@@ -22,6 +22,8 @@ let selected = new Set(Array.isArray(saved.selected) ? saved.selected.filter(id 
 if (!selected.size) selected = new Set(POIS.map(p => p.id));
 let history = Array.isArray(saved.history) ? saved.history.filter(id => POIS.some(p => p.id === id)).slice(0, 6) : [];
 let angle = 0, spinning = false, soundOn = false, audio, lastTick = -1;
+let spinSession = 0, destinationSource = null;
+const destinationBuffers = new Map();
 const customImages = new Map();
 let editorPoi, pendingImage, pendingUrl, editorSession = 0, editorBusy = false;
 let imageStoreReady = false;
@@ -85,22 +87,58 @@ function tick(final=false){
   if(!soundOn||!audio)return;
   try{const o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.frequency.value=final?740:480;o.type='sine';g.gain.setValueAtTime(final?.13:.035,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+(final?.4:.045));o.start();o.stop(audio.currentTime+(final?.4:.05));}catch{}
 }
+// Jingle musical propre au POI tiré, lancé lorsque le résultat s'affiche.
+// Les fichiers 02.mp3 et 04.mp3 contiennent volontairement le même son.
+function stopDestinationSound() {
+  if (!destinationSource) return;
+  try { destinationSource.stop(); } catch {}
+  try { destinationSource.disconnect(); } catch {}
+  destinationSource = null;
+}
+async function getDestinationSound(id) {
+  if (!audio) return null;
+  if (!destinationBuffers.has(id)) {
+    const pending = fetch(`audio/${id}.mp3`)
+      .then(response => { if (!response.ok) throw new Error(`Son ${id} indisponible (${response.status})`); return response.arrayBuffer(); })
+      .then(data => audio.decodeAudioData(data))
+      .catch(error => { destinationBuffers.delete(id); console.warn(error); return null; });
+    destinationBuffers.set(id, pending);
+  }
+  return destinationBuffers.get(id);
+}
+async function playDestinationSound(id, session) {
+  if (!soundOn || !audio) return;
+  const buffer = await getDestinationSound(id);
+  if (!buffer || !soundOn || spinning || session !== spinSession) return;
+  stopDestinationSound();
+  try {
+    const source = audio.createBufferSource();
+    const volume = audio.createGain(); volume.gain.value = 0.8;
+    source.buffer = buffer;
+    source.connect(volume); volume.connect(audio.destination);
+    destinationSource = source;
+    source.onended = () => { if (destinationSource === source) destinationSource = null; source.disconnect(); volume.disconnect(); };
+    source.start();
+  } catch (error) { console.warn('Lecture du son du lieu impossible', error); }
+}
 function showPassing(index,items){if(index===lastTick)return;lastTick=index;const p=items[index];setImage(p);$('resultName').textContent=p.name;$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;tick();}
 async function spin(){
   if(spinning || $('imageDialog').open)return;
+  stopDestinationSound();
+  const session = ++spinSession;
   spinning=true;
   const items=active(),index=randomIndex(items.length),winner=items[index],startAngle=normalise(angle),endAngle=targetAngle(startAngle,index,items.length),duration=reducedMotion.matches?700:Number($('duration').value)*1000;
   angle=startAngle;lastTick=-1;document.body.classList.add('spinning');$('resultCard').classList.remove('winner','reveal');$('spin').disabled=true;$('spin').querySelector('span').textContent='LE DESTIN EST EN MARCHE…';$('duration').disabled=true;$('selectAll').disabled=true;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=true);
   document.querySelectorAll('.edit-image').forEach(e=>e.disabled=true);
   $('resultLabel').textContent='CAP EN COURS';$('artBadge').textContent='EN APPROCHE';$('resultOverline').textContent='GARDE LE CAP…';$('resultDetail').textContent='La roue ralentit. Le point de chute arrive.';$('wheelStatus').textContent='Tous les regards sur la roue.';$('announcement').textContent='Tirage en cours.';
-  if(soundOn){try{audio ??= new (window.AudioContext||window.webkitAudioContext)();await audio.resume();}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}
+  if(soundOn){try{audio ??= new (window.AudioContext||window.webkitAudioContext)();await audio.resume();void getDestinationSound(winner.id);}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}
   const started=performance.now();
   function frame(now){
     const progress=Math.min(1,(now-started)/duration),ease=1-Math.pow(1-progress,4);
     angle=reducedMotion.matches?(progress===1?endAngle:startAngle):startAngle+(endAngle-startAngle)*ease;applyRotation();
     if(!reducedMotion.matches)showPassing(indexAtPointer(angle,items.length),items);
     if(progress<1){requestAnimationFrame(frame);return;}
-    angle=normalise(endAngle);applyRotation();spinning=false;document.body.classList.remove('spinning');setImage(winner);$('resultName').textContent=winner.name;$('resultLabel').textContent='DESTINATION CHOISIE';$('resultOverline').textContent="L'ÉQUIPAGE A SON CAP !";$('artBadge').textContent='TERRE EN VUE';$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;$('resultDetail').textContent='Prochain arrêt : '+winner.name+'. Bon drop !';$('resultCard').classList.add('winner','reveal');$('wheelStatus').textContent='Cap sur '+winner.name+' !';$('announcement').textContent='Destination choisie : '+winner.name;tick(true);
+    angle=normalise(endAngle);applyRotation();spinning=false;document.body.classList.remove('spinning');setImage(winner);$('resultName').textContent=winner.name;$('resultLabel').textContent='DESTINATION CHOISIE';$('resultOverline').textContent="L'ÉQUIPAGE A SON CAP !";$('artBadge').textContent='TERRE EN VUE';$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;$('resultDetail').textContent='Prochain arrêt : '+winner.name+'. Bon drop !';$('resultCard').classList.add('winner','reveal');$('wheelStatus').textContent='Cap sur '+winner.name+' !';$('announcement').textContent='Destination choisie : '+winner.name;tick(true);void playDestinationSound(winner.id, session);
     history.unshift(winner.id);history=history.slice(0,6);renderHistory();persist();$('spin').disabled=false;$('spin').querySelector('span').textContent='RELANCER LA ROUE';$('duration').disabled=false;$('selectAll').disabled=selected.size===12;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=false);
     document.querySelectorAll('.edit-image').forEach(e=>e.disabled=!imageStoreReady);
   }
@@ -110,7 +148,7 @@ $('spin').addEventListener('click',spin);
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.repeat&&!['INPUT','SELECT','BUTTON','TEXTAREA','A'].includes(document.activeElement.tagName)&&!$('sourcesDialog').open&&!$('imageDialog').open){e.preventDefault();spin();}});
 $('duration').addEventListener('change',persist);
 $('selectAll').addEventListener('click',()=>{if(spinning)return;selected=new Set(POIS.map(p=>p.id));renderCards();drawWheel();resetResult();persist();$('selectionMessage').textContent='Les 12 destinations sont dans le tirage.';});
-$('sound').addEventListener('click',()=>{soundOn=!soundOn;$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').querySelector('span').textContent=soundOn?'Son activé':'Son désactivé';if(soundOn){try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();tick();}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}});
+$('sound').addEventListener('click',()=>{soundOn=!soundOn;$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').querySelector('span').textContent=soundOn?'Son activé':'Son désactivé';if(!soundOn)stopDestinationSound();if(soundOn){try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();tick();}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}});
 $('streamMode').addEventListener('click',()=>{const enabled=document.body.classList.toggle('stream');$('streamMode').setAttribute('aria-pressed',String(enabled));$('streamMode').querySelector('span').textContent=enabled?'Quitter le mode stream':'Mode stream';});
 $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{$('wheelStatus').textContent='Plein écran indisponible ici. Utilise F11 dans ton navigateur.';}});
 document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Passer en plein écran');});
