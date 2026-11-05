@@ -1,0 +1,51 @@
+name: Publier la roue Ma_JesTik
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dist/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Recuperer les fichiers
+        uses: actions/checkout@v4
+
+      - name: Verifier le site original
+        shell: bash
+        run: |
+          test -f dist/index.html
+          test -f dist/style.css
+          test -f dist/app.js
+          test -f dist/engine.mjs
+          test -f dist/image-storage.mjs
+          for n in $(seq -w 1 12); do
+            test -f "dist/assets/${n}.webp"
+          done
+
+      - name: Configurer GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparer le site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Publier
+        id: deployment
+        uses: actions/deploy-pages@v4
