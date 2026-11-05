@@ -16,7 +16,7 @@
 .map-dialog-close:hover,.map-dialog-close:focus-visible{border-color:#efc978}
 /* Agrandir la zone utile sans créer de nouveaux pixels : on affiche la même image source, simplement recadrée par CSS. */
 .map-dialog-frame{display:block;width:100%;aspect-ratio:1/1;overflow:hidden;position:relative;border-radius:6px;background:#115d87}
-.map-dialog-image{display:block;position:absolute;max-width:none;max-height:none;width:161%;height:161%;left:-34.2%;top:-34.8%;object-fit:fill;transform:none;background:#115d87}
+.map-dialog-image{display:block;position:absolute;max-width:none;max-height:none;width:161%;height:auto;left:-34.2%;top:-34.8%;object-fit:contain;transform:none;background:#115d87}
 .map-dialog-tip{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 2px 0;color:#9cb5b9;font-size:10px;line-height:1.25}
 .map-dialog-tip a{color:#efc978;text-decoration:underline}
 body.stream .map-launch{display:none}
