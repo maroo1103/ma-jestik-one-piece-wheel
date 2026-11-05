@@ -6,21 +6,21 @@
 .map-launch-title{padding:3px 3px 8px}.map-launch-title span{font-size:14px}
 .map-launch-button img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;border-radius:5px;background:#12608c}
 .map-launch-footer{justify-content:center;padding-top:8px;font-size:9px;color:#aac5c7}
-.map-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(96vw,calc(94dvh - 104px),1080px);max-width:1080px;max-height:94dvh;padding:0;border:1px solid #c5a767;border-radius:12px;background:#0b1924;color:#f3f3eb;box-shadow:0 24px 90px #0009;overflow:hidden}
+.map-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(96vw,calc(100dvh - 134px),1060px);max-width:1060px;max-height:calc(100dvh - 14px);padding:0;border:1px solid #c5a767;border-radius:12px;background:#0b1924;color:#f3f3eb;box-shadow:0 24px 90px #0009;overflow:hidden}
 .map-dialog::backdrop{background:rgba(0,7,13,.84);backdrop-filter:blur(6px)}
 .map-dialog-panel{padding:12px;max-width:100%;box-sizing:border-box}
-.map-dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.map-dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 .map-dialog-heading h2{margin:0;font-size:clamp(19px,2.3vw,30px);font-family:var(--heading,inherit);line-height:1.1}
 .map-dialog-eyebrow{margin:0 0 7px;color:#efc978;font-size:10px;font-weight:800;letter-spacing:1.5px}
-.map-dialog-close{width:44px;height:44px;border:1px solid #46616c;border-radius:7px;background:#152e3b;color:#fff;cursor:pointer;font-size:30px;line-height:1}
+.map-dialog-close{width:40px;height:40px;border:1px solid #46616c;border-radius:7px;background:#152e3b;color:#fff;cursor:pointer;font-size:30px;line-height:1}
 .map-dialog-close:hover,.map-dialog-close:focus-visible{border-color:#efc978}
 /* Agrandir la zone utile sans créer de nouveaux pixels : on affiche la même image source, simplement recadrée par CSS. */
 .map-dialog-frame{display:block;width:100%;aspect-ratio:1/1;overflow:hidden;position:relative;border-radius:6px;background:#115d87}
-.map-dialog-image{display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:center;transform:scale(1.45);transform-origin:center center;background:#115d87}
-.map-dialog-tip{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:9px 2px 0;color:#9cb5b9;font-size:11px;line-height:1.35}
+.map-dialog-image{display:block;position:absolute;max-width:none;max-height:none;width:161%;height:161%;left:-34.2%;top:-34.8%;object-fit:fill;transform:none;background:#115d87}
+.map-dialog-tip{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 2px 0;color:#9cb5b9;font-size:10px;line-height:1.25}
 .map-dialog-tip a{color:#efc978;text-decoration:underline}
 body.stream .map-launch{display:none}
 @media(max-width:1550px){.map-launch{position:relative;top:auto;left:auto;width:185px;margin:18px 4.1% 0}}
-@media(max-width:760px){.map-launch{width:min(210px,55vw);margin:15px 4% 0}.map-dialog{width:min(97vw,calc(94dvh - 104px));max-height:94dvh}.map-dialog-panel{padding:9px}.map-dialog-tip{font-size:10px;line-height:1.3}}
-@media(max-height:550px){.map-dialog{width:min(96vw,calc(94dvh - 112px))}.map-dialog-panel{padding:7px}.map-dialog-heading{margin-bottom:5px}.map-dialog-heading h2{font-size:18px}.map-dialog-close{width:35px;height:35px;font-size:24px}.map-dialog-tip{margin-top:5px;font-size:9px}}
+@media(max-width:760px){.map-launch{width:min(210px,55vw);margin:15px 4% 0}.map-dialog{width:min(96vw,calc(100dvh - 120px));max-height:calc(100dvh - 14px)}.map-dialog-panel{padding:8px}.map-dialog-heading{margin-bottom:6px}.map-dialog-heading h2{font-size:18px}.map-dialog-tip{font-size:9px;line-height:1.25}}
+@media(max-height:550px){.map-dialog{width:min(96vw,calc(100dvh - 105px))}.map-dialog-panel{padding:7px}.map-dialog-heading{margin-bottom:5px}.map-dialog-heading h2{font-size:18px}.map-dialog-close{width:35px;height:35px;font-size:24px}.map-dialog-tip{margin-top:5px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.map-launch-button{transition:none}}
