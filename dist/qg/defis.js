@@ -5,12 +5,13 @@ export const FORTNITE_CHALLENGES = [[1,"Le survivant","Terminer dans le TOP 10 s
  * Dans cette V1, les données restent strictement dans le navigateur actuel.
  */
 const STORE_KEY = "ma_jestik_qg_defis_fortnite_v1";
+const CATALOG_VERSION = 2; // Migration douce : conserve les 28 anciens réglages et active les 60 nouveaux.
 const MAX_HISTORY = 40;
 const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const classes = {Facile:"easy",Moyen:"medium",Difficile:"hard"};
 const teams = {solo:"Solo",duo:"Duo",trio:"Trio",quatuor:"Quatuor"};
 const levels = {Facile:0,Moyen:1,Difficile:2};
-const initial = () => ({mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:FORTNITE_CHALLENGES.map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
+const initial = () => ({catalogVersion:CATALOG_VERSION,mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:FORTNITE_CHALLENGES.map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
 let data = initial();
 function load(){
  try{
@@ -20,9 +21,14 @@ function load(){
   clean.mode = parsed.mode==="viewer"?"viewer":"random";
   clean.team = Object.hasOwn(teams,parsed.team)?parsed.team:"solo";
   clean.level = ["all","Facile","Moyen","Difficile"].includes(parsed.level)?parsed.level:"all";
-  clean.category = ["all","Combat","Survie","Stratégie","Duo"].includes(parsed.category)?parsed.category:"all";
+  clean.category = ["all","Combat","Survie","Stratégie","Duo","Trio","Quatuor"].includes(parsed.category)?parsed.category:"all";
   clean.sort = ["default","easy","hard"].includes(parsed.sort)?parsed.sort:"default";
-  clean.enabled = [...new Set(parsed.enabled.filter(n=>Number.isInteger(n)&&n>=1&&n<=28))];
+  clean.enabled = [...new Set(parsed.enabled.filter(n=>Number.isInteger(n)&&n>=1&&n<=FORTNITE_CHALLENGES.length))];
+  // Les préférences manuelles sur les 28 anciens défis restent inchangées.
+  // Les 60 nouveaux défis sont activés une seule fois pour les sessions existantes.
+  if((Number(parsed.catalogVersion)||1)<CATALOG_VERSION){
+    clean.enabled = [...new Set([...clean.enabled,...FORTNITE_CHALLENGES.slice(28).map(x=>x[0])])];
+  }
   clean.history = parsed.history.slice(0,MAX_HISTORY).filter(x=>x&&typeof x.title==="string");
   clean.queue = parsed.queue.slice(0,20).filter(x=>x&&typeof x.description==="string");
   clean.active = parsed.active && typeof parsed.active.description==="string"?parsed.active:null;
@@ -32,7 +38,7 @@ function load(){
  }catch{return initial();}
 }
 function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(data))}catch{}}
-const eligible = x => data.enabled.includes(x[0])&&(x[5]!=="duo"||data.team==="duo")&&(data.level==="all"||x[3]===data.level);
+const eligible = x => data.enabled.includes(x[0])&&(x[5]==="both"||x[5]===data.team)&&(data.level==="all"||x[3]===data.level);
 const getSorted = items => [...items].sort((a,b)=>data.sort==="default"?a[0]-b[0]:((levels[a[3]]-levels[b[3]])*(data.sort==="easy"?1:-1))||a[0]-b[0]);
 const teamSelect = () => '<label>Composition <select id="challengeTeam">'+Object.entries(teams).map(([id,label])=>'<option value="'+id+'" '+(data.team===id?"selected":"")+'>'+label+'</option>').join("")+'</select></label>';
 const score=()=>({success:data.history.filter(x=>x.result==="success").length,fail:data.history.filter(x=>x.result==="failure").length,skipped:data.history.filter(x=>x.result==="skipped").length});
@@ -44,7 +50,7 @@ function current(){
 }
 function catalogue(){
  const matches=getSorted(FORTNITE_CHALLENGES.filter(x=>data.category==="all"||x[4]===data.category));
- return '<details id="challengeCatalogue" class="challenge-catalog" '+(data.catalogOpen?"open":"")+'><summary>📋 CONSULTER LES 28 DÉFIS <span>'+data.enabled.length+' activés / 28</span></summary><div class="challenge-cat-tools"><label for="challengeCategory">Catégorie</label><select id="challengeCategory"><option value="all">Toutes</option>'+["Combat","Survie","Stratégie","Duo"].map(x=>'<option value="'+x+'" '+(data.category===x?"selected":"")+'>'+x+'</option>').join("")+'</select><label for="challengeSort">Trier par</label><select id="challengeSort"><option value="default" '+(data.sort==="default"?"selected":"")+'>Numéro</option><option value="easy" '+(data.sort==="easy"?"selected":"")+'>Facile → Difficile</option><option value="hard" '+(data.sort==="hard"?"selected":"")+'>Difficile → Facile</option></select><button type="button" class="btn btn-small" data-action="enable-all">Tout activer</button><button type="button" class="btn btn-small" data-action="disable-all">Tout désactiver</button></div><div class="challenge-catalog-list">'+matches.map(x=>'<label class="challenge-catalog-row"><input type="checkbox" data-enable="'+x[0]+'" '+(data.enabled.includes(x[0])?"checked":"")+'><span class="challenge-catalog-desc"><strong>'+x[0]+'. '+escapeHtml(x[1])+'</strong><small>'+escapeHtml(x[2])+'</small></span><span class="challenge-catalog-meta">'+badge(x[3])+'<small>'+escapeHtml(x[5]==="duo"?"Duo uniquement":x[4])+'</small></span></label>').join("")+'</div></details>';
+ return '<details id="challengeCatalogue" class="challenge-catalog" '+(data.catalogOpen?"open":"")+'><summary>📋 CONSULTER LES '+FORTNITE_CHALLENGES.length+' DÉFIS <span>'+data.enabled.length+' activés / '+FORTNITE_CHALLENGES.length+'</span></summary><div class="challenge-cat-tools"><label for="challengeCategory">Catégorie</label><select id="challengeCategory"><option value="all">Toutes</option>'+["Combat","Survie","Stratégie","Duo","Trio","Quatuor"].map(x=>'<option value="'+x+'" '+(data.category===x?"selected":"")+'>'+x+'</option>').join("")+'</select><label for="challengeSort">Trier par</label><select id="challengeSort"><option value="default" '+(data.sort==="default"?"selected":"")+'>Numéro</option><option value="easy" '+(data.sort==="easy"?"selected":"")+'>Facile → Difficile</option><option value="hard" '+(data.sort==="hard"?"selected":"")+'>Difficile → Facile</option></select><button type="button" class="btn btn-small" data-action="enable-all">Tout activer</button><button type="button" class="btn btn-small" data-action="disable-all">Tout désactiver</button></div><div class="challenge-catalog-list">'+matches.map(x=>'<label class="challenge-catalog-row"><input type="checkbox" data-enable="'+x[0]+'" '+(data.enabled.includes(x[0])?"checked":"")+'><span class="challenge-catalog-desc"><strong>'+x[0]+'. '+escapeHtml(x[1])+'</strong><small>'+escapeHtml(x[2])+'</small></span><span class="challenge-catalog-meta">'+badge(x[3])+'<small>'+escapeHtml(x[5]==="duo"?"Duo uniquement":x[4])+'</small></span></label>').join("")+'</div></details>';
 }
 function queue(){
  if(!data.queue.length)return '<p class="challenge-muted">Aucune proposition en attente sur cet appareil.</p>';
@@ -68,7 +74,7 @@ function view(message=""){
  catalogue()+'<div class="note">Version publique gratuite : résultats et propositions enregistrés <strong>uniquement dans ce navigateur</strong>. Pas encore de classement général ni de transmission automatique au streamer. Certains défis dépendent des armes et mécaniques disponibles dans la saison Fortnite.</div></section>';
 }
 export function challengesMarkup(){
- return '<div class="page-head"><div class="eyebrow">CRÉATION N° 02 · FORTNITE ZERO BUILD</div><h1>DÉFIS & MISSIONS</h1><p>Choisis Solo, Duo, Trio ou Quatuor, filtre par difficulté et découvre les défis disponibles. Consulte le catalogue pour les trier, ou propose ta propre mission.</p><div class="page-tags"><span class="tag">28 défis Fortnite</span><span class="tag">Solo · Duo · Trio · Quatuor</span><span class="tag gold">Enregistrement local</span></div></div><div id="challengeRoot"></div>';
+ return '<div class="page-head"><div class="eyebrow">CRÉATION N° 02 · FORTNITE ZERO BUILD</div><h1>DÉFIS & MISSIONS</h1><p>Choisis Solo, Duo, Trio ou Quatuor, filtre par difficulté et découvre les défis disponibles. Consulte le catalogue pour les trier, ou propose ta propre mission.</p><div class="page-tags"><span class="tag">88 défis Fortnite</span><span class="tag">Solo · Duo · Trio · Quatuor</span><span class="tag gold">Enregistrement local</span></div></div><div id="challengeRoot"></div>';
 }
 export function mountChallenges(){
  const root=document.getElementById("challengeRoot");
@@ -120,7 +126,7 @@ export function mountChallenges(){
   if(el.id==="challengeTeam"){data.team=Object.hasOwn(teams,el.value)?el.value:"solo";save();render();}
   else if(el.id==="challengeLevel"){data.level=["Facile","Moyen","Difficile"].includes(el.value)?el.value:"all";save();render();}
   else if(el.id==="challengeSort"){data.sort=["default","easy","hard"].includes(el.value)?el.value:"default";data.catalogOpen=true;save();render();}
-  else if(el.id==="challengeCategory"){data.category=["Combat","Survie","Stratégie","Duo"].includes(el.value)?el.value:"all";data.catalogOpen=true;save();render();}
+  else if(el.id==="challengeCategory"){data.category=["Combat","Survie","Stratégie","Duo","Trio","Quatuor"].includes(el.value)?el.value:"all";data.catalogOpen=true;save();render();}
   else if(el.matches("[data-enable]")){const id=Number(el.dataset.enable);data.enabled=el.checked?[...new Set([...data.enabled,id])]:data.enabled.filter(x=>x!==id);data.catalogOpen=true;save();render();}
  });
  root.addEventListener("submit",event=>{
