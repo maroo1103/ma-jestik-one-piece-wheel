@@ -1,12 +1,12 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261106-118';
-import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-v1';
+import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
-{path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Objectif de kills et événements du live. Version test locale ; détection automatique en préparation.',ready:true},
+{path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Suivi du Killathon Fortnite et boosts Twitch, avec affichage public en préparation.',ready:true},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Des votes sur toutes sortes de sujets, pas uniquement les fails.',ready:false},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:false}
 ];
@@ -17,7 +17,7 @@ const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><di
 function home(){
  return '<section class="hero"><div class="hero-content"><div class="eyebrow">LE QG COMMUNAUTAIRE · MA_JESTIK</div><h1>TOUTES NOS CRÉATIONS.<br><em>UN SEUL QG.</em></h1><p>Roue Fortnite, défis, Killathon et univers gaming. Un site ouvert à tous, conçu pour évoluer avec vous — sans changer de fenêtre.</p><div class="hero-actions"><a class="btn btn-gold" href="#/roue">🎡 UTILISER LA ROUE <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="#/setup">🖥️ DÉCOUVRIR MON SETUP</a></div></div><div class="hero-decoration" aria-hidden="true">MJ</div></section>'+
  '<section><div class="section-top"><div><h2>NOS CRÉATIONS</h2><p>Nos outils Fortnite et nos projets communautaires, regroupés au même endroit.</p></div><span class="capsule">● LE QG PREND FORME</span></div><div class="cards">'+modules.map(m=>'<a class="module-card '+(m.ready?'highlight':'')+'" href="#/'+m.path+'"><div class="card-line"><span class="module-icon" aria-hidden="true">'+m.icon+'</span><span class="'+(m.ready?'status-ready':'status-prep')+'">'+(m.ready?'DISPONIBLE':'EN PRÉPARATION')+'</span></div><h3>'+m.title+'</h3><p>'+m.desc+'</p><span class="card-bottom">'+(m.ready?'UTILISER MAINTENANT':'VOIR LE PROJET')+' <span aria-hidden="true">→</span></span></a>').join('')+'</div></section>'+
- '<div class="info-strip"><span class="strip-icon" aria-hidden="true">🧭</span><div><strong>À construire étape par étape, avec toi.</strong><p>Les 118 défis Fortnite sont validés. Le Killathon est disponible en démonstration et les votes communautaires restent à concevoir.</p></div></div>';
+ '<div class="info-strip"><span class="strip-icon" aria-hidden="true">🧭</span><div><strong>À construire étape par étape, avec toi.</strong><p>Les 118 défis Fortnite sont validés. La rubrique Killathon affiche un aperçu ; les données du direct arriveront après connexion publique sécurisée.</p></div></div>';
 }
 function wheel(){
  return head('CRÉATION N° 01','LA ROUE FORTNITE','Notre roue Fortnite One Piece est intégrée à ce QG. Elle garde ses tirages, ses images, son audio et ses réglages : le site d’origine reste intact.',[tag('● DÉJÀ FONCTIONNEL'),tag('12 destinations'),tag('Tirages indépendants')])+
@@ -133,17 +133,5 @@ $('menuMobile').addEventListener('click',()=>{
 });
 $('sidebarShade').addEventListener('click',closeMobile);
 window.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobile()});
-const dialog=$('infoDialog');
-$('loginInfo').addEventListener('click',()=>{
- $('infoTitle').textContent='Comptes en préparation';
- $('infoText').textContent='Les comptes avec pseudos, avatars et classements partagés nécessitent une authentification sécurisée et une base de données. Aucun faux système de connexion n’est proposé. Nous construirons cette fonction sur une offre gratuite, sans abonnement mensuel.';
- dialog.showModal();
-});
-$('closeInfo').addEventListener('click',()=>dialog.close());
-$('okInfo').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',event=>{
- const rect=dialog.getBoundingClientRect();
- if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();
-});
 window.addEventListener('hashchange',route);
 route();
