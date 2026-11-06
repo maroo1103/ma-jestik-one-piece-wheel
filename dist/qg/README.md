@@ -1,3 +1,16 @@
+# Ma_JesTik · Le QG communautaire — état au 6 novembre 2026
+
+## Rubrique Killathon — design final validé
+- Interface publique en lecture seule : compteurs, progression, boosts Twitch (+1, +5, +10, +20) et derniers événements.
+- Suppression des commandes de test, des réglages d'administration, des bandeaux techniques et des références Rumble dans cette rubrique.
+- Écran initial 0/100 **à titre d'aperçu** : ne prétend pas afficher le vrai compteur.
+- Statut « EN DIRECT » seulement avec un flux HTTPS public valide et fraîchement mis à jour ; sinon « APERÇU ».
+- Pour connecter le véritable serveur local, créer ultérieurement une passerelle sécurisée exposant UNIQUEMENT des données publiques JSON. Ne jamais exposer 127.0.0.1, clés, token ou webhook privés.
+- Ajouter son URL HTTPS dans la balise meta `majestik-killathon-public-feed` de `index.html`.
+- Format JSON attendu : `{"kills":12,"goal":100,"live":true,"updatedAt":"2026-11-06T20:00:00Z","events":[{"type":"follow","label":"Nouveau follow — objectif +1","date":"2026-11-06T20:00:00Z"}]}`.
+- Les actions Follow/Sub de Streamer.bot ont été validées par **simulation** avec le serveur Killathon local ; les événements réels Twitch et la synchronisation vers GitHub Pages doivent encore être vérifiés.
+- La roue, les 118 défis et le setup d'origine n'ont pas été modifiés dans cette mise à jour.
+
 # Ma_JesTik · QG communautaire — première fondation
 
 ## Killathon Ma_JesTik — ajouté le 6 novembre 2026
