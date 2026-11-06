@@ -8,7 +8,8 @@ Une seule adresse et une navigation interne pour toutes les créations Ma_JesTik
 
 - Accueil et menu responsive à sous-menus, sans création de nouvelles fenêtres.
 - Roue Fortnite **existante** intégrée dans le site grâce à une iframe de même origine (`../`). Son code, ses sons, ses images et sa page d’origine restent inchangés.
-- Pages dédiées aux défis, bingo, coffre et tribunal. Les contenus sont volontairement **à définir avec Ma_JesTik avant de les rendre publics**.
+- **Défis Fortnite Zero Build jouables : 28 missions validées par Ma_JesTik** (24 utilisables en solo et duo, 4 réservées au duo), difficulté, choix des missions actives, tirage sans répétition immédiate, journal local des réussites/échecs et propositions de viewers à valider localement. Le moteur est dans `defis.js`, le style dans `defis.css`. Les données sont sauvegardées uniquement dans le navigateur du visiteur, sans compte ni classement partagé.
+- Pages Bingo, Coffre et Tribunal : les contenus sont volontairement **à définir avec Ma_JesTik avant activation publique**.
 - Page Classements : présentation uniquement, sans faux scores et sans prétendre qu’une base de données est déjà en service.
 - Mon setup interactif : **la vraie création Ma_JesTik d'origine**, avec photo interactive (13 zones), zoom, infobulles et sous-page de configuration PC. Le HTML/CSS/JS a été réintégré sous `setup-original/`. La photo et l'emoji sont actuellement servis depuis le dépôt original `setup-ma-jestik` pour préserver leurs fichiers binaires ; aucun nouvel onglet n'est ouvert pour ces pages internes.
 - Affiliations Instant Gaming et Amazon : emplacements, **aucun lien affilié fictif**.
@@ -17,8 +18,8 @@ Une seule adresse et une navigation interne pour toutes les créations Ma_JesTik
 
 ## À construire avant de considérer le site complet
 
-1. Validations éditoriales : listes précises des défis, cases du bingo, surprises et questions du tribunal.
-2. UX et moteur de jeux + paramètres indépendants par visiteur.
+1. Validations éditoriales : les 28 défis Fortnite sont validés. Restent les cases du bingo, les surprises du coffre, les questions du tribunal et les défis des autres jeux.
+2. Finaliser les moteurs de bingo, coffre et tribunal ; le module Défis Fortnite est déjà utilisable localement.
 3. Authentification et autorisations réelles, session sécurisée, anti-abus, procédure de suppression de compte.
 4. Classements partagés et système de calcul des points contrôlé côté serveur (pas via localStorage).
 5. Stockage et API sur offres gratuites (ex. Cloudflare Workers + D1) en restant dans les quotas, sans activer un plan facturé.
