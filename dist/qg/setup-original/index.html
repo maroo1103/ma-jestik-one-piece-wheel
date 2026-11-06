@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Découvrez le setup gaming interactif de Ma_Jestikk : cliquez sur un équipement pour retrouver sa référence.">
+  <title>Mon Setup Interactif | Ma_Jestikk</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Retour à mon setup"><span class="brand-mark"><img src="https://maroo1103.github.io/setup-ma-jestik/assets/emoji-ma-jestik-v2.png" alt="" width="40" height="40" style="display:block;width:40px;height:40px;object-fit:contain"></span><span>Ma_Jestikk <small>SETUP INTERACTIF</small></span></a>
+    <a class="top-link" href="config-pc.html">Configuration PC <span aria-hidden="true">↗</span></a>
+  </header>
+  <main class="wrap">
+    <div class="hero">
+      <span class="eyebrow">BIENVENUE DANS MON UNIVERS</span>
+      <h1>Explore mon <span>setup.</span></h1>
+      <p>Une seule photo, tout mon matériel. Clique directement sur un objet pour découvrir où le trouver.</p>
+    </div>
+    <div class="viewer-head">
+      <span class="status"><span class="pulse"></span> 13 éléments interactifs</span>
+      <div class="zoom-actions"><span class="zoom-caption">ZOOM</span><button id="zoom-out" type="button" aria-label="Dézoomer">−</button><output id="zoom-level" aria-live="polite">100 %</output><button id="zoom-in" type="button" aria-label="Zoomer">+</button><button id="zoom-reset" type="button">Réinitialiser</button></div>
+    </div>
+    <div class="scene-viewport" id="scene-viewport" tabindex="0" aria-label="Photo interactive. Faites défiler horizontalement sur mobile pour voir l'ensemble des objets.">
+      <svg id="scene-map" class="scene-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1448 1086" role="group" aria-label="Photo interactive de mon setup gaming">
+        <image href="https://maroo1103.github.io/setup-ma-jestik/assets/setup-ma-jestikk.png" x="0" y="0" width="1448" height="1086" preserveAspectRatio="xMidYMid meet" />
+        <!-- Les zones sont dessinées en transparence et visibles seulement au survol/clavier. -->
+        <a class="hotspot" href="https://link.amazon/B03M11aax" target="_blank" rel="sponsored noopener noreferrer" aria-label="PlayStation 5 : voir sur Amazon" data-label="PlayStation 5">
+          <title>PlayStation 5 • Voir sur Amazon</title><path d="M31 400 Q30 387 36 384 L141 352 Q146 350 148 359 L149 371 L174 358 Q179 355 182 367 L200 659 Q198 673 185 682 L163 703 Q154 709 141 710 L74 714 Q64 714 62 701 L31 415 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0jg9uZWL" target="_blank" rel="sponsored noopener noreferrer" aria-label="Manette PS5 blanche : voir sur Amazon" data-label="Manette PS5">
+          <title>Manette PS5 • Voir sur Amazon</title><path d="M15 762 Q20 742 48 734 Q68 723 86 722 L117 716 Q137 716 154 727 Q173 727 181 754 Q185 776 176 787 Q170 797 156 796 Q143 790 133 772 Q126 760 113 762 L85 762 Q68 767 54 791 Q44 807 31 804 Q13 803 12 786 Q11 774 15 762 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B04omSfyH" target="_blank" rel="sponsored noopener noreferrer" aria-label="Manette SCUF noire pour PC : voir sur Amazon" data-label="Manette SCUF (PC)">
+          <title>Manette SCUF PC • Voir sur Amazon</title><path d="M534 716 Q526 706 543 698 Q562 690 598 681 Q621 676 637 685 Q670 695 682 720 Q689 731 677 739 Q666 747 651 731 L633 718 Q622 711 615 721 L585 764 Q568 783 554 765 Q540 749 534 728 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0aAAbtSu" target="_blank" rel="sponsored noopener noreferrer" aria-label="Webcam : voir sur Amazon" data-label="Webcam">
+          <title>Webcam • Voir sur Amazon</title><path d="M588 230 Q594 224 606 226 L625 228 Q640 228 642 240 L642 254 Q639 265 627 266 L593 265 Q578 262 579 248 Q578 236 588 230 Z"/>
+          <path d="M575 256 Q566 255 565 263 Q565 270 575 270 L588 267 L637 268 Q646 269 647 273 L566 275 Q561 271 563 265 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0dTJrqEN" target="_blank" rel="sponsored noopener noreferrer" aria-label="Écran principal : voir sur Amazon" data-label="Écran principal">
+          <title>Écran principal • Voir sur Amazon</title><path d="M208 322 Q208 316 217 313 Q385 278 612 260 Q623 259 623 270 L624 510 Q625 520 612 526 Q382 618 218 688 Q209 691 207 679 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B00TPFHV5" target="_blank" rel="sponsored noopener noreferrer" aria-label="Écran secondaire : voir sur Amazon" data-label="Écran secondaire">
+          <title>Écran secondaire • Voir sur Amazon</title><path d="M630 274 Q630 270 637 270 L1008 272 Q1015 272 1015 279 L1010 491 Q1010 502 1000 504 L635 531 Q622 533 622 522 L624 279 Q625 275 630 274 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0fjncCRS" target="_blank" rel="sponsored noopener noreferrer" aria-label="Support double écran : voir sur Amazon" data-label="Support double écran">
+          <title>Support double écran • Voir sur Amazon</title>
+          <path d="M526 545 Q532 540 543 542 L553 544 L554 567 L569 572 Q578 577 578 586 L576 599 Q569 608 554 608 L508 609 Q497 606 495 596 L498 584 Q505 576 524 568 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0182skhV" target="_blank" rel="sponsored noopener noreferrer" aria-label="Microphone RØDE NT-USB+ : voir sur Amazon" data-label="Micro RØDE NT-USB+">
+          <title>Micro RØDE NT-USB+ • Voir sur Amazon</title><path d="M625 432 Q629 423 642 423 L671 419 Q684 419 688 430 L691 513 Q688 527 679 528 L633 531 Q625 528 622 517 L619 449 Q618 437 625 432 Z"/>
+          <path d="M639 530 L673 528 L677 564 Q674 578 660 579 Q640 575 639 564 Z"/>
+          <path d="M634 565 Q643 571 646 576 L617 624 Q609 632 601 629 Q598 626 602 620 L620 577 Z"/>
+          <path d="M650 571 L663 571 L668 625 Q667 634 656 633 Q647 632 648 623 Z"/>
+          <path d="M670 566 L683 567 L699 617 L691 624 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B07W6ZZdJ" target="_blank" rel="sponsored noopener noreferrer" aria-label="Casque Astro A50 : voir sur Amazon" data-label="Casque Astro A50">
+          <title>Casque Astro A50 • Voir sur Amazon</title><path d="M953 519 Q949 493 973 473 Q989 458 1020 458 Q1054 463 1071 482 Q1087 505 1080 538 L1074 574 Q1072 591 1060 595 L1043 597 Q1027 596 1020 585 Q1016 578 1026 561 L1048 523 Q1051 512 1044 505 Q1025 492 1008 491 Q985 493 974 511 Q971 521 979 533 L995 558 Q1001 575 990 584 Q972 598 963 587 Q945 565 953 519 Z"/>
+          <path d="M956 588 Q961 583 970 586 L1061 589 Q1074 590 1075 601 Q1074 608 1065 610 L968 607 Q957 605 955 598 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0fXC1OdZ" target="_blank" rel="sponsored noopener noreferrer" aria-label="Clavier Logitech : voir sur Amazon" data-label="Clavier Logitech">
+          <title>Clavier Logitech • Voir sur Amazon</title><path d="M650 615 Q650 613 661 612 L950 582 Q960 583 968 598 L1021 659 Q1027 668 1019 674 L691 721 Q685 721 681 714 L646 633 Q642 621 650 615 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B0fXC1OdZ" target="_blank" rel="sponsored noopener noreferrer" aria-label="Souris Logitech : voir sur Amazon" data-label="Souris Logitech">
+          <title>Souris Logitech • Voir sur Amazon</title><path d="M1062 631 Q1058 623 1074 621 Q1087 618 1095 620 Q1110 618 1119 625 Q1136 639 1139 659 Q1138 672 1127 675 Q1108 679 1093 666 L1069 657 Q1052 648 1062 631 Z"/>
+        </a>
+        <a class="hotspot pc-hotspot" href="config-pc.html" aria-label="Tour PC : découvrir tous les composants" data-label="Tour PC • Voir les composants">
+          <title>Tour PC • Découvrir toute la configuration</title>
+          <path d="M1083 296 L1198 279 Q1204 277 1211 278 L1437 299 L1434 465 Q1399 475 1380 500 Q1352 527 1361 557 Q1372 590 1354 603 L1104 576 Q1085 574 1082 554 L1081 315 Q1080 301 1083 296 Z"/>
+        </a>
+        <a class="hotspot" href="https://link.amazon/B09P9aqX0" target="_blank" rel="sponsored noopener noreferrer" aria-label="Chaise gaming : voir sur Amazon" data-label="Chaise gaming">
+          <title>Chaise gaming • Voir sur Amazon</title>
+          <!-- Un seul contour visible pour toute la chaise : dossier + assise. -->
+          <path d="M1448 445 C1390 463 1367 489 1354 512 C1343 547 1367 599 1357 646 C1350 706 1310 750 1258 803 C1220 845 1185 868 1154 872 C1107 865 1062 866 1032 874 C994 881 969 873 931 880 C872 888 839 905 814 948 C786 999 781 1056 778 1086 L1448 1086 Z"/>
+          <!-- Accoudoir cliquable, sans deuxième contour affiché. -->
+          <path class="hitbox-invisible" d="M995 774 Q1054 757 1147 774 Q1192 780 1206 797 Q1214 815 1183 826 Q1065 851 995 833 Q977 827 980 800 Q981 783 995 774 Z"/>
+        </a>
+      </svg>
+    </div>
+    <div class="viewer-foot"><span><span aria-hidden="true">⌖</span> Survole ou touche un équipement</span><span>Sur mobile : déplace et zoome la photo</span></div>
+    <div class="info-strip"><div><strong>À l'intérieur de la tour ?</strong><p>Retrouve toute ma configuration PC, pièce par pièce, avec les liens des composants.</p></div><a class="button" href="config-pc.html">Découvrir ma config PC <span aria-hidden="true">↗</span></a></div>
+    <p class="affiliate">En tant que Partenaire Amazon, je réalise un bénéfice sur les achats remplissant les conditions requises. Certains liens de ce site sont des liens affiliés ; cela n'augmente pas ton prix d'achat.</p>
+  </main>
+  <footer>© Ma_Jestikk · Setup interactif · <a href="https://www.twitch.tv/ma_jestikk" target="_blank" rel="noopener noreferrer">Twitch</a></footer>
+  <div id="tooltip" class="floating-label" aria-hidden="true"></div>
+  <script src="script.js" defer></script>
+</body>
+</html>

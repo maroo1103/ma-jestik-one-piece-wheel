@@ -10,7 +10,7 @@ Une seule adresse et une navigation interne pour toutes les créations Ma_JesTik
 - Roue Fortnite **existante** intégrée dans le site grâce à une iframe de même origine (`../`). Son code, ses sons, ses images et sa page d’origine restent inchangés.
 - Pages dédiées aux défis, bingo, coffre et tribunal. Les contenus sont volontairement **à définir avec Ma_JesTik avant de les rendre publics**.
 - Page Classements : présentation uniquement, sans faux scores et sans prétendre qu’une base de données est déjà en service.
-- Mon setup interactif : fiches matérielles sélectionnables, avant ajout des photos.
+- Mon setup interactif : **la vraie création Ma_JesTik d'origine**, avec photo interactive (13 zones), zoom, infobulles et sous-page de configuration PC. Le HTML/CSS/JS a été réintégré sous `setup-original/`. La photo et l'emoji sont actuellement servis depuis le dépôt original `setup-ma-jestik` pour préserver leurs fichiers binaires ; aucun nouvel onglet n'est ouvert pour ces pages internes.
 - Affiliations Instant Gaming et Amazon : emplacements, **aucun lien affilié fictif**.
 - Code créateur : emplacement inactif tant qu'il n'est pas obtenu.
 - Comptes : bouton d'information, **aucune inscription fictive**.
@@ -38,3 +38,7 @@ Le budget visé est le prix annuel du domaine, sans abonnement mensuel. Les four
 ## Développement responsable
 
 Pas de classement « partagé » avec de faux chiffres; pas de formulaire qui fait croire qu'un compte a été créé; aucune clé API sensible dans le JavaScript public; validation manuelle des défis avant affichage sur un live.
+
+## Origine du setup interactif
+
+Projet original : `https://github.com/maroo1103/setup-ma-jestik`. Les liens Amazon sont conservés tels qu'ils figurent sur ce projet et n'ont pas été revérifiés individuellement. Lorsque le site sera regroupé définitivement, les médias devront idéalement être copiés en local pour supprimer la dépendance au dépôt d'origine. Les sorties vers Amazon restent des liens externes intentionnels.
