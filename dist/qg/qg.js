@@ -1,18 +1,6 @@
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',bingo:'Bingo gaming',coffre:'Coffre mystère',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
-const products = [
-{type:'PROCESSEUR',name:'AMD Ryzen 7 7800X3D',icon:'⚡',detail:'Le processeur de mon PC principal, optimisé pour le gaming. Plateforme AMD AM5.'},
-{type:'CARTE GRAPHIQUE',name:'PNY GeForce RTX 5070 Ti Epic-X ARGB OC',icon:'🎮',detail:'Ma carte graphique pour jouer et diffuser en 1440p. Le matériel présenté correspond à mon setup personnel.'},
-{type:'CARTE MÈRE',name:'MSI B650 Gaming Plus WiFi',icon:'🔧',detail:'Une carte mère au format ATX sur plateforme AMD AM5.'},
-{type:'MÉMOIRE',name:'Crucial Pro DDR5 — 32 Go',icon:'▥',detail:'Deux barrettes de 16 Go. Mon réglage quotidien fonctionne à 6 000 MT/s.'},
-{type:'BOÎTIER',name:'NZXT H6 Flow ARGB',icon:'🖥️',detail:'Mon boîtier noir avec vitrine et ventilation personnalisée.'},
-{type:'REFROIDISSEMENT',name:'Arctic Liquid Freezer III 360',icon:'❄️',detail:'Refroidissement liquide du processeur, avec radiateur 360 mm installé sur le dessus.'},
-{type:'MICRO',name:'RØDE NT-USB+',icon:'🎙️',detail:'Mon microphone pour les lives et les discussions.'},
-{type:'CAMÉRA',name:'Elgato Facecam Neo',icon:'📷',detail:'Ma caméra utilisée pour le streaming.'},
-{type:'CASQUE',name:'Astro A50 Gen 4',icon:'🎧',detail:'Mon casque gaming sans fil.'},
-{type:'ÉCRANS',name:'Deux moniteurs gaming 27″ QHD',icon:'🖼️',detail:'Un MSI MAG 27CQ6F 180 Hz et un AOC CQ27G2S 165 Hz, tous deux en 2 560 × 1 440 pixels.'}
-];
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'Défis aléatoires ou proposés par les viewers. Nous choisirons ensemble les missions.',ready:false},
@@ -58,9 +46,9 @@ function ranking(){
  '<div class="note">Architecture prévue : authentification sécurisée, stockage partagé et règles de calcul côté serveur sur un service à quota gratuit. Pas d’abonnement mensuel activé.</div>';
 }
 function setup(){
- return head('UNIVERS MA_JESTIK','MON SETUP INTERACTIF','Explore les composants de mon PC et de mon installation streaming. Des photos personnelles et des liens d’affiliation pourront compléter les fiches plus tard.',[tag('10 fiches matériel'),tag('Sans achat obligatoire')])+
- '<section class="setup-grid">'+products.map((p,i)=>'<button type="button" class="hardware-card" data-hardware="'+i+'" aria-controls="hardwareDetail" aria-expanded="false"><span class="hardware-icon" aria-hidden="true">'+p.icon+'</span><small>'+p.type+'</small><strong>'+p.name+'</strong></button>').join('')+'</section><div id="hardwareDetail" class="hardware-detail" hidden aria-live="polite"></div>'+
- '<div class="note">Les visuels de ton vrai setup seront ajoutés quand tu les choisiras. Aucun lien commercial n’est inventé.</div>';
+ return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Retrouve notre création originale : la photo de mon bureau avec les 13 équipements cliquables, le zoom, les liens Amazon et la configuration PC détaillée. Tout fonctionne directement dans le QG, sans ouvrir un autre site.',[tag('13 éléments interactifs'),tag('Notre création originale'),tag('Liens affiliés indiqués')])+
+ '<div class="wheel-area setup-area"><div class="wheel-area-header"><strong>🖥️ SETUP MA_JESTIK · VERSION ORIGINALE</strong><small>Photo interactive · Zoom · Configuration PC</small></div><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>'+
+ '<div class="note">Le setup et sa page de configuration sont intégrés au QG. Seuls les liens vers les boutiques ouvrent leurs sites externes. Les photos sont provisoirement chargées depuis le dépôt original Ma_JesTik, et les liens affiliés existants sont conservés.</div>';
 }
 function partners(){
  return head('UNIVERS MA_JESTIK','AFFILIATIONS & PARTENAIRES','Un espace transparent pour retrouver les boutiques et matériels que je recommande. Les liens affiliés n’apparaîtront que lorsque leur suivi aura été vérifié.',[tag('Liens à configurer','gold'),tag('Informations commerciales claires')])+
@@ -99,17 +87,31 @@ function mountWheel(){
   }catch{}
  });
 }
-function mountHardware(){
- const detail=$('hardwareDetail');if(!detail)return;
- document.querySelectorAll('[data-hardware]').forEach(button=>{
-  button.addEventListener('click',()=>{
-   const id=Number(button.dataset.hardware),item=products[id];
-   if(!item)return;
-   document.querySelectorAll('[data-hardware]').forEach(btn=>{btn.classList.toggle('active',btn===button);btn.setAttribute('aria-expanded',String(btn===button));});
-   detail.hidden=false;
-   detail.innerHTML='<small class="step-label">'+item.type+'</small><h3>'+item.name+'</h3><p>'+item.detail+'</p>';
-   if(window.matchMedia('(max-width:590px)').matches)detail.scrollIntoView({behavior:'smooth',block:'nearest'});
-  });
+function mountSetup(){
+ const frame=$('setupFrame');
+ if(!frame)return;
+ let ro=null;
+ const update=()=>{
+  try{
+   const doc=frame.contentDocument;
+   if(!doc)return;
+   const height=Math.max(doc.documentElement.scrollHeight,doc.body?.scrollHeight||0,850);
+   frame.style.height=Math.min(6000,height+18)+'px';
+  }catch{frame.style.height='1600px';}
+ };
+ frame.addEventListener('load',()=>{
+  ro?.disconnect();
+  update();
+  try{
+   const doc=frame.contentDocument;
+   if(doc && window.ResizeObserver){
+    ro=new ResizeObserver(update);
+    ro.observe(doc.body);
+   }
+   frame.contentWindow.addEventListener('resize',update);
+   setTimeout(update,150);
+   setTimeout(update,750);
+  }catch{frame.style.height='1600px';}
  });
 }
 function closeMobile(){
@@ -128,7 +130,7 @@ function route(){
  const group=groups[page];
  if(group){const button=document.querySelector('[data-toggle="'+group+'"]');button?.setAttribute('aria-expanded','true');}
  if(page==='roue')mountWheel();
- if(page==='setup')mountHardware();
+ if(page==='setup')mountSetup();
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
