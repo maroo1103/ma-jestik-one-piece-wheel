@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#09141e">
+  <meta name="description" content="Le QG communautaire Ma_JesTik : roue Fortnite, créations gaming, défis, setup et espace communauté.">
+  <title>Ma_JesTik · Le QG communautaire</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230c1d2b'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='36' fill='%23edbe72' font-family='Arial' font-weight='bold'%3EMJ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="qg.css?v=1">
+  <script type="module" src="qg.js?v=1"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Aller au contenu</a>
+  <div class="layout" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Navigation principale">
+      <a class="brand" href="#/accueil" aria-label="Ma_JesTik — accueil">
+        <span class="brand-symbol" aria-hidden="true">MJ</span>
+        <span class="brand-text"><strong>MA_JESTIK</strong><small>LE HASARD A DU BON.</small></span>
+      </a>
+      <div class="sidebar-section-label">NAVIGATION</div>
+      <nav class="navigation">
+        <a class="nav-link" href="#/accueil" data-page="accueil"><span class="nav-icon" aria-hidden="true">⌂</span><span>Accueil</span></a>
+        <div class="nav-group" data-group="outils">
+          <button type="button" class="group-toggle" data-toggle="outils" aria-expanded="true" aria-controls="nav-outils"><span class="nav-icon" aria-hidden="true">✦</span><span>Outils gaming</span><span class="chev" aria-hidden="true">⌄</span></button>
+          <div class="submenu" id="nav-outils">
+            <a href="#/roue" data-page="roue"><span>🎡</span> Roue Fortnite <span class="mini-state">EN LIGNE</span></a>
+            <a href="#/defis" data-page="defis"><span>⚔</span> Défis & missions</a>
+            <a href="#/bingo" data-page="bingo"><span>▦</span> Bingo gaming</a>
+            <a href="#/coffre" data-page="coffre"><span>🎁</span> Coffre mystère</a>
+          </div>
+        </div>
+        <div class="nav-group" data-group="communaute">
+          <button type="button" class="group-toggle" data-toggle="communaute" aria-expanded="true" aria-controls="nav-communaute"><span class="nav-icon" aria-hidden="true">♜</span><span>Communauté</span><span class="chev" aria-hidden="true">⌄</span></button>
+          <div class="submenu" id="nav-communaute">
+            <a href="#/tribunal" data-page="tribunal"><span>⚖</span> Tribunal</a>
+            <a href="#/classement" data-page="classement"><span>🏆</span> Classements</a>
+          </div>
+        </div>
+        <div class="nav-group" data-group="univers">
+          <button type="button" class="group-toggle" data-toggle="univers" aria-expanded="true" aria-controls="nav-univers"><span class="nav-icon" aria-hidden="true">◈</span><span>Univers Ma_JesTik</span><span class="chev" aria-hidden="true">⌄</span></button>
+          <div class="submenu" id="nav-univers">
+            <a href="#/setup" data-page="setup"><span>🖥</span> Mon setup interactif</a>
+            <a href="#/partenaires" data-page="partenaires"><span>🔗</span> Affiliations & partenaires</a>
+            <a href="#/createur" data-page="createur"><span>★</span> Code créateur</a>
+          </div>
+        </div>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="bottom-heading"><span class="live-indicator"></span> TON QUARTIER GÉNÉRAL</div>
+        <p>Une seule adresse pour nos créations. Le contenu évolue avec la communauté.</p>
+        <span class="beta">VERSION DE PRÉPARATION · V1</span>
+      </div>
+    </aside>
+    <div id="sidebarShade" class="sidebar-shade" hidden></div>
+    <div class="app-column">
+      <header class="topbar">
+        <button id="menuMobile" class="icon-btn menu-mobile" type="button" aria-label="Ouvrir le menu" aria-controls="sidebar" aria-expanded="false">☰</button>
+        <div class="crumb"><span>LE QG</span><span class="crumb-divider">/</span><strong id="crumbName">Accueil</strong></div>
+        <div class="top-actions">
+          <span class="public-pill"><span></span> SITE PUBLIC</span>
+          <button class="login-coming" type="button" id="loginInfo" title="Comptes utilisateurs : prochaine étape">👤 <span>Comptes à venir</span></button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <div class="page-enter" id="page" aria-live="polite"></div>
+      </main>
+      <footer class="footer"><span>© 2026 MA_JESTIK · Créé pour la communauté</span><span>Projet indépendant · Développement progressif · Aucun abonnement mensuel</span></footer>
+    </div>
+  </div>
+  <dialog id="infoDialog" class="info-dialog" aria-labelledby="infoTitle">
+    <div class="info-dialog-head"><h2 id="infoTitle">Information</h2><button id="closeInfo" class="icon-btn" aria-label="Fermer">✕</button></div>
+    <p id="infoText"></p>
+    <button type="button" id="okInfo" class="btn btn-gold">Compris</button>
+  </dialog>
+</body>
+</html>
