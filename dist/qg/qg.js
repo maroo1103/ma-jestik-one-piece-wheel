@@ -1,4 +1,4 @@
-import {challengesMarkup,mountChallenges} from './defis.js';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261106-trio4';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',bingo:'Bingo gaming',coffre:'Coffre mystère',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
