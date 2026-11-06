@@ -1,16 +1,18 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261106-118';
+import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-v1';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
-const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',bingo:'Bingo gaming',coffre:'Coffre mystère',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
+const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',killathon:'Killathon',bingo:'Bingo gaming',coffre:'Coffre mystère',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
+{path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Objectif de kills et événements du live. Version test locale ; détection automatique en préparation.',ready:true},
 {path:'bingo',icon:'▦',title:'Bingo gaming',desc:'Des grilles de situations à compléter en direct. Chaque case sera décidée ensemble.',ready:false},
 {path:'coffre',icon:'🎁',title:'Coffre mystère',desc:'Un système de surprises dont nous définirons les règles et le contenu.',ready:false},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Des votes sur toutes sortes de sujets, pas uniquement les fails.',ready:false},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:false}
 ];
-const groups = {accueil:null,roue:'outils',defis:'outils',bingo:'outils',coffre:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',createur:'univers'};
+const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',bingo:'outils',coffre:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',createur:'univers'};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
 const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1><p>'+description+'</p><div class="page-tags">'+tags.join('')+'</div></div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
@@ -56,7 +58,7 @@ function creator(){
  return head('UNIVERS MA_JESTIK','CODE CRÉATEUR','Un emplacement pour ton éventuel futur code créateur Epic Games. Il n’est pas activé tant que tu n’as pas été admis au programme.',[tag('À venir','gold')])+
  '<section class="panel"><h3>TON CODE S’AFFICHERA ICI</h3><p>Lorsque tu auras obtenu ton code officiel, nous pourrons ajouter un grand encart avec un bouton « Copier le code », et des explications pour l’utiliser dans la boutique Fortnite.</p><span class="tag gold">NON DISPONIBLE POUR LE MOMENT</span></section>';
 }
-const pages={accueil:home,roue:wheel,defis:challenges,bingo:bingo,coffre:chest,tribunal:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
+const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,bingo:bingo,coffre:chest,tribunal:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
 let wheelObserver=null;
 function mountWheel(){
  const frame=$('wheelFrame');if(!frame)return;
@@ -129,6 +131,7 @@ function route(){
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
+ if(page==='killathon')mountKillathon();
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
