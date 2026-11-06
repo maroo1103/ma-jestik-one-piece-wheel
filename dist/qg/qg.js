@@ -1,9 +1,10 @@
+import {challengesMarkup,mountChallenges} from './defis.js';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',bingo:'Bingo gaming',coffre:'Coffre mystère',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
-{path:'defis',icon:'⚔️',title:'Défis & missions',desc:'Défis aléatoires ou proposés par les viewers. Nous choisirons ensemble les missions.',ready:false},
+{path:'defis',icon:'⚔️',title:'Défis & missions',desc:'28 défis Fortnite Zero Build validés : tirage aléatoire, filtres Solo/Duo et propositions manuelles des viewers.',ready:true},
 {path:'bingo',icon:'▦',title:'Bingo gaming',desc:'Des grilles de situations à compléter en direct. Chaque case sera décidée ensemble.',ready:false},
 {path:'coffre',icon:'🎁',title:'Coffre mystère',desc:'Un système de surprises dont nous définirons les règles et le contenu.',ready:false},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Des votes sur toutes sortes de sujets, pas uniquement les fails.',ready:false},
@@ -23,11 +24,7 @@ function wheel(){
  '<div class="wheel-area"><div class="wheel-area-header"><strong>🎡 LE HASARD DÉCIDE · ROUe FORTNITE</strong><small>Même site · aucune nouvelle fenêtre</small></div><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'+
  '<div class="note">La roue est chargée directement depuis le même hébergement, à l’intérieur du QG. Les images et les sons restent dans leur version actuelle.</div>';
 }
-function challenges(){
- return head('CRÉATION N° 02','DÉFIS & MISSIONS','Deux façons de jouer : tirage aléatoire ou proposition d’un viewer. Tu valides toujours ce qui s’affiche pendant ton live.',[tag('Deux modes'),tag('Fortnite / Multi-jeux'),tag('Contenu à valider','gold')])+
- '<div class="panel-grid">'+panel('🎲','MODE ALÉATOIRE','Une mission adaptée au jeu en cours, tirée dans une liste approuvée et modifiable. Difficulté, durée et conditions de réussite seront configurables.')+panel('👥','MODE VIEWER','Un spectateur propose une mission. Elle reste dans une file d’attente jusqu’à ton acceptation ou ton refus, pour éviter les abus.')+'</div>'+
- '<div class="note"><strong>Important :</strong> aucun des anciens défis de démonstration n’est publié automatiquement. Nous choisirons ensemble la vraie liste, jeu par jeu.</div>';
-}
+function challenges(){return challengesMarkup();}
 function bingo(){
  return head('CRÉATION N° 03','BINGO GAMING','Une grille personnalisée pour chaque type de live. On choisira les cases, les conditions de validation et les récompenses ensemble.',[tag('4 × 4 pour commencer'),tag('Contenu à valider','gold')])+
  '<div class="panel-grid"><section class="panel"><h3>APERÇU DE LA GRILLE</h3><p>Les cases marquées « ? » sont volontairement vides : aucune mission n’est imposée sans ton accord.</p><div class="bingo-visual">'+Array.from({length:16},()=>'<div aria-label="Case à définir">?</div>').join('')+'</div></section>'+panel('🏁','RÈGLES À CHOISIR','Qu’est-ce qui valide une case ? Comment compter une ligne ? Le bingo est-il personnel ou collectif ? Nous déciderons de ces règles avant de coder le jeu définitif.')+'</div>';
@@ -131,6 +128,7 @@ function route(){
  if(group){const button=document.querySelector('[data-toggle="'+group+'"]');button?.setAttribute('aria-expanded','true');}
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
+ if(page==='defis')mountChallenges();
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
