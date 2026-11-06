@@ -8,7 +8,7 @@ Une seule adresse et une navigation interne pour toutes les créations Ma_JesTik
 
 - Accueil et menu responsive à sous-menus, sans création de nouvelles fenêtres.
 - Roue Fortnite **existante** intégrée dans le site grâce à une iframe de même origine (`../`). Son code, ses sons, ses images et sa page d’origine restent inchangés.
-- **Défis Fortnite Zero Build jouables : 28 missions validées par Ma_JesTik** (24 compatibles Solo/Duo/Trio/Quatuor et 4 réservées au Duo), choix du mode d'équipe, filtrage et tri par difficulté croissante/décroissante, choix des missions actives, tirage sans répétition immédiate, journal local des réussites/échecs et propositions de viewers à valider localement. Le moteur est dans `defis.js`, le style dans `defis.css`. Les données sont sauvegardées uniquement dans le navigateur du visiteur, sans compte ni classement partagé.
+- **Défis Fortnite Zero Build jouables : 88 missions validées par Ma_JesTik** (54 génériques accessibles en Solo/Duo/Trio/Quatuor, 14 spécifiques au Duo, 10 au Trio et 10 au Quatuor), choix du mode d'équipe, filtrage et tri par difficulté croissante/décroissante, choix des missions actives, tirage sans répétition immédiate, journal local des réussites/échecs et propositions de viewers à valider localement. Le moteur est dans `defis.js`, le style dans `defis.css`. Les données sont sauvegardées uniquement dans le navigateur du visiteur, sans compte ni classement partagé.
 - Pages Bingo, Coffre et Tribunal : les contenus sont volontairement **à définir avec Ma_JesTik avant activation publique**.
 - Page Classements : présentation uniquement, sans faux scores et sans prétendre qu’une base de données est déjà en service.
 - Mon setup interactif : **la vraie création Ma_JesTik d'origine**, avec photo interactive (13 zones), zoom, infobulles et sous-page de configuration PC. Le HTML/CSS/JS a été réintégré sous `setup-original/`. La photo et l'emoji sont actuellement servis depuis le dépôt original `setup-ma-jestik` pour préserver leurs fichiers binaires ; aucun nouvel onglet n'est ouvert pour ces pages internes.
@@ -18,7 +18,7 @@ Une seule adresse et une navigation interne pour toutes les créations Ma_JesTik
 
 ## À construire avant de considérer le site complet
 
-1. Validations éditoriales : les 28 défis Fortnite sont validés. Restent les cases du bingo, les surprises du coffre, les questions du tribunal et les défis des autres jeux.
+1. Validations éditoriales : les 88 défis Fortnite sont validés. Restent les cases du bingo, les surprises du coffre, les questions du tribunal et les défis des autres jeux.
 2. Finaliser les moteurs de bingo, coffre et tribunal ; le module Défis Fortnite est déjà utilisable localement.
 3. Authentification et autorisations réelles, session sécurisée, anti-abus, procédure de suppression de compte.
 4. Classements partagés et système de calcul des points contrôlé côté serveur (pas via localStorage).
@@ -46,9 +46,12 @@ Projet original : `https://github.com/maroo1103/setup-ma-jestik`. Les liens Amaz
 
 ## Défis Fortnite : compatibilité des modes
 
-- Solo : 24 défis génériques.
-- Duo : les 28 défis, dont 4 spécifiques au Duo.
-- Trio et Quatuor : les 24 défis génériques ; aucune règle Duo n'est réinterprétée sans validation de Ma_JesTik.
+- Solo : 54 défis génériques.
+- Duo : 68 défis, dont 14 spécifiques au Duo.
+- Trio : 64 défis, dont 10 spécifiques au Trio.
+- Quatuor : 64 défis, dont 10 spécifiques au Quatuor.
+- Catégories du catalogue : Combat (20), Survie (18), Stratégie (16), Duo (14), Trio (10), Quatuor (10).
+- Les catégories d'équipe restent strictement séparées pour le tirage ; aucun défi Duo ne peut apparaître en Trio ou Quatuor.
 - La liste est triable par numéro, du plus facile au plus difficile, ou dans l'ordre inverse. Le tirage aléatoire peut être filtré par difficulté.
 - Les anciens historiques enregistrés dans le navigateur restent disponibles.
 - Le catalogue ne comprend pas encore de missions d'autres jeux ; elles seront ajoutées ultérieurement après validation.
