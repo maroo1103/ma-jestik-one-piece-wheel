@@ -1,34 +1,85 @@
-/* Killathon Ma_JesTik — simulation publique indépendante, aucune donnée partagée. */
-const KEY='majestik.killathon.demo.v1';
-const DEFAULT={kills:0,goal:100,base:100,active:false,events:[],revision:0};
-let data=load();
-function load(){try{const a=JSON.parse(localStorage.getItem(KEY));if(!a||typeof a!=='object')return {...DEFAULT};return {...DEFAULT,kills:clamp(a.kills,0,999999),goal:clamp(a.goal,1,999999),base:clamp(a.base,1,999999),active:!!a.active,events:Array.isArray(a.events)?a.events.slice(0,12):[],revision:clamp(a.revision,0,999999)};}catch{return {...DEFAULT};}}
-function clamp(v,min,max){v=Number(v);return Number.isFinite(v)?Math.max(min,Math.min(max,Math.trunc(v))):min;}
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function update(label,fn){const before=JSON.stringify(data);fn();if(JSON.stringify(data)===before)return;data.events.unshift({date:new Date().toISOString(),label});data.events=data.events.slice(0,12);data.revision++;try{localStorage.setItem(KEY,JSON.stringify(data));}catch{alert("Impossible de sauvegarder ce compteur dans ce navigateur.");}draw();}
-function progress(){return Math.min(100,Math.round(data.kills/Math.max(data.goal,1)*100));}
-function stats(){return '<div class="kt-summary"><div><span>TES ÉLIMINATIONS</span><strong>'+data.kills+'</strong></div><div><span>OBJECTIF ACTUEL</span><strong>'+data.goal+'</strong></div><div><span>RESTANT À FAIRE</span><strong>'+Math.max(0,data.goal-data.kills)+'</strong></div></div><div class="kt-progress"><div style="width:'+progress()+'%"></div></div><div class="kt-progress-caption"><span>'+progress()+' % accompli</span><span>'+((data.kills>=data.goal)?'🏆 Objectif atteint !':'Cap sur les '+data.goal+' éliminations')+'</span></div>';}
-function buttons(){return '<section class="kt-block"><div class="kt-subheading"><h3>🎮 Tes éliminations</h3><span>Mode manuel pour la démo</span></div><div class="kt-actions"><button type="button" data-kt="kill">🎯 +1 kill</button><button type="button" data-kt="minus">−1 correction</button><button type="button" data-kt="kills5">+5 kills (test)</button></div><p>Seuls TES kills comptent. Ceux de tes coéquipiers ne sont jamais ajoutés automatiquement dans ce module.</p></section><section class="kt-block"><div class="kt-subheading"><h3>👥 Événements du live</h3><span>Augmentent l’objectif, pas les kills réalisés</span></div><div class="kt-actions"><button type="button" data-kt="follow">👤 Follow +1</button><button type="button" data-kt="prime">⭐ Prime / T1 +5</button><button type="button" data-kt="tier2">🥈 T2 +10</button><button type="button" data-kt="tier3">🥇 T3 +20</button></div><p>Ces boutons simulent les événements. La réception automatique Twitch/Rumble n’est pas encore raccordée.</p></section>';}
-function options(){return '<section class="kt-block"><h3>⚙️ Réglages</h3><div class="kt-settings"><label>Objectif initial <input id="kt-goal" type="number" min="1" max="999999" step="1" value="'+data.base+'"></label><button type="button" data-kt="setgoal">Appliquer un nouvel objectif</button><button type="button" data-kt="reset">Remettre le compteur à zéro</button></div><p>Les valeurs sont enregistrées uniquement dans ce navigateur, pas dans les comptes des viewers ni dans OBS.</p></section>';}
-function history(){return '<section class="kt-block"><h3>📜 Historique local</h3>'+(data.events.length?'<ul class="kt-log">'+data.events.map(item=>'<li><span>'+esc(item.label)+'</span><time>'+new Date(item.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</time></li>').join('')+'</ul>':'<p>Aucune action pour le moment. Lance un test ci-dessus.</p>')+'</section>';}
-function markup(){return '<div class="kt-shell"><div class="kt-top"><div><span class="kt-kicker">FORTNITE ZERO BUILD · MA_JESTIK</span><h2>🎯 KILLATHON</h2><p>Un objectif de kills qui peut augmenter avec ta communauté.</p></div><span class="kt-chip">VERSION TEST · LOCALE</span></div>'+stats()+'<div class="kt-columns"><div>'+buttons()+'</div><div>'+options()+history()+'</div></div><div class="kt-disclaimer"><strong>Ce qui marche :</strong> calculs, paliers, corrections, historique et sauvegarde locale. <strong>Ce qui reste à connecter :</strong> détection Fortnite via un composant PC autorisé, événements Twitch/Rumble et overlay OBS synchronisé. Ce démonstrateur ne contrôle pas ton stream.</div></div>';}
-let host=null;
-function draw(){if(host?.isConnected)host.innerHTML=markup();}
-export function killathonMarkup(){return '<section class="page-head"><div class="eyebrow">CRÉATION N° 03 · SYSTÈME COMMUNAUTAIRE</div><h1>LE KILLATHON</h1><p>Chaque élimination te rapproche de ton objectif. Les follows et abonnements peuvent augmenter la barre à atteindre. Cette première version est un simulateur personnel, pas encore un outil automatique.</p><div class="page-tags"><span class="tag">100 kills au départ</span><span class="tag">Tes kills uniquement</span><span class="tag gold">Automatisation en préparation</span></div></section><div id="kt-app"></div>';}
+/* Killathon Ma_JesTik — tableau public en lecture seule.
+   Le vrai compteur local ne doit jamais être accessible directement depuis Internet.
+   Pour afficher de vraies données, configurer un flux PUBLIC HTTPS, sans token ni clé
+   privée, via la balise meta majestik-killathon-public-feed. */
+const $ = id => document.getElementById(id);
+const fmt = n => new Intl.NumberFormat('fr-FR').format(n);
+const initial = {kills:0,goal:100,events:[],live:false};
+let snapshot={...initial};
+let ticker=null;
+const ICONS={kill:'🎯',follow:'💜',prime:'⭐',tier1:'⭐',tier2:'👑',tier3:'💎'};
+function int(v,min,max,fallback){const n=Number(v);return Number.isFinite(n)?Math.max(min,Math.min(max,Math.floor(n))):fallback;}
+function safe(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function eventTime(value){const t=new Date(value);return Number.isNaN(t.getTime())?'':t.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function applyPayload(json){
+ if(!json||typeof json!=='object')throw new Error('Flux incorrect');
+ if(!Number.isFinite(Number(json.kills))||!Number.isFinite(Number(json.goal)))throw new Error('Compteurs absents');
+ const recent=typeof json.updatedAt==='string'?Date.parse(json.updatedAt):NaN;
+ const live=json.live===true&&Number.isFinite(recent)&&Math.abs(Date.now()-recent)<120000;
+ snapshot={
+  kills:int(json.kills,0,999999,0),
+  goal:int(json.goal,1,999999,100),
+  events:Array.isArray(json.events)?json.events.slice(0,8).map(e=>({
+   type:typeof e.type==='string'?e.type.toLowerCase():'',
+   label:typeof e.label==='string'?e.label.slice(0,180):'',
+   date:e.date||e.timestamp||''
+  })).filter(e=>e.label):[],
+  live
+ };
+}
+function stats(){
+ const left=Math.max(0,snapshot.goal-snapshot.kills);
+ const percent=Math.min(100,Math.round(100*snapshot.kills/snapshot.goal));
+ return '<div class="kt-summary" aria-label="Progression du Killathon">'+
+ '<div><span>TES ÉLIMINATIONS</span><strong>'+fmt(snapshot.kills)+'</strong></div>'+
+ '<div><span>OBJECTIF ACTUEL</span><strong>'+fmt(snapshot.goal)+'</strong></div>'+
+ '<div><span>RESTANT À FAIRE</span><strong>'+fmt(left)+'</strong></div></div>'+
+ '<div class="kt-progress" role="progressbar" aria-label="Progression des éliminations" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+percent+'"><div style="width:'+percent+'%"></div></div>'+
+ '<div class="kt-progress-caption"><span>'+percent+' % accompli</span><span>'+(left?'Cap sur les '+fmt(snapshot.goal)+' éliminations':'🏆 Objectif atteint !')+'</span></div>';
+}
+function boosts(){
+ return '<section class="kt-block kt-boosts" aria-labelledby="kt-boost-title"><h3 id="kt-boost-title">💜 Boosts communautaires Twitch</h3>'+
+ '<div class="kt-boost-list"><span>💜 <b>Follow +1</b></span><span>⭐ <b>Prime / T1 +5</b></span><span>👑 <b>T2 +10</b></span><span>💎 <b>T3 +20</b></span></div>'+
+ '<p>Les boosts augmentent l’objectif global, pas le compteur de kills réalisés.</p></section>';
+}
+function history(){
+ const html=snapshot.events.length?snapshot.events.map(e=>'<li><span class="kt-event-icon" aria-hidden="true">'+(ICONS[e.type]||'✦')+'</span><span class="kt-event-label">'+safe(e.label)+'</span><time>'+safe(eventTime(e.date))+'</time></li>').join(''):
+ '<li class="kt-event-empty">Les événements du live apparaîtront ici une fois la synchronisation publique activée.</li>';
+ return '<section class="kt-block kt-history" aria-labelledby="kt-history-title"><h3 id="kt-history-title">🗓️ Derniers événements</h3><ul class="kt-event-list">'+html+'</ul></section>';
+}
+function display(){
+ const host=$('kt-app');if(!host)return;
+ const badge=snapshot.live?'🟢 EN DIRECT':'◌ APERÇU';
+ host.innerHTML='<section class="kt-shell"><div class="kt-top"><div><span class="kt-kicker">FORTNITE ZERO BUILD · MA_JESTIK</span>'+
+ '<div class="kt-headline"><span class="kt-target" aria-hidden="true">🎯</span><div><h2>KILLATHON</h2><p>Un défi communautaire synchronisé avec Fortnite et Twitch lorsque le direct est connecté.</p></div></div></div>'+
+ '<span class="kt-chip '+(snapshot.live?'is-live':'')+'">'+badge+'</span></div>'+
+ stats()+boosts()+history()+'</section>';
+ const nav=document.querySelector('a[data-page="killathon"] .mini-state');
+ if(nav){nav.textContent=snapshot.live?'EN DIRECT':'APERÇU';nav.classList.toggle('kt-nav-live',snapshot.live);}
+}
+export function killathonMarkup(){
+ return '<section class="kt-page-head"><h1>LE KILLATHON</h1><p>Chaque élimination te rapproche de ton objectif. Les follows et abonnements Twitch peuvent faire évoluer la difficulté en direct pour toute la communauté.</p></section>'+
+ '<div id="kt-app" aria-live="polite"></div>';
+}
 export function mountKillathon(){
- host=document.getElementById('kt-app');if(!host)return;data=load();
- host.addEventListener('click',e=>{
- const b=e.target.closest('button[data-kt]');if(!b||!host.contains(b))return;
- const x=b.dataset.kt;
- if(x==='kill')update('+1 élimination personnelle',()=>data.kills++);
- if(x==='minus')update('Correction : −1 kill',()=>data.kills=Math.max(0,data.kills-1));
- if(x==='kills5')update('Simulation : +5 éliminations',()=>data.kills+=5);
- if(x==='follow')update('Follow : objectif +1',()=>data.goal+=1);
- if(x==='prime')update('Prime / T1 : objectif +5',()=>data.goal+=5);
- if(x==='tier2')update('T2 : objectif +10',()=>data.goal+=10);
- if(x==='tier3')update('T3 : objectif +20',()=>data.goal+=20);
- if(x==='setgoal'){const n=clamp(host.querySelector('#kt-goal').value,1,999999);update('Nouvel objectif initial : '+n,()=>{data.base=n;data.goal=n;});}
- if(x==='reset'&&window.confirm('Réinitialiser les kills, l’objectif et l’historique de cette démo locale ?')){data={...DEFAULT};try{localStorage.setItem(KEY,JSON.stringify(data));}catch{}draw();}
- });
- draw();
+ if(ticker){clearInterval(ticker);ticker=null;}
+ snapshot={...initial};display();
+ const raw=document.querySelector('meta[name="majestik-killathon-public-feed"]')?.getAttribute('content')?.trim()||'';
+ if(!raw)return;
+ let url;
+ try{url=new URL(raw);if(url.protocol!=='https:')return;}catch{return;}
+ async function reload(){
+  if(!$('kt-app')){clearInterval(ticker);ticker=null;return;}
+  try{
+   const response=await fetch(url.href,{cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(6500)});
+   if(!response.ok)throw new Error('Indisponible');
+   const json=await response.json();
+   applyPayload(json);
+  }catch{
+   snapshot={...snapshot,live:false};
+  }
+  display();
+ }
+ reload();
+ ticker=setInterval(reload,20000);
 }
