@@ -1,10 +1,10 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261106-88';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261106-118';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',bingo:'Bingo gaming',coffre:'Coffre mystère',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
-{path:'defis',icon:'⚔️',title:'Défis & missions',desc:'88 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
+{path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
 {path:'bingo',icon:'▦',title:'Bingo gaming',desc:'Des grilles de situations à compléter en direct. Chaque case sera décidée ensemble.',ready:false},
 {path:'coffre',icon:'🎁',title:'Coffre mystère',desc:'Un système de surprises dont nous définirons les règles et le contenu.',ready:false},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Des votes sur toutes sortes de sujets, pas uniquement les fails.',ready:false},
