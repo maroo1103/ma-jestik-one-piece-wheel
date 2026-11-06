@@ -4,13 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#09141e">
-  <meta name="description" content="Le QG communautaire Ma_JesTik : roue Fortnite, créations gaming, défis, setup et espace communauté.">
+  <meta name="description" content="Le QG Ma_JesTik : roue Fortnite One Piece, 118 défis Zero Build, Killathon Twitch, setup interactif et communauté.">
+  <!-- À remplir plus tard avec une URL HTTPS de statistiques PUBLIQUES, jamais un secret. -->
+  <meta name="majestik-killathon-public-feed" content="">
   <title>Ma_JesTik · Le QG communautaire</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230c1d2b'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='36' fill='%23edbe72' font-family='Arial' font-weight='bold'%3EMJ%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="qg.css?v=20261106-setup">
+  <link rel="stylesheet" href="qg.css?v=20261106-final2">
   <link rel="stylesheet" href="defis.css?v=20261106-28">
-  <link rel="stylesheet" href="killathon.css?v=20261106-v1">
-  <script type="module" src="qg.js?v=20261106-clean1"></script>
+  <link rel="stylesheet" href="killathon.css?v=20261106-final2">
+  <script type="module" src="qg.js?v=20261106-final2"></script>
 </head>
 <body>
   <a class="skip" href="#main">Aller au contenu</a>
@@ -28,7 +30,7 @@
           <div class="submenu" id="nav-outils">
             <a href="#/roue" data-page="roue"><span>🎡</span> Roue Fortnite <span class="mini-state">EN LIGNE</span></a>
             <a href="#/defis" data-page="defis"><span>⚔</span> Défis & missions</a>
-            <a href="#/killathon" data-page="killathon"><span>🎯</span> Killathon <span class="mini-state">TEST</span></a>
+            <a href="#/killathon" data-page="killathon"><span>🎯</span> Killathon <span class="mini-state">APERÇU</span></a>
           </div>
         </div>
         <div class="nav-group" data-group="communaute">
@@ -50,7 +52,7 @@
       <div class="sidebar-bottom">
         <div class="bottom-heading"><span class="live-indicator"></span> TON QUARTIER GÉNÉRAL</div>
         <p>Une seule adresse pour nos créations. Le contenu évolue avec la communauté.</p>
-        <span class="beta">VERSION DE PRÉPARATION · V1</span>
+        
       </div>
     </aside>
     <div id="sidebarShade" class="sidebar-shade" hidden></div>
@@ -59,14 +61,13 @@
         <button id="menuMobile" class="icon-btn menu-mobile" type="button" aria-label="Ouvrir le menu" aria-controls="sidebar" aria-expanded="false">☰</button>
         <div class="crumb"><span>LE QG</span><span class="crumb-divider">/</span><strong id="crumbName">Accueil</strong></div>
         <div class="top-actions">
-          <span class="public-pill"><span></span> SITE PUBLIC</span>
-          <button class="login-coming" type="button" id="loginInfo" title="Comptes utilisateurs : prochaine étape">👤 <span>Comptes à venir</span></button>
+          <a class="top-link-twitch" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer">💜 Suivre sur Twitch ↗</a>
         </div>
       </header>
       <main id="main" tabindex="-1">
         <div class="page-enter" id="page" aria-live="polite"></div>
       </main>
-      <footer class="footer"><span>© 2026 MA_JESTIK · Créé pour la communauté</span><span>Projet indépendant · Développement progressif · Aucun abonnement mensuel</span></footer>
+      <footer class="footer"><span>© 2026 MA_JESTIK — Le QG de la communauté</span><span>Fortnite · Twitch · Communauté</span></footer>
     </div>
   </div>
   <dialog id="infoDialog" class="info-dialog" aria-labelledby="infoTitle">
