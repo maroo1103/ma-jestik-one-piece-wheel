@@ -1,0 +1,39 @@
+/* Killathon — préfixe kt- pour préserver les autres modules. */
+.kt-shell{border:1px solid #375569;border-radius:15px;background:radial-gradient(circle at 89% -15%,#27565e55,transparent 45%),linear-gradient(140deg,#122d3c,#0b1c2a);padding:clamp(16px,2.4vw,30px);box-shadow:0 18px 52px #0002}
+.kt-top{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.kt-kicker{display:block;color:#efc078;font-weight:900;letter-spacing:2px;font-size:10px}
+.kt-top h2{font-size:clamp(42px,5vw,67px);margin:4px 0 0;line-height:1;color:#fff}
+.kt-top p{color:#adbfcc;margin:8px 0 0;font-size:13px}
+.kt-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid #5f5137;background:#30281e;color:#f6d298;padding:9px 11px;border-radius:7px;font-size:10px;font-weight:800;letter-spacing:.7px;white-space:nowrap}
+.kt-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 15px}
+.kt-summary>div{border:1px solid #365367;background:#1a3543;border-radius:11px;padding:20px 18px;display:grid;gap:3px}
+.kt-summary span{font-size:10px;color:#b7cad7;font-weight:800;letter-spacing:1.3px}
+.kt-summary strong{font-family:var(--display,'Arial Narrow',sans-serif);font-size:clamp(34px,5vw,57px);font-weight:900;color:#f6d289;line-height:1.16;font-variant-numeric:tabular-nums}
+.kt-progress{height:19px;border-radius:20px;background:#314b58;border:1px solid #456271;overflow:hidden;box-shadow:inset 0 2px 5px #0003}
+.kt-progress>div{background:linear-gradient(90deg,#c88c3b,#ffd385);height:100%;border-radius:inherit;transition:width .35s ease;box-shadow:0 0 20px #f2bc6080}
+.kt-progress-caption{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:7px 2px 25px;color:#bed0d9;font-size:12px;font-weight:700}
+.kt-columns{display:grid;grid-template-columns:1.06fr .94fr;gap:16px}
+.kt-columns>div{display:grid;align-content:start;gap:16px;min-width:0}
+.kt-block{border:1px solid #315065;background:#122939;border-radius:12px;padding:20px}
+.kt-block h3{font-family:var(--display,'Arial Narrow',sans-serif);font-size:27px;margin:0 0 11px}
+.kt-block p{font-size:12px;color:#a9c0cb;line-height:1.7;margin:13px 0 0}
+.kt-subheading{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px}
+.kt-subheading h3{margin:0}
+.kt-subheading span{font-size:10px;color:#efc078;font-weight:800}
+.kt-actions{display:flex;gap:9px;flex-wrap:wrap}
+.kt-shell button{border:1px solid #47677b;background:#224255;color:#f9f7f1;padding:11px 14px;min-height:42px;border-radius:8px;font-weight:800;font-size:12px;transition:background .15s,border-color .15s}
+.kt-shell button:hover,.kt-shell button:focus-visible{background:#30556a;border-color:#f1bf78}
+.kt-shell [data-kt="kill"],.kt-shell [data-kt="setgoal"]{background:#eaba72;color:#14202d;border-color:#eaba72}
+.kt-shell [data-kt="kill"]:hover,.kt-shell [data-kt="setgoal"]:hover{background:#f8cf94}
+.kt-shell [data-kt="reset"]{border-color:#744c4d;color:#ffcfcd;background:#482d34}
+.kt-settings{display:flex;align-items:end;flex-wrap:wrap;gap:9px}
+.kt-settings label{display:grid;gap:7px;font-size:11px;font-weight:800;color:#b5ccda}
+.kt-settings input{width:125px;min-height:42px;padding:10px;color:#fff;background:#0b1c2a;border:1px solid #426175;border-radius:7px}
+.kt-log{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.kt-log li{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #2e495b;padding:9px 0;color:#cfe0e9;font-size:12px}
+.kt-log time{white-space:nowrap;color:#8fadb9;font-size:11px}
+.kt-disclaimer{font-size:12px;line-height:1.75;color:#9bb4c3;background:#10202c;border-left:3px solid #d8ac65;padding:13px 16px;border-radius:3px;margin-top:22px}
+.kt-disclaimer strong{color:#e7dbc8}
+@media(max-width:1100px){.kt-columns{grid-template-columns:1fr}}
+@media(max-width:670px){.kt-top{flex-wrap:wrap}.kt-summary{gap:6px}.kt-summary>div{padding:13px 9px}.kt-summary span{font-size:8px;letter-spacing:.3px}.kt-summary strong{font-size:35px}.kt-block{padding:15px}.kt-actions button{flex:1 1 42%}.kt-progress-caption{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.kt-progress>div,.kt-shell button{transition:none}}
