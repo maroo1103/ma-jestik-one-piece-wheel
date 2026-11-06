@@ -1,5 +1,15 @@
 # Ma_JesTik · QG communautaire — première fondation
 
+## Killathon Ma_JesTik — ajouté le 6 novembre 2026
+
+- Nouvelle rubrique `#/killathon` : compteur de démonstration avec objectif initial 100 kills, progression, corrections, boutons follows/subs, historique et sauvegarde dans le navigateur.
+- La démo publique n'est **pas** le score réel du streamer : chaque visiteur possède ses propres valeurs (localStorage).
+- La version PC/OBS est fournie séparément sous forme d'un pack Node.js sans dépendance, avec serveur local `127.0.0.1:4357`, overlay transparent et synchronisation en temps réel, sauvegarde et tests.
+- La passerelle Overwolf pour les **propres éliminations** du joueur est au stade **prototype non testé dans le jeu**. Elle nécessite une autorisation développeur Overwolf ; il n'existe pas encore de détection automatique garantie.
+- Follows/subs Twitch et Rumble : commandes manuelles utilisables, intégration réelle des plateformes à réaliser. Ne jamais stocker de clé privée ou de jeton dans le code public GitHub Pages.
+- Le catalogue des **118 défis** et le code de la roue ne doivent pas être touchés lors des travaux Killathon.
+- Décisions de Ma_JesTik : rubriques **Bingo** et **Coffre Mystère** à retirer entièrement lors d'une intervention ultérieure ; ne pas les effacer avant le feu vert explicite.
+
 ## Objectif
 
 Une seule adresse et une navigation interne pour toutes les créations Ma_JesTik, accessible publiquement. Aucun abonnement mensuel. Le projet doit pouvoir passer plus tard sous un nom de domaine `.fr` acheté par son propriétaire.
