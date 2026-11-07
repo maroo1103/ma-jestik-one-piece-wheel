@@ -292,8 +292,6 @@
 .partner-amazon{font-family:Georgia,serif;font-size:55px;font-weight:900;font-style:italic}
 .partner-box .partner-cta{display:inline-flex;margin-top:16px;padding:10px 17px;min-height:42px}
 .partner-box .partner-disclosure{font-size:11px;color:#c1d4dc;margin-top:10px;line-height:1.5}
-.partner-legal{font-size:12px;line-height:1.75}
-.partner-legal strong{color:#e9c58b}
 @media(max-width:680px){
  .partner-box{padding:17px}
  .partner-heading{gap:7px}
