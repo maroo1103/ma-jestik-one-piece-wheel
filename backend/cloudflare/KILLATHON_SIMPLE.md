@@ -67,3 +67,15 @@ Tant que le Worker n'est pas actif, le QG indique que la connexion ou l'activati
 - Supprimer le profil QG entraîne normalement la suppression des données Killathon liées grâce à ON DELETE CASCADE.
 - Lors du passage à un domaine .fr, modifier ALLOWED_ORIGIN et les URLs si nécessaire. Il n'est pas nécessaire de recréer la base.
 - Le Worker de votes / classement reste indépendant et ne doit pas être remplacé par celui du Killathon.
+
+## Mise à jour : arrêter ou terminer un Killathon
+
+Cette version ajoute « Arrêter le Killathon » (conserve les kills) et « Terminer et créer un nouveau Killathon » (supprime uniquement le Killathon personnel). L'ancien lien OBS est invalidé après la fin ; il faut copier le nouveau lien lors de la prochaine création.
+
+Pour activer le bouton « Terminer » :
+1. Ouvrir le Worker **ma-jestik-qg-killathon** dans Cloudflare.
+2. Éditer son code et remplacer le fichier par la version actuelle du fichier `backend/cloudflare/killathon-simple-worker.js` du dépôt.
+3. Déployer, puis tester /v1/health. La réponse doit contenir `"features":{"finish":true}`.
+4. Recharger la page Killathon du QG. Le bouton « Terminer et créer un nouveau Killathon » apparaît alors.
+
+Aucune migration D1 et aucun changement au Worker de votes n'est nécessaire. Ne pas terminer un Killathon de test que tu souhaites conserver.

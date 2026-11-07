@@ -55,3 +55,8 @@
  .kts-obs-link input{width:100%;flex:auto}
 }
 @media(prefers-reduced-motion:reduce){.kts-bar span,.kts-button{transition:none}}
+
+/* Fin explicite d'un Killathon, distincte de l'arrêt et de la remise à zéro. */
+.kts-finish{display:grid;gap:7px;justify-items:start;margin-top:22px;padding-top:18px;border-top:1px solid #36586e}
+.kts-finish .kts-button{max-width:100%}
+.kts-panel .kts-finish p{font-size:11px;color:#aec4d1;max-width:600px;line-height:1.5}

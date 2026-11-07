@@ -11,6 +11,13 @@ async function refresh(){
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),7000);
  try{
   const r=await fetch(api+'/v1/killathon/public/'+encodeURIComponent(id),{mode:'cors',credentials:'omit',cache:'no-store',signal:controller.signal});
+  if(r.status===404){
+   get('kills').textContent='—';get('goal').textContent='—';
+   get('progress').style.width='0%';
+   get('progressTrack').setAttribute('aria-valuenow','0');
+   get('error').textContent='Ce Killathon est terminé. Utilise le nouveau lien OBS.';
+   get('error').hidden=false;lastOk=false;return;
+  }
   if(!r.ok)throw Error('Indisponible');
   const data=(await r.json())?.killathon;
   if(!data||!Number.isFinite(Number(data.kills))||!Number.isFinite(Number(data.goal)))throw Error('Données invalides');

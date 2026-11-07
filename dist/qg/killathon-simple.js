@@ -4,7 +4,7 @@ import {getQGTwitchSession} from './twitch-auth.js?v=20261107-ranking-optin1';
 const KTS_API=(document.querySelector('meta[name="majestik-killathon-api"]')?.content||'').replace(/\/$/,'');
 const KTS_GAMES=['Fortnite Zero Build','Fortnite Battle Royale','Warzone','Autre jeu'];
 const byId=id=>document.getElementById(id);
-let ktsBoard=null,ktsBusy=false,ktsError='',ktsInfo='',ktsTimer=null,ktsAccountId='',ktsRequest=0;
+let ktsBoard=null,ktsBusy=false,ktsError='',ktsInfo='',ktsTimer=null,ktsAccountId='',ktsRequest=0,ktsCanFinish=false;
 const ktsEsc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ktsInt=(n,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(n)||0)));
 function ktsOverlayLink(){
@@ -38,7 +38,7 @@ function ktsView(){
   host.innerHTML='<div class="kts-panel"><p class="kts-feedback">Chargement de ton espace Killathon…</p></div>';return;
  }
  let out='<div class="kts-panel"><div class="kts-header"><div><span class="kts-eyebrow">MODE SIMPLE · COMPTE TWITCH</span><h3>Mon Killathon</h3><p>Compteur manuel, sauvegardé en ligne et indépendant pour chaque streamer.</p></div>';
- if(ktsBoard)out+='<span class="kts-state '+(ktsBoard.active?'kts-on':'')+'">'+(ktsBoard.active?'● EN COURS':'● EN PAUSE')+'</span>';
+ if(ktsBoard)out+='<span class="kts-state '+(ktsBoard.active?'kts-on':'')+'">'+(ktsBoard.active?'● EN COURS':'● ARRÊTÉ')+'</span>';
  out+='</div>';
  if(ktsError)out+='<p class="kts-message kts-error" role="alert">'+ktsEsc(ktsError)+'</p>';
  if(ktsInfo)out+='<p class="kts-message" role="status">'+ktsEsc(ktsInfo)+'</p>';
@@ -54,7 +54,9 @@ function ktsView(){
   '<div class="kts-actions">'+ktsButton('subtract','− 1 élimination')+ktsButton('add','+ 1 élimination','kts-primary')+'</div>'+
   '<div class="kts-options"><label>Modifier l’objectif<input type="number" id="ktsGoalEdit" min="1" max="9999" step="1" value="'+ktsInt(ktsBoard.goal,1,9999)+'"></label>'+
   ktsButton('goal','Enregistrer l’objectif')+'</div>'+
-  '<div class="kts-actions">'+ktsButton('active',ktsBoard.active?'⏸ Mettre en pause':'▶ Démarrer le Killathon',ktsBoard.active?'':'kts-primary')+ktsButton('reset','Remettre à zéro','kts-danger')+'</div>'+
+  '<div class="kts-actions">'+ktsButton('active',ktsBoard.active?'⏹ Arrêter le Killathon':'▶ Démarrer le Killathon',ktsBoard.active?'':'kts-primary')+ktsButton('reset','Remettre le compteur à zéro')+'</div>'+
+  (ktsCanFinish?'<div class="kts-finish">'+ktsButton('finish','Terminer et créer un nouveau Killathon','kts-danger')+
+  '<p>Terminer efface cette session et désactive son ancien lien OBS. Tes autres données QG restent intactes.</p></div>':'')+
   '<section class="kts-obs"><div><h4>📺 Affichage pour OBS</h4><p>Ajoute ce lien comme source <strong>Navigateur</strong> dans OBS (760 × 95). Il se met à jour automatiquement, sans jeton Twitch.</p></div>'+
   '<div class="kts-obs-link"><input id="ktsObsUrl" readonly aria-label="Lien OBS" value="'+ktsEsc(ktsOverlayLink())+'">'+ktsButton('copy','Copier le lien OBS','kts-primary')+'</div></section>';
  }
@@ -78,6 +80,15 @@ async function ktsFetch(method,path,token,payload){
   if(e instanceof TypeError)throw Error('Connexion au Killathon indisponible. Vérifie le service Cloudflare.');
   throw e;
  }finally{clearTimeout(timeout);}
+}
+async function ktsCheckFinishFeature(){
+ try{
+  const response=await fetch(KTS_API+'/v1/health',{mode:'cors',cache:'no-store',credentials:'omit'});
+  if(!response.ok)return;
+  const body=await response.json();
+  const enabled=body?.features?.finish===true;
+  if(enabled!==ktsCanFinish){ktsCanFinish=enabled;ktsView();}
+ }catch{}
 }
 async function ktsLoad(silent=false){
  const session=getQGTwitchSession();if(!session)return;
@@ -115,14 +126,23 @@ async function ktsAction(action,host){
   body={action:'goal',goal};
  }else if(action==='active')body={action:'active',active:!ktsBoard?.active};
  else if(action==='reset'){
-  if(!window.confirm('Réinitialiser ton compteur à zéro et arrêter le Killathon ?'))return;
+  if(!window.confirm('Remettre ton compteur à zéro ? Le Killathon restera disponible, mais il sera arrêté.'))return;
+ }else if(action==='finish'){
+  if(!ktsCanFinish)return;
+  if(!window.confirm('Terminer définitivement ce Killathon ? Tu reviendras au menu de création et ton ancien lien OBS ne fonctionnera plus.'))return;
  }else if(!['add','subtract'].includes(action))return;
  const attempt=++ktsRequest;ktsBusy=true;ktsError='';ktsInfo='';ktsView();
  try{
   const data=await ktsFetch('POST',path,session.token,body);
   if(attempt!==ktsRequest||getQGTwitchSession()?.id!==session.id)return;
-  ktsBoard=data.killathon||null;
-  if(action==='create')ktsInfo='Killathon créé ! Tu peux maintenant copier ton lien OBS.';
+  if(action==='finish'){
+   if(data.finished!==true)throw Error('La fin du Killathon n’a pas été confirmée.');
+   ktsBoard=null;
+   ktsInfo='Killathon terminé. Tu peux en créer un nouveau !';
+  }else{
+   ktsBoard=data.killathon||null;
+   if(action==='create')ktsInfo='Killathon créé ! Tu peux maintenant copier ton lien OBS.';
+  }
  }catch(e){if(attempt===ktsRequest)ktsError=e.message;}
  finally{if(attempt===ktsRequest){ktsBusy=false;ktsView();}}
 }
@@ -144,6 +164,7 @@ export function mountSimpleKillathon(){
   if(button&&host.contains(button))void ktsAction(button.dataset.ktsAction,host);
  });
  ktsHandleSession();
+ void ktsCheckFinishFeature();
  ktsTimer=setInterval(()=>{
   if(!byId('kt-simple-app')){clearInterval(ktsTimer);ktsTimer=null;return;}
   if(document.visibilityState==='visible'&&!ktsBusy&&getQGTwitchSession()?.id===ktsAccountId&&ktsAccountId)void ktsLoad(true);

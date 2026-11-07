@@ -62,6 +62,13 @@ async function killathonRoute(req,env,origin,path){
   return respond({killathon:await killathonForOwner(env.DB,user.id)},201);
  }
  const action=String(body.action||"");
+ if(action==="finish"){
+  // Un compte Twitch ne peut terminer que son propre Killathon.
+  // L'UUID OBS précédent devient invalide ; le profil et les points sont conservés.
+  const completed=await env.DB.prepare("DELETE FROM killathon_simple WHERE twitch_id=?").bind(user.id).run();
+  if(completed.meta?.changes!==1)return respond({error:"Killathon déjà terminé"},404);
+  return respond({finished:true,killathon:null});
+ }
  let stmt;
  if(action==="add"){
   stmt=env.DB.prepare("UPDATE killathon_simple SET kills=MIN(999999,kills+1),updated_at=unixepoch() WHERE twitch_id=?").bind(user.id);
@@ -100,7 +107,7 @@ export default {
   if(!env.DB||!env.TWITCH_CLIENT_ID)return output({error:"Killathon non configuré"},503,origin);
   const path=new URL(req.url).pathname.replace(/\/+$/,"")||"/";
   try{
-   if(path==="/v1/health"&&req.method==="GET")return output({status:"ok",service:"killathon-simple"},200,origin);
+   if(path==="/v1/health"&&req.method==="GET")return output({status:"ok",service:"killathon-simple",features:{finish:true}},200,origin);
    if(path.startsWith("/v1/killathon/"))return await killathonRoute(req,env,origin,path);
    return output({error:"Route inconnue"},404,origin);
   }catch(error){
