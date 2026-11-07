@@ -14,7 +14,7 @@ const del=k=>{try{sessionStorage.removeItem(k)}catch{}};
 let root=null,me=null;
 function make(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
 function msg(text){if(!root)return;root.replaceChildren();const e=make('span','qg-auth-note',text);e.setAttribute('role','status');root.append(e);}
-function clear(){me=null;member=null;memberBusy=false;memberMessage='';del(KEY);}
+function clear(){me=null;member=null;memberBusy=false;memberMessage='';del(KEY);window.dispatchEvent(new Event('qg:twitch-session'));}
 function render(open=false){
   if(!root)return;
   root.replaceChildren();
@@ -142,7 +142,7 @@ async function check(token){
   if(!user||String(user.id)!==String(check.user_id))throw Error('Identité non vérifiée');
   const next={token,id:String(user.id),name:String(user.display_name||user.login||'Twitch').slice(0,64),avatar:String(user.profile_image_url||'')};
   if(!put(KEY,JSON.stringify(next)))throw Error('Stockage de session indisponible');
-  me=next;member=null;memberMessage='';render();
+  me=next;member=null;memberMessage='';render();window.dispatchEvent(new Event('qg:twitch-session'));
   if(apiReady)void loadMember(next.id,token);
 }
 function login(){
@@ -181,6 +181,7 @@ async function restore(){
   if(!old?.token||typeof old.token!=='string')return;
   try{await check(old.token)}catch{clear();render();}
 }
+export function getQGTwitchSession(){return me?.token?{id:me.id,name:me.name,token:me.token}:null;}
 export function mountTwitchAuth(){
   root=document.getElementById('qgTwitchAccount');
   if(!root||!/^[a-z0-9]{10,80}$/.test(clientId)){

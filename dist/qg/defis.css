@@ -47,3 +47,26 @@
 .challenge-queue-item{background:#0c2c3b;border-color:#285e74}
 @media(max-width:700px){.challenge-page-head{padding-top:6px;padding-bottom:15px;min-height:unset}.challenge-page-head:before{inset:-20px -20px 0 8%}.challenge-page-head h1{font-size:48px}.challenge-ui{padding:13px}.challenge-game-switcher{align-items:stretch;padding:14px}.challenge-game-field{width:100%}.challenge-neutral{align-items:flex-start;padding:17px;gap:12px;min-height:145px}.challenge-neutral-icon{width:49px;height:49px;flex-basis:49px;font-size:25px}.challenge-neutral h2{font-size:30px}.challenge-main.panel{padding:13px}.challenge-game-banner{min-height:160px;padding:18px;background-position:62% center}.challenge-stats>div{padding:13px 10px}}
 @media(prefers-reduced-motion:reduce){.challenge-ui *{scroll-behavior:auto}}
+
+/* Pronostics du QG : identite bleu nuit / turquoise / or du Killathon. */
+.qg-vote-panel{position:relative;overflow:hidden;border:1px solid #247b94;border-radius:12px;background:radial-gradient(ellipse at 90% 0%,#50357461,transparent 48%),linear-gradient(145deg,#0b3144,#081f31);padding:clamp(16px,2vw,26px);margin:15px 0;color:#eff8fc;display:grid;gap:10px}
+.qg-vote-kicker{color:#f3cb7d;font-size:10px;font-weight:900;letter-spacing:1.35px}
+.qg-vote-title{font-size:clamp(23px,2.5vw,34px);font-weight:900;line-height:1.07;color:#fff;margin:0}
+.qg-vote-description{font-size:13px;line-height:1.5;color:#bcd6e3;margin:0}
+.qg-vote-state{justify-self:start;background:#163d56;border:1px solid #38869a;border-radius:30px;color:#b6eff4;padding:5px 10px;font-size:11px;font-weight:850}
+.qg-vote-state.cancelled{background:#4a2b36;color:#ffe1de;border-color:#855261}
+.qg-vote-challenge{font-size:18px;margin:4px 0 0;color:#fff}
+.qg-vote-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:3px 0}
+.qg-vote-button{min-height:41px;padding:11px 14px;border-radius:8px;border:1px solid #41869b;background:#194459;color:#f5f9fd;font-weight:850;font-size:12px;cursor:pointer;max-width:100%}
+.qg-vote-button:hover:not(:disabled),.qg-vote-button:focus-visible{background:#215b72;border-color:#79bbca}
+.qg-vote-button.vote-success,.qg-vote-button.resolve-success{border-color:#51a98d;background:#143e3c;color:#bbf1d4}
+.qg-vote-button.vote-failure,.qg-vote-button.resolve-failure{border-color:#ba8164;background:#4d302c;color:#ffe1c5}
+.qg-vote-button.cancel{border-color:#895660;background:#482b3c;color:#ffcfcf}
+.qg-vote-button:disabled{opacity:.6;cursor:wait}
+.qg-vote-hint{font-size:12px;line-height:1.48;color:#bed3de;margin:0}
+.qg-vote-confirmed{font-size:12px;font-weight:800;color:#a5dfbb;margin:0}
+.qg-vote-result{font-size:13px;font-weight:800;color:#f4d18a;margin:0}
+.qg-vote-error{font-size:12px;color:#ffbcaa;margin:0}
+.qg-vote-refresh{justify-self:start;background:transparent;border:0;border-bottom:1px dashed #5794a4;color:#a5cedd;cursor:pointer;padding:5px 0;font-size:11px}
+.qg-vote-refresh:hover{color:white}
+@media(max-width:580px){.qg-vote-panel{padding:14px}.qg-vote-actions{display:grid;grid-template-columns:1fr;gap:7px}.qg-vote-button{width:100%}}
