@@ -95,25 +95,35 @@ function creator(){
 }
 const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
 let wheelObserver=null;
+let setupObserver=null;
+// Mesure la fin du contenu REEL (et non scrollHeight, qui peut inclure
+// la hauteur déjà attribuée à l'iframe et empêcher tout rétrécissement).
+function setEmbedHeight(frame,selector,minimum,maximum,extra=8){
+ if(!frame?.isConnected)return;
+ const doc=frame.contentDocument;
+ if(!doc)return;
+ const end=doc.querySelector(selector);
+ if(!end)return;
+ const bottom=end.getBoundingClientRect().bottom+(doc.defaultView?.scrollY||0);
+ if(!Number.isFinite(bottom)||bottom<=0)return;
+ const exact=Math.min(maximum,Math.max(minimum,Math.ceil(bottom+extra)));
+ if(Math.abs(frame.getBoundingClientRect().height-exact)>2){
+  frame.style.height=exact+'px';
+ }
+}
 function mountWheel(){
  const frame=$('wheelFrame');if(!frame)return;
  const loading=$('wheelLoading');
- const update=()=>{
-  try{
-   if(!frame.contentDocument)return;
-   const doc=frame.contentDocument;
-   let actual=Math.max(doc.documentElement.scrollHeight,doc.body?.scrollHeight||0,720);
-   frame.style.height=Math.min(4800,actual+12)+'px';
-  }catch{frame.style.height='1700px';}
- };
+ const update=()=>{try{setEmbedHeight(frame,'main',720,4800,8)}catch{}};
  frame.addEventListener('load',()=>{
-  loading.hidden=true;update();
+  if(loading)loading.hidden=true;
+  update();
   try{
    const doc=frame.contentDocument;
-   if(doc && window.ResizeObserver){
+   if(doc&&window.ResizeObserver){
     wheelObserver?.disconnect();
     wheelObserver=new ResizeObserver(update);
-    wheelObserver.observe(doc.body);
+    wheelObserver.observe(doc.querySelector('main')||doc.body);
    }
    frame.contentWindow.addEventListener('resize',update);
    setTimeout(update,250);
@@ -122,30 +132,22 @@ function mountWheel(){
  });
 }
 function mountSetup(){
- const frame=$('setupFrame');
- if(!frame)return;
- let ro=null;
- const update=()=>{
-  try{
-   const doc=frame.contentDocument;
-   if(!doc)return;
-   const height=Math.max(doc.documentElement.scrollHeight,doc.body?.scrollHeight||0,850);
-   frame.style.height=Math.min(6000,height+18)+'px';
-  }catch{frame.style.height='1600px';}
- };
+ const frame=$('setupFrame');if(!frame)return;
+ const update=()=>{try{setEmbedHeight(frame,'body > footer',850,6000,8)}catch{}};
  frame.addEventListener('load',()=>{
-  ro?.disconnect();
+  setupObserver?.disconnect();
   update();
   try{
    const doc=frame.contentDocument;
-   if(doc && window.ResizeObserver){
-    ro=new ResizeObserver(update);
-    ro.observe(doc.body);
+   if(doc&&window.ResizeObserver){
+    setupObserver=new ResizeObserver(update);
+    setupObserver.observe(doc.body);
+    setupObserver.observe(doc.querySelector('main')||doc.body);
    }
    frame.contentWindow.addEventListener('resize',update);
    setTimeout(update,150);
    setTimeout(update,750);
-  }catch{frame.style.height='1600px';}
+  }catch{}
  });
 }
 function closeMobile(){
@@ -158,6 +160,7 @@ function route(){
  const raw=decodeURIComponent(location.hash.replace(/^#\/?/,'').split('?')[0]);
  const page=Object.prototype.hasOwnProperty.call(pages,raw)?raw:'accueil';
  if(wheelObserver){wheelObserver.disconnect();wheelObserver=null;}
+ if(setupObserver){setupObserver.disconnect();setupObserver=null;}
  root.innerHTML=pages[page]();
  $('crumbName').textContent=names[page];
  document.title=(page==='accueil'?'Le QG communautaire':names[page])+' · Ma_JesTik';
