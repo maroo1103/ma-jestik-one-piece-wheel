@@ -19,3 +19,75 @@
 .top-social-short{display:none}
 @media(max-width:850px){.top-actions{gap:7px}.top-link-twitch{padding:8px 10px;gap:6px}.top-social-long{display:none}.top-social-short{display:inline}}
 @media(max-width:480px){.topbar{gap:9px;padding-left:12px;padding-right:12px}.topbar .crumb{display:none}.top-actions{margin-left:auto}.top-link-twitch{font-size:11px;padding:8px 9px}}
+
+/* Accueil QG — bannière Killathon & Défis : bleu nuit, halo violet et étoile. */
+.home-hero{
+  isolation:isolate;
+  min-height:270px;
+  border-color:#1b667b;
+  border-radius:16px;
+  align-items:center;
+  background:linear-gradient(110deg,#09131e,#0a2033 60%,#10223a);
+  padding:clamp(27px,3.9vw,50px);
+  box-shadow:0 14px 50px #0003;
+}
+.home-hero:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:-15px -45px -15px 29%;
+  background:linear-gradient(90deg,#09131e 0%,#09131e33 48%,#09131e88 100%),radial-gradient(ellipse at 77% 37%,#6e369f9c,transparent 38%),radial-gradient(ellipse at 85% 80%,#16445e,transparent 50%),linear-gradient(170deg,#0b1c33,#082a48 65%,#09131e);
+}
+.home-hero:after{
+  content:"✦";
+  position:absolute;
+  z-index:-1;
+  inset:auto;
+  right:19%;
+  top:10%;
+  width:auto;
+  height:auto;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  color:#c9a7f8;
+  filter:drop-shadow(0 0 21px #ad71ff);
+  font-size:46px;
+  line-height:1;
+  opacity:.85;
+  pointer-events:none;
+}
+.home-hero .hero-content{max-width:700px}
+.home-hero h1{
+  color:#fff;
+  font:900 clamp(48px,5vw,75px)/.98 var(--display,'Arial Narrow',sans-serif);
+  letter-spacing:.01em;
+  margin:17px 0 15px;
+  text-shadow:0 2px 14px #0008;
+}
+.home-hero p{color:#c1d4df;font-size:14px;line-height:1.6;margin:0}
+.home-tools .module-card,
+.home-tools .module-card.highlight{
+  border:1px solid #187b92;
+  border-radius:12px;
+  background:linear-gradient(145deg,#0a394b99,#09283799);
+  box-shadow:0 8px 25px #0002;
+}
+.home-tools .module-card:hover,
+.home-tools .module-card.highlight:hover{
+  border-color:#53bacc;
+  background:linear-gradient(145deg,#10485b,#0d3042);
+}
+.home-tools .module-card .module-icon{background:#163e50;border-color:#39758b}
+.home-tools .capsule{color:#b8dbe5;background:#15384a;border-color:#31738b}
+.home-tools + .info-strip{background:#103444;border-color:#246d80}
+@media(max-width:700px){
+  .home-hero{min-height:220px;padding:25px 20px}
+  .home-hero:before{inset:-20px -20px 0 8%}
+  .home-hero:after{right:14%;top:10%;font-size:35px}
+  .home-hero h1{font-size:clamp(43px,11vw,62px);max-width:370px}
+  .home-hero p{font-size:13px}
+}
+@media(max-width:460px){
+  .home-tools .section-top{align-items:flex-start;flex-wrap:wrap}
+}
