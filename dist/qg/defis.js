@@ -63,7 +63,7 @@ function current(){
  if(publicActive()&&(!data.active||String(data.active.title)!==String(officialRound.challenge_title)))return sharedMission();
  if(!data.active)return '<div class="challenge-empty"><div class="challenge-symbol" aria-hidden="true">⚔️</div><h3>Aucune mission en cours</h3><p>Choisis tes filtres puis lance un défi aléatoire, ou accepte une proposition locale.</p></div>';
  const a=data.active;
- return '<div class="challenge-active"><div class="challenge-overline"><span>● MISSION EN COURS</span><span>'+escapeHtml(a.source==="viewer"?"PROPOSÉ PAR "+a.by:"TIRAGE ALÉATOIRE")+'</span></div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.description)+'</p><div class="challenge-meta">'+badge(a.level)+ '<span>'+escapeHtml((teams[a.team] || (a.team==="both"?"Solo / Duo":"Solo")).toUpperCase())+'</span></div>'+(publicActive()?'<div class="challenge-official-action-hint">🗳️ Vote communautaire en cours · Valide ton résultat dans <strong>Le verdict de la mission</strong>, à droite.</div>':'<div class="challenge-result-actions"><button type="button" data-action="success" class="btn success">✓ Réussie</button><button type="button" data-action="failure" class="btn failure">✕ Ratée</button><button type="button" data-action="skipped" class="btn btn-ghost">Passer</button></div>')+'</div>';
+ return '<div class="challenge-active"><div class="challenge-overline"><span>● MISSION EN COURS</span><span>'+escapeHtml(a.source==="viewer"?"PROPOSÉ PAR "+a.by:"TIRAGE ALÉATOIRE")+'</span></div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.description)+'</p><div class="challenge-meta">'+badge(a.level)+ '<span>'+escapeHtml((teams[a.team] || (a.team==="both"?"Solo / Duo":"Solo")).toUpperCase())+'</span></div>'+(publicActive()?'':'<div class="challenge-result-actions"><button type="button" data-action="success" class="btn success">✓ Réussie</button><button type="button" data-action="failure" class="btn failure">✕ Ratée</button><button type="button" data-action="skipped" class="btn btn-ghost">Passer</button></div>')+'</div>';
 }
 function catalogue(){
  const matches=getSorted(FORTNITE_CHALLENGES.filter(x=>data.category==="all"||x[4]===data.category));
@@ -158,12 +158,12 @@ export function mountChallenges(){
    const pool=alternatives.length?alternatives:available;
    const x=pool[Math.floor(Math.random()*pool.length)];
    data.active={id:x[0],source:"random",title:x[1],description:x[2],level:x[3],team:data.team,by:"Tirage aléatoire",started:Date.now()};
-   data.lastPreset=x[0];save();render("Publication de la mission en cours…");
+   data.lastPreset=x[0];save();render();
    void (async()=>{
     const ok=await votePanel?.publishCurrent();
     if(!root.isConnected)return;
     const message=root.querySelector("#challengeStatus");
-    if(message)message.textContent=ok?"Mission publiée : les membres voient maintenant ce défi.":"Le défi est local, mais pas encore publié. Réessaie depuis le panneau de vote.";
+    if(message)message.textContent=ok?"":"Le défi est local, mais pas encore publié. Réessaie depuis le panneau de vote.";
    })();
    return;
   }
@@ -183,12 +183,12 @@ export function mountChallenges(){
    if(action==="accept")data.active={...item,source:"viewer",level:"Personnalisé",started:Date.now()};
    save();
    if(action==="accept"){
-    render("Publication de la proposition en cours…");
+    render();
     void (async()=>{
       const ok=await votePanel?.publishCurrent();
       if(!root.isConnected)return;
       const status=root.querySelector("#challengeStatus");
-      if(status)status.textContent=ok?"Défi viewer publié au QG : votes ouverts.":"Proposition acceptée localement, mais pas publiée. Réessaie dans le panneau.";
+      if(status)status.textContent=ok?"":"Proposition acceptée localement, mais pas publiée. Réessaie dans le panneau.";
     })();
    } else render("Proposition refusée.");
    return;

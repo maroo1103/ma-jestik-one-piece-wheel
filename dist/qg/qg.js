@@ -1,4 +1,4 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-no-confirm1';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-clean-status1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);

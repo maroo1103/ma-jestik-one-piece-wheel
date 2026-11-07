@@ -132,3 +132,6 @@
 .qg-vote-gain{font-size:16px;font-weight:900;color:#92f0bc;margin:2px 0}
 .qg-vote-auto-label{color:#a4c7ba}
 @media(max-width:450px){.qg-vote-foot{align-items:flex-start;flex-wrap:wrap}.qg-vote-auto-label{font-size:10px}}
+
+/* Ne pas reserver d'espace au statut des defis quand aucun avertissement n'est affiche. */
+.challenge-status:empty{display:none}
