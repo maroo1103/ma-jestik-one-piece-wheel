@@ -23,7 +23,7 @@ function home(){
 }
 function wheel(){
  return head('CRÉATION N° 01','LA ROUE FORTNITE','Laisse le hasard choisir ta prochaine destination sur la carte de Fortnite.')+
- '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
+ '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../roue.html" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
 }
 function challenges(){return challengesMarkup();}
 function court(){

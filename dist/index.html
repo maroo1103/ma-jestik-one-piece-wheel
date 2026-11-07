@@ -1,74 +1,14 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1520">
-  <meta name="description" content="Choisis ton prochain point de chute Fortnite One Piece avec la roue communautaire de Ma_JesTik.">
-  <title>Ma_JesTik · Cap sur la victoire</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23ff784c'/%3E%3Cpath d='M32 7 39 27 57 32 39 39 32 57 25 39 7 32 25 27Z' fill='%230b1520'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="map.css?v=20261105-zoom2">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Le QG communautaire Ma_JesTik : roue Fortnite, défis, Killathon, classements et plus.">
+  <title>Ma_JesTik · Le QG communautaire</title>
+  <meta http-equiv="refresh" content="0;url=./qg/#/accueil">
+  <script>location.replace(new URL('./qg/#/accueil', location.href).href);</script>
 </head>
 <body>
-  <div class="ambient" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="Accueil Ma JesTik"><span class="brand-mark">M<span>J</span></span><span>MA_JESTIK<span class="brand-small">LE HASARD A DU BON.</span></span></a>
-    <div class="header-right"><span class="private"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 19v-2a6 6 0 0 1 12 0v2M16 6a3 3 0 0 1 0 6m1 2a5 5 0 0 1 4 5"/></svg> ESPACE COMMUNAUTAIRE</span><button id="streamMode" class="secondary" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><span>Mode stream</span></button><button id="fullscreen" class="icon-button" aria-label="Passer en plein écran" title="Plein écran"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5m6 0h5v5M4 15v5h5m6 0h5v-5"/></svg></button></div>
-  </header>
-  <aside class="map-launch" aria-label="Accès à la carte Fortnite">
-    <button id="mapOpen" class="map-launch-button" type="button" aria-haspopup="dialog" aria-controls="mapDialog" aria-label="Afficher la carte des 12 lieux en grand">
-      <span class="map-launch-title">CARTE DE L'ÎLE <span aria-hidden="true">↗</span></span>
-      <img src="assets/carte-vierge.webp" alt="Aperçu de la carte Fortnite One Piece sans les noms des lieux" width="1272" height="1274" loading="lazy">
-      <span class="map-launch-footer">AGRANDIR LA CARTE</span>
-    </button>
-  </aside>
-  <main>
-    <section class="intro"><div><p class="eyebrow"><span></span> FORTNITE × ONE PIECE <i> / </i> CHASSE AUX TRÉSORS</p><h1>On atterrit <em>où ?</em></h1><p class="intro-copy">Un tour de roue. Un cap à suivre. À toi de jouer.</p></div><div class="chapter"><span>ÎLE AUX OS MÊLÉS</span><strong>12 <small>destinations</small></strong><span class="tiny">CARTE VÉRIFIÉE · 05.11.2026</span></div></section>
-    <section class="arena" aria-label="Roue de tirage">
-      <div class="wheel-column">
-        <div class="wheel-caption"><span class="small-label">LE DESTIN DÉCIDE</span><span id="odds">12 lieux · chances égales</span></div>
-        <div class="wheel-wrap"><div class="wheel-halo"></div><svg id="wheel" viewBox="0 0 720 720" role="img" aria-label="Roue avec les douze lieux sélectionnés"><defs id="wheelDefs"></defs><g id="rotor"></g><circle cx="360" cy="360" r="334" fill="none" stroke="#efc978" stroke-width="3"/><circle cx="360" cy="360" r="343" fill="none" stroke="#769a9d" stroke-opacity=".25" stroke-width="1"/><g id="rim"></g></svg><div class="pointer" aria-hidden="true"></div><div class="hub" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 10 58 39 89 50 58 59 50 90 42 59 11 50 42 39Z"/><circle cx="50" cy="50" r="8"/></svg><span>CAP SUR<br>LA VICTOIRE</span></div></div>
-        <p class="wheel-note"><span class="live-dot"></span><span id="wheelStatus">L'équipage attend ton signal.</span></p>
-      </div>
-      <aside class="control-column">
-        <div class="result-card" id="resultCard">
-          <div class="result-top"><span class="small-label" id="resultLabel">PROCHAINE ESCALE</span><span class="result-number" id="resultNumber">? / 12</span></div>
-          <div class="result-art"><img id="resultImage" src="assets/06.webp" alt="Illustration d'Arlong Park"><div class="art-shade"></div><div class="art-badge" id="artBadge">LE GRAND DÉPART</div><div class="art-coordinate" aria-hidden="true">UN TOUR <span>✦</span> UN CAP</div></div>
-          <div class="result-copy"><p id="resultOverline">PRÊT À PRENDRE LE LARGE ?</p><h2 id="resultName">Le prochain cap<br>t'attend.</h2><p id="resultDetail">Lance la roue et découvre ton point de chute.</p></div>
-          <div class="result-decoration" aria-hidden="true">✦</div>
-        </div>
-        <div class="launch-controls"><button id="spin" class="launch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 21 12 9 20Z"/></svg><span>LANCER LA ROUE</span><kbd>ESPACE</kbd></button><div class="options"><label for="duration"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M9 2h6m-3 3v3m0 1v5l3 2"/></svg> Durée <select id="duration"><option value="5">5 s</option><option value="8" selected>8 s</option><option value="12">12 s</option></select></label><button id="sound" class="sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4Zm13-1 4 8m0-8-4 8"/></svg><span>Son désactivé</span></button></div><p class="control-help">Le résultat reste affiché jusqu'au prochain tirage.</p></div>
-      </aside>
-    </section>
-    <section class="recent-section" aria-label="Derniers tirages"><span class="small-label">JOURNAL DE BORD</span><div id="history"><span class="empty-history">Les dernières escales apparaîtront ici.</span></div></section>
-    <section class="destinations" aria-labelledby="destTitle"><div class="section-heading"><div><p class="eyebrow">PRÉPARE TON ITINÉRAIRE</p><h2 id="destTitle">Les destinations<span id="selectedCount">12 / 12</span></h2><p>Coche tes lieux et personnalise leurs images.</p></div><button id="selectAll" class="secondary">Tout sélectionner</button></div><p class="image-help">Tes images restent dans ce navigateur, sur cet appareil. Tu pourras retrouver les illustrations d'origine à tout moment.</p><div id="poiGrid" class="poi-grid"></div><p id="selectionMessage" class="selection-message" role="status"></p><p id="imageNotice" class="image-notice" role="status"></p></section>
-    <footer><p>FAIT POUR LES AVENTURES DE <strong>MA_JESTIK</strong><span>✦</span> BON DROP, BON LOOT.</p><button id="sourcesButton">Lieux & illustrations <span>↗</span></button></footer>
-  </main>
-  <div class="sr-only" id="announcement" aria-live="polite" aria-atomic="true"></div>
-  <dialog id="imageDialog" aria-labelledby="imageDialogTitle" aria-describedby="imageDialogHelp">
-    <div class="dialog-head"><p class="eyebrow">PERSONNALISE TON ESCALE</p><button id="closeImageDialog" class="icon-button" aria-label="Fermer la modification d'image">×</button></div>
-    <h2 id="imageDialogTitle">Changer l'image</h2>
-    <p id="imagePoiName" class="image-poi-name"></p>
-    <div class="image-editor-preview"><img id="imagePreview" alt="Aperçu de l'image du lieu"><span id="imagePreviewBadge">IMAGE ACTUELLE</span></div>
-    <label class="image-upload" for="imageFile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></svg><span>Choisir une image<small>JPG, PNG, WebP ou AVIF · 20 Mo max.</small></span><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif" class="sr-only" aria-label="Choisir une image pour le lieu"></label>
-    <p id="imageDialogHelp" class="image-editor-help">L'image remplacera celle du lieu sur la roue, dans le résultat et dans l'historique. Elle est enregistrée uniquement dans ce navigateur ; garde ton fichier d'origine.</p>
-    <p id="imageError" class="image-error" role="status" aria-live="polite"></p>
-    <div class="image-editor-actions"><button id="restoreImage" class="secondary" disabled>Image d'origine</button><div><button id="cancelImage" class="secondary">Annuler</button><button id="applyImage" class="save-image" disabled>Enregistrer</button></div></div>
-  </dialog>
-  <dialog id="sourcesDialog"><div class="dialog-head"><p class="eyebrow">À PROPOS DE LA CARTE</p><button id="closeDialog" class="icon-button" aria-label="Fermer">×</button></div><h2>Des lieux vérifiés.<br>Des captures du jeu.</h2><p>Les 12 noms correspondent aux lieux-dits relevés dans les données françaises de la carte, vérifiées le 5 novembre 2026. « Fort de Fortune's » remplace le nom précédemment utilisé « Forteresse de Lil Uzi », absent de cette liste. L'orthographe de « Le $.$. Rocky » a aussi été corrigée.</p><p>Les 12 images des destinations sont des captures de Fortnite utilisées pour cette roue communautaire, et non des illustrations créées par IA.</p><a href="https://fortnite-api.com/v1/map?language=fr" target="_blank" rel="noopener noreferrer">Consulter les noms de la carte · Fortnite-API ↗</a><a href="https://www.fortnite.com/news/fortnite-treasure-hunters-the-greatest-adventure-of-all-time?lang=fr" target="_blank" rel="noopener noreferrer">Découvrir la saison · Epic Games ↗</a><p class="tiny">Outil personnel non officiel. Fortnite et One Piece appartiennent à leurs ayants droit. Les choix et l'historique sont conservés uniquement dans ce navigateur. Le site est public et partageable. Chaque visiteur effectue ses tirages indépendamment.</p></dialog>
-  <dialog id="mapDialog" class="map-dialog" aria-labelledby="mapDialogTitle">
-    <div class="map-dialog-panel">
-      <div class="map-dialog-heading">
-        <div><p class="map-dialog-eyebrow">FORTNITE × ONE PIECE</p><h2 id="mapDialogTitle">Carte de l'île · 12 lieux</h2></div>
-        <button id="mapClose" type="button" class="map-dialog-close" aria-label="Fermer la carte">×</button>
-      </div>
-      <div class="map-dialog-frame" aria-label="Carte agrandie des douze destinations">
-        <img src="assets/carte-lieux.webp" width="1272" height="1274" alt="Carte complète de Fortnite One Piece avec les douze lieux nommés en français" class="map-dialog-image">
-      </div>
-      <p class="map-dialog-tip">Appuie sur Échap ou clique en dehors de la carte pour fermer. <a href="assets/carte-lieux.webp" target="_blank" rel="noopener">Voir la carte complète en taille réelle ↗</a></p>
-    </div>
-  </dialog>
-  <script type="module" src="app.js"></script>
-  <script type="module" src="map.js"></script>
+  <p>Bienvenue au QG Ma_JesTik. <a href="./qg/#/accueil">Ouvrir le QG</a>.</p>
 </body>
 </html>
