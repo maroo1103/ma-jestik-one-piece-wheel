@@ -62,10 +62,10 @@ function render(open=false){
       area.append(make('p','qg-member-note','Ce profil contient ton identifiant Twitch, ton pseudo, ton avatar et sa date de création.'));
       const label=make('label','qg-member-option');
       const choice=make('input');choice.type='checkbox';choice.checked=member.visible_in_ranking===1;
-      label.append(choice,make('span','','Participer au futur classement'));
+      label.append(choice,make('span','','Afficher mon profil dans le classement'));
       choice.addEventListener('change',()=>{void profileAction('visibility',{visible:choice.checked});});
       area.append(label);
-      area.append(make('p','qg-member-note','Aucun point n’est encore attribué. Le classement sera volontaire.'));
+      area.append(make('p','qg-member-note',member.visible_in_ranking===1?'Ton profil apparaît dans le classement dès que tu as des points.':'Tes points sont conservés, mais ton pseudo reste absent du classement tant que cette option est désactivée.'));
       const erase=make('button','qg-member-erase','Supprimer mon profil QG');erase.type='button';
       erase.addEventListener('click',()=>{void profileAction('delete');});
       area.append(erase);
@@ -135,6 +135,7 @@ async function profileAction(action,payload){
     if(me?.id!==id)return;
     member=action==='delete'?null:data.member;
     if(action!=='delete'&&!member)throw new Error('Réponse sans profil');
+    window.dispatchEvent(new Event('qg:member-updated'));
   }catch{
     if(me?.id===id)memberMessage='write';
   }finally{

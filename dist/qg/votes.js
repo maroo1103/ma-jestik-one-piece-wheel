@@ -1,7 +1,7 @@
 /* Défis Ma_JesTik — interface publique de pronostics.
    Off tant que la migration D1 et le compte propriétaire ne sont pas prêts.
    AUCUNE modification du catalogue des 118 défis Fortnite. */
-import {getQGTwitchSession,isQGOwnerSession} from './twitch-auth.js?v=20261107-auth-unified1';
+import {getQGTwitchSession,isQGOwnerSession} from './twitch-auth.js?v=20261107-ranking-optin1';
 const enabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const base=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
 const fixedAPI=base==='https://ma-jestik-qg-members.maroodu11.workers.dev';
@@ -20,6 +20,7 @@ function button(label,action,disabled=false){
 export function mountVotePanel(root,getActive,onStateChange=()=>{}){
  if(!enabled||!fixedAPI)return {render(){}};
  let round=null,info=null,profileError='',loading=true,busy=false,error='',updateAt=0,inflight=false,retryRefresh=false;
+ let memberProfile=null,memberProfileId=null,memberProfileUpdatedAt=0;
  let notifiedKey='';
  function notify(){
   const next=JSON.stringify([round?.id||'',round?.status||'',ownerUI(),info?.registered===true,loading]);
@@ -65,6 +66,18 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
        :'Profil Twitch non vérifiable. Réessaie avec « Actualiser ».';
     }
    } else info=null;
+   if(s?.token&&info?.registered===true){
+    if(memberProfileId!==s.id||Date.now()-memberProfileUpdatedAt>60000){
+     try{
+      const profile=await request('/v1/me','GET',undefined,true);
+      memberProfile=profile.member||null;memberProfileId=s.id;memberProfileUpdatedAt=Date.now();
+     }catch{
+      memberProfile=null;memberProfileId=null;memberProfileUpdatedAt=0;
+     }
+    }
+   }else{
+    memberProfile=null;memberProfileId=null;memberProfileUpdatedAt=0;
+   }
    updateAt=Date.now();
   }catch{error='Le service de vote est momentanément indisponible.';}
   finally{inflight=false;loading=false;notify();render();if(retryRefresh){retryRefresh=false;void refresh();}}
@@ -81,6 +94,14 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   if(round && ['open','locked'].includes(round.status))return null;
   if(round && Number(d.started||0)<=Number(round.created_at||0)*1000)return null;
   return {game:'fortnite',challenge_id:d.source==='viewer'?0:id,title,team};
+ }
+ function rankingVisibility(node){
+  if(!session()?.token||info?.registered!==true||!memberProfile)return;
+  if(Number(memberProfile.visible_in_ranking)===1)return;
+  const notice=el('div','qg-vote-rank-notice');
+  add(notice,'p','qg-vote-hint','Ton profil est masqué du classement, même si tu gagnes des points.');
+  notice.append(button('Apparaître dans le classement','ranking-opt-in'));
+  node.append(notice);
  }
  function controls(node){
   const status=round?.status;
@@ -150,7 +171,10 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
     const yes=Number(round.counts?.success||0),no=Number(round.counts?.failure||0);
     add(section,'p','qg-vote-result',yes+' Réussite · '+no+' Échec');
   }else if(!round&&!loading)add(section,'p','qg-vote-hint','Aucun vote ouvert actuellement.');
-  if(!busy&&!loading&&!error)controls(section);
+  if(!busy&&!loading&&!error){
+   controls(section);
+   rankingVisibility(section);
+  }
   if(busy)add(section,'p','qg-vote-hint','Enregistrement…');
   const foot=el('div','qg-vote-foot');
   foot.append(el('small','','Un vote par membre Twitch'));
@@ -181,8 +205,26 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
    if(round?.status!=='open'||!session()?.token||info?.registered!==false)return;
    busy=true;error='';render();
    let message='';
-   try{await request('/v1/me','POST',undefined,true);}
-   catch {message='Création impossible. Vérifie ta connexion Twitch et réessaie.';}
+   try{
+    const created=await request('/v1/me','POST',undefined,true);
+    memberProfile=created.member||null;memberProfileId=session()?.id||null;memberProfileUpdatedAt=Date.now();
+   }catch {message='Création impossible. Vérifie ta connexion Twitch et réessaie.';}
+   finally{
+    busy=false;
+    await refresh();
+    if(message){error=message;render();}
+   }
+   return;
+  }
+  if(action==='ranking-opt-in'){
+   if(!session()?.token||info?.registered!==true||!memberProfile||Number(memberProfile.visible_in_ranking)===1)return;
+   busy=true;error='';render();
+   let message='';
+   try{
+    const result=await request('/v1/me/visibility','PATCH',{visible:true},true);
+    memberProfile=result.member||null;memberProfileId=session()?.id||null;memberProfileUpdatedAt=Date.now();
+    window.dispatchEvent(new Event('qg:member-updated'));
+   }catch{message='Impossible de modifier la visibilité du profil. Réessaie depuis le menu Twitch.';}
    finally{
     busy=false;
     await refresh();
@@ -226,6 +268,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   }
   if(Date.now()-updateAt>=14000)void refresh();
  },15000);
- window.addEventListener('qg:twitch-session',()=>{if(document.contains(root))void refresh();});
+ window.addEventListener('qg:twitch-session',()=>{memberProfile=null;memberProfileId=null;if(document.contains(root))void refresh();});
+ window.addEventListener('qg:member-updated',()=>{memberProfileUpdatedAt=0;if(document.contains(root))void refresh();});
  return {render,refresh,publishCurrent,isOwner:()=>ownerUI(),hasOpenRound:()=>round?.status==='open'||round?.status==='locked',currentRound:()=>round};
 }

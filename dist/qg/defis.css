@@ -113,3 +113,9 @@
 .qg-vote-onboarding .qg-vote-button.profile-create{font-size:12px;min-height:38px;border-color:#9474be;background:#453160;color:#fff}
 .qg-vote-onboarding .qg-vote-button.profile-create:hover{border-color:#c5a5ec;background:#60447e}
 .qg-vote-consent{color:#9ab7c6;font-size:10px;line-height:1.4}
+
+/* Consentement explicite pour apparaître dans le classement Twitch. */
+.qg-vote-rank-notice{display:grid;align-items:start;justify-items:start;gap:9px;padding:12px;border:1px solid #785a99;background:rgba(84,59,117,.16);border-radius:9px}
+.qg-vote-rank-notice .qg-vote-hint{color:#d6cbe6}
+.qg-vote-rank-notice .qg-vote-button.ranking-opt-in{min-height:34px;border-color:#af90cf;background:#44355d;color:#fff;font-size:11px;padding:8px 11px}
+.qg-vote-rank-notice .qg-vote-button.ranking-opt-in:hover{background:#62477e}
