@@ -3,6 +3,9 @@
  Pour une vraie session serveur, passer plus tard à Authorization Code + Workers/D1. */
 const clientId=(document.querySelector('meta[name="majestik-twitch-client-id"]')?.content||'').trim();
 const KEY='mj-twitch-session-v1', PENDING='mj-twitch-state-v1';
+const API=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
+const apiReady=API==='https://ma-jestik-qg-members.maroodu11.workers.dev';
+let member=null,memberBusy=false,memberMessage='';
 const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','createur']);
 const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2))?s:'#/accueil';
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
@@ -11,8 +14,8 @@ const del=k=>{try{sessionStorage.removeItem(k)}catch{}};
 let root=null,me=null;
 function make(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
 function msg(text){if(!root)return;root.replaceChildren();const e=make('span','qg-auth-note',text);e.setAttribute('role','status');root.append(e);}
-function clear(){me=null;del(KEY);}
-function render(){
+function clear(){me=null;member=null;memberBusy=false;memberMessage='';del(KEY);}
+function render(open=false){
   if(!root)return;
   root.replaceChildren();
   if(!me){const b=make('button','qg-login','Connexion Twitch');b.type='button';b.addEventListener('click',login);root.append(b);return;}
@@ -31,22 +34,98 @@ function render(){
   trigger.append(make('span','qg-profile-name',me.name));
   trigger.append(make('span','qg-profile-chevron','⌄'));
   const menu=make('div','qg-account-menu');
-  menu.id='qgAccountMenu';menu.setAttribute('role','menu');menu.hidden=true;
+  menu.id='qgAccountMenu';menu.setAttribute('role','group');menu.setAttribute('aria-label','Options Twitch et profil QG');menu.hidden=true;
   const heading=make('span','qg-account-menu-heading','Compte Twitch');
   heading.setAttribute('role','presentation');
+  if(apiReady) {
+    const area=make('section','qg-member-area');
+    area.append(make('strong','qg-member-heading','PROFIL COMMUNAUTAIRE'));
+    if(memberBusy)area.append(make('p','qg-member-note','Mise à jour du profil…'));
+    else if(member){
+      area.append(make('p','qg-member-active','✓ Profil QG enregistré'));
+      area.append(make('p','qg-member-note','Ce profil contient ton identifiant Twitch, ton pseudo, ton avatar et sa date de création.'));
+      const label=make('label','qg-member-option');
+      const choice=make('input');choice.type='checkbox';choice.checked=member.visible_in_ranking===1;
+      label.append(choice,make('span','','Participer au futur classement'));
+      choice.addEventListener('change',()=>{void profileAction('visibility',{visible:choice.checked});});
+      area.append(label);
+      area.append(make('p','qg-member-note','Aucun point n’est encore attribué. Le classement sera volontaire.'));
+      const erase=make('button','qg-member-erase','Supprimer mon profil QG');erase.type='button';
+      erase.addEventListener('click',()=>{void profileAction('delete');});
+      area.append(erase);
+    }else if(memberMessage!=='offline'){
+      area.append(make('p','qg-member-note','Enregistre ton identifiant Twitch, ton pseudo, ton avatar et ta date d’inscription pour les futurs classements. Tu pourras supprimer ton profil ici.'));
+      const create=make('button','qg-member-create','Créer mon profil QG');create.type='button';
+      create.addEventListener('click',()=>{void profileAction('create');});
+      area.append(create);
+    }
+    if(memberMessage)area.append(make('p','qg-member-error',memberMessage==='offline'?'Profils indisponibles pour le moment.':'Action impossible. Réessaie.'));
+    menu.append(area);
+  }
   const logout=make('button','qg-account-menu-logout','Se déconnecter');
-  logout.type='button';logout.setAttribute('role','menuitem');
+  logout.type='button';
   logout.addEventListener('click',()=>{clear();render();});
   menu.append(heading,logout);
   trigger.addEventListener('click',()=>{
     const opening=menu.hidden;
     menu.hidden=!opening;
     trigger.setAttribute('aria-expanded',String(opening));
-    if(opening)logout.focus();
+    if(opening)menu.querySelector('button')?.focus();
   });
   wrapper.append(trigger,menu);
   root.append(wrapper);
+  if(open){menu.hidden=false;trigger.setAttribute('aria-expanded','true');}
 }
+async function membersFetch(method,path,token,body) {
+  if(!apiReady)throw new Error('API absente');
+  const c=new AbortController(),timeout=setTimeout(()=>c.abort(),10000);
+  const headers={Authorization:'Bearer '+token};
+  if(body!==undefined)headers['Content-Type']='application/json';
+  try {
+    const res=await fetch(API+path,{
+      method,headers,body:body===undefined?undefined:JSON.stringify(body),
+      mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',signal:c.signal
+    });
+    if(!res.ok)throw new Error('API '+res.status);
+    return await res.json();
+  }finally{clearTimeout(timeout);}
+}
+async function loadMember(id,token){
+  if(!apiReady)return;
+  memberBusy=true;memberMessage='';render();
+  try{
+    const data=await membersFetch('GET','/v1/me',token);
+    if(me?.id!==id)return;
+    member=data.member||null;
+  }catch{
+    if(me?.id===id){member=null;memberMessage='offline';}
+  }finally{
+    if(me?.id===id){memberBusy=false;render();}
+  }
+}
+async function profileAction(action,payload){
+  if(!me||memberBusy||!apiReady)return;
+  if(action==='delete'&&!window.confirm('Supprimer définitivement ton profil du QG Ma_JesTik ?'))return;
+  const id=me.id,token=me.token;
+  memberBusy=true;memberMessage='';render(true);
+  try{
+    const spec={
+      create:['POST','/v1/me',undefined],
+      visibility:['PATCH','/v1/me/visibility',payload],
+      delete:['DELETE','/v1/me',undefined]
+    }[action];
+    if(!spec)throw new Error('Action non autorisée');
+    const data=await membersFetch(spec[0],spec[1],token,spec[2]);
+    if(me?.id!==id)return;
+    member=action==='delete'?null:data.member;
+    if(action!=='delete'&&!member)throw new Error('Réponse sans profil');
+  }catch{
+    if(me?.id===id)memberMessage='write';
+  }finally{
+    if(me?.id===id){memberBusy=false;render(true);}
+  }
+}
+
 async function getJson(url,headers){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
   try{
@@ -63,7 +142,8 @@ async function check(token){
   if(!user||String(user.id)!==String(check.user_id))throw Error('Identité non vérifiée');
   const next={token,id:String(user.id),name:String(user.display_name||user.login||'Twitch').slice(0,64),avatar:String(user.profile_image_url||'')};
   if(!put(KEY,JSON.stringify(next)))throw Error('Stockage de session indisponible');
-  me=next;render();
+  me=next;member=null;memberMessage='';render();
+  if(apiReady)void loadMember(next.id,token);
 }
 function login(){
   const bytes=crypto.getRandomValues(new Uint8Array(24));
