@@ -119,3 +119,16 @@
 .qg-vote-rank-notice .qg-vote-hint{color:#d6cbe6}
 .qg-vote-rank-notice .qg-vote-button.ranking-opt-in{min-height:34px;border-color:#af90cf;background:#44355d;color:#fff;font-size:11px;padding:8px 11px}
 .qg-vote-rank-notice .qg-vote-button.ranking-opt-in:hover{background:#62477e}
+
+/* Parcours de vote simplifié, résultat admin en un clic, synchronisation visible. */
+.challenge-official-action-hint{font-size:12px;line-height:1.5;color:#d7cbea;background:#291e43;border:1px solid #755b95;border-radius:9px;padding:12px}
+.qg-vote-verdict .qg-vote-button.resolve-success{background:#174b40;border:1px solid #479a79;color:#e1ffe8}
+.qg-vote-verdict .qg-vote-button.resolve-failure{background:#55363b;border:1px solid #bb7b83;color:#ffe6df}
+.qg-vote-verdict .qg-vote-button{display:flex;justify-content:center;align-items:center;min-height:62px;font-size:13px;white-space:normal;text-align:center}
+.qg-vote-admin-secondary{justify-content:space-between;gap:7px}
+.qg-vote-admin-secondary .qg-vote-button{min-height:26px;padding:5px 6px;background:transparent;color:#a8c1d1;border-color:transparent;font-size:10px}
+.qg-vote-admin-secondary .qg-vote-button.cancel{color:#cfb0b8;background:transparent;border-color:transparent}
+.qg-vote-admin-secondary .qg-vote-button:hover{background:#224358}
+.qg-vote-gain{font-size:16px;font-weight:900;color:#92f0bc;margin:2px 0}
+.qg-vote-auto-label{color:#a4c7ba}
+@media(max-width:450px){.qg-vote-foot{align-items:flex-start;flex-wrap:wrap}.qg-vote-auto-label{font-size:10px}}
