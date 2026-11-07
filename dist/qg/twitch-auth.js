@@ -11,9 +11,25 @@ const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
 const put=(k,v)=>{try{sessionStorage.setItem(k,v);return true}catch{return false}};
 const del=k=>{try{sessionStorage.removeItem(k)}catch{}};
+// Un retour OAuth peut arriver dans un autre onglet (particulièrement sur mobile).
+// On conserve SEULEMENT le state CSRF temporaire également entre les onglets
+// du même navigateur ; jamais le jeton Twitch dans localStorage.
+const getPendingLocal=()=>{try{return localStorage.getItem(PENDING)}catch{return null}};
+const putPendingLocal=v=>{try{localStorage.setItem(PENDING,v);return true}catch{return false}};
+const delPending=()=>{del(PENDING);try{localStorage.removeItem(PENDING)}catch{}};
+const parsePending=raw=>{try{return JSON.parse(raw||"null")}catch{return null}};
+const PENDING_TTL=20*60*1000;
 let root=null,me=null;
 function make(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
-function msg(text){if(!root)return;root.replaceChildren();const e=make('span','qg-auth-note',text);e.setAttribute('role','status');root.append(e);}
+function msg(text,retry=false){
+ if(!root)return;
+ root.replaceChildren();
+ const e=make('span','qg-auth-note',text);e.setAttribute('role','status');root.append(e);
+ if(retry){
+  const b=make('button','qg-login','Réessayer avec Twitch');
+  b.type='button';b.addEventListener('click',login);root.append(b);
+ }
+}
 function clear(){me=null;member=null;memberBusy=false;memberMessage='';del(KEY);window.dispatchEvent(new Event('qg:twitch-session'));}
 function render(open=false){
   if(!root)return;
@@ -148,31 +164,44 @@ async function check(token){
 function login(){
   const bytes=crypto.getRandomValues(new Uint8Array(24));
   const state=Array.from(bytes,v=>v.toString(16).padStart(2,'0')).join('');
-  if(!put(PENDING,JSON.stringify({state,route:goodRoute(location.hash),time:Date.now()}))){
-    msg('Connexion impossible : stockage temporaire bloqué.');return;
+  const pending=JSON.stringify({state,route:goodRoute(location.hash),time:Date.now()});
+  // sessionStorage pour l'onglet courant ; localStorage seulement pour
+  // rapprocher un éventuel retour dans un nouvel onglet du même navigateur.
+  // Si aucun des deux n'est disponible, on ne démarre pas OAuth.
+  if(!put(PENDING,pending)&&!putPendingLocal(pending)){
+    msg('Connexion impossible : stockage navigateur bloqué.');return;
   }
+  // En présence de sessionStorage, tenter aussi le repli inter-onglets.
+  putPendingLocal(pending);
   const u=new URL('https://id.twitch.tv/oauth2/authorize');
   u.search=new URLSearchParams({response_type:'token',client_id:clientId,redirect_uri:new URL('./',location.href).href,scope:'',state}).toString();
   location.assign(u.href);
 }
 async function finish(token){
-  try{await check(token)}catch{clear();msg('Échec de connexion Twitch. Réessaie.');}
+  try{await check(token)}catch{clear();msg('Échec de connexion Twitch. Réessaie.',true);}
 }
 function callback(){
   const hash=location.hash.substring(1),query=new URLSearchParams(location.search);
   const hasToken=hash.startsWith('access_token='),hasHashError=hash.startsWith('error='),hasQueryError=query.has('error')&&query.has('state');
   if(!hasToken&&!hasHashError&&!hasQueryError)return false;
   const values=new URLSearchParams(hasQueryError?location.search.substring(1):hash);
-  let previous;
-  try{previous=JSON.parse(get(PENDING)||'null')}catch{}
-  del(PENDING);
+  const returnedState=values.get('state');
+  const inTab=parsePending(get(PENDING));
+  const acrossTabs=parsePending(getPendingLocal());
+  const acceptable=p=>p&&typeof p.state==='string'&&p.state.length===48&&
+   p.state===returnedState&&Number.isFinite(p.time)&&
+   p.time<=Date.now()&&Date.now()-p.time<=PENDING_TTL;
+  const previous=acceptable(inTab)?inTab:(acceptable(acrossTabs)?acrossTabs:null);
+  // Usage unique : jamais accepter un retour sans state correspondant.
+  delPending();
   history.replaceState(null,'',location.pathname+(hasQueryError?'':location.search)+goodRoute(previous?.route));
-  if(!previous||!Number.isFinite(previous.time)||Date.now()-previous.time>600000||values.get('state')!==previous.state){
-    msg('Retour Twitch non reconnu : reconnecte-toi.');return true;
+  if(!previous){
+    msg('Retour Twitch non reconnu. Réessaie dans le même navigateur (évite l’ouverture dans l’application Twitch).',true);
+    return true;
   }
-  if(hasHashError||hasQueryError){msg('Connexion Twitch annulée.');return true;}
+  if(hasHashError||hasQueryError){msg('Connexion Twitch annulée.',true);return true;}
   const token=values.get('access_token');
-  if(!token||!/^[\w-]{12,500}$/.test(token)){msg('Jeton Twitch incorrect.');return true;}
+  if(!token||!/^[\w-]{12,500}$/.test(token)){msg('Jeton Twitch incorrect.',true);return true;}
   void finish(token);
   return true;
 }

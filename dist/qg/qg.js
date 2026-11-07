@@ -1,5 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-vote-compact1';
-import {mountTwitchAuth} from './twitch-auth.js?v=20261107-votes1';
+import {mountTwitchAuth} from './twitch-auth.js?v=20261107-oauth-mobile1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
