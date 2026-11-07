@@ -9,4 +9,5 @@
 /* Bouton Twitch dans l'en-tête du QG */
 .top-link-twitch{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #62448e;background:#211736;color:#f4e9ff;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 0 12px #6d35a022;transition:background .15s,border-color .15s}
 .top-link-twitch:hover,.top-link-twitch:focus-visible{background:#392657;border-color:#a67ce0}
+.top-link-twitch-icon{display:inline-block;width:17px;height:17px;flex:0 0 17px;vertical-align:middle}
 @media(max-width:580px){.top-link-twitch{font-size:10px;padding:8px 9px}}

@@ -87,7 +87,7 @@ function view(message=""){
  catalogue()+'<div class="note">Version publique gratuite : résultats et propositions enregistrés <strong>uniquement dans ce navigateur</strong>. Pas encore de classement général ni de transmission automatique au streamer. Certains défis dépendent des armes et mécaniques disponibles dans la saison Fortnite.</div></section>';
 }
 export function challengesMarkup(){
- return '<div class="challenge-page-head"><div class="challenge-game-kicker">L’ESPACE GAMING DE L’ÉQUIPAGE</div><h1>DÉFIS & MISSIONS</h1><p>Un seul espace pour relever des défis sur tes jeux préférés. Choisis un jeu pour commencer.</p></div><div id="challengeRoot"></div>';
+ return '<div class="challenge-page-head"><div class="challenge-game-kicker">L’ESPACE GAMING DE L’ÉQUIPAGE</div><h1>DÉFIS & MISSIONS</h1></div><div id="challengeRoot"></div>';
 }
 export function mountChallenges(){
  const root=document.getElementById("challengeRoot");
