@@ -43,3 +43,24 @@
 .court-rules p{color:#98b4c2;font-size:11px;line-height:1.6;margin:0}
 @media(max-width:1000px){.court-layout{grid-template-columns:1fr}}
 @media(max-width:690px){.court-layout,.court-rules{grid-template-columns:1fr}.court-warning{padding:14px}.court-preview h2,.court-editor h2{font-size:31px}.court-panel-head{flex-wrap:wrap}.court-vote{padding:12px}.court-actions .btn{flex:1}}
+
+/* Résultats : comptes et pourcentages basés uniquement sur les votes de la démo locale. */
+.court-results{margin-top:20px;border:1px solid #355666;border-radius:11px;background:linear-gradient(135deg,#102a3b,#0b2231);padding:18px}
+.court-results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid #2b4b5b;margin-bottom:15px}
+.court-results-head strong{font-size:12px;letter-spacing:1px;color:#f5d39a}
+.court-results-total{font-size:11px;color:#acdcca;font-weight:800}
+.court-result-row{padding:10px 0 13px}
+.court-result-row+.court-result-row{border-top:1px solid #294657}
+.court-result-info{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}
+.court-result-label{color:#eff7fa;font-size:13px;font-weight:800;overflow-wrap:anywhere}
+.court-result-numbers{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.court-result-numbers strong{color:#f3d09b;font-size:15px;font-variant-numeric:tabular-nums}
+.court-result-numbers span{color:#c1d6df;font-size:11px;font-variant-numeric:tabular-nums}
+.court-result-track{height:10px;background:#253b4b;border:1px solid #335368;border-radius:99px;overflow:hidden}
+.court-result-fill{height:100%;width:0;background:linear-gradient(90deg,#a67be5,#63c4bd);border-radius:99px;transition:width .25s ease}
+.court-test-vote{display:inline-flex;align-items:center;margin-top:9px;border:1px solid #415e70;background:#203b4d;border-radius:6px;padding:6px 10px;color:#bed5e2;font-size:10px;font-weight:750}
+.court-test-vote:hover:not(:disabled){color:#fff;border-color:#b999d4;background:#2b4b64}
+.court-test-vote:disabled{opacity:.4;cursor:not-allowed}
+.court-results-help{color:#9db2c1;font-size:10px;line-height:1.65;margin:14px 0 0}
+@media(max-width:480px){.court-results{padding:13px}.court-result-numbers{gap:8px}.court-result-label{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.court-result-fill{transition:none}}

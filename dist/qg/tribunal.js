@@ -4,7 +4,7 @@ let ticker=null;
 export function unmountTribunal(){if(ticker){clearInterval(ticker);ticker=null;}}
 export function tribunalMarkup(){
  return '<div class="page-head"><div class="eyebrow">COMMUNAUTÉ · CRÉATION N° 05</div><h1>LE TRIBUNAL</h1><p>Une question. Plusieurs réponses. La communauté aura son mot à dire sur les jeux, les défis et les prochaines décisions du QG.</p><div class="page-tags"><span class="tag gold">EN CONSTRUCTION</span><span class="tag">2 À 4 CHOIX</span><span class="tag">VOTES TWITCH PRÉVUS</span></div></div>'+
- '<div class="court-warning" role="note"><span aria-hidden="true">⚖️</span><div><strong>MODE DÉMONSTRATION</strong><p>Tu peux créer et tester un sondage ci-dessous. Les choix restent uniquement dans cet onglet du navigateur : aucun vote public, score ou résultat partagé n’est enregistré.</p></div></div>'+
+ '<div class="court-warning" role="note"><span aria-hidden="true">⚖️</span><div><strong>MODE DÉMONSTRATION</strong><p>Tu peux créer et tester un sondage ci-dessous. Les résultats ci-dessous sont des votes de test, visibles uniquement dans cet onglet. Ils ne représentent pas les votes de vrais visiteurs.</p></div></div>'+
  '<div class="court-layout"><section class="panel court-preview" aria-labelledby="courtPreviewTitle"><div class="court-panel-head"><div><span class="court-overline">APERÇU DU SCRUTIN</span><h2 id="courtPreviewTitle">La parole à l’équipage</h2></div><span class="court-live-state" id="courtState">DÉMO LOCALE</span></div><div id="courtPoll" aria-live="polite"></div><div class="court-actions"><button class="btn btn-ghost" type="button" id="courtClose">Clore la démo</button><button class="btn btn-ghost" type="button" id="courtReset">Réinitialiser le vote</button></div></section>'+
  '<section class="panel court-editor" aria-labelledby="courtEditorTitle"><span class="court-overline">ATELIER DE CRÉATION</span><h2 id="courtEditorTitle">Préparer une question</h2><p class="court-editor-copy">Teste ici le format d’un futur scrutin. En version définitive, seul Ma_JesTik pourra le publier pour tout le monde.</p><form id="courtForm"><label class="court-field" for="courtQuestion"><span>Question</span><textarea id="courtQuestion" maxlength="140" rows="3" required>Quel jeu veux-tu voir lors du prochain live ?</textarea></label><div class="court-field"><span>Réponses proposées</span><div id="courtChoices"></div><div class="court-choice-tools"><button type="button" id="courtAdd">+ Ajouter une réponse</button><button type="button" id="courtRemove">− Retirer la dernière</button></div></div><label class="court-field" for="courtDuration"><span>Durée du sondage (démo)</span><select id="courtDuration"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 heure</option></select></label><button class="btn btn-gold court-create" type="submit">Lancer la prévisualisation <span aria-hidden="true">↗</span></button><p id="courtFormMessage" class="court-form-message" role="status"></p></form></section></div>'+
  '<section class="court-rules" aria-label="Règles du tribunal"><div><span aria-hidden="true">01</span><strong>Une question libre</strong><p>Gameplay, jeux, prochaines activités ou propositions de la communauté.</p></div><div><span aria-hidden="true">02</span><strong>Un vote Twitch par personne</strong><p>Contrôle côté serveur prévu pour le lancement réel, et non simple cookie du navigateur.</p></div><div><span aria-hidden="true">03</span><strong>Un verdict transparent</strong><p>Les résultats ne seront affichés qu’à partir des votes réellement comptabilisés.</p></div></section>';
@@ -47,7 +47,7 @@ export function mountTribunal(){
   remove.disabled=choices.children.length<=2;
  }
  function begin(question,answers,minutes){
-  poll={question,answers,minutes,deadline:Date.now()+minutes*60000,choice:null,closed:false};
+  poll={question,answers,minutes,deadline:Date.now()+minutes*60000,choice:null,votes:answers.map(()=>0),closed:false};
   render();
  }
  function timeLeft(){
@@ -84,15 +84,57 @@ export function mountTribunal(){
    btn.append(make('span','court-vote-arrow',poll.choice===index?'✓':'↗'));
    btn.addEventListener('click',()=>{
     if(!poll||poll.closed||poll.choice!==null)return;
-    poll.choice=index;render();
+    poll.choice=index;poll.votes[index]+=1;render();
    });
    voteList.append(btn);
   });
   preview.append(voteList);
+  const total=poll.votes.reduce((sum,count)=>sum+count,0);
+  const results=make('section','court-results');
+  results.setAttribute('aria-label','Résultats du sondage de démonstration');
+  const resultsHead=make('div','court-results-head');
+  resultsHead.append(make('strong','','RÉSULTATS DU SONDAGE'));
+  resultsHead.append(make('span','court-results-total',total+' vote'+(total>1?'s':'')+' simulé'+(total>1?'s':'')));
+  results.append(resultsHead);
+  poll.answers.forEach((answer,index)=>{
+   const votes=poll.votes[index];
+   const percent=total?Math.round(votes/total*100):0;
+   const row=make('div','court-result-row');
+   const info=make('div','court-result-info');
+   info.append(make('span','court-result-label',answer));
+   const numbers=make('span','court-result-numbers');
+   numbers.append(make('strong','',percent+' %'));
+   numbers.append(make('span','',votes+' vote'+(votes>1?'s':'')));
+   info.append(numbers);
+   row.append(info);
+   const track=make('div','court-result-track');
+   track.setAttribute('role','progressbar');
+   track.setAttribute('aria-label',answer);
+   track.setAttribute('aria-valuemin','0');
+   track.setAttribute('aria-valuemax','100');
+   track.setAttribute('aria-valuenow',String(percent));
+   const fill=make('div','court-result-fill');
+   fill.style.width=percent+'%';
+   track.append(fill);
+   row.append(track);
+   const test=make('button','court-test-vote','+1 vote de test');
+   test.type='button';
+   test.disabled=poll.closed;
+   test.setAttribute('aria-label','Ajouter un vote fictif à '+answer);
+   test.addEventListener('click',()=>{
+    if(!poll||poll.closed)return;
+    poll.votes[index]+=1;
+    render();
+   });
+   row.append(test);
+   results.append(row);
+  });
+  results.append(make('p','court-results-help','Les votes et pourcentages sont uniquement simulés dans ce navigateur. Le scrutin public sera connecté à Twitch et Cloudflare ultérieurement.'));
+  preview.append(results);
   const note=make('p','court-vote-note');
-  if(poll.closed)note.textContent='Démo clôturée : aucun résultat public n’a été publié.';
-  else if(poll.choice!==null)note.textContent='✓ Choix sélectionné dans cette démo. Aucun vote envoyé ni sauvegardé.';
-  else note.textContent='Clique sur une réponse pour tester le vote local (un seul choix par aperçu).';
+  if(poll.closed)note.textContent='Démo clôturée : les résultats restent visibles, sans publication publique.';
+  else if(poll.choice!==null)note.textContent='✓ Ton vote de test a été compté. Utilise les boutons « +1 vote de test » pour voir évoluer les résultats.';
+  else note.textContent='Choisis une réponse ou ajoute des votes de test pour voir les résultats évoluer en direct.';
   preview.append(note);
   close.disabled=poll.closed;
   reset.disabled=false;
