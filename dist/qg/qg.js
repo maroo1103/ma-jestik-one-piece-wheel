@@ -32,50 +32,83 @@ function court(){
 }
 function ranking(){
  if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE L’ÉQUIPAGE','',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit')])+
- '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>Les meilleurs pronostics des membres qui ont accepté d’apparaître dans le classement.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO TWITCH</th><th>POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement des résultats…</td></tr></tbody></table></section>';
+ '<section class="qg-rankings"><div class="qg-podium-title"><span aria-hidden="true">🏆</span><h2>TOP 3 DE L’ÉQUIPAGE</h2></div>'+
+ '<div class="qg-podium" id="rankingPodium" aria-live="polite"><p class="qg-podium-empty">Chargement du podium…</p></div>'+
+ '<section class="panel qg-ranking-panel" aria-labelledby="rankTableTitle"><div class="qg-rank-table-title"><h2 id="rankTableTitle">CLASSEMENT GÉNÉRAL</h2><p>À partir de la 4ᵉ place</p></div>'+
+ '<div class="qg-ranking-scroll"><table class="ranking-table qg-rank-table"><thead><tr><th scope="col">RANG</th><th scope="col">PSEUDO TWITCH</th><th scope="col">POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement…</td></tr></tbody></table></div></section></section>';
  return head('COMMUNAUTÉ','LES CLASSEMENTS','Des records et points partagés entre visiteurs. Les scores devront être contrôlés côté serveur pour que chacun joue à armes égales.',[tag('Comptes à construire','gold'),tag('Scores protégés à venir')])+
  '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>La vraie base de données n’est pas encore connectée. Aucun faux profil ni faux score n’est affiché.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO</th><th>POINTS</th></tr></thead><tbody><tr><td colspan="3" class="empty-rank">Pas encore de classement — lancement après validation des règles et du système de comptes.</td></tr></tbody></table></section>'+
  '<div class="note">Architecture prévue : authentification sécurisée, stockage partagé et règles de calcul côté serveur sur un service à quota gratuit. Pas d’abonnement mensuel activé.</div>';
 }
 let rankingTimer=null;
 let rankingNode=null,rankingSignature='';
+function rankScore(value){return Math.max(0,Math.floor(Number(value)||0));}
+function rankAvatar(entry){
+ const container=document.createElement('span');container.className='qg-rank-avatar';
+ const initial=document.createElement('span');initial.className='qg-rank-initial';initial.textContent=String(entry.display_name||'?').trim().slice(0,1).toUpperCase()||'?';container.append(initial);
+ try{
+  const url=new URL(String(entry.avatar_url||''));
+  if(url.protocol==='https:'&&url.hostname==='static-cdn.jtvnw.net'){
+   const img=document.createElement('img');img.src=url.href;img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';
+   img.addEventListener('error',()=>img.remove(),{once:true});container.append(img);
+  }
+ }catch{}
+ return container;
+}
+function rankCard(entry,place){
+ const roles=['Capitaine de l’équipage','Second de bord','Éclaireur'];
+ const icons=['👑','🥈','🥉'];
+ const card=document.createElement('article');card.className='qg-rank-card qg-rank-card-'+place;
+ card.setAttribute('aria-label','Place '+place+' : '+entry.display_name+', '+rankScore(entry.score)+' points');
+ const icon=document.createElement('span');icon.className='qg-rank-medal';icon.setAttribute('aria-hidden','true');icon.textContent=icons[place-1];
+ const number=document.createElement('span');number.className='qg-rank-number';number.textContent='#'+place;
+ const name=document.createElement('strong');name.className='qg-rank-name';name.textContent=entry.display_name.slice(0,64);
+ const score=document.createElement('span');score.className='qg-rank-score';const points=rankScore(entry.score);
+ score.textContent=String(points)+' '+(points===1?'point':'points');
+ const role=document.createElement('span');role.className='qg-rank-role';role.textContent=roles[place-1];
+ card.append(icon,number,rankAvatar(entry),name,score,role);
+ return card;
+}
+function renderRankings(entries,podium,tbody){
+ podium.replaceChildren();
+ if(!entries.length){
+  const msg=document.createElement('p');msg.className='qg-podium-empty';msg.textContent='Le podium attend ses premiers pronostiqueurs.';podium.append(msg);
+ }else{
+  // Ordre visuel : médaille d'argent, médaille d'or, médaille de bronze.
+  [1,0,2].forEach(i=>{if(entries[i])podium.append(rankCard(entries[i],i+1));});
+ }
+ tbody.replaceChildren();
+ if(entries.length<=3){
+  const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=3;cell.className='empty-rank';
+  cell.textContent=entries.length?'La suite du classement apparaîtra à partir du 4ᵉ membre.':'Aucun membre classé pour le moment.';
+  row.append(cell);tbody.append(row);return;
+ }
+ entries.slice(3,50).forEach((entry,i)=>{
+  const row=document.createElement('tr');row.className='qg-rank-row';
+  const rank=document.createElement('td');const badge=document.createElement('span');badge.className='qg-rank-position';badge.textContent=String(i+4);rank.append(badge);
+  const who=document.createElement('td'),person=document.createElement('span');person.className='ranking-person';
+  const name=document.createElement('span');name.textContent=entry.display_name.slice(0,64);
+  person.append(rankAvatar(entry),name);who.append(person);
+  const score=document.createElement('td');score.className='qg-rank-points';score.textContent=String(rankScore(entry.score));
+  row.append(rank,who,score);tbody.append(row);
+ });
+}
 async function mountRankings(){
- const tbody=$('rankingRows');
- if(!tbody||!votesEnabled)return;
+ const tbody=$('rankingRows'),podium=$('rankingPodium');if(!tbody||!podium||!votesEnabled)return;
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10000);
  try{
-  const r=await fetch(voteApi+'/v1/ranking',{cache:'no-store',mode:'cors',signal:controller.signal});
-  if(!r.ok)throw Error('Classement inaccessible');
-  const data=await r.json();
-  if(!tbody.isConnected)return;
-  const entries=Array.isArray(data.entries)?data.entries:[];
-  const signature=JSON.stringify(entries.map(x=>[x.display_name,x.score,x.avatar_url]));
+  const res=await fetch(voteApi+'/v1/ranking',{cache:'no-store',mode:'cors',signal:controller.signal});
+  if(!res.ok)throw Error('Classement inaccessible');
+  const data=await res.json();if(!tbody.isConnected||!podium.isConnected)return;
+  const entries=Array.isArray(data.entries)?data.entries.filter(e=>e&&typeof e.display_name==='string'&&e.display_name.trim()).slice(0,50):[];
+  const signature=JSON.stringify(entries.map(e=>[e.display_name,rankScore(e.score),e.avatar_url]));
   if(rankingNode===tbody&&rankingSignature===signature)return;
-  rankingNode=tbody;rankingSignature=signature;
-  tbody.replaceChildren();
-  if(!entries.length){
-   const tr=document.createElement('tr'),td=document.createElement('td');
-   td.colSpan=3;td.className='empty-rank';td.textContent='Aucun point officiel pour le moment. Les premiers pronostics validés apparaîtront ici.';
-   tr.append(td);tbody.append(tr);return;
-  }
-  entries.slice(0,50).forEach((entry,i)=>{
-   if(!entry||typeof entry.display_name!=='string')return;
-   const tr=document.createElement('tr');
-   const rank=document.createElement('td');rank.textContent=String(i+1);
-   const who=document.createElement('td');
-   const user=document.createElement('span');user.className='ranking-person';
-   try {
-    const url=new URL(String(entry.avatar_url||''));
-    if(url.protocol==='https:'&&url.hostname==='static-cdn.jtvnw.net'){
-     const img=document.createElement('img');img.src=url.href;img.alt='';img.referrerPolicy='no-referrer';img.width=26;img.height=26;user.append(img);
-    }
-   }catch{}
-   const name=document.createElement('span');name.textContent=entry.display_name.slice(0,64);user.append(name);who.append(user);
-   const score=document.createElement('td');score.textContent=String(Math.max(0,Math.floor(Number(entry.score)||0)));
-   tr.append(rank,who,score);tbody.append(tr);
-  });
+  renderRankings(entries,podium,tbody);rankingNode=tbody;rankingSignature=signature;
  }catch{
-  if(tbody.isConnected)tbody.querySelector('.empty-rank').textContent='Le classement est temporairement indisponible.';
+  if(tbody.isConnected&&podium.isConnected&&rankingNode!==tbody){
+   const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=3;cell.className='empty-rank';cell.textContent='Le classement est temporairement indisponible.';row.append(cell);tbody.replaceChildren(row);
+   const msg=document.createElement('p');msg.className='qg-podium-empty';msg.textContent='Le podium est temporairement indisponible.';podium.replaceChildren(msg);
+  }
  }finally{clearTimeout(timer);}
 }
 function setup(){
