@@ -38,6 +38,8 @@ function ranking(){
  '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>La vraie base de données n’est pas encore connectée. Aucun faux profil ni faux score n’est affiché.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO</th><th>POINTS</th></tr></thead><tbody><tr><td colspan="3" class="empty-rank">Pas encore de classement — lancement après validation des règles et du système de comptes.</td></tr></tbody></table></section>'+
  '<div class="note">Architecture prévue : authentification sécurisée, stockage partagé et règles de calcul côté serveur sur un service à quota gratuit. Pas d’abonnement mensuel activé.</div>';
 }
+let rankingTimer=null;
+let rankingNode=null,rankingSignature='';
 async function mountRankings(){
  const tbody=$('rankingRows');
  if(!tbody||!votesEnabled)return;
@@ -47,8 +49,11 @@ async function mountRankings(){
   if(!r.ok)throw Error('Classement inaccessible');
   const data=await r.json();
   if(!tbody.isConnected)return;
-  tbody.replaceChildren();
   const entries=Array.isArray(data.entries)?data.entries:[];
+  const signature=JSON.stringify(entries.map(x=>[x.display_name,x.score,x.avatar_url]));
+  if(rankingNode===tbody&&rankingSignature===signature)return;
+  rankingNode=tbody;rankingSignature=signature;
+  tbody.replaceChildren();
   if(!entries.length){
    const tr=document.createElement('tr'),td=document.createElement('td');
    td.colSpan=3;td.className='empty-rank';td.textContent='Aucun point officiel pour le moment. Les premiers pronostics validés apparaîtront ici.';
@@ -149,6 +154,7 @@ function closeMobile(){
  $('menuMobile').setAttribute('aria-expanded','false');
 }
 function route(){
+ if(rankingTimer){clearInterval(rankingTimer);rankingTimer=null;}
  const raw=decodeURIComponent(location.hash.replace(/^#\/?/,'').split('?')[0]);
  const page=Object.prototype.hasOwnProperty.call(pages,raw)?raw:'accueil';
  if(wheelObserver){wheelObserver.disconnect();wheelObserver=null;}
@@ -162,7 +168,12 @@ function route(){
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
  if(page==='killathon')mountKillathon();
- if(page==='classement'&&votesEnabled)void mountRankings();
+ if(page==='classement'&&votesEnabled){
+  void mountRankings();
+  rankingTimer=setInterval(()=>{
+   if(document.visibilityState!=='hidden')void mountRankings();
+  },12000);
+ }
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
@@ -175,5 +186,11 @@ $('menuMobile').addEventListener('click',()=>{
 $('sidebarShade').addEventListener('click',closeMobile);
 window.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobile()});
 window.addEventListener('hashchange',route);
+window.addEventListener('focus',()=>{
+ if(location.hash.startsWith('#/classement')&&votesEnabled)void mountRankings();
+});
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='visible'&&location.hash.startsWith('#/classement')&&votesEnabled)void mountRankings();
+});
 mountTwitchAuth(); // Le module nettoie immédiatement une URL de retour OAuth.
 route();
