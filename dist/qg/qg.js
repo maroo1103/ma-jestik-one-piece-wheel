@@ -1,4 +1,4 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-minimal-panel1';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-copy-clean1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);
@@ -15,16 +15,15 @@ const modules = [
 ];
 const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',createur:'univers'};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
-const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1><p>'+description+'</p><div class="page-tags">'+tags.join('')+'</div></div>';
+const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1>'+(description?'<p>'+description+'</p>':'')+(tags.length?'<div class="page-tags">'+tags.join('')+'</div>':'')+'</div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
 function home(){
  return '<section class="hero home-hero"><div class="hero-content"><div class="eyebrow">LE QG COMMUNAUTAIRE · MA_JESTIK</div><h1>BIENVENUE AU QG</h1><p>Quelques outils de divertissement.</p></div></section>'+
  '<section class="home-tools"><div class="section-top"><div><h2>OUTILS</h2><p>Les outils et espaces de la communauté réunis au même endroit.</p></div></div><div class="cards">'+modules.map(m=>'<a class="module-card '+(m.ready?'highlight':'')+'" href="#/'+m.path+'"><div class="card-line"><span class="module-icon" aria-hidden="true">'+m.icon+'</span><span class="'+(m.ready?'status-ready':'status-prep')+'">'+(m.ready?'DISPONIBLE':'EN PRÉPARATION')+'</span></div><h3>'+m.title+'</h3><p>'+m.desc+'</p><span class="card-bottom">'+(m.ready?'UTILISER MAINTENANT':'VOIR LE PROJET')+' <span aria-hidden="true">→</span></span></a>').join('')+'</div></section>';
 }
 function wheel(){
- return head('CRÉATION N° 01','LA ROUE FORTNITE','Notre roue Fortnite One Piece est intégrée à ce QG. Elle garde ses tirages, ses images, son audio et ses réglages : le site d’origine reste intact.',[tag('● DÉJÀ FONCTIONNEL'),tag('12 destinations'),tag('Tirages indépendants')])+
- '<div class="wheel-area"><div class="wheel-area-header"><strong>🎡 LE HASARD DÉCIDE · ROUe FORTNITE</strong><small>Même site · aucune nouvelle fenêtre</small></div><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'+
- '<div class="note">La roue est chargée directement depuis le même hébergement, à l’intérieur du QG. Les images et les sons restent dans leur version actuelle.</div>';
+ return head('CRÉATION N° 01','LA ROUE FORTNITE','Laisse le hasard choisir ta prochaine destination sur la carte de Fortnite.')+
+ '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
 }
 function challenges(){return challengesMarkup();}
 function court(){
@@ -32,7 +31,7 @@ function court(){
  '<div class="panel-grid"><article class="panel"><h3>UNE QUESTION. UN VERDICT.</h3><p>Exemple de présentation, sans vote réel pour le moment.</p><div class="vote-visual"><strong>QUEL SERA LE PROCHAIN JEU DU LIVE ?</strong><div class="vote-options"><span>FORTNITE</span><span>WARZONE</span></div></div></article>'+panel('⚖️','UN TRIBUNAL UNIVERSEL','L’administrateur rédige une question, propose plusieurs réponses et fixe une durée. Lorsque les comptes et les votes sécurisés seront prêts, chaque participant pourra voter une seule fois selon les règles choisies.')+'</div>';
 }
 function ranking(){
- if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE L’ÉQUIPAGE','Les points sont attribués uniquement après validation officielle des pronostics de défis Fortnite.',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit'),tag('Classement volontaire','gold')])+
+ if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE L’ÉQUIPAGE','',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit'),tag('Classement volontaire','gold')])+
  '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>Les meilleurs pronostics des membres qui ont accepté d’apparaître dans le classement. Aucun point fictif.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO TWITCH</th><th>POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement des résultats…</td></tr></tbody></table></section>';
  return head('COMMUNAUTÉ','LES CLASSEMENTS','Des records et points partagés entre visiteurs. Les scores devront être contrôlés côté serveur pour que chacun joue à armes égales.',[tag('Comptes à construire','gold'),tag('Scores protégés à venir')])+
  '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>La vraie base de données n’est pas encore connectée. Aucun faux profil ni faux score n’est affiché.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO</th><th>POINTS</th></tr></thead><tbody><tr><td colspan="3" class="empty-rank">Pas encore de classement — lancement après validation des règles et du système de comptes.</td></tr></tbody></table></section>'+
@@ -80,9 +79,8 @@ async function mountRankings(){
  }finally{clearTimeout(timer);}
 }
 function setup(){
- return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Retrouve notre création originale : la photo de mon bureau avec les 13 équipements cliquables, le zoom, les liens Amazon et la configuration PC détaillée. Tout fonctionne directement dans le QG, sans ouvrir un autre site.',[tag('13 éléments interactifs'),tag('Notre création originale'),tag('Liens affiliés indiqués')])+
- '<div class="wheel-area setup-area"><div class="wheel-area-header"><strong>🖥️ SETUP MA_JESTIK · VERSION ORIGINALE</strong><small>Photo interactive · Zoom · Configuration PC</small></div><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>'+
- '<div class="note">Le setup et sa page de configuration sont intégrés au QG. Seuls les liens vers les boutiques ouvrent leurs sites externes. Les photos sont provisoirement chargées depuis le dépôt original Ma_JesTik, et les liens affiliés existants sont conservés.</div>';
+ return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Explore mon installation gaming en détail. Sélectionne un équipement sur la photo pour découvrir ses caractéristiques et ma configuration PC.')+
+ '<div class="wheel-area setup-area"><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>';
 }
 function partners(){
  return head('UNIVERS MA_JESTIK','AFFILIATIONS & PARTENAIRES','Un espace transparent pour retrouver les boutiques et matériels que je recommande. Les liens affiliés n’apparaîtront que lorsque leur suivi aura été vérifié.',[tag('Liens à configurer','gold'),tag('Informations commerciales claires')])+
