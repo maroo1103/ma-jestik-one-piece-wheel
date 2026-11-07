@@ -160,3 +160,7 @@
 .qg-member-erase{background:transparent;color:#ffc1b7;border:1px solid #8c5962}
 .qg-member-erase:hover{background:#45303c}
 .qg-member-error{margin:0;color:#ffb19c;font-size:11px}
+
+/* Classement communautaire : profils Twitch réels uniquement. */
+.ranking-person{display:inline-flex;align-items:center;gap:9px;font-weight:750;min-width:0}
+.ranking-person img{width:26px;height:26px;object-fit:cover;border-radius:6px}

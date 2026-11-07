@@ -3,13 +3,15 @@ import {mountTwitchAuth} from './twitch-auth.js?v=20261107-votes1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
+const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
+const voteApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
 const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
 {path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Suivi du Killathon Fortnite et boosts Twitch, avec affichage public en préparation.',ready:true},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Des votes sur toutes sortes de sujets, pas uniquement les fails.',ready:false},
-{path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:false}
+{path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
 ];
 const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',createur:'univers'};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
@@ -30,9 +32,47 @@ function court(){
  '<div class="panel-grid"><article class="panel"><h3>UNE QUESTION. UN VERDICT.</h3><p>Exemple de présentation, sans vote réel pour le moment.</p><div class="vote-visual"><strong>QUEL SERA LE PROCHAIN JEU DU LIVE ?</strong><div class="vote-options"><span>FORTNITE</span><span>WARZONE</span></div></div></article>'+panel('⚖️','UN TRIBUNAL UNIVERSEL','L’administrateur rédige une question, propose plusieurs réponses et fixe une durée. Lorsque les comptes et les votes sécurisés seront prêts, chaque participant pourra voter une seule fois selon les règles choisies.')+'</div>';
 }
 function ranking(){
+ if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE L’ÉQUIPAGE','Les points sont attribués uniquement après validation officielle des pronostics de défis Fortnite.',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit'),tag('Classement volontaire','gold')])+
+ '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>Les meilleurs pronostics des membres qui ont accepté d’apparaître dans le classement. Aucun point fictif.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO TWITCH</th><th>POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement des résultats…</td></tr></tbody></table></section>';
  return head('COMMUNAUTÉ','LES CLASSEMENTS','Des records et points partagés entre visiteurs. Les scores devront être contrôlés côté serveur pour que chacun joue à armes égales.',[tag('Comptes à construire','gold'),tag('Scores protégés à venir')])+
  '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>La vraie base de données n’est pas encore connectée. Aucun faux profil ni faux score n’est affiché.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO</th><th>POINTS</th></tr></thead><tbody><tr><td colspan="3" class="empty-rank">Pas encore de classement — lancement après validation des règles et du système de comptes.</td></tr></tbody></table></section>'+
  '<div class="note">Architecture prévue : authentification sécurisée, stockage partagé et règles de calcul côté serveur sur un service à quota gratuit. Pas d’abonnement mensuel activé.</div>';
+}
+async function mountRankings(){
+ const tbody=$('rankingRows');
+ if(!tbody||!votesEnabled)return;
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10000);
+ try{
+  const r=await fetch(voteApi+'/v1/ranking',{cache:'no-store',mode:'cors',signal:controller.signal});
+  if(!r.ok)throw Error('Classement inaccessible');
+  const data=await r.json();
+  if(!tbody.isConnected)return;
+  tbody.replaceChildren();
+  const entries=Array.isArray(data.entries)?data.entries:[];
+  if(!entries.length){
+   const tr=document.createElement('tr'),td=document.createElement('td');
+   td.colSpan=3;td.className='empty-rank';td.textContent='Aucun point officiel pour le moment. Les premiers pronostics validés apparaîtront ici.';
+   tr.append(td);tbody.append(tr);return;
+  }
+  entries.slice(0,50).forEach((entry,i)=>{
+   if(!entry||typeof entry.display_name!=='string')return;
+   const tr=document.createElement('tr');
+   const rank=document.createElement('td');rank.textContent=String(i+1);
+   const who=document.createElement('td');
+   const user=document.createElement('span');user.className='ranking-person';
+   try {
+    const url=new URL(String(entry.avatar_url||''));
+    if(url.protocol==='https:'&&url.hostname==='static-cdn.jtvnw.net'){
+     const img=document.createElement('img');img.src=url.href;img.alt='';img.referrerPolicy='no-referrer';img.width=26;img.height=26;user.append(img);
+    }
+   }catch{}
+   const name=document.createElement('span');name.textContent=entry.display_name.slice(0,64);user.append(name);who.append(user);
+   const score=document.createElement('td');score.textContent=String(Math.max(0,Math.floor(Number(entry.score)||0)));
+   tr.append(rank,who,score);tbody.append(tr);
+  });
+ }catch{
+  if(tbody.isConnected)tbody.querySelector('.empty-rank').textContent='Le classement est temporairement indisponible.';
+ }finally{clearTimeout(timer);}
 }
 function setup(){
  return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Retrouve notre création originale : la photo de mon bureau avec les 13 équipements cliquables, le zoom, les liens Amazon et la configuration PC détaillée. Tout fonctionne directement dans le QG, sans ouvrir un autre site.',[tag('13 éléments interactifs'),tag('Notre création originale'),tag('Liens affiliés indiqués')])+
@@ -122,6 +162,7 @@ function route(){
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
  if(page==='killathon')mountKillathon();
+ if(page==='classement'&&votesEnabled)void mountRankings();
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
