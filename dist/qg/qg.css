@@ -257,3 +257,25 @@
  }
  .qg-rank-card{grid-template-columns:36px 72px minmax(0,1fr)}
 }
+
+
+/* Navigation latérale : lisibilité améliorée, sans libellés d'état. */
+@media(min-width:1201px){
+ .layout{grid-template-columns:298px minmax(0,1fr)}
+}
+@media(min-width:831px) and (max-width:1200px){
+ .layout{grid-template-columns:282px minmax(0,1fr)}
+}
+.sidebar-section-label{font-size:11px;letter-spacing:1.85px}
+.nav-link,.group-toggle{font-size:16px;line-height:1.4;padding:13px 11px;gap:10px}
+.nav-icon{font-size:19px;width:21px;flex-shrink:0}
+.submenu{margin-left:27px;padding-left:12px}
+.submenu a{font-size:14.5px;line-height:1.4;min-height:40px;padding:9px 8px;gap:9px;white-space:normal}
+.submenu a span:first-child{font-size:17px;width:20px;flex-shrink:0}
+.sidebar-social .top-link-twitch{font-size:13px}
+@media(max-width:830px){
+ .sidebar{width:302px;max-width:88vw}
+}
+@media(max-width:380px){
+ .sidebar{width:292px;max-width:90vw}
+}
