@@ -279,3 +279,25 @@
 @media(max-width:380px){
  .sidebar{width:292px;max-width:90vw}
 }
+
+/* QG — partenariats : cartes cliquables clairement identifiées comme affiliées. */
+.partner-content{flex:1;min-width:0}
+.partner-heading{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.partner-heading h3{margin:0}
+.partner-label{display:inline-flex;align-items:center;font-size:9px;font-weight:900;letter-spacing:.9px;color:#baf0d2;background:#174539;border:1px solid #377c64;border-radius:99px;padding:4px 9px}
+.partner-box.partner-live{border-color:#41677a;background:linear-gradient(110deg,#15394a,#102b3e 64%,#19273e);box-shadow:0 10px 22px #00000016;transition:transform .18s,border-color .18s,box-shadow .18s}
+.partner-box.partner-live:hover{border-color:#9b81bf;transform:translateY(-2px);box-shadow:0 12px 28px #0004}
+.partner-box.partner-instant .partner-brand{border-color:#b08547;background:linear-gradient(160deg,#46301d,#2c2c2d);color:#ffce81}
+.partner-box.partner-amazon-card .partner-brand{border-color:#97754d;background:linear-gradient(160deg,#302a27,#313039);color:#ffca79}
+.partner-amazon{font-family:Georgia,serif;font-size:55px;font-weight:900;font-style:italic}
+.partner-box .partner-cta{display:inline-flex;margin-top:16px;padding:10px 17px;min-height:42px}
+.partner-box .partner-disclosure{font-size:11px;color:#c1d4dc;margin-top:10px;line-height:1.5}
+.partner-legal{font-size:12px;line-height:1.75}
+.partner-legal strong{color:#e9c58b}
+@media(max-width:680px){
+ .partner-box{padding:17px}
+ .partner-heading{gap:7px}
+ .partner-box .partner-cta{width:100%;justify-content:center}
+ .partner-amazon{font-size:42px}
+}
+@media(prefers-reduced-motion:reduce){.partner-box.partner-live{transition:none}}
