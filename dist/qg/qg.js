@@ -9,7 +9,7 @@ const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
-{path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Compteur personnel, objectif et affichage OBS pour chaque streamer. Activation en cours.',ready:false},
+{path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Compteur personnel, objectif et affichage OBS pour chaque streamer. Prêt à utiliser.',ready:true},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Des votes sur toutes sortes de sujets, pas uniquement les fails.',ready:false},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
 ];
