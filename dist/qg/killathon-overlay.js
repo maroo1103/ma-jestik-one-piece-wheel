@@ -1,5 +1,5 @@
 /* Source navigateur OBS : accès uniquement à une URL publique aléatoire, aucun jeton Twitch. */
-const api=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
+const api=(document.querySelector('meta[name="majestik-killathon-api"]')?.content||'').replace(/\/$/,'');
 const params=new URLSearchParams(location.search);
 const id=params.get('id')||'';
 const isUUID=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);

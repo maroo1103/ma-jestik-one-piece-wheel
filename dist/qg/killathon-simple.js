@@ -1,7 +1,7 @@
 /* Killathon simple — chaque streamer gère son compteur vérifié Twitch.
    Stockage et autorisations sont gérés par Cloudflare ; OBS utilise un lien public lecture seule. */
 import {getQGTwitchSession} from './twitch-auth.js?v=20261107-ranking-optin1';
-const KTS_API=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
+const KTS_API=(document.querySelector('meta[name="majestik-killathon-api"]')?.content||'').replace(/\/$/,'');
 const KTS_GAMES=['Fortnite Zero Build','Fortnite Battle Royale','Warzone','Autre jeu'];
 const byId=id=>document.getElementById(id);
 let ktsBoard=null,ktsBusy=false,ktsError='',ktsInfo='',ktsTimer=null,ktsAccountId='',ktsRequest=0;
