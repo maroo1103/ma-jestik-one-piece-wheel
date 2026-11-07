@@ -105,3 +105,29 @@
 .qg-auth-note{font-size:11px;color:#f1c27f;max-width:180px;line-height:1.3}
 @media(max-width:1050px){.qg-profile-name{max-width:85px}.qg-login{padding:8px;font-size:11px}}
 @media(max-width:680px){.qg-profile-name{display:none}.qg-login{padding:8px 7px}.qg-logout{padding:6px}.top-actions{gap:5px}}
+
+/* Liens de communauté déplacés sous la navigation, en bas de la barre latérale. */
+.sidebar-social{
+  flex-shrink:0;
+  margin-top:auto;
+  display:grid;
+  gap:9px;
+  padding:16px 16px 20px;
+  border-top:1px solid #254152;
+  background:linear-gradient(180deg,#0c1f2b,#0a1926);
+}
+.sidebar-social .top-link-twitch{
+  display:inline-flex;
+  width:100%;
+  min-height:42px;
+  align-items:center;
+  justify-content:flex-start;
+  gap:9px;
+  padding:10px 12px;
+  font-size:12px;
+  box-shadow:none;
+}
+.sidebar-social .top-social-long{display:inline}
+.sidebar-social .top-social-short{display:none}
+.sidebar-social .top-link-twitch-icon{width:18px;height:18px;flex-basis:18px}
+@media(max-height:570px){.sidebar-social{padding-top:10px;padding-bottom:10px;gap:6px}}
