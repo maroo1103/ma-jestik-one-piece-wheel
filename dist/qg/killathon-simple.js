@@ -55,7 +55,7 @@ function ktsView(){
   '<div class="kts-options"><label>Modifier l’objectif<input type="number" id="ktsGoalEdit" min="1" max="9999" step="1" value="'+ktsInt(ktsBoard.goal,1,9999)+'"></label>'+
   ktsButton('goal','Enregistrer l’objectif')+'</div>'+
   '<div class="kts-actions">'+ktsButton('active',ktsBoard.active?'⏸ Mettre en pause':'▶ Démarrer le Killathon',ktsBoard.active?'':'kts-primary')+ktsButton('reset','Remettre à zéro','kts-danger')+'</div>'+
-  '<section class="kts-obs"><div><h4>📺 Affichage pour OBS</h4><p>Ajoute ce lien comme source <strong>Navigateur</strong> dans OBS (960 × 220). Il se met à jour automatiquement, sans jeton Twitch.</p></div>'+
+  '<section class="kts-obs"><div><h4>📺 Affichage pour OBS</h4><p>Ajoute ce lien comme source <strong>Navigateur</strong> dans OBS (760 × 95). Il se met à jour automatiquement, sans jeton Twitch.</p></div>'+
   '<div class="kts-obs-link"><input id="ktsObsUrl" readonly aria-label="Lien OBS" value="'+ktsEsc(ktsOverlayLink())+'">'+ktsButton('copy','Copier le lien OBS','kts-primary')+'</div></section>';
  }
  out+='</div>';

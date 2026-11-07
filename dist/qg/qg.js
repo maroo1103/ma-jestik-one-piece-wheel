@@ -1,6 +1,6 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-copy-clean1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
-import {killathonMarkup,mountKillathon} from './killathon.js?v=20261107-simple2';
+import {killathonMarkup,mountKillathon} from './killathon.js?v=20261107-mini1';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';

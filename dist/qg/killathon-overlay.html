@@ -6,21 +6,21 @@
  <meta name="theme-color" content="#061b29">
  <meta name="majestik-killathon-api" content="https://ma-jestik-qg-killathon.maroodu11.workers.dev">
  <title>Killathon · Ma_JesTik · OBS</title>
- <link rel="stylesheet" href="killathon-overlay.css?v=20261107-simple1">
- <script type="module" src="killathon-overlay.js?v=20261107-simple1"></script>
+ <link rel="stylesheet" href="killathon-overlay.css?v=20261107-mini1">
+ <script type="module" src="killathon-overlay.js?v=20261107-mini1"></script>
 </head>
 <body>
- <main class="overlay" aria-live="polite">
-  <div class="overlay-top">
-   <div class="overlay-brand"><span class="overlay-icon">🎯</span><span><strong>KILLATHON</strong><small id="streamer">Ma_JesTik</small></span></div>
-   <div class="overlay-state" id="liveState">CHARGEMENT</div>
+ <main class="overlay" aria-label="Killathon : compteur et objectif">
+  <div class="overlay-header">
+   <strong class="overlay-title">KILLATHON</strong>
+   <div class="overlay-score" aria-label="Éliminations réalisées et objectif">
+    <span id="kills">0</span><span class="overlay-divider" aria-hidden="true">/</span><span id="goal">30</span>
+   </div>
   </div>
-  <div class="overlay-bottom">
-   <div class="overlay-goal"><span id="kills">0</span><small>/</small><span id="goal">30</span><small>éliminations</small></div>
-   <div class="overlay-progress"><div id="progress"></div></div>
-   <div class="overlay-percent" id="percent">0 %</div>
+  <div class="overlay-progress" id="progressTrack" role="progressbar" aria-label="Progression du Killathon" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+   <div id="progress"></div>
   </div>
-  <p class="overlay-error" id="error" hidden></p>
+  <p class="overlay-error" id="error" role="status" hidden></p>
  </main>
 </body>
 </html>
