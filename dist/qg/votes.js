@@ -197,13 +197,6 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
    rankingVisibility(section);
   }
   if(busy)add(section,'p','qg-vote-hint','Enregistrement…');
-  const foot=el('div','qg-vote-foot');
-  foot.append(el('small','qg-vote-auto-label','● Synchronisation automatique · env. 6 s'));
-  const refresh=el('button','qg-vote-refresh','↻ Forcer la mise à jour');
-  refresh.type='button';refresh.dataset.voteAction='refresh';refresh.disabled=busy||inflight;
-  refresh.setAttribute('aria-label','Actualiser les votes');
-  foot.append(refresh);
-  section.append(foot);
   host.append(section);
   host.querySelectorAll('[data-vote-action]').forEach(b=>b.addEventListener('click',()=>{void act(b.dataset.voteAction);}));
  }
