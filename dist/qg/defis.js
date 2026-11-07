@@ -11,6 +11,17 @@ const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, c=>({"&":"&a
 const classes = {Facile:"easy",Moyen:"medium",Difficile:"hard"};
 const teams = {solo:"Solo",duo:"Duo",trio:"Trio",quatuor:"Quatuor"};
 const levels = {Facile:0,Moyen:1,Difficile:2};
+const GAME_OPTIONS = [
+ {id:"fortnite",label:"Fortnite Zero Build",available:true},
+ {id:"warzone",label:"Call of Duty: Warzone",available:false},
+ {id:"apex",label:"Apex Legends",available:false},
+ {id:"z1",label:"Z1 Battle Royale",available:false}
+];
+// Choix temporaire : chaque arrivée sur la page commence sans thème de jeu.
+// Le catalogue et les résultats Fortnite restent conservés dans leur stockage habituel.
+let selectedGame="";
+const gameSelector=()=>'<div class="challenge-game-switcher"><div class="challenge-game-switcher-copy"><span class="challenge-game-kicker">SÉLECTION DU JEU</span><strong>Choisis ton univers</strong><small>Les défis disponibles s’affichent selon le jeu choisi.</small></div><label class="challenge-game-field" for="challengeGame"><span>JEU</span><select id="challengeGame"><option value="" '+(!selectedGame?'selected':'')+'>— Sélectionner un jeu —</option>'+GAME_OPTIONS.map(x=>'<option value="'+x.id+'" '+(selectedGame===x.id?'selected ':'')+(!x.available?'disabled ':'')+'>'+x.label+(x.available?'':' · À venir')+'</option>').join("")+'</select></label></div>';
+const neutralChallenge=()=>'<div class="challenge-neutral"><span class="challenge-neutral-icon" aria-hidden="true">⚔️</span><div><span class="challenge-game-kicker">TON PROCHAIN OBJECTIF</span><h2>LE DÉFI DE L’ÉQUIPAGE</h2><p>Sélectionne un jeu dans le menu ci-dessus pour découvrir ses missions.</p></div></div>';
 const initial = () => ({catalogVersion:CATALOG_VERSION,mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:FORTNITE_CHALLENGES.map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
 let data = initial();
 function load(){
@@ -64,9 +75,10 @@ function history(){
 function view(message=""){
  const s=score();
  const count=FORTNITE_CHALLENGES.filter(eligible).length;
- return '<section class="challenge-ui" id="challengeUi">'+
+ if(!selectedGame) return '<section class="challenge-ui" id="challengeUi">'+gameSelector()+neutralChallenge()+'</section>';
+ return '<section class="challenge-ui" id="challengeUi">'+gameSelector()+
  '<div class="challenge-stats"><div><span>DÉFIS DISPONIBLES</span><strong>'+count+'</strong></div><div><span>RÉUSSITES</span><strong>'+s.success+'</strong></div><div><span>ÉCHECS</span><strong>'+s.fail+'</strong></div><div><span>PASSÉES</span><strong>'+s.skipped+'</strong></div></div>'+
- '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-panel-title"><h2>LE DÉFI DE L’ÉQUIPAGE</h2><span class="tag">FORTNITE ZERO BUILD</span></div>'+
+ '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DE L’ÉQUIPAGE</h2><p>118 missions pour faire vos preuves dans l’arène.</p></div>'+
  '<div class="challenge-tabs" role="group" aria-label="Mode de création du défi"><button type="button" class="'+(data.mode==="random"?"selected":"")+'" data-action="mode" data-value="random" aria-pressed="'+(data.mode==="random")+'">🎲 Aléatoire</button><button type="button" class="'+(data.mode==="viewer"?"selected":"")+'" data-action="mode" data-value="viewer" aria-pressed="'+(data.mode==="viewer")+'">👥 Proposition viewer</button></div>'+
  (data.mode==="random"?'<div class="challenge-filters">'+teamSelect()+'<label>Filtrer par difficulté <select id="challengeLevel"><option value="all">Toutes</option>'+["Facile","Moyen","Difficile"].map(x=>'<option value="'+x+'" '+(data.level===x?"selected":"")+'>'+x+'</option>').join("")+'</select></label></div><p class="challenge-muted">'+count+' défi(s) compatible(s) avec ce mode et cette difficulté.</p><button type="button" class="btn btn-gold challenge-draw" data-action="draw" '+(data.active?"disabled":"")+'>🎲 TIRER UNE MISSION</button>':
  '<form id="challengeViewerForm" class="challenge-viewer-form">'+teamSelect()+'<label>Pseudo du viewer <input name="viewer" type="text" maxlength="36" placeholder="Ex. ViewerAlpha" required></label><label>Titre du défi <input name="title" type="text" maxlength="80" placeholder="Ex. Le défi du pirate" required></label><label>Règles de la mission <textarea name="description" rows="3" maxlength="350" placeholder="Explique précisément comment réussir le défi…" required></textarea></label><button type="submit" class="btn btn-gold">Ajouter à la file de validation</button><p class="challenge-muted">Cette proposition reste sur cet appareil : elle n’est pas envoyée à Ma_JesTik ni à Twitch/Rumble.</p></form>')+
@@ -75,11 +87,12 @@ function view(message=""){
  catalogue()+'<div class="note">Version publique gratuite : résultats et propositions enregistrés <strong>uniquement dans ce navigateur</strong>. Pas encore de classement général ni de transmission automatique au streamer. Certains défis dépendent des armes et mécaniques disponibles dans la saison Fortnite.</div></section>';
 }
 export function challengesMarkup(){
- return '<div class="page-head"><div class="eyebrow">CRÉATION N° 02 · FORTNITE ZERO BUILD</div><h1>DÉFIS & MISSIONS</h1><p>Choisis Solo, Duo, Trio ou Quatuor, filtre par difficulté et découvre les défis disponibles. Consulte le catalogue pour les trier, ou propose ta propre mission.</p><div class="page-tags"><span class="tag">118 défis Fortnite</span><span class="tag">Solo · Duo · Trio · Quatuor</span><span class="tag gold">Enregistrement local</span></div></div><div id="challengeRoot"></div>';
+ return '<div class="challenge-page-head"><div class="challenge-game-kicker">L’ESPACE GAMING DE L’ÉQUIPAGE</div><h1>DÉFIS & MISSIONS</h1><p>Un seul espace pour relever des défis sur tes jeux préférés. Choisis un jeu pour commencer.</p></div><div id="challengeRoot"></div>';
 }
 export function mountChallenges(){
  const root=document.getElementById("challengeRoot");
  if(!root)return;
+ selectedGame="";
  data=load();
  let status="";
  const render=(message="")=>{root.innerHTML=view(message);const details=root.querySelector("#challengeCatalogue");details?.addEventListener("toggle",()=>{data.catalogOpen=details.open;save()})};
@@ -124,7 +137,8 @@ export function mountChallenges(){
  });
  root.addEventListener("change",event=>{
   const el=event.target;
-  if(el.id==="challengeTeam"){data.team=Object.hasOwn(teams,el.value)?el.value:"solo";save();render();}
+  if(el.id==="challengeGame") { selectedGame=el.value==="fortnite"?"fortnite":"";render(); }
+  else if(el.id==="challengeTeam"){data.team=Object.hasOwn(teams,el.value)?el.value:"solo";save();render();}
   else if(el.id==="challengeLevel"){data.level=["Facile","Moyen","Difficile"].includes(el.value)?el.value:"all";save();render();}
   else if(el.id==="challengeSort"){data.sort=["default","easy","hard"].includes(el.value)?el.value:"default";data.catalogOpen=true;save();render();}
   else if(el.id==="challengeCategory"){data.category=["Combat","Survie","Stratégie","Duo","Trio","Quatuor"].includes(el.value)?el.value:"all";data.catalogOpen=true;save();render();}

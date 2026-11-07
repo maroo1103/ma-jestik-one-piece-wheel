@@ -3,3 +3,45 @@
 @media(max-width:1160px){.challenge-columns{grid-template-columns:1fr}.challenge-sidebar{grid-template-columns:1fr 1fr}.challenge-result-actions{grid-template-columns:1fr 1fr 0.8fr}}
 @media(max-width:700px){.challenge-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.challenge-sidebar{grid-template-columns:1fr}.challenge-result-actions{grid-template-columns:1fr 1fr}.challenge-result-actions .btn:last-child{grid-column:1/-1}.challenge-cat-tools{align-items:stretch}.challenge-cat-tools label{width:100%}.challenge-cat-tools select{width:100%}.challenge-catalog-row{gap:8px}.challenge-catalog>summary{padding:14px;font-size:12px}.challenge-catalog>summary span{font-size:9px}}
 @media(max-width:390px){.challenge-tabs{grid-template-columns:1fr}.challenge-filters{grid-template-columns:1fr}.challenge-catalog-meta{display:none}}
+
+
+/* DA Défis & missions : même palette bleu nuit / turquoise / or que Killathon. */
+.challenge-page-head{position:relative;margin:-7px 0 21px;padding:12px 0 18px;overflow:hidden;background:radial-gradient(ellipse at 84% 18%,#16445e55,transparent 49%)}
+.challenge-page-head .challenge-game-kicker{display:block;margin-bottom:10px}
+.challenge-page-head h1{font:900 clamp(46px,5vw,74px)/.98 var(--display,'Arial Narrow',sans-serif);letter-spacing:.01em;margin:0 0 13px;color:#fff}
+.challenge-page-head p{max-width:640px;margin:0;color:#c1d4df;font-size:14px;line-height:1.6}
+.challenge-game-kicker{font-size:10px;letter-spacing:1.7px;font-weight:900;color:#ffd16e}
+.challenge-ui{padding:clamp(16px,2vw,27px);gap:17px;border:1px solid #17798c;border-radius:16px;background:radial-gradient(ellipse at 80% 0%,#0a48566b,transparent 55%),linear-gradient(147deg,#06303e,#082635 58%,#031925);box-shadow:0 14px 50px #0003}
+.challenge-game-switcher{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;border:1px solid #246d80;border-radius:12px;background:#163b4bb8;padding:16px 20px}
+.challenge-game-switcher-copy{display:grid;gap:3px;min-width:210px}
+.challenge-game-switcher-copy strong{font:800 25px/1.1 var(--display,'Arial Narrow',sans-serif);color:#fff}
+.challenge-game-switcher-copy small{font-size:12px;color:#bfd5df}
+.challenge-game-field{display:grid;gap:7px;min-width:min(100%,270px);color:#c1d4df;font-size:10px;font-weight:900;letter-spacing:.9px}
+.challenge-ui .challenge-game-field select{min-height:46px;padding:9px 40px 9px 14px;border:1px solid #3d8ca1;border-radius:8px;color:#f8f8f8;background:#082837;font-size:13px;font-weight:750;letter-spacing:normal;cursor:pointer}
+.challenge-ui .challenge-game-field select:focus-visible{outline:2px solid #f8c66d;outline-offset:2px}
+.challenge-neutral{display:flex;align-items:center;gap:23px;min-height:190px;border:1px solid #247e91;border-radius:13px;background:radial-gradient(circle at 80% 40%,#185263a6,transparent 55%),linear-gradient(120deg,#07303e,#082532);padding:28px}
+.challenge-neutral-icon{display:grid;place-items:center;flex:0 0 72px;width:72px;height:72px;border:1px solid #31889b;border-radius:17px;background:#1a4a5b;color:#ffd16e;font-size:34px}
+.challenge-neutral h2{font:900 clamp(29px,4vw,43px)/1 var(--display,'Arial Narrow',sans-serif);color:#fff;margin:7px 0 10px}
+.challenge-neutral p{margin:0;color:#c0d5df;font-size:13px}
+.challenge-stats{gap:12px}
+.challenge-stats>div{border:1px solid #246d80;border-radius:10px;background:#1842549e;padding:14px 18px}
+.challenge-stats span{color:#bed3df;letter-spacing:.95px}
+.challenge-stats strong{color:#f8c66d;font:900 clamp(34px,4.5vw,50px)/1.08 var(--display,'Arial Narrow',sans-serif)}
+.challenge-columns{gap:13px}
+.challenge-main.panel,.challenge-sidebar .panel{background:linear-gradient(145deg,#0a394b99,#09283799);border:1px solid #187b92;border-radius:12px}
+.challenge-main.panel{padding:18px}
+.challenge-game-banner{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;min-height:158px;padding:22px 20px;border:1px solid #338da1;border-radius:11px;overflow:hidden;background-color:#082635}
+.challenge-game-banner--fortnite{background-image:linear-gradient(90deg,#041b29f2 0%,#041b29de 40%,#041b2980 72%,#041b2938 100%),url('../assets/05.webp');background-size:cover;background-position:center 44%}
+.challenge-game-banner h2{font:900 clamp(29px,3.2vw,43px)/.99 var(--display,'Arial Narrow',sans-serif);text-shadow:0 2px 16px #00131e;margin:8px 0 8px;max-width:430px;color:#fff}
+.challenge-game-banner p{font-size:12px;color:#d2e5ed;margin:0;text-shadow:0 1px 9px #00131e;max-width:430px}
+.challenge-ui select,.challenge-ui input:not([type=checkbox]),.challenge-ui textarea{background:#082635;border-color:#39758b;color:#eef5fb}
+.challenge-tabs{background:#062332;border-color:#246d80;margin:16px 0}
+.challenge-tabs button.selected{background:#174c60;border-color:#448da0;color:#ffd16e}
+.challenge-ui .challenge-draw{background:#efc078;color:#102535;border-color:#efc078}
+.challenge-active{background:linear-gradient(145deg,#104657,#0a2a38);border-color:#4d889b}
+.challenge-catalog{background:#0b2b3a;border-color:#187b92;border-radius:12px}
+.challenge-catalog>summary{color:#f8c66d}
+.challenge-catalog-row{background:#0b2b3a;border-color:#285e74}
+.challenge-queue-item{background:#0c2c3b;border-color:#285e74}
+@media(max-width:700px){.challenge-page-head{padding-top:6px}.challenge-page-head h1{font-size:48px}.challenge-ui{padding:13px}.challenge-game-switcher{align-items:stretch;padding:14px}.challenge-game-field{width:100%}.challenge-neutral{align-items:flex-start;padding:17px;gap:12px;min-height:145px}.challenge-neutral-icon{width:49px;height:49px;flex-basis:49px;font-size:25px}.challenge-neutral h2{font-size:30px}.challenge-main.panel{padding:13px}.challenge-game-banner{min-height:160px;padding:18px;background-position:62% center}.challenge-stats>div{padding:13px 10px}}
+@media(prefers-reduced-motion:reduce){.challenge-ui *{scroll-behavior:auto}}
