@@ -216,3 +216,44 @@
  .qg-rank-table th:first-child,.qg-rank-table td:first-child{width:62px}.qg-rank-table th:last-child,.qg-rank-table td:last-child{width:74px}
  .qg-rank-table th,.qg-rank-table td{padding:10px 6px}.qg-rank-avatar{width:30px;height:30px}.qg-rank-points{font-size:20px}
 }
+
+
+/* Couronnes de laurier vectorielles autour des vrais avatars Twitch.
+   Un seul masque SVG, teinté par rang : or / argent / bronze. */
+.qg-rank-avatar-frame{
+ position:relative;display:grid;place-items:center;flex:0 0 auto;
+ width:148px;height:132px;isolation:isolate;
+}
+.qg-rank-avatar-frame::before{
+ content:"";position:absolute;inset:-8px 0;z-index:0;pointer-events:none;
+ background:linear-gradient(145deg,#eef5ff,#9ab6ce 50%,#dceaf5);
+ -webkit-mask-image:url("laurel-wreath.svg");
+ mask-image:url("laurel-wreath.svg");
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+ -webkit-mask-position:center;mask-position:center;
+ -webkit-mask-size:contain;mask-size:contain;
+ filter:drop-shadow(0 1px 3px #0006);
+}
+.qg-rank-avatar-frame .qg-rank-avatar{position:relative;z-index:1;flex-shrink:0}
+.qg-rank-card-1 .qg-rank-avatar-frame::before{
+ background:linear-gradient(140deg,#fff4c6 8%,#f2cf78 42%,#c98b24 68%,#ffe4a3);
+}
+.qg-rank-card-2 .qg-rank-avatar-frame::before{
+ background:linear-gradient(135deg,#fff 0%,#d2e2ef 42%,#849caf 70%,#f1f8ff);
+}
+.qg-rank-card-3 .qg-rank-avatar-frame::before{
+ background:linear-gradient(135deg,#f8cc9f 0%,#c98d66 40%,#8c5443 70%,#ffd6ab);
+}
+@media(max-width:850px){
+ .qg-rank-avatar-frame{width:118px;height:112px}
+ .qg-rank-avatar-frame::before{inset:-3px 0}
+}
+@media(max-width:620px){
+ .qg-rank-avatar-frame{grid-column:2;grid-row:1/3;width:72px;height:72px;justify-self:center}
+ .qg-rank-avatar-frame::before{inset:-3px 0}
+ .qg-rank-card .qg-rank-avatar-frame .qg-rank-avatar,
+ .qg-rank-card-1 .qg-rank-avatar-frame .qg-rank-avatar{
+  grid-column:auto;grid-row:auto;width:47px;height:47px;
+ }
+ .qg-rank-card{grid-template-columns:36px 72px minmax(0,1fr)}
+}

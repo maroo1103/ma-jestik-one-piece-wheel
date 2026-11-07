@@ -55,6 +55,12 @@ function rankAvatar(entry){
  }catch{}
  return container;
 }
+function rankWreathedAvatar(entry){
+ const frame=document.createElement('span');
+ frame.className='qg-rank-avatar-frame';
+ frame.append(rankAvatar(entry));
+ return frame;
+}
 function rankCard(entry,place){
  const roles=['Capitaine de l’équipage','Second de bord','Éclaireur'];
  const icons=['👑','🥈','🥉'];
@@ -66,7 +72,7 @@ function rankCard(entry,place){
  const score=document.createElement('span');score.className='qg-rank-score';const points=rankScore(entry.score);
  score.textContent=String(points)+' '+(points===1?'point':'points');
  const role=document.createElement('span');role.className='qg-rank-role';role.textContent=roles[place-1];
- card.append(icon,number,rankAvatar(entry),name,score,role);
+ card.append(icon,number,rankWreathedAvatar(entry),name,score,role);
  return card;
 }
 function renderRankings(entries,podium,tbody){
