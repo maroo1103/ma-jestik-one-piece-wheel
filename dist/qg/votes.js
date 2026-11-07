@@ -19,7 +19,7 @@ function button(label,action,disabled=false){
 }
 export function mountVotePanel(root,getActive,onStateChange=()=>{}){
  if(!enabled||!fixedAPI)return {render(){}};
- let round=null,info=null,loading=true,busy=false,error='',updateAt=0,inflight=false,retryRefresh=false;
+ let round=null,info=null,profileError='',loading=true,busy=false,error='',updateAt=0,inflight=false,retryRefresh=false;
  let notifiedKey='';
  function notify(){
   const next=JSON.stringify([round?.id||'',round?.status||'',ownerUI(),info?.registered===true,loading]);
@@ -55,9 +55,15 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
    const status=await request('/v1/votes/current');
    round=status.round||null;
    const s=session();
+   profileError='';
    if(s?.token){
     try {info=await request('/v1/votes/me','GET',undefined,true);}
-    catch {info=null;}
+    catch (e) {
+     info=null;
+     profileError=String(e?.message||'').includes('401')
+       ?'Connexion Twitch expirée. Déconnecte-toi puis reconnecte-toi.'
+       :'Profil Twitch non vérifiable. Réessaie avec « Actualiser ».';
+    }
    } else info=null;
    updateAt=Date.now();
   }catch{error='Le service de vote est momentanément indisponible.';}
@@ -92,9 +98,17 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
       add(node,'p','qg-vote-confirmed','✓ Ton vote : '+nameOf[info.prediction]);
     }else if(!s?.token){
       add(node,'p','qg-vote-hint','Connecte-toi avec Twitch pour voter.');
-    }else if(!info?.registered){
-      add(node,'p','qg-vote-hint','Crée ton profil QG pour voter.');
-    }else add(node,'p','qg-vote-hint','Vérification de ton profil…');
+    }else if(profileError){
+      add(node,'p','qg-vote-error',profileError);
+    }else if(info?.registered===false){
+      const create=el('div','qg-vote-onboarding');
+      add(create,'p','qg-vote-hint','Un profil QG est nécessaire pour voter.');
+      const b=button('Créer mon profil pour voter','profile-create');
+      b.setAttribute('aria-label','Créer volontairement mon profil QG et accéder aux pronostics');
+      create.append(b);
+      add(create,'small','qg-vote-consent','Cette action enregistre ton ID Twitch, ton pseudo et ton avatar dans le QG. Le classement reste facultatif.');
+      node.append(create);
+    }else add(node,'p','qg-vote-hint','Vérification de ton profil Twitch…');
     if(ownerUI()){
       const admin=el('div','qg-vote-admin');
       admin.append(button('Fermer les votes','close'),button('Annuler','cancel'));
@@ -163,6 +177,19 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   if(action==='refresh'){await refresh();return;}
   if(action==='start'){await publishCurrent();return;}
   if(busy)return;
+  if(action==='profile-create'){
+   if(round?.status!=='open'||!session()?.token||info?.registered!==false)return;
+   busy=true;error='';render();
+   let message='';
+   try{await request('/v1/me','POST',undefined,true);}
+   catch {message='Création impossible. Vérifie ta connexion Twitch et réessaie.';}
+   finally{
+    busy=false;
+    await refresh();
+    if(message){error=message;render();}
+   }
+   return;
+  }
   const admin=['start','close','cancel','resolve-success','resolve-failure'].includes(action);
   if(admin&&!ownerUI())return;
   let path='',body=null;
