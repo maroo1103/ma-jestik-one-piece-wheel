@@ -268,7 +268,6 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   }else if(action==='resolve-success'||action==='resolve-failure'){
    if(!['open','locked'].includes(round?.status))return;
    const outcome=action==='resolve-success'?'success':'failure';
-   if(!window.confirm('Valider officiellement « '+nameOf[outcome]+' » ? Les votes seront clos et les points attribués.'))return;
    const mustClose=round.status==='open';
    path='/v1/votes/resolve';body={round_id:round.id,result:outcome};
    // Un seul clic côté streamer : clôture d'abord, puis résultat officiel.
