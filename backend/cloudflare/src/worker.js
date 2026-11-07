@@ -1,4 +1,4 @@
-// Ma_JesTik QG : profils Twitch persistants, API non déployée pour le moment.
+// Ma_JesTik QG : profils Twitch actifs. Routes votes préparées, migration D1 requise avant déploiement de cette version.
 // Aucun endpoint public ne permet de modifier son score.
 const output=(data,status=200,origin=null)=>{
   const h=new Headers({"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"});

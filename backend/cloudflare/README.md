@@ -1,6 +1,6 @@
 # Préparation des profils Twitch et du classement QG
 
-État : uniquement stocké dans GitHub, rien n'est déployé sur Cloudflare et le site actuel continue de fonctionner normalement.
+État novembre 2026 : Worker de profils et D1 déployés, en service. Le code des votes est préparé dans GitHub mais n'a pas encore été installé dans le Worker actif. Exécuter la migration 0002_defi_votes.sql puis configurer OWNER_TWITCH_ID avant de déployer le nouveau Worker. Voir DEFIS_VOTES.md.
 
 ## Ce qui est prêt
 - API Cloudflare Worker avec vérification du token Twitch via l'API Twitch, puis récupération de l'ID, du pseudo et de l'avatar.

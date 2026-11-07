@@ -151,9 +151,14 @@ export function mountVotePanel(root,getActive){
    path='/v1/votes/resolve';body={round_id:round.id,result:outcome};
   }else return;
   busy=true;error='';render();
+  let actionError='';
   try{await request(path,'POST',body,true);}
-  catch{error='Action refusée ou connexion indisponible. Actualise le vote puis réessaie.';}
-  finally{busy=false;await refresh();if(error)render();}
+  catch{actionError='Action refusée ou connexion indisponible. Actualise le vote puis réessaie.';}
+  finally{
+    busy=false;
+    await refresh();
+    if(actionError){error=actionError;render();}
+  }
  }
  render();
  void refresh();
