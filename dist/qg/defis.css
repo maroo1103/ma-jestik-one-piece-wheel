@@ -6,7 +6,9 @@
 
 
 /* DA Défis & missions : même palette bleu nuit / turquoise / or que Killathon. */
-.challenge-page-head{position:relative;margin:-7px 0 21px;padding:12px 0 18px;overflow:hidden;background:radial-gradient(ellipse at 84% 18%,#16445e55,transparent 49%)}
+.challenge-page-head{position:relative;isolation:isolate;min-height:194px;margin:-7px 0 23px;padding:8px 0 36px;overflow:hidden}
+.challenge-page-head:before{content:"";position:absolute;z-index:-1;inset:-15px -45px -15px 29%;background:linear-gradient(90deg,#09131e 0%,#09131e33 48%,#09131e88 100%),radial-gradient(ellipse at 77% 37%,#6e369f9c,transparent 38%),radial-gradient(ellipse at 85% 80%,#16445e,transparent 50%),linear-gradient(170deg,#0b1c33,#082a48 65%,#09131e);border-radius:20px}
+.challenge-page-head:after{content:"✦";position:absolute;z-index:-1;right:19%;top:13px;color:#c9a7f8;filter:drop-shadow(0 0 21px #ad71ff);font-size:46px;opacity:.85}
 .challenge-page-head .challenge-game-kicker{display:block;margin-bottom:10px}
 .challenge-page-head h1{font:900 clamp(46px,5vw,74px)/.98 var(--display,'Arial Narrow',sans-serif);letter-spacing:.01em;margin:0 0 13px;color:#fff}
 .challenge-page-head p{max-width:640px;margin:0;color:#c1d4df;font-size:14px;line-height:1.6}
@@ -43,5 +45,5 @@
 .challenge-catalog>summary{color:#f8c66d}
 .challenge-catalog-row{background:#0b2b3a;border-color:#285e74}
 .challenge-queue-item{background:#0c2c3b;border-color:#285e74}
-@media(max-width:700px){.challenge-page-head{padding-top:6px}.challenge-page-head h1{font-size:48px}.challenge-ui{padding:13px}.challenge-game-switcher{align-items:stretch;padding:14px}.challenge-game-field{width:100%}.challenge-neutral{align-items:flex-start;padding:17px;gap:12px;min-height:145px}.challenge-neutral-icon{width:49px;height:49px;flex-basis:49px;font-size:25px}.challenge-neutral h2{font-size:30px}.challenge-main.panel{padding:13px}.challenge-game-banner{min-height:160px;padding:18px;background-position:62% center}.challenge-stats>div{padding:13px 10px}}
+@media(max-width:700px){.challenge-page-head{padding-top:6px;padding-bottom:15px;min-height:unset}.challenge-page-head:before{inset:-20px -20px 0 8%}.challenge-page-head h1{font-size:48px}.challenge-ui{padding:13px}.challenge-game-switcher{align-items:stretch;padding:14px}.challenge-game-field{width:100%}.challenge-neutral{align-items:flex-start;padding:17px;gap:12px;min-height:145px}.challenge-neutral-icon{width:49px;height:49px;flex-basis:49px;font-size:25px}.challenge-neutral h2{font-size:30px}.challenge-main.panel{padding:13px}.challenge-game-banner{min-height:160px;padding:18px;background-position:62% center}.challenge-stats>div{padding:13px 10px}}
 @media(prefers-reduced-motion:reduce){.challenge-ui *{scroll-behavior:auto}}
