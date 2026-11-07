@@ -164,10 +164,21 @@ export function mountChallenges(){
   }
   if(action==="accept"||action==="reject"){
    const idx=data.queue.findIndex(q=>q.id===btn.dataset.id);if(idx<0)return;
+   if(action==="accept"&&votePanel?.hasOpenRound()){render("Termine le vote officiel avant d'accepter un autre défi.");return;}
    if(action==="accept"&&data.active){render("Termine le défi en cours avant d'en accepter un autre.");return;}
    const [item]=data.queue.splice(idx,1);
    if(action==="accept")data.active={...item,source:"viewer",level:"Personnalisé",started:Date.now()};
-   save();render(action==="accept"?"Défi accepté : bonne chance !":"Proposition refusée.");return;
+   save();
+   if(action==="accept"){
+    render("Publication de la proposition en cours…");
+    void (async()=>{
+      const ok=await votePanel?.publishCurrent();
+      if(!root.isConnected)return;
+      const status=root.querySelector("#challengeStatus");
+      if(status)status.textContent=ok?"Défi viewer publié au QG : votes ouverts.":"Proposition acceptée localement, mais pas publiée. Réessaie dans le panneau.";
+    })();
+   } else render("Proposition refusée.");
+   return;
   }
   if(action==="enable-all"||action==="disable-all"){
    data.enabled=action==="enable-all"?FORTNITE_CHALLENGES.map(x=>x[0]):[];
