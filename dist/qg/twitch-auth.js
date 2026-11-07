@@ -16,18 +16,36 @@ function render(){
   if(!root)return;
   root.replaceChildren();
   if(!me){const b=make('button','qg-login','Connexion Twitch');b.type='button';b.addEventListener('click',login);root.append(b);return;}
-  const card=make('div','qg-profile');
+  const wrapper=make('div','qg-account-dropdown');
+  const trigger=make('button','qg-profile');trigger.type='button';
+  trigger.setAttribute('aria-expanded','false');
+  trigger.setAttribute('aria-haspopup','menu');
+  trigger.setAttribute('aria-controls','qgAccountMenu');
+  trigger.setAttribute('aria-label','Compte Twitch de '+me.name+' : ouvrir les options');
   try{
     const url=new URL(me.avatar);
     if(url.protocol==='https:'&&url.hostname==='static-cdn.jtvnw.net'){
-      const img=make('img');img.src=url.href;img.alt='';img.width=27;img.height=27;img.referrerPolicy='no-referrer';card.append(img);
+      const img=make('img');img.src=url.href;img.alt='';img.width=27;img.height=27;img.referrerPolicy='no-referrer';trigger.append(img);
     }
   }catch{}
-  card.append(make('span','qg-profile-name',me.name));
-  const out=make('button','qg-logout','Quitter');out.type='button';
-  out.setAttribute('aria-label','Se déconnecter de Twitch');
-  out.addEventListener('click',()=>{clear();render();});
-  root.append(card,out);
+  trigger.append(make('span','qg-profile-name',me.name));
+  trigger.append(make('span','qg-profile-chevron','⌄'));
+  const menu=make('div','qg-account-menu');
+  menu.id='qgAccountMenu';menu.setAttribute('role','menu');menu.hidden=true;
+  const heading=make('span','qg-account-menu-heading','Compte Twitch');
+  heading.setAttribute('role','presentation');
+  const logout=make('button','qg-account-menu-logout','Se déconnecter');
+  logout.type='button';logout.setAttribute('role','menuitem');
+  logout.addEventListener('click',()=>{clear();render();});
+  menu.append(heading,logout);
+  trigger.addEventListener('click',()=>{
+    const opening=menu.hidden;
+    menu.hidden=!opening;
+    trigger.setAttribute('aria-expanded',String(opening));
+    if(opening)logout.focus();
+  });
+  wrapper.append(trigger,menu);
+  root.append(wrapper);
 }
 async function getJson(url,headers){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
@@ -92,6 +110,23 @@ export function mountTwitchAuth(){
     return; // ID absent => aucun faux bouton visible
   }
   root.hidden=false;render();
+  // Fermer le menu au clic à l'extérieur, via Échap ou après navigation.
+  document.addEventListener('pointerdown',e=>{
+    const menu=root.querySelector('.qg-account-menu');
+    const trigger=root.querySelector('.qg-profile');
+    if(menu&&!menu.hidden&&!root.contains(e.target)){menu.hidden=true;trigger?.setAttribute('aria-expanded','false');}
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Escape')return;
+    const menu=root.querySelector('.qg-account-menu');
+    const trigger=root.querySelector('.qg-profile');
+    if(menu&&!menu.hidden){menu.hidden=true;trigger?.setAttribute('aria-expanded','false');trigger?.focus();}
+  });
+  window.addEventListener('hashchange',()=>{
+    const menu=root.querySelector('.qg-account-menu');
+    const trigger=root.querySelector('.qg-profile');
+    if(menu&&!menu.hidden){menu.hidden=true;trigger?.setAttribute('aria-expanded','false');}
+  });
   if(!callback())void restore();
   // Twitch exige la vérification des sessions au lancement et toutes les heures.
   setInterval(()=>{if(get(KEY))void restore()},3600000);

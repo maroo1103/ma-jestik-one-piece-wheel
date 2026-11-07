@@ -131,3 +131,17 @@
 .sidebar-social .top-social-short{display:none}
 .sidebar-social .top-link-twitch-icon{width:18px;height:18px;flex-basis:18px}
 @media(max-height:570px){.sidebar-social{padding-top:10px;padding-bottom:10px;gap:6px}}
+
+/* Menu du compte Twitch : profil cliquable, déconnexion masquée par défaut. */
+.qg-account-dropdown{position:relative;display:inline-flex;align-items:center;min-width:0}
+.qg-account-dropdown .qg-profile{font:inherit;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s}
+.qg-account-dropdown .qg-profile:hover,.qg-account-dropdown .qg-profile[aria-expanded="true"]{background:#1c5065;border-color:#64a8bb}
+.qg-profile-chevron{display:inline-block;font-size:17px;line-height:1;color:#c5dce6;margin-left:3px;transition:transform .15s}
+.qg-profile[aria-expanded="true"] .qg-profile-chevron{transform:rotate(180deg)}
+.qg-account-menu[hidden]{display:none!important}
+.qg-account-menu{position:absolute;z-index:75;top:calc(100% + 9px);right:0;min-width:191px;max-width:min(290px,calc(100vw - 20px));padding:7px;background:#0d2533;border:1px solid #3d7488;border-radius:10px;box-shadow:0 16px 40px #0009}
+.qg-account-menu-heading{display:block;padding:8px 11px 9px;color:#b6cfdb;font-size:10px;font-weight:800;letter-spacing:.75px;text-transform:uppercase;border-bottom:1px solid #2e5264;margin-bottom:5px}
+.qg-account-menu-logout{display:block;width:100%;padding:11px 12px;text-align:left;border:0;border-radius:7px;background:transparent;color:#e7f2fa;font:700 12px/1.2 var(--font);cursor:pointer}
+.qg-account-menu-logout:hover,.qg-account-menu-logout:focus-visible{background:#214c61;color:white}
+@media(max-width:680px){.qg-account-dropdown .qg-profile-name{display:inline;max-width:86px}.qg-account-dropdown .qg-profile{padding:5px 7px 5px 5px}.qg-profile-chevron{font-size:14px}}
+@media(max-width:380px){.qg-account-dropdown .qg-profile-name{max-width:64px;font-size:11px}}
