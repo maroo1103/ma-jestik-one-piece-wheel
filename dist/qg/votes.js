@@ -1,7 +1,7 @@
 /* Défis Ma_JesTik — interface publique de pronostics.
    Off tant que la migration D1 et le compte propriétaire ne sont pas prêts.
    AUCUNE modification du catalogue des 118 défis Fortnite. */
-import {getQGTwitchSession} from './twitch-auth.js?v=20261107-votes1';
+import {getQGTwitchSession,isQGOwnerSession} from './twitch-auth.js?v=20261107-auth-unified1';
 const enabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const base=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
 const fixedAPI=base==='https://ma-jestik-qg-members.maroodu11.workers.dev';
@@ -22,14 +22,15 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
  let round=null,info=null,loading=true,busy=false,error='',updateAt=0,inflight=false,retryRefresh=false;
  let notifiedKey='';
  function notify(){
-  const next=JSON.stringify([round?.id||'',round?.status||'',info?.owner===true,info?.registered===true,loading]);
+  const next=JSON.stringify([round?.id||'',round?.status||'',ownerUI(),info?.registered===true,loading]);
   if(next===notifiedKey)return;
   notifiedKey=next;
-  onStateChange({round,owner:info?.owner===true,registered:info?.registered===true,loaded:!loading});
+  onStateChange({round,owner:ownerUI(),registered:info?.registered===true,loaded:!loading});
  }
  let timer=null;
  const slot=()=>root.querySelector('#challengeVoteSlot');
  const session=()=>getQGTwitchSession();
+ const ownerUI=()=>info?.owner===true||isQGOwnerSession();
  async function request(path,method='GET',payload,authenticated=false){
   const headers={};
   const s=session();
@@ -94,7 +95,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
     }else if(!info?.registered){
       add(node,'p','qg-vote-hint','Crée ton profil QG pour voter.');
     }else add(node,'p','qg-vote-hint','Vérification de ton profil…');
-    if(info?.owner){
+    if(ownerUI()){
       const admin=el('div','qg-vote-admin');
       admin.append(button('Fermer les votes','close'),button('Annuler','cancel'));
       node.append(admin);
@@ -102,14 +103,14 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
     return;
   }
   if(status==='locked'){
-    if(info?.owner){
+    if(ownerUI()){
       const admin=el('div','qg-vote-admin');
       admin.append(button('✓ Réussite','resolve-success'),button('✕ Échec','resolve-failure'),button('Annuler','cancel'));
       node.append(admin);
     }else add(node,'p','qg-vote-hint','Résultat officiel en attente.');
     return;
   }
-  if(info?.owner&&startCandidate()){
+  if(ownerUI()&&startCandidate()){
     const admin=el('div','qg-vote-admin');
     admin.append(button('Ouvrir le vote','start'));
     node.append(admin);
@@ -148,7 +149,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   host.querySelectorAll('[data-vote-action]').forEach(b=>b.addEventListener('click',()=>{void act(b.dataset.voteAction);}));
  }
  async function publishCurrent(){
-  if(!info?.owner||busy)return false;
+  if(!ownerUI()||busy)return false;
   const candidate=startCandidate();
   if(!candidate)return false;
   busy=true;error='';render();
@@ -163,7 +164,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   if(action==='start'){await publishCurrent();return;}
   if(busy)return;
   const admin=['start','close','cancel','resolve-success','resolve-failure'].includes(action);
-  if(admin&&!info?.owner)return;
+  if(admin&&!ownerUI())return;
   let path='',body=null;
   if(action==='vote-success'||action==='vote-failure'){
    if(round?.status!=='open'||info?.prediction||!info?.registered)return;
@@ -199,5 +200,5 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   if(Date.now()-updateAt>=14000)void refresh();
  },15000);
  window.addEventListener('qg:twitch-session',()=>{if(document.contains(root))void refresh();});
- return {render,refresh,publishCurrent,isOwner:()=>info?.owner===true,hasOpenRound:()=>round?.status==='open'||round?.status==='locked',currentRound:()=>round};
+ return {render,refresh,publishCurrent,isOwner:()=>ownerUI(),hasOpenRound:()=>round?.status==='open'||round?.status==='locked',currentRound:()=>round};
 }

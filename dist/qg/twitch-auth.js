@@ -211,6 +211,11 @@ async function restore(){
   try{await check(old.token)}catch{clear();render();}
 }
 export function getQGTwitchSession(){return me?.token?{id:me.id,name:me.name,token:me.token}:null;}
+// Vérification d'affichage uniquement ; les actions restent protégées côté Cloudflare.
+export function isQGOwnerSession(){
+ const id=(document.querySelector('meta[name="majestik-owner-twitch-id"]')?.content||'').trim();
+ return !!me?.token&&/^[0-9]+$/.test(id)&&String(me.id)===id;
+}
 export function mountTwitchAuth(){
   root=document.getElementById('qgTwitchAccount');
   if(!root||!/^[a-z0-9]{10,80}$/.test(clientId)){
