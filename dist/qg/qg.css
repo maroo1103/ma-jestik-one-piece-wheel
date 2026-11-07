@@ -11,3 +11,11 @@
 .top-link-twitch:hover,.top-link-twitch:focus-visible{background:#392657;border-color:#a67ce0}
 .top-link-twitch-icon{display:inline-block;width:17px;height:17px;flex:0 0 17px;vertical-align:middle}
 @media(max-width:580px){.top-link-twitch{font-size:10px;padding:8px 9px}}
+
+/* Boutons officiels Twitch et Discord sur une même ligne */
+.top-actions{gap:10px}
+.top-link-discord{border-color:#5865b6;background:#202753;color:#eef1ff;box-shadow:0 0 12px #5865f233}
+.top-link-discord:hover,.top-link-discord:focus-visible{background:#323d7c;border-color:#8993ff}
+.top-social-short{display:none}
+@media(max-width:850px){.top-actions{gap:7px}.top-link-twitch{padding:8px 10px;gap:6px}.top-social-long{display:none}.top-social-short{display:inline}}
+@media(max-width:480px){.topbar{gap:9px;padding-left:12px;padding-right:12px}.topbar .crumb{display:none}.top-actions{margin-left:auto}.top-link-twitch{font-size:11px;padding:8px 9px}}
