@@ -1,4 +1,4 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-votes1';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-vote-position1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-votes1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);
