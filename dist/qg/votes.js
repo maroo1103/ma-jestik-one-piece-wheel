@@ -17,9 +17,16 @@ function button(label,action,disabled=false){
  b.type='button';b.disabled=disabled;b.dataset.voteAction=action;
  return b;
 }
-export function mountVotePanel(root,getActive){
+export function mountVotePanel(root,getActive,onStateChange=()=>{}){
  if(!enabled||!fixedAPI)return {render(){}};
- let round=null,info=null,loading=true,busy=false,error='',updateAt=0,inflight=false;
+ let round=null,info=null,loading=true,busy=false,error='',updateAt=0,inflight=false,retryRefresh=false;
+ let notifiedKey='';
+ function notify(){
+  const next=JSON.stringify([round?.id||'',round?.status||'',info?.owner===true,info?.registered===true,loading]);
+  if(next===notifiedKey)return;
+  notifiedKey=next;
+  onStateChange({round,owner:info?.owner===true,registered:info?.registered===true,loaded:!loading});
+ }
  let timer=null;
  const slot=()=>root.querySelector('#challengeVoteSlot');
  const session=()=>getQGTwitchSession();
@@ -40,7 +47,8 @@ export function mountVotePanel(root,getActive){
   }finally{clearTimeout(timeout);}
  }
  async function refresh(){
-  if(inflight||busy)return;
+  if(inflight){retryRefresh=true;return;}
+  if(busy)return;
   inflight=true;loading=true;error='';render();
   try{
    const status=await request('/v1/votes/current');
@@ -52,7 +60,7 @@ export function mountVotePanel(root,getActive){
    } else info=null;
    updateAt=Date.now();
   }catch{error='Le service de vote est momentanément indisponible.';}
-  finally{inflight=false;loading=false;render();}
+  finally{inflight=false;loading=false;notify();render();if(retryRefresh){retryRefresh=false;void refresh();}}
  }
  function add(parent,tag,cls,txt){const n=el(tag,cls,txt);parent.append(n);return n;}
  function startCandidate(){
@@ -139,16 +147,25 @@ export function mountVotePanel(root,getActive){
   host.append(section);
   host.querySelectorAll('[data-vote-action]').forEach(b=>b.addEventListener('click',()=>{void act(b.dataset.voteAction);}));
  }
+ async function publishCurrent(){
+  if(!info?.owner||busy)return false;
+  const candidate=startCandidate();
+  if(!candidate)return false;
+  busy=true;error='';render();
+  let ok=false,problem='';
+  try{await request('/v1/votes/start','POST',candidate,true);ok=true;}
+  catch{problem='Mission non publiée. Réessaie avec « Ouvrir le vote ».';}
+  finally{busy=false;await refresh();if(problem){error=problem;render();}}
+  return ok;
+ }
  async function act(action){
   if(action==='refresh'){await refresh();return;}
+  if(action==='start'){await publishCurrent();return;}
   if(busy)return;
   const admin=['start','close','cancel','resolve-success','resolve-failure'].includes(action);
   if(admin&&!info?.owner)return;
   let path='',body=null;
-  if(action==='start'){
-   body=startCandidate();if(!body)return;
-   path='/v1/votes/start';
-  }else if(action==='vote-success'||action==='vote-failure'){
+  if(action==='vote-success'||action==='vote-failure'){
    if(round?.status!=='open'||info?.prediction||!info?.registered)return;
    path='/v1/votes/cast';body={round_id:round.id,prediction:action==='vote-success'?'success':'failure'};
   }else if(action==='close'){
@@ -182,5 +199,5 @@ export function mountVotePanel(root,getActive){
   if(Date.now()-updateAt>=14000)void refresh();
  },15000);
  window.addEventListener('qg:twitch-session',()=>{if(document.contains(root))void refresh();});
- return {render,refresh};
+ return {render,refresh,publishCurrent,isOwner:()=>info?.owner===true,hasOpenRound:()=>round?.status==='open'||round?.status==='locked',currentRound:()=>round};
 }

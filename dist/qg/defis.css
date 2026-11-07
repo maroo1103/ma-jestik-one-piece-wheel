@@ -99,3 +99,11 @@
 .qg-vote-foot small{font-size:10px;line-height:1.35}
 .qg-vote-foot .qg-vote-refresh{font-size:11px;text-align:right;white-space:nowrap;border-bottom:0;padding:3px 0}
 @media(max-width:440px){.challenge-sidebar .qg-vote-panel{padding:14px}.qg-vote-choice-grid .qg-vote-button{min-height:72px;font-size:12px}.qg-vote-reward{font-size:9px}}
+
+/* Mission officielle synchronisée entre les navigateurs, lecture seule chez les membres. */
+.challenge-public .challenge-main{min-width:0}
+.challenge-public .shared-live{border-color:#367e93;background:linear-gradient(140deg,#12475a,#102c42)}
+.challenge-public .shared-waiting{border:1px dashed #3b6779;border-radius:9px;background:#0b2938}
+.challenge-public .challenge-overline span:first-child{color:#f4cb80}
+.challenge-public .challenge-game-banner{margin-bottom:16px}
+.challenge-public .challenge-sidebar .panel{min-width:0}
