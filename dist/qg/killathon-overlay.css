@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:wght@500;700;800&display=swap');
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;background:transparent!important;color:#fff;overflow:hidden}
+body{font-family:'DM Sans',system-ui,sans-serif}
+.overlay{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:17px;width:min(960px,100%);padding:18px 23px 21px;border:2px solid #4589b8;border-radius:20px;background:linear-gradient(113deg,#072537ec,#101e39eb 66%,#332657e8);box-shadow:0 9px 30px #0009,0 0 23px #7351cb55}
+.overlay-top{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.overlay-brand{display:flex;align-items:center;gap:13px;min-width:0}
+.overlay-icon{display:grid;place-items:center;width:53px;height:53px;border:1px solid #627baf;border-radius:12px;font-size:30px;background:#1a3651}
+.overlay-brand span:last-child{display:grid;gap:1px;min-width:0}
+.overlay-brand strong{font:900 37px/.95 'Barlow Condensed',Impact,sans-serif;letter-spacing:.7px}
+.overlay-brand small{color:#c5dbe7;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.overlay-state{padding:8px 13px;border:1px solid #748296;background:#2c3d5a;border-radius:999px;color:#e2eaf4;font-size:11px;font-weight:900;letter-spacing:.7px}
+.overlay-state.active{border-color:#55ad8e;color:#b9ffd6;background:#19473e}
+.overlay-bottom{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center}
+.overlay-goal{display:flex;align-items:baseline;gap:7px;white-space:nowrap}
+.overlay-goal span{font:900 50px/.85 'Barlow Condensed',Impact,sans-serif;color:#f3c879;font-variant-numeric:tabular-nums}
+.overlay-goal small{font-size:13px;font-weight:800;color:#e7f1fb}
+.overlay-progress{height:23px;border:1px solid #7c87a8;background:#324668;border-radius:99px;overflow:hidden}
+.overlay-progress div{height:100%;width:0;background:linear-gradient(90deg,#9169e0,#d2a1ff);border-radius:inherit;transition:width .45s}
+.overlay-percent{font:900 33px/.9 'Barlow Condensed',Impact,sans-serif;white-space:nowrap;color:#e3c7ff}
+.overlay-error{font-size:12px;color:#ffddc8;margin:0}
+@media(max-width:700px){.overlay{padding:12px 14px;gap:12px}.overlay-bottom{grid-template-columns:1fr auto;gap:10px}.overlay-progress{grid-column:1/-1;grid-row:2}.overlay-goal span{font-size:38px}.overlay-brand strong{font-size:29px}.overlay-percent{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.overlay-progress div{transition:none}}

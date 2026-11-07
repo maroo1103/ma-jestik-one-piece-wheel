@@ -77,9 +77,9 @@ async function ktsFetch(method,path,token,payload){
   throw e;
  }finally{clearTimeout(timeout);}
 }
-async function ktsLoad(){
+async function ktsLoad(silent=false){
  const session=getQGTwitchSession();if(!session)return;
- const attempt=++ktsRequest;ktsBusy=true;ktsError='';ktsInfo='';ktsView();
+ const attempt=++ktsRequest;if(!silent){ktsBusy=true;ktsError='';ktsInfo='';ktsView();}
  try{
   const data=await ktsFetch('GET','/v1/killathon/me',session.token);
   if(attempt!==ktsRequest||getQGTwitchSession()?.id!==session.id)return;
@@ -135,7 +135,7 @@ window.addEventListener('qg:twitch-session',ktsHandleSession);
 export function mountSimpleKillathon(){
  const host=byId('kt-simple-app');if(!host)return;
  if(ktsTimer)clearInterval(ktsTimer);
- ktsAccountId='';ktsBoard=null;ktsBusy=false;ktsError='';ktsInfo='';ktsRequest++;
+ ktsAccountId=null;ktsBoard=null;ktsBusy=false;ktsError='';ktsInfo='';ktsRequest++;
  host.addEventListener('click',event=>{
   const button=event.target.closest('button[data-kts-action]');
   if(button&&host.contains(button))void ktsAction(button.dataset.ktsAction,host);
@@ -143,6 +143,6 @@ export function mountSimpleKillathon(){
  ktsHandleSession();
  ktsTimer=setInterval(()=>{
   if(!byId('kt-simple-app')){clearInterval(ktsTimer);ktsTimer=null;return;}
-  if(document.visibilityState==='visible'&&!ktsBusy&&getQGTwitchSession()?.id===ktsAccountId&&ktsAccountId)void ktsLoad();
+  if(document.visibilityState==='visible'&&!ktsBusy&&getQGTwitchSession()?.id===ktsAccountId&&ktsAccountId)void ktsLoad(true);
  },15000);
 }
