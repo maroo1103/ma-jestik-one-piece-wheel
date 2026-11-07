@@ -64,3 +64,68 @@
 .court-results-help{color:#9db2c1;font-size:10px;line-height:1.65;margin:14px 0 0}
 @media(max-width:480px){.court-results{padding:13px}.court-result-numbers{gap:8px}.court-result-label{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.court-result-fill{transition:none}}
+
+/* Tribunal multi-sondages : expérience locale, données isolées par navigateur. */
+.court-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 20px}
+.court-summary>div{border:1px solid #275368;border-radius:11px;background:linear-gradient(135deg,#102f42,#0b2333);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.court-summary span{font-size:10px;letter-spacing:.9px;font-weight:850;color:#a8c6d1}
+.court-summary strong{font:900 30px var(--display,Arial);color:#efc783;font-variant-numeric:tabular-nums}
+.court-workspace{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.8fr);gap:18px;align-items:start}
+.court-list-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:0 0 17px;flex-wrap:wrap}
+.court-list-head h2{font:900 clamp(29px,3vw,38px)/1.1 var(--display,Arial);margin:0}
+.court-tabs{display:flex;gap:5px;background:#112e3f;border:1px solid #34586b;border-radius:9px;padding:4px}
+.court-tabs button{padding:8px 12px;background:none;border:0;border-radius:6px;color:#a9c5d1;font-size:11px;font-weight:850}
+.court-tabs button.active{background:#27526a;color:#fff;box-shadow:0 1px 6px #0005}
+.court-poll-stack{display:grid;gap:15px}
+.court-poll-card{background:linear-gradient(140deg,#133448,#0b2636);border:1px solid #2f6073;border-radius:12px;padding:22px;box-shadow:0 7px 20px #0002}
+.court-poll-card.is-closed{background:linear-gradient(140deg,#1b2b36,#10202d)}
+.court-poll-top{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:14px}
+.court-poll-state{font-size:10px;font-weight:900;letter-spacing:.7px;color:#a6eac9;background:#174538;border:1px solid #3c7d66;padding:5px 9px;border-radius:30px}
+.court-poll-state.is-closed{color:#e0c4a8;background:#453427;border-color:#7d6049}
+.court-poll-time{font-size:12px;color:#f0c987;font-weight:850;font-variant-numeric:tabular-nums}
+.court-poll-title{font:900 clamp(23px,2.5vw,31px)/1.15 var(--display,Arial);color:#fff;margin:0 0 9px;overflow-wrap:anywhere}
+.court-poll-by,.court-poll-total{font-size:11px;color:#aac5d3;margin:6px 0}
+.court-poll-total{margin:13px 0 16px}
+.court-answer{padding:14px 0 13px;border-top:1px solid #2a4d60}
+.court-answer-head{display:flex;align-items:center;justify-content:space-between;gap:13px;margin-bottom:9px}
+.court-answer-name{font-size:13px;font-weight:850;color:#f3f7f8;overflow-wrap:anywhere}
+.court-answer-stats{font-size:11px;font-weight:850;color:#edc888;white-space:nowrap;font-variant-numeric:tabular-nums}
+.court-answer-buttons{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px}
+.court-vote-action{padding:7px 12px;border-radius:7px;border:1px solid #63958b;background:#215848;color:#ecfff9;font-size:11px;font-weight:850}
+.court-vote-action:hover:not(:disabled){background:#35735e}
+.court-vote-action:disabled{opacity:.5;cursor:default}
+.court-poll-bottom{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:15px;padding-top:13px;border-top:1px solid #2b4b5b}
+.court-poll-manage{border:1px solid #3f6475;border-radius:7px;background:#1a3849;color:#b9d2dd;font-size:10px;font-weight:800;padding:8px 12px}
+.court-poll-manage.danger{color:#f1b8a9;border-color:#76504b}
+.court-poll-manage:disabled{opacity:.4;cursor:default}
+.court-empty-list{border:1px dashed #517385;border-radius:12px;background:#0e2838;padding:26px;text-align:center}
+.court-empty-list strong{font-size:16px}
+.court-empty-list p{font-size:12px;color:#abc5d0}
+.court-side{display:grid;gap:15px}
+.court-tool-card{padding:0!important;overflow:hidden}
+.court-tool-card>summary{list-style:none;cursor:pointer;padding:20px 19px;display:flex;justify-content:space-between;gap:12px;font-weight:900;font-size:16px;letter-spacing:.3px;color:#f0c985}
+.court-tool-card>summary::-webkit-details-marker{display:none}
+.court-tool-card>summary span{font-size:20px}
+.court-tool-card>p{padding:0 19px;margin:0 0 15px;font-size:12px;line-height:1.6;color:#a8c4d1}
+.court-tool-card form{padding:0 19px 20px}
+.court-tool-card .court-field{margin-bottom:14px}
+.court-tool-card .court-field input{border:1px solid #385567;border-radius:8px;background:#0a2230;color:#f5f6f2;padding:12px;width:100%;font-size:13px}
+.court-submit{display:block;width:100%;font-size:12px!important;white-space:normal}
+.court-suggest-card{border-color:#534d78!important}
+.court-suggest-card>summary{color:#cab0f4}
+.court-moderation{margin-top:20px}
+.court-moderation>p{font-size:12px;line-height:1.65;color:#abc1cd;margin:0 0 17px}
+.court-moderation-pill{font-size:10px;color:#e5c18a;border:1px solid #7b6244;border-radius:7px;padding:7px 9px}
+.court-proposal-list{display:grid;gap:10px}
+.court-proposal{border:1px solid #345768;border-radius:9px;background:#102d3e;padding:16px}
+.court-proposal-top{display:flex;gap:15px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.court-proposal-top strong{font-size:14px;overflow-wrap:anywhere}
+.court-proposal-top span{font-size:10px;font-weight:800;color:#d6b382}
+.court-proposal p{font-size:12px;color:#a7c0cc;margin:8px 0 12px}
+.court-proposal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.court-proposal-actions button{border-radius:7px;padding:9px 12px;font-size:11px;font-weight:850}
+.court-proposal-accept{background:#194f46;border:1px solid #568f80;color:#defbea}
+.court-proposal-decline{background:#472c34;border:1px solid #77545b;color:#f3d2d2}
+.court-empty-proposals{font-size:12px;color:#9cb6c5}
+@media(max-width:1050px){.court-workspace{grid-template-columns:1fr}}
+@media(max-width:700px){.court-summary{grid-template-columns:1fr}.court-summary>div{padding:11px 15px}.court-poll-card{padding:16px}.court-list-head{align-items:start}.court-tabs{width:100%}.court-tabs button{flex:1}.court-answer-head{align-items:flex-start}.court-answer-stats{text-align:right}}

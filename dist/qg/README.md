@@ -78,3 +78,5 @@ Projet original : `https://github.com/maroo1103/setup-ma-jestik`. Les liens Amaz
 - La liste est triable par numéro, du plus facile au plus difficile, ou dans l'ordre inverse. Le tirage aléatoire peut être filtré par difficulté.
 - Les anciens historiques enregistrés dans le navigateur restent disponibles.
 - Le catalogue ne comprend pas encore de missions d'autres jeux ; elles seront ajoutées ultérieurement après validation.
+
+- Tribunal V3 (démo) : sondages simultanés, compteurs et résultats par sondage, filtre ouverts/terminés, propositions de questions, simulation de modération, sauvegarde locale du navigateur. Aucun partage inter-utilisateurs ni soumission réelle avant backend sécurisé.

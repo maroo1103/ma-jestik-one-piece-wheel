@@ -1,166 +1,234 @@
-/* Tribunal Ma_JesTik — prévisualisation locale, aucun scrutin public enregistré.
-   Les vrais votes nécessiteront une API Cloudflare avec vérification Twitch côté serveur. */
-let ticker=null;
-export function unmountTribunal(){if(ticker){clearInterval(ticker);ticker=null;}}
+/* Tribunal Ma_JesTik — démonstration MULTI-SONDAGES locale.
+ * Aucun sondage/proposition/vote n'est partagé : l'API communautaire nécessite
+ * une authentification Twitch et des vérifications de droits côté Cloudflare. */
+const STORAGE='mj-qg-tribunal-demo-v3';
+let timer=null;
+export function unmountTribunal(){if(timer!==null){clearInterval(timer);timer=null;}}
 export function tribunalMarkup(){
- return '<div class="page-head"><div class="eyebrow">COMMUNAUTÉ · CRÉATION N° 05</div><h1>LE TRIBUNAL</h1><p>Une question. Plusieurs réponses. La communauté aura son mot à dire sur les jeux, les défis et les prochaines décisions du QG.</p><div class="page-tags"><span class="tag gold">EN CONSTRUCTION</span><span class="tag">2 À 4 CHOIX</span><span class="tag">VOTES TWITCH PRÉVUS</span></div></div>'+
- '<div class="court-warning" role="note"><span aria-hidden="true">⚖️</span><div><strong>MODE DÉMONSTRATION</strong><p>Tu peux créer et tester un sondage ci-dessous. Les résultats ci-dessous sont des votes de test, visibles uniquement dans cet onglet. Ils ne représentent pas les votes de vrais visiteurs.</p></div></div>'+
- '<div class="court-layout"><section class="panel court-preview" aria-labelledby="courtPreviewTitle"><div class="court-panel-head"><div><span class="court-overline">APERÇU DU SCRUTIN</span><h2 id="courtPreviewTitle">La parole à l’équipage</h2></div><span class="court-live-state" id="courtState">DÉMO LOCALE</span></div><div id="courtPoll" aria-live="polite"></div><div class="court-actions"><button class="btn btn-ghost" type="button" id="courtClose">Clore la démo</button><button class="btn btn-ghost" type="button" id="courtReset">Réinitialiser le vote</button></div></section>'+
- '<section class="panel court-editor" aria-labelledby="courtEditorTitle"><span class="court-overline">ATELIER DE CRÉATION</span><h2 id="courtEditorTitle">Préparer une question</h2><p class="court-editor-copy">Teste ici le format d’un futur scrutin. En version définitive, seul Ma_JesTik pourra le publier pour tout le monde.</p><form id="courtForm"><label class="court-field" for="courtQuestion"><span>Question</span><textarea id="courtQuestion" maxlength="140" rows="3" required>Quel jeu veux-tu voir lors du prochain live ?</textarea></label><div class="court-field"><span>Réponses proposées</span><div id="courtChoices"></div><div class="court-choice-tools"><button type="button" id="courtAdd">+ Ajouter une réponse</button><button type="button" id="courtRemove">− Retirer la dernière</button></div></div><label class="court-field" for="courtDuration"><span>Durée du sondage (démo)</span><select id="courtDuration"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 heure</option></select></label><button class="btn btn-gold court-create" type="submit">Lancer la prévisualisation <span aria-hidden="true">↗</span></button><p id="courtFormMessage" class="court-form-message" role="status"></p></form></section></div>'+
- '<section class="court-rules" aria-label="Règles du tribunal"><div><span aria-hidden="true">01</span><strong>Une question libre</strong><p>Gameplay, jeux, prochaines activités ou propositions de la communauté.</p></div><div><span aria-hidden="true">02</span><strong>Un vote Twitch par personne</strong><p>Contrôle côté serveur prévu pour le lancement réel, et non simple cookie du navigateur.</p></div><div><span aria-hidden="true">03</span><strong>Un verdict transparent</strong><p>Les résultats ne seront affichés qu’à partir des votes réellement comptabilisés.</p></div></section>';
+ return '<div class="page-head"><div class="eyebrow">COMMUNAUTÉ · CRÉATION N° 05</div><h1>LE TRIBUNAL</h1><p>Pose plusieurs questions à la fois. Vote, consulte les résultats et découvre les propositions des membres.</p><div class="page-tags"><span class="tag gold">MODE TEST LOCAL</span><span class="tag">SONDAGES SIMULTANÉS</span><span class="tag">PROPOSITIONS À VALIDER</span></div></div>'+
+ '<div class="court-warning" role="note"><span aria-hidden="true">⚖️</span><div><strong>VERSION DE DÉMONSTRATION, NON PARTAGÉE</strong><p>Les sondages, votes et propositions sont enregistrés dans ce navigateur uniquement. Une question proposée sur un autre appareil ne te parvient PAS encore. Le système public avec connexion Twitch et modération propriétaire sera ajouté ensuite.</p></div></div>'+
+ '<div class="court-summary"><div><span>SONDAGES OUVERTS</span><strong id="courtOpenCount">0</strong></div><div><span>SONDAGES TERMINÉS</span><strong id="courtClosedCount">0</strong></div><div><span>PROPOSITIONS À EXAMINER</span><strong id="courtProposalCount">0</strong></div></div>'+
+ '<div class="court-workspace"><section class="court-primary" aria-labelledby="courtListTitle"><div class="court-list-head"><div><span class="court-overline">LES QUESTIONS DE L’ÉQUIPAGE</span><h2 id="courtListTitle">Liste des sondages</h2></div><div class="court-tabs" aria-label="Filtrer les sondages"><button type="button" data-court-filter="open" aria-pressed="true">En cours</button><button type="button" data-court-filter="closed" aria-pressed="false">Terminés</button><button type="button" data-court-filter="all" aria-pressed="false">Tous</button></div></div><div class="court-poll-stack" id="courtPollList"></div></section>'+
+ '<aside class="court-side"><details open class="panel court-tool-card"><summary>CRÉER UN SONDAGE <span>＋</span></summary><p>Ajoute autant de questions que nécessaire (20 maximum dans la démo). Leurs minuteries fonctionnent indépendamment.</p><form id="courtCreateForm"><label class="court-field"><span>Ta question</span><textarea id="courtCreateQuestion" maxlength="140" rows="3" required placeholder="Quel jeu pour notre prochain live ?"></textarea></label><div class="court-field"><span>Réponses (2 à 4)</span><div id="courtCreateChoices"></div><div class="court-choice-tools"><button type="button" data-court-add="create">+ Réponse</button><button type="button" data-court-remove="create">− Réponse</button></div></div><label class="court-field"><span>Durée</span><select id="courtCreateDuration"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 heure</option><option value="1440">24 heures</option></select></label><button class="btn btn-gold court-submit" type="submit">Créer un sondage de test</button><p class="court-form-message" id="courtCreateMessage" role="status"></p></form></details>'+
+ '<details open class="panel court-tool-card court-suggest-card"><summary>PROPOSER UNE QUESTION <span>✎</span></summary><p>Voici le formulaire que les membres utiliseront. Pour l’instant, l’envoi est enregistré seulement sur cet appareil.</p><form id="courtSuggestForm"><label class="court-field"><span>Pseudo (démo)</span><input id="courtSuggestAuthor" maxlength="36" autocomplete="off" placeholder="Ton pseudo" required></label><label class="court-field"><span>Question proposée</span><textarea id="courtSuggestQuestion" maxlength="140" rows="3" required placeholder="Et si on faisait un live spécial ?"></textarea></label><div class="court-field"><span>Réponses proposées (2 à 4)</span><div id="courtSuggestChoices"></div><div class="court-choice-tools"><button type="button" data-court-add="suggest">+ Réponse</button><button type="button" data-court-remove="suggest">− Réponse</button></div></div><button class="btn btn-gold court-submit" type="submit">Ajouter à la file locale</button><p class="court-form-message" id="courtSuggestMessage" role="status"></p></form></details></aside></div>'+
+ '<section class="panel court-moderation" aria-labelledby="courtModerationTitle"><div class="court-list-head"><div><span class="court-overline">FILE DE PROPOSITIONS · TEST LOCAL</span><h2 id="courtModerationTitle">Questions à examiner</h2></div><span class="court-moderation-pill">VALIDATION AVANT PUBLICATION</span></div><p>Dans la version publique, seuls les administrateurs autorisés pourront accepter ou refuser une proposition. Ici, les boutons permettent de tester le parcours sur ce navigateur.</p><div id="courtProposalList" class="court-proposal-list"></div></section>';
 }
 export function mountTribunal(){
  unmountTribunal();
  const root=document.getElementById('page');
- const form=root?.querySelector('#courtForm');
- if(!form)return;
- const choices=root.querySelector('#courtChoices');
- const preview=root.querySelector('#courtPoll');
- const status=root.querySelector('#courtState');
- const msg=root.querySelector('#courtFormMessage');
- const add=root.querySelector('#courtAdd');
- const remove=root.querySelector('#courtRemove');
- const close=root.querySelector('#courtClose');
- const reset=root.querySelector('#courtReset');
- let poll=null;
- const defaults=['Fortnite','Warzone','Un jeu narratif'];
- function make(tag,cls,content){
-  const x=document.createElement(tag);if(cls)x.className=cls;
-  if(content!==undefined)x.textContent=content;
-  return x;
+ if(!root||!root.querySelector('#courtCreateForm'))return;
+ const $=sel=>root.querySelector(sel);
+ const maxPolls=20,maxProposals=30;
+ const initial=()=>({polls:[{id:'demo-example',question:'Quel jeu veux-tu voir au prochain live ?',answers:['Fortnite','Warzone','Un jeu narratif'],votes:[0,0,0],selected:null,created:Date.now(),ends:Date.now()+600000,closed:false,from:''}],proposals:[]});
+ let data;
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');
+  if(saved&&Array.isArray(saved.polls)&&Array.isArray(saved.proposals)){
+   data={polls:saved.polls.filter(x=>x&&typeof x.question==='string'&&Array.isArray(x.answers)&&Array.isArray(x.votes)).slice(0,maxPolls),proposals:saved.proposals.filter(x=>x&&typeof x.question==='string'&&Array.isArray(x.answers)).slice(0,maxProposals)};
+  }
+ }catch{}
+ if(!data)data=initial();
+ let filter='open';
+ const make=(tag,cls,text)=>{
+  const item=document.createElement(tag);
+  if(cls)item.className=cls;
+  if(text!==undefined)item.textContent=String(text);
+  return item;
+ };
+ const persist=()=>{
+  try{localStorage.setItem(STORAGE,JSON.stringify(data));}
+  catch{ /* Démo utilisable sans persistance si stockage bloqué. */ }
+ };
+ const id=()=>String(Date.now())+'-'+Math.random().toString(36).slice(2,10);
+ const closed=p=>p.closed||Date.now()>=Number(p.ends);
+ const active=()=>data.polls.filter(p=>!closed(p));
+ const fmt=seconds=>{
+  const min=Math.floor(seconds/60);
+  const hrs=Math.floor(min/60);
+  return hrs?hrs+'h '+String(min%60).padStart(2,'0')+'min':String(min).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
+ };
+ const remaining=p=>Math.max(0,Math.ceil((Number(p.ends)-Date.now())/1000));
+ const countLabel=n=>n+' vote'+(n>1?'s':'');
+ const valid=(question,answers)=>{
+  if(question.length<10||question.length>140)return 'La question doit contenir entre 10 et 140 caractères.';
+  if(answers.length<2||answers.length>4||answers.some(s=>s.length<2||s.length>55))return 'Il faut entre 2 et 4 réponses de 2 à 55 caractères.';
+  if(new Set(answers.map(s=>s.toLocaleLowerCase('fr'))).size!==answers.length)return 'Deux réponses ne doivent pas être identiques.';
+  return '';
+ };
+ const choiceList=(kind,values)=>{
+  const host=$('#court'+(kind==='create'?'Create':'Suggest')+'Choices');
+  const redraw=()=>{
+   host.replaceChildren();
+   values.forEach((text,index)=>{
+    const row=make('label','court-option-edit');
+    row.append(make('span','',String(index+1).padStart(2,'0')));
+    const input=make('input');
+    input.required=true;input.maxLength=55;input.value=text;input.placeholder='Réponse '+(index+1);
+    input.setAttribute('aria-label','Réponse '+(index+1));
+    input.addEventListener('input',()=>{values[index]=input.value;});
+    row.append(input);host.append(row);
+   });
+   $('[data-court-add="'+kind+'"]').disabled=values.length>=4;
+   $('[data-court-remove="'+kind+'"]').disabled=values.length<=2;
+  };
+  $('[data-court-add="'+kind+'"]').addEventListener('click',()=>{
+   if(values.length<4){values.push('');redraw();host.lastElementChild?.querySelector('input')?.focus();}
+  });
+  $('[data-court-remove="'+kind+'"]').addEventListener('click',()=>{if(values.length>2){values.pop();redraw();}});
+  redraw();
+  return ()=>values.map(v=>v.trim());
+ };
+ const createValues=['Fortnite','Warzone','Un jeu narratif'];
+ const suggestValues=['Oui','Non'];
+ const getCreate=choiceList('create',createValues);
+ const getSuggest=choiceList('suggest',suggestValues);
+ const resetForm=(kind)=>{
+  if(kind==='create'){
+   $('#courtCreateQuestion').value='';
+   createValues.splice(0,createValues.length,'Oui','Non');
+   $('#courtCreateChoices').querySelectorAll('input').forEach(()=>{});
+   // Remet les deux champs en conservant leurs gestionnaires.
+  }else{
+   $('#courtSuggestQuestion').value='';
+  }
+ };
+ const addPoll=(question,answers,duration,from='')=>{
+  const poll={id:id(),question,answers:answers.slice(),votes:answers.map(()=>0),selected:null,created:Date.now(),ends:Date.now()+duration*60000,closed:false,from};
+  data.polls.unshift(poll);persist();filter='open';render();
+ };
+ function pollCard(p){
+  const isClosed=closed(p);
+  const article=make('article','court-poll-card'+(isClosed?' is-closed':''));
+  const top=make('div','court-poll-top');
+  top.append(make('span','court-poll-state'+(isClosed?' is-closed':''),isClosed?'TERMINÉ':'● EN COURS'));
+  const time=make('span','court-poll-time',isClosed?'Clôturé':fmt(remaining(p)));
+  time.dataset.courtTime=p.id;top.append(time);article.append(top);
+  article.append(make('h3','court-poll-title',p.question));
+  if(p.from)article.append(make('p','court-poll-by','Proposée par '+p.from+' · démonstration locale'));
+  const total=p.votes.reduce((sum,n)=>sum+(Number(n)||0),0);
+  article.append(make('p','court-poll-total',countLabel(total)+' de démonstration · '+p.answers.length+' réponses'));
+  p.answers.forEach((answer,index)=>{
+   const n=Number(p.votes[index])||0;
+   const pct=total?Math.round(100*n/total):0;
+   const item=make('div','court-answer');
+   const header=make('div','court-answer-head');
+   header.append(make('span','court-answer-name',answer));
+   header.append(make('span','court-answer-stats',n+' vote'+(n>1?'s':'')+' · '+pct+' %'));
+   item.append(header);
+   const track=make('div','court-result-track');
+   track.setAttribute('role','progressbar');track.setAttribute('aria-label',answer);
+   track.setAttribute('aria-valuemin','0');track.setAttribute('aria-valuemax','100');track.setAttribute('aria-valuenow',String(pct));
+   const fill=make('div','court-result-fill');fill.style.width=pct+'%';track.append(fill);item.append(track);
+   const buttons=make('div','court-answer-buttons');
+   const vote=make('button','court-vote-action',p.selected===index?'✓ Mon vote test': 'Voter');
+   vote.type='button';vote.disabled=isClosed||p.selected!==null;
+   vote.addEventListener('click',()=>{
+    if(closed(p)||p.selected!==null)return;
+    p.selected=index;p.votes[index]+=1;persist();render();
+   });
+   buttons.append(vote);
+   const simulate=make('button','court-test-vote','+1 vote de test');
+   simulate.type='button';simulate.disabled=isClosed;
+   simulate.addEventListener('click',()=>{
+    if(closed(p))return;
+    p.votes[index]+=1;persist();render();
+   });
+   buttons.append(simulate);item.append(buttons);article.append(item);
+  });
+  const bottom=make('div','court-poll-bottom');
+  const close=make('button','court-poll-manage',isClosed?'Déjà clos':'Clore le sondage test');
+  close.type='button';close.disabled=isClosed;
+  close.addEventListener('click',()=>{p.closed=true;persist();render();});
+  bottom.append(close);
+  const del=make('button','court-poll-manage danger','Supprimer');
+  del.type='button';
+  del.addEventListener('click',()=>{
+   if(!window.confirm('Supprimer ce sondage de démonstration ?'))return;
+   data.polls=data.polls.filter(x=>x.id!==p.id);persist();render();
+  });
+  bottom.append(del);
+  article.append(bottom);
+  return article;
  }
- function addOption(value=''){
-  if(choices.children.length>=4)return;
-  const count=choices.children.length+1;
-  const label=make('label','court-option-edit');
-  label.append(make('span','',String(count).padStart(2,'0')));
-  const field=make('input');
-  field.type='text';field.required=true;field.maxLength=55;
-  field.placeholder='Réponse '+count;
-  field.value=value;
-  field.setAttribute('aria-label','Réponse '+count);
-  label.append(field);choices.append(label);
-  updateButtons();
+ function renderPolls(){
+  const container=$('#courtPollList');
+  container.replaceChildren();
+  const items=data.polls.filter(p=>filter==='all'||(filter==='open'?!closed(p):closed(p)));
+  if(!items.length){
+   const empty=make('div','court-empty-list');
+   empty.append(make('strong','',filter==='open'?'Aucun sondage ouvert':filter==='closed'?'Aucun sondage terminé':'Pas encore de sondage'));
+   empty.append(make('p','','Utilise le formulaire « Créer un sondage » pour lancer une nouvelle question dans cette démonstration.'));
+   container.append(empty);
+  }else items.forEach(p=>container.append(pollCard(p)));
+  root.querySelectorAll('[data-court-filter]').forEach(btn=>{
+   const selected=btn.dataset.courtFilter===filter;
+   btn.setAttribute('aria-pressed',String(selected));btn.classList.toggle('active',selected);
+  });
  }
- function updateButtons(){
-  add.disabled=choices.children.length>=4;
-  remove.disabled=choices.children.length<=2;
- }
- function begin(question,answers,minutes){
-  poll={question,answers,minutes,deadline:Date.now()+minutes*60000,choice:null,votes:answers.map(()=>0),closed:false};
-  render();
- }
- function timeLeft(){
-  if(!poll)return 0;
-  return Math.max(0,Math.ceil((poll.deadline-Date.now())/1000));
- }
- function updateTime(){
-  if(!poll)return;
-  const seconds=timeLeft();
-  if(seconds===0&&!poll.closed){poll.closed=true;render();return;}
-  const clock=root.querySelector('#courtTime');
-  if(clock)clock.textContent=seconds?String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0'):'00:00';
+ function renderProposals(){
+  const container=$('#courtProposalList');container.replaceChildren();
+  const pending=data.proposals.filter(p=>p.status==='pending');
+  if(!pending.length){container.append(make('p','court-empty-proposals','Aucune proposition locale en attente.'));return;}
+  pending.forEach(p=>{
+   const card=make('article','court-proposal');
+   const first=make('div','court-proposal-top');
+   first.append(make('strong','',p.question));first.append(make('span','','PAR '+p.author));
+   card.append(first);
+   card.append(make('p','',p.answers.join(' · ')));
+   const actions=make('div','court-proposal-actions');
+   const accept=make('button','court-proposal-accept','Accepter en démo');
+   accept.type='button';accept.addEventListener('click',()=>{
+    if(data.polls.length>=maxPolls){window.alert('Limite de 20 sondages de démonstration atteinte.');return;}
+    p.status='accepted';addPoll(p.question,p.answers,10,p.author);
+   });
+   const decline=make('button','court-proposal-decline','Refuser');
+   decline.type='button';decline.addEventListener('click',()=>{p.status='rejected';persist();render();});
+   actions.append(accept,decline);card.append(actions);container.append(card);
+  });
  }
  function render(){
-  preview.replaceChildren();
-  if(!poll){preview.append(make('p','court-empty','Aucune question en prévisualisation.'));return;}
-  status.textContent=poll.closed?'DÉMO TERMINÉE':'DÉMO LOCALE';
-  status.classList.toggle('is-closed',poll.closed);
-  const heading=make('div','court-question');
-  heading.append(make('span','court-overline','QUESTION DE LA COMMUNAUTÉ'));
-  heading.append(make('h3','',poll.question));
-  preview.append(heading);
-  const meta=make('div','court-poll-meta');
-  meta.append(make('span','','⚖️ '+poll.answers.length+' réponses possibles'));
-  const time=make('span');time.id='courtTime';meta.append(time);
-  preview.append(meta);
-  const voteList=make('div','court-vote-list');
-  poll.answers.forEach((answer,index)=>{
-   const btn=make('button','court-vote'+(poll.choice===index?' selected':''),answer);
-   btn.type='button';
-   btn.disabled=poll.closed||poll.choice!==null;
-   btn.setAttribute('aria-pressed',String(poll.choice===index));
-   btn.prepend(make('span','court-vote-number',String(index+1).padStart(2,'0')));
-   btn.append(make('span','court-vote-arrow',poll.choice===index?'✓':'↗'));
-   btn.addEventListener('click',()=>{
-    if(!poll||poll.closed||poll.choice!==null)return;
-    poll.choice=index;poll.votes[index]+=1;render();
-   });
-   voteList.append(btn);
-  });
-  preview.append(voteList);
-  const total=poll.votes.reduce((sum,count)=>sum+count,0);
-  const results=make('section','court-results');
-  results.setAttribute('aria-label','Résultats du sondage de démonstration');
-  const resultsHead=make('div','court-results-head');
-  resultsHead.append(make('strong','','RÉSULTATS DU SONDAGE'));
-  resultsHead.append(make('span','court-results-total',total+' vote'+(total>1?'s':'')+' simulé'+(total>1?'s':'')));
-  results.append(resultsHead);
-  poll.answers.forEach((answer,index)=>{
-   const votes=poll.votes[index];
-   const percent=total?Math.round(votes/total*100):0;
-   const row=make('div','court-result-row');
-   const info=make('div','court-result-info');
-   info.append(make('span','court-result-label',answer));
-   const numbers=make('span','court-result-numbers');
-   numbers.append(make('strong','',percent+' %'));
-   numbers.append(make('span','',votes+' vote'+(votes>1?'s':'')));
-   info.append(numbers);
-   row.append(info);
-   const track=make('div','court-result-track');
-   track.setAttribute('role','progressbar');
-   track.setAttribute('aria-label',answer);
-   track.setAttribute('aria-valuemin','0');
-   track.setAttribute('aria-valuemax','100');
-   track.setAttribute('aria-valuenow',String(percent));
-   const fill=make('div','court-result-fill');
-   fill.style.width=percent+'%';
-   track.append(fill);
-   row.append(track);
-   const test=make('button','court-test-vote','+1 vote de test');
-   test.type='button';
-   test.disabled=poll.closed;
-   test.setAttribute('aria-label','Ajouter un vote fictif à '+answer);
-   test.addEventListener('click',()=>{
-    if(!poll||poll.closed)return;
-    poll.votes[index]+=1;
-    render();
-   });
-   row.append(test);
-   results.append(row);
-  });
-  results.append(make('p','court-results-help','Les votes et pourcentages sont uniquement simulés dans ce navigateur. Le scrutin public sera connecté à Twitch et Cloudflare ultérieurement.'));
-  preview.append(results);
-  const note=make('p','court-vote-note');
-  if(poll.closed)note.textContent='Démo clôturée : les résultats restent visibles, sans publication publique.';
-  else if(poll.choice!==null)note.textContent='✓ Ton vote de test a été compté. Utilise les boutons « +1 vote de test » pour voir évoluer les résultats.';
-  else note.textContent='Choisis une réponse ou ajoute des votes de test pour voir les résultats évoluer en direct.';
-  preview.append(note);
-  close.disabled=poll.closed;
-  reset.disabled=false;
-  updateTime();
+  $('#courtOpenCount').textContent=String(active().length);
+  $('#courtClosedCount').textContent=String(data.polls.length-active().length);
+  $('#courtProposalCount').textContent=String(data.proposals.filter(x=>x.status==='pending').length);
+  renderPolls();renderProposals();
  }
- defaults.forEach(v=>addOption(v));
- function submit(){
-  const question=root.querySelector('#courtQuestion').value.trim();
-  const answers=[...choices.querySelectorAll('input')].map(x=>x.value.trim());
-  const duration=Number(root.querySelector('#courtDuration').value);
-  if(question.length<10){msg.textContent='Écris une question de 10 caractères minimum.';return;}
-  if(answers.length<2||answers.length>4||answers.some(x=>x.length<2)){
-   msg.textContent='Il faut entre 2 et 4 réponses non vides (2 caractères minimum).';return;
+ root.querySelectorAll('[data-court-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.courtFilter;renderPolls();}));
+ $('#courtCreateForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const question=$('#courtCreateQuestion').value.trim(),answers=getCreate();
+  const error=valid(question,answers),msg=$('#courtCreateMessage');
+  if(error){msg.textContent=error;return;}
+  if(data.polls.length>=maxPolls){msg.textContent='Limite de 20 sondages de démonstration atteinte.';return;}
+  const duration=Number($('#courtCreateDuration').value);
+  if(![5,10,15,30,60,1440].includes(duration)){msg.textContent='Durée invalide.';return;}
+  addPoll(question,answers,duration);
+  msg.textContent='Sondage ajouté à ta liste locale. Aucun visiteur ne le voit.';
+  $('#courtCreateQuestion').value='';
+ });
+ $('#courtSuggestForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const author=$('#courtSuggestAuthor').value.trim(),question=$('#courtSuggestQuestion').value.trim(),answers=getSuggest();
+  const msg=$('#courtSuggestMessage');
+  const error=valid(question,answers);
+  if(author.length<2||author.length>36){msg.textContent='Pseudo de 2 à 36 caractères requis.';return;}
+  if(error){msg.textContent=error;return;}
+  if(data.proposals.length>=maxProposals){msg.textContent='Limite de 30 propositions locales atteinte.';return;}
+  data.proposals.unshift({id:id(),author,question,answers:answers.slice(),status:'pending',created:Date.now()});
+  persist();render();
+  msg.textContent='Proposition enregistrée sur cet appareil uniquement, non envoyée à Ma_JesTik.';
+  $('#courtSuggestQuestion').value='';
+ });
+ render();
+ timer=setInterval(()=>{
+  const expired=data.polls.some(p=>!p.closed&&remaining(p)===0);
+  if(expired){
+   data.polls.forEach(p=>{if(!p.closed&&remaining(p)===0)p.closed=true;});
+   persist();render();
+   return;
   }
-  if(new Set(answers.map(x=>x.toLocaleLowerCase('fr'))).size!==answers.length){
-   msg.textContent='Deux réponses ne peuvent pas être identiques.';return;
-  }
-  if(![5,10,15,30,60].includes(duration)){msg.textContent='Durée invalide.';return;}
-  msg.textContent='Prévisualisation lancée : aucune donnée n’est envoyée.';
-  begin(question,answers,duration);
- }
- form.addEventListener('submit',e=>{e.preventDefault();submit();});
- add.addEventListener('click',()=>addOption(''));
- remove.addEventListener('click',()=>{if(choices.children.length>2){choices.lastElementChild.remove();updateButtons();}});
- close.addEventListener('click',()=>{if(poll){poll.closed=true;render();}});
- reset.addEventListener('click',()=>{if(poll)begin(poll.question,poll.answers,poll.minutes);});
- submit();
- ticker=setInterval(updateTime,1000);
+  root.querySelectorAll('[data-court-time]').forEach(node=>{
+   const poll=data.polls.find(p=>p.id===node.dataset.courtTime);
+   if(poll)node.textContent=closed(poll)?'Clôturé':fmt(remaining(poll));
+  });
+ },1000);
 }
