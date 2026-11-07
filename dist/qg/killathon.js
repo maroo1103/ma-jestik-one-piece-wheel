@@ -2,7 +2,7 @@
    Le vrai compteur local ne doit jamais être accessible directement depuis Internet.
    Pour afficher de vraies données, configurer un flux PUBLIC HTTPS, sans token ni clé
    privée, via la balise meta majestik-killathon-public-feed. */
-import {mountSimpleKillathon} from './killathon-simple.js?v=20261107-simple1';
+import {mountSimpleKillathon} from './killathon-simple.js?v=20261107-simple2';
 const $ = id => document.getElementById(id);
 const fmt = n => new Intl.NumberFormat('fr-FR').format(n);
 const initial = {kills:0,goal:100,events:[],live:false};

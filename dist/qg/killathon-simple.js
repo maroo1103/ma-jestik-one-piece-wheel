@@ -42,7 +42,9 @@ function ktsView(){
  out+='</div>';
  if(ktsError)out+='<p class="kts-message kts-error" role="alert">'+ktsEsc(ktsError)+'</p>';
  if(ktsInfo)out+='<p class="kts-message" role="status">'+ktsEsc(ktsInfo)+'</p>';
- if(!ktsBoard){
+ if(!ktsBoard&&ktsError){
+  out+='<div class="kts-start"><p>Ton espace Killathon sera accessible dès que le service sera activé.</p>'+ktsButton('retry','Réessayer la connexion')+'</div>';
+ }else if(!ktsBoard){
   out+='<div class="kts-start"><h4>Créer mon Killathon</h4><p>Choisis ton jeu et le nombre d’éliminations à atteindre.</p><div class="kts-form">'+
   '<label>Jeu<select id="ktsGame">'+KTS_GAMES.map(x=>'<option>'+ktsEsc(x)+'</option>').join('')+'</select></label>'+
   '<label>Objectif<input id="ktsGoal" type="number" min="1" max="9999" step="1" value="30" inputmode="numeric"></label></div>'+
@@ -92,6 +94,7 @@ async function ktsAction(action,host){
  if(action==='login'){
   document.querySelector('#qgTwitchAccount .qg-login')?.click();return;
  }
+ if(action==='retry'){void ktsLoad();return;}
  if(action==='copy'){
   const input=host.querySelector('#ktsObsUrl');
   if(!input)return;
