@@ -1,4 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-game-selector1';
+import {mountTwitchAuth} from './twitch-auth.js?v=20261107-auth1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261106-final2';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
@@ -133,4 +134,5 @@ $('menuMobile').addEventListener('click',()=>{
 $('sidebarShade').addEventListener('click',closeMobile);
 window.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobile()});
 window.addEventListener('hashchange',route);
+mountTwitchAuth(); // Le module nettoie immédiatement une URL de retour OAuth.
 route();

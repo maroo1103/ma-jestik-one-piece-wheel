@@ -91,3 +91,17 @@
 @media(max-width:460px){
   .home-tools .section-top{align-items:flex-start;flex-wrap:wrap}
 }
+
+/* Connexion Twitch : n'apparait que si un client ID valide est configuré. */
+.qg-account[hidden]{display:none!important}
+.qg-account{display:flex;align-items:center;gap:7px;min-width:0}
+.qg-login,.qg-logout{display:inline-flex;align-items:center;justify-content:center;border:1px solid #9557c8;background:#39215d;color:#fff;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:800;white-space:nowrap;min-height:36px}
+.qg-login:hover{background:#593281;border-color:#bb8fe5}
+.qg-profile{display:inline-flex;align-items:center;gap:7px;border:1px solid #39758b;background:#143a4a;border-radius:8px;color:#fff;padding:5px 9px 5px 5px;min-width:0}
+.qg-profile img{display:block;width:27px;height:27px;object-fit:cover;border-radius:6px}
+.qg-profile-name{font-size:12px;font-weight:800;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qg-logout{background:#152938;border-color:#31516a;color:#c3dbe7;padding:7px 9px;min-height:34px;font-size:11px}
+.qg-logout:hover{color:#fff;border-color:#60aec0}
+.qg-auth-note{font-size:11px;color:#f1c27f;max-width:180px;line-height:1.3}
+@media(max-width:1050px){.qg-profile-name{max-width:85px}.qg-login{padding:8px;font-size:11px}}
+@media(max-width:680px){.qg-profile-name{display:none}.qg-login{padding:8px 7px}.qg-logout{padding:6px}.top-actions{gap:5px}}
