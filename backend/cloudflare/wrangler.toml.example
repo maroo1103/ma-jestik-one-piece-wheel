@@ -1,0 +1,12 @@
+# Modèle à copier en wrangler.toml après création de la base D1
+name = "ma-jestik-qg-members"
+main = "src/worker.js"
+compatibility_date = "2026-11-07"
+workers_dev = true
+[vars]
+TWITCH_CLIENT_ID = "p5tdg5jfacomtqxmu6tzsubxpjxa3i"
+ALLOWED_ORIGIN = "https://maroo1103.github.io"
+[[d1_databases]]
+binding = "DB"
+database_name = "ma-jestik-qg-members"
+database_id = "REMPLACER_PAR_VOTRE_DATABASE_ID_D1"
