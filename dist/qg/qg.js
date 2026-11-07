@@ -1,6 +1,7 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-copy-clean1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261107-end1';
+import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261107-demo1';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
@@ -26,10 +27,7 @@ function wheel(){
  '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../roue.html" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
 }
 function challenges(){return challengesMarkup();}
-function court(){
- return head('CRÉATION N° 05','LE TRIBUNAL','L’assemblée prend la parole. Votes sur le gameplay, les choix de jeu, les défis et les décisions de la communauté — pas uniquement les fails.',[tag('Questions libres'),tag('2 à 4 réponses possibles'),tag('Votes partagés à venir','gold')])+
- '<div class="panel-grid"><article class="panel"><h3>UNE QUESTION. UN VERDICT.</h3><p>Exemple de présentation, sans vote réel pour le moment.</p><div class="vote-visual"><strong>QUEL SERA LE PROCHAIN JEU DU LIVE ?</strong><div class="vote-options"><span>FORTNITE</span><span>WARZONE</span></div></div></article>'+panel('⚖️','UN TRIBUNAL UNIVERSEL','L’administrateur rédige une question, propose plusieurs réponses et fixe une durée. Lorsque les comptes et les votes sécurisés seront prêts, chaque participant pourra voter une seule fois selon les règles choisies.')+'</div>';
-}
+function court(){return tribunalMarkup();}
 function ranking(){
  if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE L’ÉQUIPAGE','',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit')])+
  '<section class="qg-rankings"><div class="qg-podium-title"><span aria-hidden="true">🏆</span><h2>TOP 3 DE L’ÉQUIPAGE</h2></div>'+
@@ -195,6 +193,7 @@ function closeMobile(){
  $('menuMobile').setAttribute('aria-expanded','false');
 }
 function route(){
+ unmountTribunal();
  if(rankingTimer){clearInterval(rankingTimer);rankingTimer=null;}
  const raw=decodeURIComponent(location.hash.replace(/^#\/?/,'').split('?')[0]);
  const page=Object.prototype.hasOwnProperty.call(pages,raw)?raw:'accueil';
@@ -210,6 +209,7 @@ function route(){
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
  if(page==='killathon')mountKillathon();
+ if(page==='tribunal')mountTribunal();
  if(page==='classement'&&votesEnabled){
   void mountRankings();
   rankingTimer=setInterval(()=>{
