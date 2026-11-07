@@ -68,61 +68,74 @@ export function mountVotePanel(root,getActive){
   return {game:'fortnite',challenge_id:d.source==='viewer'?0:id,title,team};
  }
  function controls(node){
-  const panel=el('div','qg-vote-actions');
   const status=round?.status;
   const s=session();
-  if(!round||status==='resolved'||status==='cancelled'){
-   const candidate=info?.owner?startCandidate():null;
-   if(candidate)panel.append(button('Ouvrir le vote pour ma mission','start'));
-   else if(info?.owner){
-    add(panel,'p','qg-vote-hint','Tire une nouvelle mission sur cet appareil pour ouvrir le prochain vote.');
-   }
-  }
   if(status==='open'){
-   if(s?.token && info?.registered && !info?.prediction){
-    panel.append(button('Je vote : Réussite','vote-success'),button('Je vote : Échec','vote-failure'));
-   }else if(info?.prediction){
-    add(panel,'p','qg-vote-confirmed','✓ Pronostic enregistré : '+nameOf[info.prediction]);
-   }else if(!s?.token){
-    add(panel,'p','qg-vote-hint','Connecte-toi avec Twitch en haut à droite pour voter.');
-   }else if(!info?.registered){
-    add(panel,'p','qg-vote-hint','Crée ton profil QG dans le menu de ton pseudo Twitch avant de voter.');
-   }else{
-    add(panel,'p','qg-vote-hint','Récupération de ton profil en cours…');
-   }
-   if(info?.owner)panel.append(button('Fermer les votes','close'),button('Annuler le vote','cancel'));
+    if(s?.token&&info?.registered&&!info?.prediction){
+      const choices=el('div','qg-vote-choice-grid');
+      const yes=button('✓ RÉUSSITE','vote-success');
+      yes.append(el('small','qg-vote-reward','+1 point si correct'));
+      const no=button('✕ ÉCHEC','vote-failure');
+      no.append(el('small','qg-vote-reward','+2 points si correct'));
+      choices.append(yes,no);
+      node.append(choices);
+    }else if(info?.prediction){
+      add(node,'p','qg-vote-confirmed','✓ Ton vote : '+nameOf[info.prediction]);
+    }else if(!s?.token){
+      add(node,'p','qg-vote-hint','Connecte-toi avec Twitch pour voter.');
+    }else if(!info?.registered){
+      add(node,'p','qg-vote-hint','Crée ton profil QG pour voter.');
+    }else add(node,'p','qg-vote-hint','Vérification de ton profil…');
+    if(info?.owner){
+      const admin=el('div','qg-vote-admin');
+      admin.append(button('Fermer les votes','close'),button('Annuler','cancel'));
+      node.append(admin);
+    }
+    return;
   }
-  if(status==='locked'&&info?.owner){
-   add(panel,'p','qg-vote-hint','Le scrutin est clos. Valide maintenant ton vrai résultat.');
-   panel.append(button('J’ai réussi · +1 aux bons votes','resolve-success'),button('J’ai échoué · +2 aux bons votes','resolve-failure'),button('Annuler sans points','cancel'));
+  if(status==='locked'){
+    if(info?.owner){
+      const admin=el('div','qg-vote-admin');
+      admin.append(button('✓ Réussite','resolve-success'),button('✕ Échec','resolve-failure'),button('Annuler','cancel'));
+      node.append(admin);
+    }else add(node,'p','qg-vote-hint','Résultat officiel en attente.');
+    return;
   }
-  if(panel.childNodes.length)node.append(panel);
+  if(info?.owner&&startCandidate()){
+    const admin=el('div','qg-vote-admin');
+    admin.append(button('Ouvrir le vote','start'));
+    node.append(admin);
+  }
  }
  function render(){
   const host=slot();if(!host)return;
   host.replaceChildren();
   const section=el('section','qg-vote-panel');
-  add(section,'span','qg-vote-kicker','VOTE DE L’ÉQUIPAGE · FORTNITE');
-  add(section,'h3','qg-vote-title','Réussite ou échec ? À toi de prédire !');
-  add(section,'p','qg-vote-description','Prédis le résultat officiel : +1 point si tu annonces une réussite, +2 si tu annonces un échec.');
-  if(loading && !round)add(section,'p','qg-vote-hint','Chargement du vote…');
+  section.setAttribute('aria-label','Pronostic de l’équipage');
+  const top=el('div','qg-vote-top');
+  top.append(el('span','qg-vote-kicker','🎯 PRONOSTIC DE L’ÉQUIPAGE'));
+  const state=round?.status||'idle';
+  const labels={open:'Votes ouverts',locked:'Votes clos',resolved:'Terminé',cancelled:'Annulé',idle:'En attente'};
+  top.append(el('span','qg-vote-state state-'+state,labels[state]||'En attente'));
+  section.append(top);
+  add(section,'h3','qg-vote-title','Va-t-il réussir ce défi ?');
   if(error)add(section,'p','qg-vote-error',error);
-  if(round){
-   const badge=add(section,'div','qg-vote-state',nameOf[round.status]||round.status);
-   if(round.status==='cancelled')badge.classList.add('cancelled');
-   add(section,'h4','qg-vote-challenge',round.challenge_title);
-   add(section,'p','qg-vote-hint','Les votes sont uniques par compte Twitch. Les points sont attribués uniquement après validation par Ma_JesTik.');
-   if(round.status==='locked'||round.status==='resolved'||round.status==='cancelled'){
-    const n=Number(round.counts?.success||0),m=Number(round.counts?.failure||0);
-    add(section,'p','qg-vote-result','Votes : '+n+' Réussite · '+m+' Échec');
-    if(round.status==='resolved')add(section,'p','qg-vote-confirmed','Résultat officiel : '+nameOf[round.result]);
-    if(round.status==='cancelled')add(section,'p','qg-vote-hint','Manche annulée : aucun point attribué.');
-   }
-  }else if(!loading) add(section,'p','qg-vote-hint','Aucun vote officiel en cours pour le moment.');
+  else if(loading&&!round)add(section,'p','qg-vote-hint','Chargement…');
+  else if(round?.status==='cancelled')add(section,'p','qg-vote-hint','Dernier vote annulé · 0 point.');
+  else if(round?.status==='resolved')add(section,'p','qg-vote-confirmed','Dernier résultat : '+nameOf[round.result]+' · +'+(round.result==='failure'?2:1)+' aux bons votes');
+  else if(round?.status==='locked'){
+    const yes=Number(round.counts?.success||0),no=Number(round.counts?.failure||0);
+    add(section,'p','qg-vote-result',yes+' Réussite · '+no+' Échec');
+  }else if(!round&&!loading)add(section,'p','qg-vote-hint','Aucun vote ouvert actuellement.');
   if(!busy&&!loading&&!error)controls(section);
-  if(busy)add(section,'p','qg-vote-hint','Enregistrement en cours…');
-  const updated=el('button','qg-vote-refresh','Actualiser le vote');updated.type='button';updated.dataset.voteAction='refresh';updated.disabled=busy||inflight;
-  section.append(updated);
+  if(busy)add(section,'p','qg-vote-hint','Enregistrement…');
+  const foot=el('div','qg-vote-foot');
+  foot.append(el('small','','Un vote par membre Twitch'));
+  const refresh=el('button','qg-vote-refresh','↻ Actualiser');
+  refresh.type='button';refresh.dataset.voteAction='refresh';refresh.disabled=busy||inflight;
+  refresh.setAttribute('aria-label','Actualiser les votes');
+  foot.append(refresh);
+  section.append(foot);
   host.append(section);
   host.querySelectorAll('[data-vote-action]').forEach(b=>b.addEventListener('click',()=>{void act(b.dataset.voteAction);}));
  }

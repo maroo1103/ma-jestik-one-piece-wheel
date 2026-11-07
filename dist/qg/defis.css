@@ -70,3 +70,32 @@
 .qg-vote-refresh{justify-self:start;background:transparent;border:0;border-bottom:1px dashed #5794a4;color:#a5cedd;cursor:pointer;padding:5px 0;font-size:11px}
 .qg-vote-refresh:hover{color:white}
 @media(max-width:580px){.qg-vote-panel{padding:14px}.qg-vote-actions{display:grid;grid-template-columns:1fr;gap:7px}.qg-vote-button{width:100%}}
+
+/* Panneau de vote compact sous Journal des missions dans la colonne droite. */
+.challenge-sidebar{grid-template-columns:minmax(0,1fr)}
+.challenge-vote-slot{min-width:0}
+.challenge-vote-slot:empty{display:none}
+.challenge-sidebar .qg-vote-panel{margin:0;padding:17px;gap:12px;min-width:0;max-width:100%;border-radius:12px;border:1px solid #277f98;background:radial-gradient(ellipse at 90% 0%,#65468c59,transparent 56%),linear-gradient(145deg,#0a3344,#081c2e)}
+.qg-vote-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.challenge-sidebar .qg-vote-kicker{font-size:10px;line-height:1.5;letter-spacing:.8px;font-weight:900;color:#f5c77d}
+.challenge-sidebar .qg-vote-state{font-size:10px;letter-spacing:0;padding:4px 8px;white-space:nowrap}
+.challenge-sidebar .qg-vote-state.state-open,.challenge-sidebar .qg-vote-state.state-resolved{background:#164e42;border-color:#367e6c;color:#aff1cd}
+.challenge-sidebar .qg-vote-state.state-locked{background:#3a3758;border-color:#76619d;color:#d9c4fb}
+.challenge-sidebar .qg-vote-state.state-idle{background:#17394a;border-color:#416878;color:#c4d7e2}
+.challenge-sidebar .qg-vote-state.state-cancelled{background:#4a2b36;border-color:#855261;color:#ffced7}
+.challenge-sidebar .qg-vote-title{font-size:clamp(20px,2vw,24px);line-height:1.16;margin:0;font-weight:900;color:#fff}
+.qg-vote-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.qg-vote-choice-grid .qg-vote-button{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;width:100%;min-height:80px;margin:0;padding:10px 7px;border-radius:10px;font-size:14px;font-weight:900;line-height:1.2;text-align:center}
+.qg-vote-choice-grid .qg-vote-button.vote-success{color:#c1f4db;background:#123e3a;border-color:#41977d}
+.qg-vote-choice-grid .qg-vote-button.vote-failure{color:#ffe1d4;background:#473038;border-color:#b47981}
+.qg-vote-choice-grid .qg-vote-button.vote-success:hover{background:#1c6252;border-color:#79d3ad}
+.qg-vote-choice-grid .qg-vote-button.vote-failure:hover{background:#69404b;border-color:#d9a3a7}
+.qg-vote-reward{display:block;font-size:10px;letter-spacing:0;color:#c6d8df;font-weight:650}
+.qg-vote-admin{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.qg-vote-admin .qg-vote-button{min-height:34px;padding:8px 10px;font-size:11px;border-radius:7px;flex:1 1 auto}
+.qg-vote-admin .qg-vote-button.start{background:#5a3a7c;border-color:#9e7ac2;color:#fff}
+.qg-vote-admin .qg-vote-button.start:hover{background:#71499d}
+.qg-vote-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #245066;padding-top:10px;color:#99b9c6;font-size:10px}
+.qg-vote-foot small{font-size:10px;line-height:1.35}
+.qg-vote-foot .qg-vote-refresh{font-size:11px;text-align:right;white-space:nowrap;border-bottom:0;padding:3px 0}
+@media(max-width:440px){.challenge-sidebar .qg-vote-panel{padding:14px}.qg-vote-choice-grid .qg-vote-button{min-height:72px;font-size:12px}.qg-vote-reward{font-size:9px}}
