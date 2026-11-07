@@ -1,0 +1,42 @@
+name: Installer le visuel Fortnite dans le QG (une fois)
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ajouter-visuel-fortnite.yml']
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  installer:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Récupérer le projet
+        uses: actions/checkout@v4
+      - name: Télécharger le visuel Fortnite dans le dépôt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/qg/media
+          curl --fail --location --retry 3 --max-time 60 -A 'Mozilla/5.0' 'https://vergemagazine.co.uk/wp-content/uploads/2026/06/FNBR-C7S3-Key-Art-1031x580.jpg' -o dist/qg/media/fortnite-runners.jpg
+          file dist/qg/media/fortnite-runners.jpg | grep -E 'JPEG image data'
+          test "$(wc -c < dist/qg/media/fortnite-runners.jpg)" -gt 20000
+      - name: Enregistrer le visuel dans GitHub
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/qg/media/fortnite-runners.jpg
+          git diff --cached --quiet || (git commit -m "QG: installer le visuel Fortnite dans les ressources locales" && git push)
+      - name: Configurer GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Préparer la publication
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publier
+        id: deployment
+        uses: actions/deploy-pages@v4

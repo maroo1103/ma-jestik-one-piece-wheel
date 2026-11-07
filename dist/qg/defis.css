@@ -33,7 +33,7 @@
 .challenge-main.panel,.challenge-sidebar .panel{background:linear-gradient(145deg,#0a394b99,#09283799);border:1px solid #187b92;border-radius:12px}
 .challenge-main.panel{padding:18px}
 .challenge-game-banner{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;min-height:158px;padding:22px 20px;border:1px solid #338da1;border-radius:11px;overflow:hidden;background-color:#082635}
-.challenge-game-banner--fortnite{background-image:linear-gradient(90deg,#041b29f2 0%,#041b29de 40%,#041b2980 72%,#041b2938 100%),url('../assets/05.webp');background-size:cover;background-position:center 44%}
+.challenge-game-banner--fortnite{background-image:linear-gradient(90deg,#041b29f2 0%,#041b29de 40%,#041b2980 72%,#041b2938 100%),url('media/fortnite-runners.jpg'),url('../assets/05.webp');background-size:cover;background-position:center 44%}
 .challenge-game-banner h2{font:900 clamp(29px,3.2vw,43px)/.99 var(--display,'Arial Narrow',sans-serif);text-shadow:0 2px 16px #00131e;margin:8px 0 8px;max-width:430px;color:#fff}
 .challenge-game-banner p{font-size:12px;color:#d2e5ed;margin:0;text-shadow:0 1px 9px #00131e;max-width:430px}
 .challenge-ui select,.challenge-ui input:not([type=checkbox]),.challenge-ui textarea{background:#082635;border-color:#39758b;color:#eef5fb}
