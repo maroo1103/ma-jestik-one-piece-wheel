@@ -346,3 +346,56 @@ body{background:#07111c}
  .hq-setup-art-caption{right:9px;bottom:3px;font-size:8px}
 }
 @media(prefers-reduced-motion:reduce){.hq-setup-art img.hq-setup-photo{transition:none}}
+
+/* Correction finale : vraie photo du PC sans filtre ni rotation CSS.
+   Le redressement léger est intégré aux pixels de la photo au déploiement. */
+.hq-setup-showcase{
+  grid-template-columns:minmax(330px,.95fr) minmax(340px,1.05fr);
+  gap:clamp(24px,4vw,75px);
+}
+.hq-setup-art{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-width:0;
+  min-height:0;
+  height:clamp(420px,37vw,565px);
+  padding:14px;
+  overflow:hidden;
+  border:1px solid #66568d99;
+  border-radius:20px;
+  background:linear-gradient(138deg,#0b1a2d 0%,#0d1930 48%,#181433 100%);
+  box-shadow:0 23px 60px #01061355,inset 0 1px #ffffff10;
+  isolation:isolate;
+}
+.hq-setup-art::before{display:none!important}
+.hq-setup-art img.hq-setup-photo{
+  display:block;
+  flex:none;
+  width:auto!important;
+  height:auto!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  border-radius:10px!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+  filter:none!important;
+  opacity:1!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+  box-shadow:none!important;
+}
+@media(max-width:850px){
+  .hq-setup-showcase{grid-template-columns:1fr;gap:25px}
+  .hq-setup-art{width:min(100%,640px);max-width:100%;height:530px;padding:12px;margin-inline:auto}
+}
+@media(max-width:680px){
+  .hq-setup-art{height:390px;padding:9px;border-radius:15px}
+  .hq-setup-art img.hq-setup-photo{max-height:100%!important;max-width:100%!important}
+}
+@media(max-width:370px){
+  .hq-setup-art{height:335px;padding:7px}
+}
