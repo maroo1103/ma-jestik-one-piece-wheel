@@ -20,8 +20,58 @@ const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
 const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1>'+(description?'<p>'+description+'</p>':'')+(tags.length?'<div class="page-tags">'+tags.join('')+'</div>':'')+'</div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
 function home(){
- return '<section class="hero home-hero"><div class="hero-content"><div class="eyebrow">LE QG COMMUNAUTAIRE · MA_JESTIK</div><h1>BIENVENUE AU QG</h1><p>Quelques outils de divertissement.</p></div></section>'+
- '<section class="home-tools"><div class="section-top"><div><h2>OUTILS</h2><p>Les outils et espaces de la communauté réunis au même endroit.</p></div></div><div class="cards">'+modules.map(m=>'<a class="module-card '+(m.ready?'highlight':'')+'" href="#/'+m.path+'"><div class="card-line"><span class="module-icon" aria-hidden="true">'+m.icon+'</span><span class="'+(m.ready?'status-ready':'status-prep')+'">'+(m.ready?'DISPONIBLE':'EN PRÉPARATION')+'</span></div><h3>'+m.title+'</h3><p>'+m.desc+'</p><span class="card-bottom">'+(m.ready?'UTILISER MAINTENANT':'VOIR LE PROJET')+' <span aria-hidden="true">→</span></span></a>').join('')+'</div></section>';
+ const paths=[
+  {path:'roue',overline:'01 / LE HASARD',title:'LA ROUE FORTNITE',summary:'Douze destinations. Une seule décision : celle de la roue.',image:'roue',name:'Explorer la roue',featured:true},
+  {path:'tribunal',overline:'02 / LA COMMUNAUTÉ',title:'LE TRIBUNAL',summary:'Des questions, des propositions et des votes qui comptent vraiment.',image:'tribunal',name:'Entrer au Tribunal',featured:true},
+  {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'118 défis Zero Build à tenter en solo ou avec ton équipe.',image:'defis',name:'Découvrir les défis'},
+  {path:'killathon',overline:'04 / LE COMPTEUR',title:'KILLATHON',summary:'Fixe ton objectif et compte tes éliminations en direct.',image:'killathon',name:'Lancer le Killathon'},
+  {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Retrouve les performances partagées de l’équipage.',image:'classement',name:'Voir les classements'}
+ ];
+ const cards=paths.map(p=>'<a class="hq-portal '+(p.featured?'hq-portal-featured ':'')+'hq-portal-'+p.path+'" href="#/'+p.path+'">'+
+  '<span class="hq-portal-art"><img src="/og/'+p.image+'.png?v=20261108" alt="" loading="lazy" decoding="async"></span>'+
+  '<span class="hq-portal-content"><span class="hq-portal-overline">'+p.overline+'</span>'+
+  '<span class="hq-portal-title">'+p.title+'</span>'+
+  '<span class="hq-portal-summary">'+p.summary+'</span>'+
+  '<span class="hq-portal-cta">'+p.name+' <span aria-hidden="true">↗</span></span></span></a>').join('');
+ return '<div class="hq-home">'+
+  '<section class="hq-hero" aria-labelledby="hqHeroTitle">'+
+   '<div class="hq-hero-scene" aria-hidden="true"></div>'+
+   '<div class="hq-hero-glow" aria-hidden="true"></div>'+
+   '<div class="hq-hero-content">'+
+    '<p class="hq-hero-eyebrow"><span class="hq-hero-dot" aria-hidden="true"></span> MA_JESTIK / NOOB & LEGENDS</p>'+
+    '<h1 id="hqHeroTitle">BIENVENUE<br><span>DANS L’ÉQUIPAGE.</span></h1>'+
+    '<p class="hq-hero-lead">Un univers pensé pour jouer, relever des défis et partager de vrais moments avec la communauté.</p>'+
+    '<div class="hq-hero-buttons">'+
+     '<button class="hq-hero-primary" type="button" data-scroll="hq-explorer">DÉCOUVRIR LE QG <span aria-hidden="true">↗</span></button>'+
+     '<a class="hq-hero-secondary" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">REJOINDRE DISCORD <span aria-hidden="true">↗</span></a>'+
+    '</div>'+
+   '</div>'+
+   '<div class="hq-hero-index" aria-hidden="true"><span>01 / 04</span><i></i><span>LE QG</span></div>'+
+   '<div class="hq-hero-bottom"><span>12 DESTINATIONS</span><b aria-hidden="true">✦</b><span>118 DÉFIS</span><b aria-hidden="true">✦</b><span>UN ÉQUIPAGE</span></div>'+
+  '</section>'+
+  '<section class="hq-intro" aria-label="La philosophie du QG">'+
+   '<p class="hq-section-overline"><span aria-hidden="true">✦</span> PLUS QU’UN SIMPLE SITE GAMING</p>'+
+   '<h2><span class="hq-quote-mark">“</span> LE HASARD A DU BON. <span class="hq-quote-mark">”</span></h2>'+
+   '<p>Bienvenue dans mon univers. Ici, la roue choisit ton atterrissage, les défis pimentent tes parties et la communauté a son mot à dire.</p>'+
+   '<span class="hq-intro-signature">— MA_JESTIK · NOOB & LEGENDS</span>'+
+  '</section>'+
+  '<section class="hq-explorer" id="hq-explorer" aria-labelledby="hqExploreTitle">'+
+   '<div class="hq-section-head"><div><p class="hq-section-overline"><span aria-hidden="true">✦</span> LES EXPÉRIENCES DU QG</p><h2 id="hqExploreTitle">CHOISIS TON AVENTURE<span>.</span></h2></div>'+
+   '<p>Chaque rubrique a son univers. À toi de choisir ce que tu veux explorer.</p></div>'+
+   '<div class="hq-portal-grid">'+cards+'</div>'+
+  '</section>'+
+  '<section class="hq-community-showcase" aria-labelledby="hqCommunityTitle">'+
+   '<div class="hq-community-visual" aria-hidden="true"><span class="hq-community-ring"></span><span class="hq-community-logo">MJ</span></div>'+
+   '<div class="hq-community-copy">'+
+    '<p class="hq-section-overline"><span aria-hidden="true">✦</span> UNE COMMUNAUTÉ AVANT TOUT</p>'+
+    '<h2 id="hqCommunityTitle">LE QG, C’EST AUSSI <em>VOUS.</em></h2>'+
+    '<p>Une question à soumettre au Tribunal ? Une envie de rejoindre l’équipage ? Les meilleurs moments se construisent ensemble.</p>'+
+    '<div class="hq-community-actions"><a href="#/tribunal">PASSER AU TRIBUNAL <span aria-hidden="true">→</span></a>'+
+    '<a href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">REJOINDRE LE DISCORD <span aria-hidden="true">↗</span></a></div>'+
+   '</div>'+
+  '</section>'+
+  '<section class="hq-endnote"><span class="hq-endnote-line"></span><span>MA_JESTIK</span><strong>À TRÈS VITE DANS LE QG.</strong><span class="hq-endnote-line"></span></section>'+
+ '</div>';
 }
 function wheel(){
  return head('OUTILS GAMING','LA ROUE FORTNITE','Laisse le hasard choisir ta prochaine destination sur la carte de Fortnite.')+
@@ -202,11 +252,14 @@ function route(){
  if(wheelObserver){wheelObserver.disconnect();wheelObserver=null;}
  if(setupObserver){setupObserver.disconnect();setupObserver=null;}
  root.innerHTML=pages[page]();
- $('crumbName').textContent=names[page];
+ document.body.classList.toggle('qg-home-active',page==='accueil');
  document.title=(page==='accueil'?'Le QG communautaire':names[page])+' · Ma_JesTik';
  document.querySelectorAll('[data-page]').forEach(a=>{let active=a.dataset.page===page;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  const group=groups[page];
- if(group){const button=document.querySelector('[data-toggle="'+group+'"]');button?.setAttribute('aria-expanded','true');}
+ document.querySelectorAll('[data-toggle]').forEach(button=>{
+  button.classList.toggle('has-active',button.dataset.toggle===group);
+  button.setAttribute('aria-expanded','false');
+ });
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
@@ -246,6 +299,11 @@ if(shareButton)shareButton.addEventListener('click',async()=>{
  }catch{
   window.prompt('Copie le lien de partage de cette rubrique :',url);
  }
+});
+document.addEventListener('click',e=>{
+ const jump=e.target.closest('[data-scroll]');
+ if(jump){const id=jump.dataset.scroll;document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
+ if(!e.target.closest('.site-navigation'))document.querySelectorAll('[data-toggle]').forEach(b=>b.setAttribute('aria-expanded','false'));
 });
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
  const isOpen=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!isOpen));
