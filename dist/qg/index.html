@@ -42,9 +42,9 @@
   <meta name="majestik-members-api" content="https://ma-jestik-qg-members.maroodu11.workers.dev/">
   <!-- API séparée : le Worker des votes reste totalement indépendant. -->
   <meta name="majestik-killathon-api" content="https://ma-jestik-qg-killathon.maroodu11.workers.dev">
-  <!-- Le Tribunal public reste désactivé jusqu’au déploiement D1 + Worker Cloudflare. -->
-  <meta name="majestik-tribunal-api" content="">
-  <meta name="majestik-tribunal-public-enabled" content="false">
+  <!-- Tribunal public : Worker isolé du Killathon et du classement. -->
+  <meta name="majestik-tribunal-api" content="https://ma-jestik-qg-tribunal.maroodu11.workers.dev">
+  <meta name="majestik-tribunal-public-enabled" content="true">
   <!-- Activé après migration des tables D1 + autorisation propriétaire Twitch + déploiement du Worker. -->
   <meta name="majestik-votes-enabled" content="true">
   <title>Ma_JesTik · Le QG communautaire</title>
@@ -54,7 +54,7 @@
   <link rel="stylesheet" href="defis.css?v=20261108-dots4">
   <link rel="stylesheet" href="killathon.css?v=20261108-dots4">
   <link rel="stylesheet" href="killathon-simple.css?v=20261107-end1">
-  <script type="module" src="qg.js?v=20261108-public-stage1"></script>
+  <script type="module" src="qg.js?v=20261108-tribunal-live1"></script>
 </head>
 <body>
   <a class="skip" href="#main">Aller au contenu</a>
