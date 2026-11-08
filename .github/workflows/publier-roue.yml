@@ -65,6 +65,43 @@ jobs:
               print(f'Miniature creee : {destination} ({destination.stat().st_size} octets)')
           PY
 
+      - name: Generer les icones installables MJ
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          source = Path('dist/icons/mj-source.webp')
+          if not source.is_file():
+              raise SystemExit('Logo MJ manquant')
+          with Image.open(source) as raw:
+              raw.load()
+              if raw.size != (192, 192):
+                  raise SystemExit('Format source MJ incorrect')
+              logo = raw.convert('RGBA')
+
+          folder = Path('dist/icons')
+          folder.mkdir(exist_ok=True)
+          for size in (16, 32, 48, 180, 192, 512):
+              destination = folder / f'icon-{size}.png'
+              logo.resize((size, size), Image.Resampling.LANCZOS).save(destination, 'PNG', optimize=True)
+
+          # Android masque parfois les angles : le logo reste entièrement dans sa zone sûre.
+          maskable = Image.new('RGBA', (512, 512), (7, 23, 37, 255))
+          inner = logo.resize((384, 384), Image.Resampling.LANCZOS)
+          maskable.alpha_composite(inner, (64, 64))
+          maskable.save(folder / 'icon-512-maskable.png', 'PNG', optimize=True)
+
+          logo.resize((180, 180), Image.Resampling.LANCZOS).save('dist/apple-touch-icon.png', 'PNG', optimize=True)
+          favicon = logo.resize((64, 64), Image.Resampling.LANCZOS)
+          favicon.save('dist/favicon.ico', format='ICO', sizes=[(16, 16), (32, 32), (48, 48), (64, 64)])
+          for name in ('icon-192.png', 'icon-512.png', 'icon-512-maskable.png'):
+              with Image.open(folder / name) as im:
+                  assert im.size == (int(name.split('-')[1].split('.')[0]),) * 2
+          print('Icones application MJ produites : favicon.ico, Apple Touch, PNG 16 a 512 et maskable')
+          PY
+
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v5
 
