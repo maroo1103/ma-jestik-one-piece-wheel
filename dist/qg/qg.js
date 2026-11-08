@@ -2,6 +2,7 @@ import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-head3';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-head3';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-labels3';
+import {publicTribunalMarkup,mountPublicTribunal,unmountPublicTribunal,tribunalPublicEnabled} from './tribunal-public.js?v=20261108-stage1';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
@@ -130,7 +131,7 @@ function creator(){
  return head('UNIVERS MA_JESTIK','CODE CRÉATEUR','Un emplacement pour ton éventuel futur code créateur Epic Games. Il n’est pas activé tant que tu n’as pas été admis au programme.',[tag('À venir','gold')])+
  '<section class="panel"><h3>TON CODE S’AFFICHERA ICI</h3><p>Lorsque tu auras obtenu ton code officiel, nous pourrons ajouter un grand encart avec un bouton « Copier le code », et des explications pour l’utiliser dans la boutique Fortnite.</p><span class="tag gold">NON DISPONIBLE POUR LE MOMENT</span></section>';
 }
-const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
+const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
 let wheelObserver=null;
 let setupObserver=null;
 // Mesure la fin du contenu REEL (et non scrollHeight, qui peut inclure
@@ -194,6 +195,7 @@ function closeMobile(){
 }
 function route(){
  unmountTribunal();
+ unmountPublicTribunal();
  if(rankingTimer){clearInterval(rankingTimer);rankingTimer=null;}
  const raw=decodeURIComponent(location.hash.replace(/^#\/?/,'').split('?')[0]);
  const page=Object.prototype.hasOwnProperty.call(pages,raw)?raw:'accueil';
@@ -209,7 +211,10 @@ function route(){
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
  if(page==='killathon')mountKillathon();
- if(page==='tribunal')mountTribunal();
+ if(page==='tribunal'){
+  if(tribunalPublicEnabled)mountPublicTribunal();
+  else mountTribunal();
+ }
  if(page==='classement'&&votesEnabled){
   void mountRankings();
   rankingTimer=setInterval(()=>{
