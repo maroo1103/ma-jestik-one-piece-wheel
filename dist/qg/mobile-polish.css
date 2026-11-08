@@ -1,0 +1,48 @@
+/* Ma_JesTik | Ajustements lisibilité et tactile sur téléphone seulement.
+   Ne pas modifier ici les règles pour ordinateur ni les comportements JavaScript. */
+@media (max-width: 680px) {
+  /* Textes discrets qui étaient difficiles à lire sur smartphone. */
+  .qg-layout .footer {
+    font-size: 11px;
+    line-height: 1.6;
+    color: #c2bcb3;
+  }
+  .qg-layout .partner-box .partner-disclosure {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .qg-layout .qg-ranking-panel .empty-rank {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .qg-layout .qg-rank-role {
+    font-size: 11px;
+  }
+  .qg-layout .kts-stats small {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+  .qg-layout .kts-panel .kts-finish p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  /* Zones de toucher confortables pour les filtres et les actions. */
+  .qg-layout .challenge-tabs button,
+  .qg-layout .court-tabs button,
+  .qg-layout .challenge-filters select,
+  .qg-layout .challenge-catalog > summary,
+  .qg-layout .kts-panel .kts-button {
+    min-height: 44px;
+  }
+
+  /* Moins de défilement sans changer le cadrage du visuel d'accueil. */
+  .qg-layout .hq-intro {
+    padding-top: 64px;
+    padding-bottom: 68px;
+  }
+  .qg-layout .hq-explorer {
+    padding-top: 62px;
+    padding-bottom: 72px;
+  }
+}

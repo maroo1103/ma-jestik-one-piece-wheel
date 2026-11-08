@@ -26,3 +26,22 @@ body{background:radial-gradient(circle at 55% 0,#71572b21 0,transparent 38%),var
 .button:hover{background:#e3b874}
 .pc-panel{background:#191a1d;border-color:#765e41}
 .part{background:#242325;border-color:#6c543d}
+
+/* Contrôles de zoom tactiles et textes secondaires, sans modifier la photo. */
+@media (max-width: 750px) {
+  .zoom-actions {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .zoom-actions button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+  .viewer-foot,
+  .affiliate {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}

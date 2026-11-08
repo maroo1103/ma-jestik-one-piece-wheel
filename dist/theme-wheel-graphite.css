@@ -43,3 +43,49 @@ body{background:#08090b;color:#f7f4ee}
 .map-dialog::backdrop,dialog::backdrop{background:#030405d9}
 .map-dialog-frame{background:#131416}
 /* La carte Fortnite et ses illustrations restent fidèles aux images originales. */
+
+/* Ergonomie des 12 destinations : réglages pour téléphone uniquement. */
+@media (max-width: 760px) {
+  .poi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+  .poi-card .name {
+    font-size: 17px;
+    line-height: 1.2;
+  }
+  .poi-card .poi-index {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .poi-card input {
+    width: 24px;
+    height: 24px;
+  }
+  .poi-card input:checked:after {
+    margin: 7px 6px;
+  }
+  .poi-card .edit-image {
+    min-height: 44px;
+    padding: 10px 7px;
+    font-size: 12px;
+  }
+  .options select {
+    min-height: 44px;
+    font-size: 14px;
+    padding: 8px 7px;
+  }
+  .sound,
+  .section-heading .secondary {
+    min-height: 44px;
+  }
+  .image-help,
+  .control-help {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  footer p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+}
