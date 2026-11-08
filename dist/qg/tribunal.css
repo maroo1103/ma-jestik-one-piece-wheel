@@ -173,3 +173,6 @@
 .court-moderation-pill{border-color:#53849a;color:#b8def4;background:#10394a}
 .court-proposal-duration{border-color:#53849a;background:#0a2534}
 .court-tool-card .court-field input{border-color:#53849a;background:#0a2534}
+
+/* Point jaune devant COMMUNAUTÉ, identique au modèle de la Roue Fortnite. */
+.court-page-head .eyebrow::before{content:"";display:block;width:6px;height:6px;flex:0 0 6px;background:#ffd16e;border-radius:50%;font-size:0;filter:none}
