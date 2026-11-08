@@ -9,7 +9,7 @@ export function tribunalMarkup(){
  '<div class="court-warning" role="note"><span aria-hidden="true">⚖️</span><div><strong>VERSION DE DÉMONSTRATION, NON PARTAGÉE</strong><p>Les sondages, votes et propositions sont enregistrés dans ce navigateur uniquement. Une question proposée sur un autre appareil ne te parvient PAS encore. Le système public avec connexion Twitch et modération propriétaire sera ajouté ensuite.</p></div></div>'+
  '<div class="court-summary"><div><span>SONDAGES OUVERTS</span><strong id="courtOpenCount">0</strong></div><div><span>SONDAGES TERMINÉS</span><strong id="courtClosedCount">0</strong></div><div><span>PROPOSITIONS À EXAMINER</span><strong id="courtProposalCount">0</strong></div></div>'+
  '<div class="court-workspace"><section class="court-primary" aria-labelledby="courtListTitle"><div class="court-list-head"><div><span class="court-overline">LES QUESTIONS DE L’ÉQUIPAGE</span><h2 id="courtListTitle">Liste des sondages</h2></div><div class="court-tabs" aria-label="Filtrer les sondages"><button type="button" data-court-filter="open" aria-pressed="true">En cours</button><button type="button" data-court-filter="closed" aria-pressed="false">Terminés</button><button type="button" data-court-filter="all" aria-pressed="false">Tous</button></div></div><div class="court-poll-stack" id="courtPollList"></div></section>'+
- '<aside class="court-side"><details open class="panel court-tool-card"><summary>CRÉER UN SONDAGE <span>＋</span></summary><p>Ajoute autant de questions que nécessaire (20 maximum dans la démo). Leurs minuteries fonctionnent indépendamment.</p><form id="courtCreateForm"><label class="court-field"><span>Ta question</span><textarea id="courtCreateQuestion" maxlength="140" rows="3" required placeholder="Quel jeu pour notre prochain live ?"></textarea></label><div class="court-field"><span>Réponses (2 à 4)</span><div id="courtCreateChoices"></div><div class="court-choice-tools"><button type="button" data-court-add="create">+ Réponse</button><button type="button" data-court-remove="create">− Réponse</button></div></div><label class="court-field"><span>Durée</span><select id="courtCreateDuration"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 heure</option><option value="1440">24 heures</option></select></label><button class="btn btn-gold court-submit" type="submit">Créer un sondage de test</button><p class="court-form-message" id="courtCreateMessage" role="status"></p></form></details>'+
+ '<aside class="court-side"><details open class="panel court-tool-card"><summary>CRÉER UN SONDAGE <span>＋</span></summary><p>Ajoute autant de questions que nécessaire (20 maximum dans la démo). Chaque sondage peut avoir une durée ou rester ouvert jusqu’à sa clôture manuelle.</p><form id="courtCreateForm"><label class="court-field"><span>Ta question</span><textarea id="courtCreateQuestion" maxlength="140" rows="3" required placeholder="Quel jeu pour notre prochain live ?"></textarea></label><div class="court-field"><span>Réponses (2 à 4)</span><div id="courtCreateChoices"></div><div class="court-choice-tools"><button type="button" data-court-add="create">+ Réponse</button><button type="button" data-court-remove="create">− Réponse</button></div></div><label class="court-field"><span>Durée</span><select id="courtCreateDuration"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 heure</option><option value="1440">24 heures</option><option value="0">♾️ Sans limite de durée</option></select></label><button class="btn btn-gold court-submit" type="submit">Créer un sondage de test</button><p class="court-form-message" id="courtCreateMessage" role="status"></p></form></details>'+
  '<details open class="panel court-tool-card court-suggest-card"><summary>PROPOSER UNE QUESTION <span>✎</span></summary><p>Voici le formulaire que les membres utiliseront. Pour l’instant, l’envoi est enregistré seulement sur cet appareil.</p><form id="courtSuggestForm"><label class="court-field"><span>Pseudo (démo)</span><input id="courtSuggestAuthor" maxlength="36" autocomplete="off" placeholder="Ton pseudo" required></label><label class="court-field"><span>Question proposée</span><textarea id="courtSuggestQuestion" maxlength="140" rows="3" required placeholder="Et si on faisait un live spécial ?"></textarea></label><div class="court-field"><span>Réponses proposées (2 à 4)</span><div id="courtSuggestChoices"></div><div class="court-choice-tools"><button type="button" data-court-add="suggest">+ Réponse</button><button type="button" data-court-remove="suggest">− Réponse</button></div></div><button class="btn btn-gold court-submit" type="submit">Ajouter à la file locale</button><p class="court-form-message" id="courtSuggestMessage" role="status"></p></form></details></aside></div>'+
  '<section class="panel court-moderation" aria-labelledby="courtModerationTitle"><div class="court-list-head"><div><span class="court-overline">FILE DE PROPOSITIONS · TEST LOCAL</span><h2 id="courtModerationTitle">Questions à examiner</h2></div><span class="court-moderation-pill">VALIDATION AVANT PUBLICATION</span></div><p>Dans la version publique, seuls les administrateurs autorisés pourront accepter ou refuser une proposition. Ici, les boutons permettent de tester le parcours sur ce navigateur.</p><div id="courtProposalList" class="court-proposal-list"></div></section>';
 }
@@ -40,14 +40,15 @@ export function mountTribunal(){
   catch{ /* Démo utilisable sans persistance si stockage bloqué. */ }
  };
  const id=()=>String(Date.now())+'-'+Math.random().toString(36).slice(2,10);
- const closed=p=>p.closed||Date.now()>=Number(p.ends);
+ const unlimited=p=>p.ends===null;
+ const closed=p=>Boolean(p.closed)||(!unlimited(p)&&Date.now()>=Number(p.ends));
  const active=()=>data.polls.filter(p=>!closed(p));
  const fmt=seconds=>{
   const min=Math.floor(seconds/60);
   const hrs=Math.floor(min/60);
   return hrs?hrs+'h '+String(min%60).padStart(2,'0')+'min':String(min).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
  };
- const remaining=p=>Math.max(0,Math.ceil((Number(p.ends)-Date.now())/1000));
+ const remaining=p=>unlimited(p)?null:Math.max(0,Math.ceil((Number(p.ends)-Date.now())/1000));
  const countLabel=n=>n+' vote'+(n>1?'s':'');
  const valid=(question,answers)=>{
   if(question.length<10||question.length>140)return 'La question doit contenir entre 10 et 140 caractères.';
@@ -93,7 +94,7 @@ export function mountTribunal(){
   }
  };
  const addPoll=(question,answers,duration,from='')=>{
-  const poll={id:id(),question,answers:answers.slice(),votes:answers.map(()=>0),selected:null,created:Date.now(),ends:Date.now()+duration*60000,closed:false,from};
+  const poll={id:id(),question,answers:answers.slice(),votes:answers.map(()=>0),selected:null,created:Date.now(),ends:duration===0?null:Date.now()+duration*60000,closed:false,from};
   data.polls.unshift(poll);persist();filter='open';render();
  };
  function pollCard(p){
@@ -101,7 +102,7 @@ export function mountTribunal(){
   const article=make('article','court-poll-card'+(isClosed?' is-closed':''));
   const top=make('div','court-poll-top');
   top.append(make('span','court-poll-state'+(isClosed?' is-closed':''),isClosed?'TERMINÉ':'● EN COURS'));
-  const time=make('span','court-poll-time',isClosed?'Clôturé':fmt(remaining(p)));
+  const time=make('span','court-poll-time',isClosed?'Clôturé':unlimited(p)?'♾️ Sans limite':fmt(remaining(p)));
   time.dataset.courtTime=p.id;top.append(time);article.append(top);
   article.append(make('h3','court-poll-title',p.question));
   if(p.from)article.append(make('p','court-poll-by','Proposée par '+p.from+' · démonstration locale'));
@@ -179,11 +180,14 @@ export function mountTribunal(){
    const accept=make('button','court-proposal-accept','Accepter en démo');
    accept.type='button';accept.addEventListener('click',()=>{
     if(data.polls.length>=maxPolls){window.alert('Limite de 20 sondages de démonstration atteinte.');return;}
-    p.status='accepted';addPoll(p.question,p.answers,10,p.author);
+    p.status='accepted';addPoll(p.question,p.answers,Number(durationSelect.value),p.author);
    });
    const decline=make('button','court-proposal-decline','Refuser');
    decline.type='button';decline.addEventListener('click',()=>{p.status='rejected';persist();render();});
-   actions.append(accept,decline);card.append(actions);container.append(card);
+   const durationSelect=make('select','court-proposal-duration');
+   durationSelect.setAttribute('aria-label','Durée du sondage proposé par '+p.author);
+   durationSelect.innerHTML='<option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 heure</option><option value="1440">24 heures</option><option value="0">♾️ Sans limite</option>';
+   actions.append(durationSelect,accept,decline);card.append(actions);container.append(card);
   });
  }
  function render(){
@@ -200,7 +204,7 @@ export function mountTribunal(){
   if(error){msg.textContent=error;return;}
   if(data.polls.length>=maxPolls){msg.textContent='Limite de 20 sondages de démonstration atteinte.';return;}
   const duration=Number($('#courtCreateDuration').value);
-  if(![5,10,15,30,60,1440].includes(duration)){msg.textContent='Durée invalide.';return;}
+  if(![0,5,10,15,30,60,1440].includes(duration)){msg.textContent='Durée invalide.';return;}
   addPoll(question,answers,duration);
   msg.textContent='Sondage ajouté à ta liste locale. Aucun visiteur ne le voit.';
   $('#courtCreateQuestion').value='';
@@ -228,7 +232,7 @@ export function mountTribunal(){
   }
   root.querySelectorAll('[data-court-time]').forEach(node=>{
    const poll=data.polls.find(p=>p.id===node.dataset.courtTime);
-   if(poll)node.textContent=closed(poll)?'Clôturé':fmt(remaining(poll));
+   if(poll)node.textContent=closed(poll)?'Clôturé':unlimited(poll)?'♾️ Sans limite':fmt(remaining(poll));
   });
  },1000);
 }

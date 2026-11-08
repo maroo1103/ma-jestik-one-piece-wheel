@@ -129,3 +129,7 @@
 .court-empty-proposals{font-size:12px;color:#9cb6c5}
 @media(max-width:1050px){.court-workspace{grid-template-columns:1fr}}
 @media(max-width:700px){.court-summary{grid-template-columns:1fr}.court-summary>div{padding:11px 15px}.court-poll-card{padding:16px}.court-list-head{align-items:start}.court-tabs{width:100%}.court-tabs button{flex:1}.court-answer-head{align-items:flex-start}.court-answer-stats{text-align:right}}
+
+/* Choix de durée lors de la validation d'une question proposée. */
+.court-proposal-duration{background:#142f40;color:#ecf3f6;border:1px solid #507187;border-radius:7px;padding:9px 10px;font:inherit;font-size:11px;font-weight:750;max-width:100%;min-height:37px}
+.court-proposal-duration:focus-visible{outline:2px solid #f0c27e;outline-offset:2px}
