@@ -1,4 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-head3';
+import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261108-login-simple1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-head3';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-labels3';
@@ -47,11 +48,25 @@ function home(){
     '</div>'+
    '</div>'+
 
-   '<div class="hq-hero-bottom" aria-label="Les activités du QG">'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">⌖</span><strong>12</strong><span>DESTINATIONS FORTNITE</span></div>'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">✦</span><strong>118</strong><span>DÉFIS ZERO BUILD</span></div>'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">◈</span><strong>5</strong><span>RUBRIQUES INTERACTIVES</span></div>'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">☑</span><strong>TWITCH</strong><span>VOTES &amp; PROFILS</span></div>'+
+   '<div class="hq-hero-bottom hq-activity-board" aria-label="Activité actuelle du QG">'+
+    '<div class="hq-activity-heading"><span aria-hidden="true">✦</span> EN CE MOMENT AU QG</div>'+
+    '<div class="hq-activity-cards">'+
+     '<a class="hq-activity-card hq-activity-twitch" data-state="neutral" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer" aria-label="Voir le statut du direct Twitch de Ma_JesTik">'+
+      '<span class="hq-activity-symbol" aria-hidden="true">◉</span>'+
+      '<span class="hq-activity-copy"><strong>TWITCH</strong><span class="hq-activity-status" data-activity-status="twitch" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
+      '<span class="hq-activity-arrow" aria-hidden="true">↗</span>'+
+     '</a>'+
+     '<a class="hq-activity-card hq-activity-tribunal" data-state="neutral" href="#/tribunal" aria-label="Ouvrir le Tribunal et consulter les sondages">'+
+      '<span class="hq-activity-symbol" aria-hidden="true">⚖</span>'+
+      '<span class="hq-activity-copy"><strong>TRIBUNAL</strong><span class="hq-activity-status" data-activity-status="tribunal" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
+      '<span class="hq-activity-arrow" aria-hidden="true">↗</span>'+
+     '</a>'+
+     '<a class="hq-activity-card hq-activity-defis" data-state="neutral" href="#/defis" aria-label="Ouvrir les défis et missions de Ma_JesTik">'+
+      '<span class="hq-activity-symbol" aria-hidden="true">⚔</span>'+
+      '<span class="hq-activity-copy"><strong>DÉFIS</strong><span class="hq-activity-status" data-activity-status="defis" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
+      '<span class="hq-activity-arrow" aria-hidden="true">↗</span>'+
+     '</a>'+
+    '</div>'+
    '</div>'+
   '</section>'+
   '<section class="hq-intro" aria-label="La philosophie du QG">'+
@@ -251,6 +266,7 @@ function closeMobile(){
  $('menuMobile').setAttribute('aria-expanded','false');
 }
 function route(){
+ unmountActivityStrip();
  unmountTribunal();
  unmountPublicTribunal();
  if(rankingTimer){clearInterval(rankingTimer);rankingTimer=null;}
@@ -267,6 +283,7 @@ function route(){
   button.classList.toggle('has-active',button.dataset.toggle===group);
   button.setAttribute('aria-expanded','false');
  });
+ if(page==='accueil')mountActivityStrip();
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
  if(page==='defis')mountChallenges();
