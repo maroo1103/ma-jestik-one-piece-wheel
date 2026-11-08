@@ -832,3 +832,52 @@ body{background:#07090c;color:#f3f1ed}
     background-position:center center;
   }
 }
+
+/* Cadrage intégral du setup : zone photo indépendante du bandeau d'activité.
+   Conserve le PNG d'origine tel quel (sans traitement, zoom, filtre ni compression). */
+.hq-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  min-height:0;
+}
+.hq-hero-content{
+  box-sizing:border-box;
+  flex:0 0 auto;
+  min-height:max(620px, 35.65vw);
+  padding-bottom:65px;
+}
+.hq-hero-scene{
+  inset:0 0 auto 0;
+  height:max(620px, 35.65vw);
+  background-size:contain;
+  background-position:center bottom;
+  background-repeat:no-repeat;
+  transform:none;
+  filter:none;
+}
+.hq-hero::before{
+  inset:0 0 auto 0;
+  height:max(620px, 35.65vw);
+}
+.hq-hero-glow{
+  inset:0 0 auto 0;
+  height:max(620px, 35.65vw);
+}
+.hq-hero-bottom.hq-activity-board{
+  position:relative;
+  inset:auto;
+  width:100%;
+  flex:0 0 auto;
+}
+@media(max-width:850px){
+  .hq-hero-content{min-height:620px}
+  .hq-hero-scene,.hq-hero::before,.hq-hero-glow{height:620px}
+  .hq-hero-scene{background-position:center bottom;background-size:contain}
+}
+@media(max-width:680px){
+  .hq-hero-content{min-height:610px;padding-bottom:45px}
+  .hq-hero-scene,.hq-hero::before,.hq-hero-glow{height:610px}
+  .hq-hero-scene{background-position:center bottom;background-size:contain}
+}
