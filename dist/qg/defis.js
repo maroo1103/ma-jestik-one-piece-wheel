@@ -159,7 +159,7 @@ export function mountChallenges(){
   }
   if(publicActive()&&!selectedGame)selectedGame="fortnite";
   const after=JSON.stringify([officialRound?.id,officialRound?.status,verifiedOwner,selectedGame]);
-  if(before!==after)render();
+  if(before!==after){render();if(verifiedOwner)void proposalPanel?.refresh();}
  });
  root.addEventListener("click", event=>{
   const btn=event.target.closest("[data-action]");
