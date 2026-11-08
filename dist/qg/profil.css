@@ -219,3 +219,8 @@
 .qg-layout .mp-photo-world-of-warcraft{object-position:center 72%!important}
 .qg-layout .mp-photo-minecraft{object-position:center 42%!important}
 .qg-layout .mp-photo-gta-vi{object-position:center 40%!important}
+
+/* Cadrage soigné pour les trois illustrations paysagères officielles. */
+.qg-layout .mp-art-frame>.mp-photo-gta-vi{object-position:50% 49%!important}
+.qg-layout .mp-art-frame>.mp-photo-minecraft{object-position:50% 50%!important}
+.qg-layout .mp-art-frame>.mp-photo-valorant{object-position:50% 47%!important}

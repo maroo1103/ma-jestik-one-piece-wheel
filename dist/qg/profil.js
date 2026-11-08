@@ -39,11 +39,11 @@ const games=[
  {"id":"path-of-exile","name":"Path of Exile","appid":238960,"subtitle":"RPG"},
  {"id":"stardew-valley","name":"Stardew Valley","appid":413150,"subtitle":"Simulation"},
  {"id":"terraria","name":"Terraria","appid":105600,"subtitle":"Aventure"},
- {"id":"gta-vi","name":"Grand Theft Auto VI","subtitle":"Monde ouvert","art":"miami","image":"https://cdn.mos.cms.futurecdn.net/v2/t%3A0%2Cl%3A420%2Ccw%3A1080%2Cch%3A1080%2Cq%3A80%2Cw%3A1080/NHhN5TgkBCkzZVSpvRZ3am.jpeg"},
+ {"id":"gta-vi","name":"Grand Theft Auto VI","subtitle":"Monde ouvert","art":"miami","image":"https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/downloads/wallpapers/games/vi/Jason_and_Lucia_01/Jason_and_Lucia_01_landscape.jpg"},
  {"id":"league-of-legends","name":"League of Legends","subtitle":"MOBA","art":"runeterra","image":"https://egamersworld.com/uploads/blog/1/17/1735564816859_1735564816859.webp"},
  {"id":"world-of-warcraft","name":"World of Warcraft","subtitle":"MMORPG","art":"azeroth","image":"https://images-eds-ssl.xboxlive.com/image?format=source&url=4rt9.lXDC4H_93laV1_eHHFT949fUipzkiFOBH3fAiZZUCdYojwUyX2aTonS1aIwMrx6NUIsHfUHSLzjGJFxxhoABQ7itg4OoTdKyzEMv9xDhjQnHi7HPM4Zg6ehHxY3lRm4NKghKmevKwdhRCvFQZLOohYpGIYbOgYB.lAKxC4-"},
- {"id":"minecraft","name":"Minecraft","subtitle":"Construction","art":"voxel","image":"https://cdn.mos.cms.futurecdn.net/v2/t%3A0%2Cl%3A448%2Ccw%3A1152%2Cch%3A1152%2Cq%3A80%2Cw%3A1152/rpPGiw7RjFaeJCCDBC4Bna.jpg"},
- {"id":"valorant","name":"Valorant","subtitle":"FPS tactique","art":"tactical","image":"https://cdn.mos.cms.futurecdn.net/QotLyoh6LR4VT8KvE3tGze.jpg"}
+ {"id":"minecraft","name":"Minecraft","subtitle":"Construction","art":"voxel","image":"https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Minecraft_PC_Bundle_.Net_1170x500.jpg"},
+ {"id":"valorant","name":"Valorant","subtitle":"FPS tactique","art":"tactical","image":"https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/8f0df8efd5b986039cd37a4d5f3bf31b815d0c54-3840x2160.jpg?w=680&auto=format&q=80"}
 ];
 const lookup=new Map(games.map(g=>[g.id,g]));
 const bannerKeys=["champagne","carbone","violet","bleu-nuit","rubis","emeraude"];
