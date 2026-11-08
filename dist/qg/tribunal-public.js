@@ -5,7 +5,7 @@ const API=(document.querySelector('meta[name="majestik-tribunal-api"]')?.content
 export const tribunalPublicEnabled=document.querySelector('meta[name="majestik-tribunal-public-enabled"]')?.content==='true'&&/^https:\/\/[a-z0-9.-]+$/i.test(API);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let active=false,interval=null,sessionHandler=null,requestId=0,root=null,busy=false;
-let polls=[],proposals=[],identity=null,selectedFilter='open',notice='';
+let polls=[],proposals=[],identity=null,selectedFilter='open',notice='',verifiedId='',verifiedAt=0;
 const dur=[['5','5 minutes'],['10','10 minutes'],['15','15 minutes'],['30','30 minutes'],['60','1 heure'],['1440','24 heures'],['0','♾️ Sans limite']];
 const durationOptions=()=>dur.map(([v,l])=>'<option value="'+v+'" '+(v==='10'?'selected':'')+'>'+l+'</option>').join('');
 function inputs(answers){
@@ -154,9 +154,13 @@ async function refresh(){
   const session=getQGTwitchSession(),newPolls=await call('/v1/tribunal/polls');
   let newIdentity=null,newProposals=[];
   if(session){
-   newIdentity=await call('/v1/tribunal/me','GET',undefined,true);
+   if(identity&&verifiedId===session.id&&Date.now()-verifiedAt<5*60*1000)newIdentity=identity;
+   else{
+    newIdentity=await call('/v1/tribunal/me','GET',undefined,true);
+    verifiedId=session.id;verifiedAt=Date.now();
+   }
    if(newIdentity.owner)newProposals=(await call('/v1/tribunal/proposals','GET',undefined,true)).proposals||[];
-  }
+  }else{verifiedId='';verifiedAt=0;}
   if(!active||id!==requestId)return;
   const roleBefore=identity?.owner===true?'owner':identity?'member':'unknown';
   const roleAfter=newIdentity?.owner===true?'owner':newIdentity?'member':'unknown';
@@ -237,12 +241,12 @@ export function mountPublicTribunal(){
  unmountPublicTribunal();
  root=document.getElementById('page');
  if(!root||!root.querySelector('#courtPublicSidebar')||!tribunalPublicEnabled)return;
- active=true;identity=null;polls=[];proposals=[];selectedFilter='open';busy=false;
+ active=true;identity=null;verifiedId='';verifiedAt=0;polls=[];proposals=[];selectedFilter='open';busy=false;
  root.addEventListener('click',click);root.addEventListener('submit',submit);
  root.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{
   selectedFilter=b.dataset.filter;renderPolls();
  }));
- sessionHandler=()=>{identity=null;renderSidebar();void refresh()};
+ sessionHandler=()=>{identity=null;verifiedId='';verifiedAt=0;renderSidebar();void refresh()};
  window.addEventListener('qg:twitch-session',sessionHandler);
  renderSidebar();void refresh();
  let seconds=0;
