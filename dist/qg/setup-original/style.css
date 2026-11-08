@@ -8,3 +8,21 @@
 .config-wrap{max-width:1210px}.pc-panel{border:1px solid var(--border);border-radius:17px;background:#161518;padding:22px}.section-title{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:3px 4px 20px;color:#d2c2b6;letter-spacing:.16em;font-size:12px;font-weight:850}.counter{color:#ab9d94;letter-spacing:normal;text-transform:none;font-weight:600}.parts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.part{background:#211c1d;border:1px solid #3b3332;border-radius:11px;min-height:145px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:16px}.part-type{font-size:10px;letter-spacing:.19em;color:#e6a574;font-weight:800}.part h2{font-size:clamp(15px,1.65vw,18px);margin:7px 0 0;line-height:1.32;font-weight:780}.part p{color:#a8a19d;font-size:12px;margin:7px 0 0}.part a{font-size:13px;font-weight:750;text-decoration:none;color:#ffd1ad;border-bottom:1px solid #b7764c;padding-bottom:2px}.part a:hover{color:#fff}.not-linked{font-size:12px;color:#a49a96}.unlinked{opacity:.75}.back-bottom{display:inline-block;margin-top:23px;text-decoration:none;color:#f4b786;font-weight:760}.back-bottom:hover{text-decoration:underline}
 @media(max-width:750px){.topbar{padding:13px 16px}.wrap{padding:33px 15px 30px}.hero{margin-bottom:26px}.viewer-head{align-items:flex-start}.zoom-actions{width:100%;justify-content:flex-end}.scene-map{min-width:900px}.info-strip{flex-direction:column;align-items:flex-start;padding:22px}.button{width:100%;text-align:center}.parts-grid{grid-template-columns:1fr}.pc-panel{padding:13px}.part{min-height:125px}.hero h1{font-size:46px}.top-link{font-size:12px}.brand{font-size:16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Harmonie QG : graphite et or champagne, sans déplacer les éléments interactifs. */
+:root{
+ --bg:#08090b;--panel:#191a1d;--text:#f7f4ee;
+ --muted:#bbb4a9;--amber:#e7b970;--border:#755d41;
+}
+body{background:radial-gradient(circle at 55% 0,#71572b21 0,transparent 38%),var(--bg)}
+.topbar{background:#101114eb;border-bottom-color:#775c3e}
+.brand-mark{background:#352a1c;border-color:#a78554;color:#f0c786}
+.top-link{border-color:#866947;color:#f4d29c}
+.scene-viewport{background:#171719;border-color:#8b6d47}
+.floating-label{background:#24201deF;border-color:#e1b56e}
+.info-strip{background:linear-gradient(115deg,#242427,#17181a);border-color:#72573b}
+.zoom-actions button{background:#292622;border-color:#856847;color:#f6e6d1}
+.button{background:#c39b5d;border-color:#e8c187;color:#19130b}
+.button:hover{background:#e3b874}
+.pc-panel{background:#191a1d;border-color:#765e41}
+.part{background:#242325;border-color:#6c543d}
