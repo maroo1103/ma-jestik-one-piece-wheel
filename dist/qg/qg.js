@@ -43,31 +43,39 @@ function home(){
     '<p class="hq-hero-lead">Un univers pensé pour jouer, relever des défis et partager de vrais moments avec la communauté.</p>'+
     '<div class="hq-hero-buttons">'+
      '<button class="hq-hero-primary" type="button" data-scroll="hq-explorer">DÉCOUVRIR LE QG <span aria-hidden="true">↗</span></button>'+
-     '<a class="hq-hero-secondary" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">REJOINDRE DISCORD <span aria-hidden="true">↗</span></a>'+
+
     '</div>'+
    '</div>'+
-   '<div class="hq-hero-index" aria-hidden="true"><span>01 / 04</span><i></i><span>LE QG</span></div>'+
-   '<div class="hq-hero-bottom"><span>12 DESTINATIONS</span><b aria-hidden="true">✦</b><span>118 DÉFIS</span><b aria-hidden="true">✦</b><span>UN ÉQUIPAGE</span></div>'+
+
+   '<div class="hq-hero-bottom" aria-label="Les expériences du QG">'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">◇</span><strong>12</strong><span>DESTINATIONS</span></div>'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">✦</span><strong>118</strong><span>DÉFIS</span></div>'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">◈</span><strong>UN</strong><span>ÉQUIPAGE</span></div>'+
+   '</div>'+
   '</section>'+
   '<section class="hq-intro" aria-label="La philosophie du QG">'+
    '<p class="hq-section-overline"><span aria-hidden="true">✦</span> PLUS QU’UN SIMPLE SITE GAMING</p>'+
    '<h2><span class="hq-quote-mark">“</span> LE HASARD A DU BON. <span class="hq-quote-mark">”</span></h2>'+
    '<p>Bienvenue dans mon univers. Ici, la roue choisit ton atterrissage, les défis pimentent tes parties et la communauté a son mot à dire.</p>'+
-   '<span class="hq-intro-signature">— MA_JESTIK · NOOB & LEGENDS</span>'+
+
   '</section>'+
   '<section class="hq-explorer" id="hq-explorer" aria-labelledby="hqExploreTitle">'+
    '<div class="hq-section-head"><div><p class="hq-section-overline"><span aria-hidden="true">✦</span> LES EXPÉRIENCES DU QG</p><h2 id="hqExploreTitle">CHOISIS TON AVENTURE<span>.</span></h2></div>'+
-   '<p>Chaque rubrique a son univers. À toi de choisir ce que tu veux explorer.</p></div>'+
+   '</div>'+
    '<div class="hq-portal-grid">'+cards+'</div>'+
   '</section>'+
-  '<section class="hq-community-showcase" aria-labelledby="hqCommunityTitle">'+
-   '<div class="hq-community-visual" aria-hidden="true"><span class="hq-community-ring"></span><span class="hq-community-logo">MJ</span></div>'+
-   '<div class="hq-community-copy">'+
-    '<p class="hq-section-overline"><span aria-hidden="true">✦</span> UNE COMMUNAUTÉ AVANT TOUT</p>'+
-    '<h2 id="hqCommunityTitle">LE QG, C’EST AUSSI <em>VOUS.</em></h2>'+
-    '<p>Une question à soumettre au Tribunal ? Une envie de rejoindre l’équipage ? Les meilleurs moments se construisent ensemble.</p>'+
-    '<div class="hq-community-actions"><a href="#/tribunal">PASSER AU TRIBUNAL <span aria-hidden="true">→</span></a>'+
-    '<a href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">REJOINDRE LE DISCORD <span aria-hidden="true">↗</span></a></div>'+
+  '<section class="hq-setup-showcase" aria-labelledby="hqSetupTitle">'+
+   '<div class="hq-setup-copy">'+
+    '<p class="hq-section-overline"><span aria-hidden="true">✦</span> DANS LES COULISSES</p>'+
+    '<h2 id="hqSetupTitle">DÉCOUVRE MON <em>SETUP GAMING.</em></h2>'+
+    '<p>Une configuration pensée pour jouer, streamer et profiter des plus beaux univers. Entre dans les coulisses et explore mon matériel.</p>'+
+    '<div class="hq-setup-specs" aria-label="Principaux composants"><span>RYZEN 7 7800X3D</span><span>RTX 5070 Ti</span><span>32 GO DDR5</span></div>'+
+    '<a class="hq-setup-cta" href="#/setup">EXPLORER MON SETUP <span aria-hidden="true">↗</span></a>'+
+   '</div>'+
+   '<div class="hq-setup-art">'+
+    '<div class="hq-setup-aura" aria-hidden="true"></div>'+
+    '<img src="media/setup-gaming-illustration.svg" alt="Illustration artistique d’un PC gaming panoramique aux éclairages bleu et violet" loading="lazy" decoding="async">'+
+    '<span class="hq-setup-art-caption">UNE CONFIGURATION À DÉCOUVRIR</span>'+
    '</div>'+
   '</section>'+
   '<section class="hq-endnote"><span class="hq-endnote-line"></span><span>MA_JESTIK</span><strong>À TRÈS VITE DANS LE QG.</strong><span class="hq-endnote-line"></span></section>'+
