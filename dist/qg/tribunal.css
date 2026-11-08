@@ -194,3 +194,32 @@
 .court-proposal .court-proposal-decline{cursor:pointer}
 .court-proposal .court-proposal-decline:hover{filter:brightness(1.13)}
 .court-public-form .court-choice-tools{margin:8px 0 14px}
+
+/* File d'attente compacte : maximum huit propositions visibles par page. */
+.court-proposal{padding:0;overflow:hidden}
+.court-proposal>summary{list-style:none;cursor:pointer;padding:13px 15px;align-items:center;gap:12px}
+.court-proposal>summary::-webkit-details-marker{display:none}
+.court-proposal>summary::marker{content:""}
+.court-proposal>summary:focus-visible{outline:2px solid #eebd74;outline-offset:-3px;border-radius:8px}
+.court-proposal[open]{border-color:#52859b}
+.court-proposal-ident{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px;overflow:hidden}
+.court-proposal-ident strong{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.court-proposal-ident>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.court-proposal-expand{display:inline-flex;flex-shrink:0;align-items:center;gap:8px;padding:7px 10px;border:1px solid #4e839b;background:#173b50;border-radius:7px;color:#cce9f8!important;font-size:11px!important;font-weight:800}
+.court-proposal-chevron{display:inline-block;font-size:17px!important;line-height:12px;transition:transform .15s}
+.court-proposal-close-label{display:none}
+.court-proposal[open] .court-proposal-open-label{display:none}
+.court-proposal[open] .court-proposal-close-label{display:inline}
+.court-proposal[open] .court-proposal-chevron{transform:rotate(180deg)}
+.court-proposal-body{padding:4px 15px 15px;border-top:1px solid #345768}
+.court-proposal-pagination{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;color:#b5d3e2;font-size:12px}
+.court-proposal-pagination:empty{display:none}
+.court-proposal-pagination button{color:#cae4f2;background:#173b50;border:1px solid #4c7990;border-radius:7px;cursor:pointer;font:inherit;font-weight:800;padding:9px 12px}
+.court-proposal-pagination button:hover:not(:disabled){border-color:#9bc0d4;background:#22506a}
+.court-proposal-pagination button:disabled{opacity:.45;cursor:default}
+@media(max-width:540px){
+ .court-proposal>summary{padding:11px}
+ .court-proposal-expand{padding:7px 8px;font-size:10px!important}
+ .court-proposal-body{padding:4px 11px 12px}
+ .court-proposal-pagination button{padding:8px 9px}
+}
