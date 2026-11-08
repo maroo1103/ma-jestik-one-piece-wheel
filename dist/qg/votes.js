@@ -170,9 +170,9 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   const host=slot();if(!host)return;
   host.replaceChildren();
   const section=el('section','qg-vote-panel');
-  section.setAttribute('aria-label','Pronostic de l’équipage');
+  section.setAttribute('aria-label','Pronostic des viewers');
   const top=el('div','qg-vote-top');
-  top.append(el('span','qg-vote-kicker','🎯 PRONOSTIC DE L’ÉQUIPAGE'));
+  top.append(el('span','qg-vote-kicker','🎯 PRONOSTIC DES VIEWERS'));
   const state=round?.status||'idle';
   const labels={open:'Votes ouverts',locked:'Votes clos',resolved:'Terminé',cancelled:'Annulé',idle:'En attente'};
   top.append(el('span','qg-vote-state state-'+state,labels[state]||'En attente'));
