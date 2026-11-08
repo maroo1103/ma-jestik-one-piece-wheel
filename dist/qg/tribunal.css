@@ -176,3 +176,21 @@
 
 /* Point jaune devant COMMUNAUTÉ, identique au modèle de la Roue Fortnite. */
 .court-page-head .eyebrow::before{content:"";display:block;width:6px;height:6px;flex:0 0 6px;background:#ffd16e;border-radius:50%;font-size:0;filter:none}
+
+/* Tribunal public : styles préparés, utilisés uniquement après l'activation du Worker. */
+#courtPublicOwnerCount[hidden],#courtPublicModeration[hidden]{display:none!important}
+.court-public-message:empty{display:none}
+.court-public-message:not(:empty){border:1px solid #427b8d;background:#102f42;color:#d1e8f2;border-radius:8px;padding:11px 14px;margin:0 0 18px;font-size:12px;line-height:1.6}
+.court-public-message.is-error{border-color:#a46b72;background:#3c2532;color:#ffdcdb}
+.court-public-info{padding:20px}
+.court-public-info h3{font-size:22px;margin:0 0 10px}
+.court-public-info p{font-size:13px;line-height:1.65;margin:0}
+.court-public-form{padding:0 19px 20px}
+.court-public-form .court-field{margin-bottom:14px}
+.court-public-form .court-field textarea,.court-public-form .court-field select,.court-public-form [data-answer]{border-color:#53849a;background:#0a2534}
+.court-proposal .court-public-form{padding:10px 0 0}
+.court-proposal .court-public-form .court-submit{margin-top:12px}
+.court-proposal .court-proposal-actions{margin-top:12px}
+.court-proposal .court-proposal-decline{cursor:pointer}
+.court-proposal .court-proposal-decline:hover{filter:brightness(1.13)}
+.court-public-form .court-choice-tools{margin:8px 0 14px}
