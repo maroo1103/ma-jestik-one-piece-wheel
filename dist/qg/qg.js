@@ -70,12 +70,12 @@ function home(){
     '<p class="hq-section-overline"><span aria-hidden="true">✦</span> DANS LES COULISSES</p>'+
     '<h2 id="hqSetupTitle">DÉCOUVRE MON <em>SETUP GAMING.</em></h2>'+
     '<p>Une configuration pensée pour jouer, streamer et profiter des plus beaux univers. Entre dans les coulisses et explore mon matériel.</p>'+
-    '<div class="hq-setup-specs" aria-label="Principaux composants"><span>RYZEN 7 7800X3D</span><span>RTX 5070 Ti</span><span>32 GO DDR5</span></div>'+
+    ''+
     '<a class="hq-setup-cta" href="#/setup">EXPLORER MON SETUP <span aria-hidden="true">↗</span></a>'+
    '</div>'+
    '<div class="hq-setup-art">'+
     '<div class="hq-setup-aura" aria-hidden="true"></div>'+
-    '<img src="media/pc-mj-realiste.webp?v=20261108-newpc" alt="Visuel réaliste d’un PC gaming panoramique noir avec éclairages violet et bleu" loading="lazy" decoding="async">'+
+    '<img src="media/pc-ma-jestik-hd.webp?v=20261108-hd1" alt="Photo HD du véritable setup gaming de Ma_JesTik" loading="lazy" decoding="async" width="1448" height="1086">'+
     '<span class="hq-setup-art-caption">UNE CONFIGURATION À DÉCOUVRIR</span>'+
    '</div>'+
   '</section>'+
