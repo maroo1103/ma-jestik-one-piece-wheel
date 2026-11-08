@@ -30,6 +30,10 @@ jobs:
         shell: bash
         run: |
           test -f dist/index.html
+          test -f dist/qg/index.html
+          test -f dist/qg/qg.js
+          test -f dist/qg/twitch-auth.js
+          test -f dist/qg/tribunal.js
           test -f dist/style.css
           test -f dist/app.js
           test -f dist/engine.mjs

@@ -4,6 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#09141e">
+  <!-- Supprime les paramètres publicitaires entrants sans toucher au retour OAuth Twitch. -->
+  <script>
+  (() => {
+    const query = new URLSearchParams(location.search);
+    let dirty = false;
+    for (const key of [...query.keys()]) {
+      if (/^utm_/i.test(key)) { query.delete(key); dirty = true; }
+    }
+    let hash = location.hash;
+    if (/^#\?utm_/i.test(hash)) {
+      hash = '#/accueil'; dirty = true;
+    } else if (/^#\/[a-z-]+\?/i.test(hash)) {
+      const split = hash.indexOf('?');
+      const params = new URLSearchParams(hash.slice(split + 1));
+      let cleaned = false;
+      for (const key of [...params.keys()]) {
+        if (/^utm_/i.test(key)) { params.delete(key); cleaned = true; }
+      }
+      if (cleaned) {
+        hash = hash.slice(0, split) + (params.size ? '?' + params : '');
+        dirty = true;
+      }
+    }
+    if (dirty) {
+      history.replaceState(null, '', location.pathname + (query.size ? '?' + query : '') + hash);
+    }
+  })();
+  </script>
   <meta name="description" content="Le QG Ma_JesTik : roue Fortnite One Piece, 118 défis Zero Build, Killathon Twitch, setup interactif et communauté.">
   <!-- À remplir plus tard avec une URL HTTPS de statistiques PUBLIQUES, jamais un secret. -->
   <meta name="majestik-killathon-public-feed" content="">
