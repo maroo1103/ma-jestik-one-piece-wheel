@@ -112,7 +112,7 @@ function view(message=""){
  catalogue()+'</section>';
 }
 export function challengesMarkup(){
- return '<div class="challenge-page-head"><div class="challenge-game-kicker">L’ESPACE GAMING DE L’ÉQUIPAGE</div><h1>DÉFIS & MISSIONS</h1></div><div id="challengeRoot"></div>';
+ return '<div class="challenge-page-head"><div class="challenge-game-kicker">OUTILS GAMING</div><h1>DÉFIS & MISSIONS</h1></div><div id="challengeRoot"></div>';
 }
 export function mountChallenges(){
  const root=document.getElementById("challengeRoot");
