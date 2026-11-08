@@ -507,6 +507,8 @@ body{background:#07111c}
   border-radius:11px;border:1px solid #786497;color:#bea6f2;
   background:#48326847;font-size:27px;line-height:1;
 }
+.hq-activity-twitch .hq-activity-symbol{background:#4c327399;border-color:#9169bf;color:#eee1ff}
+.hq-activity-twitch .hq-activity-symbol svg{display:block;width:23px;height:23px;fill:currentColor}
 .hq-activity-tribunal .hq-activity-symbol{border-color:#9b794c;color:#ecc78b;background:#6b4f2333}
 .hq-activity-defis .hq-activity-symbol{border-color:#477c99;color:#89d9f6;background:#184b723b}
 .hq-activity-copy{min-width:0;display:flex;flex-direction:column;gap:7px}
