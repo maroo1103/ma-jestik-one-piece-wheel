@@ -37,7 +37,7 @@ function ktsView(){
  if(session.id!==ktsAccountId){
   host.innerHTML='<div class="kts-panel"><p class="kts-feedback">Chargement de ton espace Killathon…</p></div>';return;
  }
- let out='<div class="kts-panel"><div class="kts-header"><div><span class="kts-eyebrow">MODE SIMPLE · COMPTE TWITCH</span><h3>Mon Killathon</h3><p>Compteur manuel, sauvegardé en ligne et indépendant pour chaque streamer.</p></div>';
+ let out='<div class="kts-panel"><div class="kts-header"><div><h3>Mon Killathon</h3><p>Compteur manuel, sauvegardé en ligne et indépendant pour chaque streamer.</p></div>';
  if(ktsBoard)out+='<span class="kts-state '+(ktsBoard.active?'kts-on':'')+'">'+(ktsBoard.active?'● EN COURS':'● ARRÊTÉ')+'</span>';
  out+='</div>';
  if(ktsError)out+='<p class="kts-message kts-error" role="alert">'+ktsEsc(ktsError)+'</p>';
