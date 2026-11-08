@@ -42,6 +42,29 @@ jobs:
             test -f "dist/assets/${n}.webp"
           done
 
+      - name: Generer les miniatures Open Graph
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check "CairoSVG>=2.7,<3" "Pillow>=10,<13"
+          python - <<'PY'
+          from pathlib import Path
+          import cairosvg
+          from PIL import Image
+
+          social = Path('dist/og')
+          expected = {'qg', 'roue', 'defis', 'killathon', 'tribunal', 'classement', 'setup', 'partenaires', 'createur'}
+          found = {p.stem for p in social.glob('*.svg')}
+          if found != expected:
+              raise SystemExit(f'Miniatures manquantes ou inattendues : {expected ^ found}')
+          for artwork in sorted(social.glob('*.svg')):
+              destination = artwork.with_suffix('.png')
+              cairosvg.svg2png(url=str(artwork), write_to=str(destination), output_width=1200, output_height=630)
+              with Image.open(destination) as im:
+                  if im.size != (1200, 630):
+                      raise SystemExit(f'Format incorrect pour {destination}')
+              print(f'Miniature creee : {destination} ({destination.stat().st_size} octets)')
+          PY
+
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v5
 
