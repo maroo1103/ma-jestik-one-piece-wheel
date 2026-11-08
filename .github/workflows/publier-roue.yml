@@ -102,33 +102,38 @@ jobs:
           print('Icones application MJ produites : favicon.ico, Apple Touch, PNG 16 a 512 et maskable')
           PY
 
-      - name: Préparer la photo HD du vrai setup Ma_JesTik
+      - name: Préparer le portrait fidèle du PC Ma_JesTik
         shell: bash
         run: |
           python - <<'PY'
-          import io
-          import urllib.request
           from pathlib import Path
-          from PIL import Image, ImageFilter, ImageOps
+          from PIL import Image, ImageOps
 
-          # Source publique du setup personnel validé (1448 x 1086).
-          source_url = "https://raw.githubusercontent.com/maroo1103/setup-ma-jestik/main/assets/setup-ma-jestikk.png"
-          request = urllib.request.Request(source_url, headers={"User-Agent": "Ma-JesTik-GitHub-Pages"})
-          with urllib.request.urlopen(request, timeout=35) as reply:
-              image_bytes = reply.read()
-          with Image.open(io.BytesIO(image_bytes)) as src:
-              im = ImageOps.exif_transpose(src).convert("RGB")
-              if min(im.size) < 900:
-                  raise RuntimeError(f"Photo source trop petite : {im.size}")
-              # Taille d'origine préservée, légère netteté et WebP haute qualité.
-              im = im.filter(ImageFilter.UnsharpMask(radius=1.15, percent=118, threshold=3))
-              target = Path("dist/qg/media/pc-ma-jestik-hd.webp")
-              target.parent.mkdir(parents=True, exist_ok=True)
-              im.save(target, "WEBP", quality=93, method=6)
-          with Image.open(target) as test:
-              if min(test.size) < 900 or target.stat().st_size < 60000:
-                  raise RuntimeError("Le visuel HD produit semble trop compressé.")
-          print(f"Photo HD du setup : {test.size}, {target.stat().st_size} octets")
+          source = Path("dist/pc-ma-jestik-nouveau.webp")
+          if not source.is_file():
+              raise SystemExit("La photo personnelle du PC manque dans dist")
+          with Image.open(source) as photo:
+              photo = ImageOps.exif_transpose(photo).convert("RGB")
+          if photo.size != (1086, 1448):
+              raise SystemExit(f"Dimensions inattendues pour la photo : {photo.size}")
+          # Le haut du boîtier est penché de ~1.5°. Corriger dans le fichier
+          # plutôt que par une rotation CSS qui déforme le cadrage sur le site.
+          straight = photo.rotate(
+              1.55,
+              resample=Image.Resampling.BICUBIC,
+              expand=False,
+              fillcolor=(8, 17, 30),
+          )
+          # Réduire uniquement le mur au-dessus et la table en dessous.
+          # Les quatre bords du boîtier et les ventilateurs sont conservés.
+          framed = straight.crop((18, 110, 1068, 1230))
+          destination = Path("dist/qg/media/pc-ma-jestik-cadre.webp")
+          destination.parent.mkdir(parents=True, exist_ok=True)
+          framed.save(destination, "WEBP", quality=94, method=6)
+          with Image.open(destination) as verify:
+              assert verify.size == (1050, 1120)
+              assert destination.stat().st_size > 90000
+          print(f"Photo personnelle du PC redressée : {framed.size}, {destination.stat().st_size} octets")
           PY
 
       - name: Configurer GitHub Pages
