@@ -59,7 +59,7 @@ body{background:#07111c}
 .qg-home-active .page-enter{max-width:none;width:100%;margin:0}
 .hq-home{overflow:hidden;background:linear-gradient(180deg,#070f1b 0%,#0b1725 40%,#091321 100%);color:#f5f4f2}
 .hq-hero{position:relative;isolation:isolate;width:100%;min-height:clamp(540px,71vh,770px);overflow:hidden;display:flex;align-items:center;background:#081529}
-.hq-hero-scene{position:absolute;inset:0;z-index:-3;background-image:url('media/qg-hero-cinematic.svg?v=20261108-clean1');background-size:cover;background-position:center center;transform:scale(1.015)}
+.hq-hero-scene{position:absolute;inset:0;z-index:-3;background-size:cover;background-position:center center;transform:scale(1.015)}
 .hq-hero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(92deg,#05101ef5 0%,#071628d0 26%,#0a162c70 47%,transparent 83%),linear-gradient(0deg,#050c18af,transparent 24%)}
 .hq-hero-glow{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 76% 48%,#7e42d022,transparent 36%);mix-blend-mode:screen}
 .hq-hero-content{width:min(775px,70%);padding:90px 0 124px clamp(26px,6.2vw,120px);position:relative;z-index:2}
@@ -701,7 +701,6 @@ body{background:#07090c;color:#f3f1ed}
 }
 .hq-hero{background:#040506}
 .hq-hero-scene{
-  background-image:url('media/qg-black-gold-photo.svg?v=20261108-gold-photo1');
   background-size:cover;
   background-position:center center;
   transform:none;
