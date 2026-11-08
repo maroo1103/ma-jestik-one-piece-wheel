@@ -3,7 +3,7 @@
    Les écritures sont vérifiées côté Cloudflare Worker. */
 const clientId=(document.querySelector('meta[name="majestik-twitch-client-id"]')?.content||'').trim();
 const KEY='mj-twitch-session-v1', PENDING='mj-twitch-state-v1';
-const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','createur','profil','membre']);
+const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','createur','profil','membre','aide']);
 const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2))?s:'#/accueil';
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
 const put=(k,v)=>{try{sessionStorage.setItem(k,v);return true}catch{return false}};
