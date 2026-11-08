@@ -50,18 +50,19 @@ function memberHtml(){
  '<p class="challenge-proposal-feedback" id="challengeProposalFeedback" role="status" aria-live="polite"></p></section>';
 }
 function ownerHtml(queue,notice,busy){
- return '<section class="panel challenge-community-panel" data-challenge-proposals-slot="owner">'+
- '<div class="challenge-game-kicker">COMMUNAUTÉ TWITCH</div><h3>PROPOSITIONS REÇUES</h3>'+
- (queue.length?queue.map(p=>
-  '<article class="challenge-queue-item"><small>DE '+esc(p.by)+' · '+esc(TEAMS[p.team])+'</small>'+
-  '<h4>'+esc(p.title)+'</h4><p>'+esc(p.description)+'</p>'+
+ // Complète la rubrique « PROPOSITIONS À VALIDER » déjà présente dans Défis.
+ // Aucune nouvelle carte, aucun nouveau titre ou encadré propriétaire.
+ if(!queue.length&&!notice)return '';
+ return '<div class="challenge-shared-proposals" data-challenge-proposals-slot="owner">'+
+ queue.map(p=>
+  '<article class="challenge-queue-item"><div><small>DE '+esc(p.by)+' · '+esc(TEAMS[p.team])+' · TWITCH</small>'+
+  '<h4>'+esc(p.title)+'</h4><p>'+esc(p.description)+'</p></div>'+
   '<div class="challenge-queue-actions">'+
   '<button type="button" class="btn btn-gold btn-small" data-shared-proposal="accept" data-proposal-id="'+esc(p.id)+'" '+(busy?'disabled':'')+'>Accepter</button>'+
   '<button type="button" class="btn btn-small" data-shared-proposal="reject" data-proposal-id="'+esc(p.id)+'" '+(busy?'disabled':'')+'>Refuser</button>'+
-  '</div></article>').join('')
- : '<p class="challenge-muted">Aucune proposition Twitch en attente.</p>')+
+  '</div></article>').join('')+
  (notice?'<p class="challenge-proposal-feedback" role="status">'+esc(notice)+'</p>':'')+
- '</section>';
+ '</div>';
 }
 export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
  let queue=[],message='',busy=false,fetching=false;
@@ -70,10 +71,18 @@ export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
   if(!active())return;
   root.querySelectorAll('[data-challenge-proposals-slot]').forEach(node=>node.remove());
   const owner=!!isOwner();
-  const host=owner?(root.querySelector('.challenge-sidebar')||root.querySelector('.challenge-ui')):
+  // Propriétaire : alimenter la file existante, plutôt qu'une seconde carte.
+  // Les visiteurs gardent leur propre formulaire « Proposer un défi ».
+  const host=owner?root.querySelector('.challenge-queue'):
    (root.querySelector('.challenge-main')||root.querySelector('.challenge-ui'));
   if(!host)return;
-  host.insertAdjacentHTML('beforeend',owner?ownerHtml(queue,message,busy):memberHtml());
+  if(owner){
+   if(queue.length)host.querySelector('[data-challenge-queue-empty]')?.remove();
+   const markup=ownerHtml(queue,message,busy);
+   if(markup)host.insertAdjacentHTML('beforeend',markup);
+  }else{
+   host.insertAdjacentHTML('beforeend',memberHtml());
+  }
  }
  async function refresh(){
   if(!active()||!isOwner()||fetching||busy)return;
