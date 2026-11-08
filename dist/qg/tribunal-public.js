@@ -6,6 +6,8 @@ export const tribunalPublicEnabled=document.querySelector('meta[name="majestik-t
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let active=false,interval=null,sessionHandler=null,requestId=0,root=null,busy=false;
 let polls=[],proposals=[],identity=null,selectedFilter='open',notice='',verifiedId='',verifiedAt=0;
+const PROPOSALS_PER_PAGE=8;
+let proposalPage=0,proposalRenderSignature='';
 const dur=[['5','5 minutes'],['10','10 minutes'],['15','15 minutes'],['30','30 minutes'],['60','1 heure'],['1440','24 heures'],['0','♾️ Sans limite']];
 const durationOptions=()=>dur.map(([v,l])=>'<option value="'+v+'" '+(v==='10'?'selected':'')+'>'+l+'</option>').join('');
 function inputs(answers){
@@ -39,7 +41,7 @@ export function publicTribunalMarkup(){
   '<div class="court-poll-stack" id="courtPollList"><p>Chargement des sondages…</p></div>'+
   '<section class="panel court-moderation" id="courtPublicModeration" hidden><div class="court-list-head"><div><span class="court-overline">PROPOSITIONS DE LA COMMUNAUTÉ</span>'+
   '<h2>Questions à examiner</h2></div><span class="court-moderation-pill">VALIDATION AVANT PUBLICATION</span></div>'+
-  '<div id="courtProposalList" class="court-proposal-list"></div></section></section>'+
+  '<div id="courtProposalList" class="court-proposal-list"></div><nav id="courtProposalPagination" class="court-proposal-pagination" aria-label="Pages des propositions"></nav></section></section>'+
   '<aside class="court-side" id="courtPublicSidebar"></aside></div>';
 }
 function status(text,bad=false){
@@ -117,14 +119,53 @@ function renderModeration(){
  const owner=!!identity?.owner;
  section.hidden=!owner;
  root.querySelector('#courtPublicOwnerCount').hidden=!owner;
- if(!owner)return;
+ if(!owner){proposalRenderSignature='';return;}
  root.querySelector('#courtProposalCount').textContent=String(proposals.length);
- const target=root.querySelector('#courtProposalList');
- if(!proposals.length){target.innerHTML='<p class="court-empty-proposals">Aucune proposition en attente.</p>';return;}
- target.innerHTML=proposals.map(p=>'<article class="court-proposal">'+
-  '<div class="court-proposal-top"><strong>'+esc(p.question)+'</strong><span>PAR '+esc(p.author_name)+'</span></div>'+
-  editorForm('approve',p.id,p.question,p.answers)+
-  '<div class="court-proposal-actions"><button type="button" class="court-proposal-decline" data-action="reject" data-id="'+esc(p.id)+'">Refuser la proposition</button></div></article>').join('');
+ const target=root.querySelector('#courtProposalList'),pager=root.querySelector('#courtProposalPagination');
+ const pageCount=Math.max(1,Math.ceil(proposals.length/PROPOSALS_PER_PAGE));
+ proposalPage=Math.min(proposalPage,pageCount-1);
+ // Pas de reconstruction toutes les 12 secondes : un formulaire en cours d'édition doit rester intact.
+ const signature=JSON.stringify(proposals)+'|'+proposalPage;
+ if(signature===proposalRenderSignature)return;
+ const expandedId=target.querySelector('details.court-proposal[open]')?.dataset.proposalId;
+ const draft=expandedId?target.querySelector('details.court-proposal[open] form'):null;
+ const draftData=draft?readForm(draft):null;
+ if(!proposals.length){
+  target.innerHTML='<p class="court-empty-proposals">Aucune proposition en attente.</p>';
+  pager.innerHTML='';
+  proposalRenderSignature=signature;
+  return;
+ }
+ const start=proposalPage*PROPOSALS_PER_PAGE;
+ target.innerHTML=proposals.slice(start,start+PROPOSALS_PER_PAGE).map(p=>
+  '<details class="court-proposal" data-proposal-id="'+esc(p.id)+'">'+
+  '<summary class="court-proposal-top"><span class="court-proposal-ident"><strong>'+esc(p.question)+'</strong>'+
+  '<span>PAR '+esc(p.author_name)+'</span></span><span class="court-proposal-expand">'+
+  '<span class="court-proposal-open-label">Examiner</span><span class="court-proposal-close-label">Refermer</span>'+
+  '<span aria-hidden="true" class="court-proposal-chevron">⌄</span></span></summary>'+
+  '<div class="court-proposal-body">'+editorForm('approve',p.id,p.question,p.answers)+
+  '<div class="court-proposal-actions"><button type="button" class="court-proposal-decline" data-action="reject" data-id="'+esc(p.id)+'">Refuser la proposition</button></div></div></details>').join('');
+ if(expandedId){
+  const reopened=[...target.querySelectorAll('details.court-proposal')].find(el=>el.dataset.proposalId===expandedId);
+  if(reopened){
+   reopened.open=true;
+   if(draftData){
+    const form=reopened.querySelector('form');
+    form.querySelector('[data-question]').value=draftData.question;
+    form.querySelector('[data-answer-list]').innerHTML=inputs(draftData.answers);
+    form.querySelector('[data-duration]').value=String(draftData.duration_minutes);
+   }
+  }
+ }
+ if(pageCount===1)pager.innerHTML='';
+ else pager.innerHTML='<button type="button" data-action="proposal-prev" '+(proposalPage===0?'disabled':'')+'>← Précédentes</button>'+
+  '<span>'+(start+1)+'–'+Math.min(start+PROPOSALS_PER_PAGE,proposals.length)+' sur '+proposals.length+'</span>'+
+  '<button type="button" data-action="proposal-next" '+(proposalPage===pageCount-1?'disabled':'')+'>Suivantes →</button>';
+ proposalRenderSignature=signature;
+}
+function onProposalToggle(e){
+ if(!root||!e.target.matches('details.court-proposal')||!e.target.open)return;
+ root.querySelectorAll('details.court-proposal[open]').forEach(item=>{if(item!==e.target)item.open=false});
 }
 async function call(path,method='GET',body,needAuth=false){
  const h={};
@@ -198,6 +239,11 @@ async function submit(e){
 async function click(e){
  const button=e.target.closest('[data-action]');if(!button||!root?.contains(button)||busy)return;
  const action=button.dataset.action;
+ if(action==='proposal-prev'||action==='proposal-next'){
+  const maxPage=Math.max(0,Math.ceil(proposals.length/PROPOSALS_PER_PAGE)-1);
+  proposalPage=Math.min(maxPage,Math.max(0,proposalPage+(action==='proposal-next'?1:-1)));
+  proposalRenderSignature='';renderModeration();return;
+ }
  if(action==='add-answer'||action==='remove-answer'){
   const holder=button.closest('form')?.querySelector('[data-answer-list]');
   if(!holder)return;
@@ -238,15 +284,15 @@ export function unmountPublicTribunal(){
  active=false;requestId++;
  if(interval!==null){clearInterval(interval);interval=null;}
  if(sessionHandler){window.removeEventListener('qg:twitch-session',sessionHandler);sessionHandler=null;}
- if(root){root.removeEventListener('click',click);root.removeEventListener('submit',submit);}
+ if(root){root.removeEventListener('click',click);root.removeEventListener('submit',submit);root.removeEventListener('toggle',onProposalToggle,true);}
  root=null;
 }
 export function mountPublicTribunal(){
  unmountPublicTribunal();
  root=document.getElementById('page');
  if(!root||!root.querySelector('#courtPublicSidebar')||!tribunalPublicEnabled)return;
- active=true;identity=null;verifiedId='';verifiedAt=0;polls=[];proposals=[];selectedFilter='open';busy=false;
- root.addEventListener('click',click);root.addEventListener('submit',submit);
+ active=true;identity=null;verifiedId='';verifiedAt=0;polls=[];proposals=[];selectedFilter='open';busy=false;proposalPage=0;proposalRenderSignature='';
+ root.addEventListener('click',click);root.addEventListener('submit',submit);root.addEventListener('toggle',onProposalToggle,true);
  root.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{
   selectedFilter=b.dataset.filter;renderPolls();
  }));
