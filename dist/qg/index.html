@@ -85,17 +85,16 @@
 </head>
 <body>
   <a class="skip" href="#main">Aller au contenu</a>
-  <div class="layout" id="app">
-    <aside class="sidebar" id="sidebar" aria-label="Navigation principale">
-      <a class="brand" href="#/accueil" aria-label="Ma_JesTik — accueil">
-        <span class="brand-symbol" aria-hidden="true">MJ</span>
+  <div class="layout qg-layout" id="app">
+    <header class="site-header" aria-label="En-tête Ma_JesTik">
+      <a class="brand" href="#/accueil" aria-label="Ma_JesTik — accueil du QG">
+        <img class="brand-icon" src="/icons/icon-192.png?v=20261108-mj1" width="48" height="48" alt="" decoding="async">
         <span class="brand-text"><strong>MA_JESTIK</strong><small>LE HASARD A DU BON.</small></span>
       </a>
-      <div class="sidebar-section-label">NAVIGATION</div>
-      <nav class="navigation">
-        <a class="nav-link" href="#/accueil" data-page="accueil"><span class="nav-icon" aria-hidden="true">⌂</span><span>Accueil</span></a>
+      <nav id="sidebar" class="navigation site-navigation" aria-label="Navigation principale">
+        <a class="nav-link nav-link-home" href="#/accueil" data-page="accueil"><span class="nav-icon" aria-hidden="true">⌂</span><span>Accueil</span></a>
         <div class="nav-group" data-group="outils">
-          <button type="button" class="group-toggle" data-toggle="outils" aria-expanded="true" aria-controls="nav-outils"><span class="nav-icon" aria-hidden="true">✦</span><span>Outils gaming</span><span class="chev" aria-hidden="true">⌄</span></button>
+          <button type="button" class="group-toggle" data-toggle="outils" aria-expanded="false" aria-controls="nav-outils"><span class="nav-icon" aria-hidden="true">✦</span><span>Outils gaming</span><span class="chev" aria-hidden="true">⌄</span></button>
           <div class="submenu" id="nav-outils">
             <a href="#/roue" data-page="roue"><span>🎡</span> Roue Fortnite</a>
             <a href="#/defis" data-page="defis"><span>⚔</span> Défis & missions</a>
@@ -103,36 +102,32 @@
           </div>
         </div>
         <div class="nav-group" data-group="communaute">
-          <button type="button" class="group-toggle" data-toggle="communaute" aria-expanded="true" aria-controls="nav-communaute"><span class="nav-icon" aria-hidden="true">♜</span><span>Communauté</span><span class="chev" aria-hidden="true">⌄</span></button>
+          <button type="button" class="group-toggle" data-toggle="communaute" aria-expanded="false" aria-controls="nav-communaute"><span class="nav-icon" aria-hidden="true">♜</span><span>Communauté</span><span class="chev" aria-hidden="true">⌄</span></button>
           <div class="submenu" id="nav-communaute">
             <a href="#/tribunal" data-page="tribunal"><span>⚖</span> Tribunal</a>
             <a href="#/classement" data-page="classement"><span>🏆</span> Classements</a>
           </div>
         </div>
         <div class="nav-group" data-group="univers">
-          <button type="button" class="group-toggle" data-toggle="univers" aria-expanded="true" aria-controls="nav-univers"><span class="nav-icon" aria-hidden="true">◈</span><span>Univers Ma_JesTik</span><span class="chev" aria-hidden="true">⌄</span></button>
+          <button type="button" class="group-toggle" data-toggle="univers" aria-expanded="false" aria-controls="nav-univers"><span class="nav-icon" aria-hidden="true">◈</span><span>Univers Ma_JesTik</span><span class="chev" aria-hidden="true">⌄</span></button>
           <div class="submenu" id="nav-univers">
             <a href="#/setup" data-page="setup"><span>🖥</span> Mon setup interactif</a>
             <a href="#/partenaires" data-page="partenaires"><span>🔗</span> Affiliations & partenaires</a>
             <a href="#/createur" data-page="createur"><span>★</span> Code créateur</a>
           </div>
         </div>
+      
+        <a class="site-nav-direct" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer">Twitch <span aria-hidden="true">↗</span></a>
       </nav>
-      <div class="sidebar-social" aria-label="Liens vers Twitch et Discord">
-        <a class="top-link-twitch" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer"><svg class="top-link-twitch-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2.149 0 .537 4.345v17.391h5.91V24H9.67l3.223-3.218h4.835L24 14.524V0H2.149Zm19.702 13.441-3.762 3.762H12.18l-3.224 3.216v-3.216H4.127V2.149H21.85v11.292Zm-5.91-6.991h2.149v6.443h-2.149V6.45Zm-5.912 0h2.149v6.443h-2.149V6.45Z"/></svg><span class="top-social-long">Suivre sur Twitch ↗</span><span class="top-social-short">Twitch</span></a>
-        <a class="top-link-twitch top-link-discord" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer" aria-label="Rejoindre le serveur Discord Ma_JesTik"><svg class="top-link-twitch-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17" focusable="false" aria-hidden="true"><path fill="currentColor" d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.865-.608 1.249a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.249.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.07.07 0 0 0-.032.027C.533 9.046-.32 13.579.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.994 3.03.077.077 0 0 0 .084-.027c.461-.629.873-1.293 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.894.077.077 0 0 1-.008-.127c.126-.095.252-.194.373-.294a.075.075 0 0 1 .078-.011c3.927 1.793 8.18 1.793 12.061 0a.075.075 0 0 1 .079.01c.122.1.248.2.375.295a.077.077 0 0 1-.007.127c-.598.35-1.223.65-1.874.894a.076.076 0 0 0-.04.107c.36.698.772 1.361 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.003-3.03.077.077 0 0 0 .03-.056c.5-5.178-.837-9.674-3.548-13.659a.06.06 0 0 0-.031-.03ZM8.02 15.33c-1.18 0-2.15-1.083-2.15-2.41s.95-2.41 2.15-2.41c1.21 0 2.17 1.093 2.15 2.41 0 1.08-.95 2.41-2.15 2.41Zm7.97 0c-1.18 0-2.15-1.083-2.15-2.41s.95-2.41 2.15-2.41c1.21 0 2.17 1.093 2.15 2.41 0 1.08-.95 2.41-2.15 2.41Z"/></svg><span class="top-social-long">Rejoindre Discord ↗</span><span class="top-social-short">Discord</span></a>
+      <div class="top-actions">
+        <a class="qg-header-discord" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Discord <span aria-hidden="true">↗</span></a>
+        <button id="qgShareLink" class="qg-share-link" type="button" title="Copier le lien de partage avec miniature" aria-label="Copier le lien de partage de cette rubrique"><span class="qg-share-icon" aria-hidden="true">↗</span><span class="qg-share-label">Partager</span></button>
+        <div class="qg-account" id="qgTwitchAccount" hidden aria-live="polite"></div>
+        <button id="menuMobile" class="icon-btn menu-mobile" type="button" aria-label="Ouvrir le menu" aria-controls="sidebar" aria-expanded="false">☰</button>
       </div>
-    </aside>
+    </header>
     <div id="sidebarShade" class="sidebar-shade" hidden></div>
     <div class="app-column">
-      <header class="topbar">
-        <button id="menuMobile" class="icon-btn menu-mobile" type="button" aria-label="Ouvrir le menu" aria-controls="sidebar" aria-expanded="false">☰</button>
-        <div class="crumb"><span>LE QG</span><span class="crumb-divider">/</span><strong id="crumbName">Accueil</strong></div>
-        <div class="top-actions">
-          <button id="qgShareLink" class="qg-share-link" type="button" title="Copier le lien de partage avec miniature" aria-label="Copier le lien de partage de cette rubrique"><span class="qg-share-icon" aria-hidden="true">↗</span><span class="qg-share-label">Partager</span></button>
-          <div class="qg-account" id="qgTwitchAccount" hidden aria-live="polite"></div>
-        </div>
-      </header>
       <main id="main" tabindex="-1">
         <div class="page-enter" id="page" aria-live="polite"></div>
       </main>
