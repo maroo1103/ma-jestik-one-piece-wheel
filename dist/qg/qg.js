@@ -1,5 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-head3';
-import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
+import {mountTwitchAuth} from './twitch-auth.js?v=20261108-login-simple1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-head3';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-labels3';
 import {publicTribunalMarkup,mountPublicTribunal,unmountPublicTribunal,tribunalPublicEnabled} from './tribunal-public.js?v=20261108-queue1';
@@ -74,7 +74,7 @@ function home(){
     '<a class="hq-setup-cta" href="#/setup">EXPLORER MON SETUP <span aria-hidden="true">↗</span></a>'+
    '</div>'+
    '<div class="hq-setup-art">'+
-    '<img class="hq-setup-photo" src="media/pc-ma-jestik-cadre.webp?v=20261108-straight1" alt="Photo du véritable PC gaming Ma_JesTik, cadrée et redressée" loading="lazy" decoding="async" width="1050" height="1120">'+
+    '<img class="hq-setup-illustration" src="media/setup-icon-premium.svg?v=20261108-icon1" alt="Illustration de la tour PC Ma_JesTik en bleu nuit, cyan, violet et or" loading="lazy" decoding="async" width="900" height="900">'+
    '</div>'+
   '</section>'+
   '<section class="hq-endnote"><span class="hq-endnote-line"></span><span>MA_JESTIK</span><strong>À TRÈS VITE DANS LE QG.</strong><span class="hq-endnote-line"></span></section>'+
@@ -284,29 +284,6 @@ function route(){
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
 // Les liens de partage possèdent des métadonnées propres, sans fragment #.
-const shareButton=$('qgShareLink');
-if(shareButton)shareButton.addEventListener('click',async()=>{
- const hashPage=location.hash.startsWith('#/')?location.hash.slice(2):location.hash.slice(1);
- const raw=decodeURIComponent(hashPage.split('?')[0]);
- const page=Object.prototype.hasOwnProperty.call(pages,raw)?raw:'accueil';
- const url=page==='accueil'?'https://ma-jestik.fr/':'https://ma-jestik.fr/partage/'+page+'/';
- try{
-  if(!navigator.clipboard?.writeText)throw new Error('Presse-papiers indisponibles');
-  await navigator.clipboard.writeText(url);
-  const label=shareButton.querySelector('.qg-share-label');
-  const icon=shareButton.querySelector('.qg-share-icon');
-  if(label)label.textContent='Copié !';
-  if(icon)icon.textContent='✓';
-  shareButton.classList.add('is-copied');
-  setTimeout(()=>{
-   if(label)label.textContent='Partager';
-   if(icon)icon.textContent='↗';
-   shareButton.classList.remove('is-copied');
-  },2000);
- }catch{
-  window.prompt('Copie le lien de partage de cette rubrique :',url);
- }
-});
 document.addEventListener('click',e=>{
  const jump=e.target.closest('[data-scroll]');
  if(jump){const id=jump.dataset.scroll;document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
