@@ -200,8 +200,20 @@ function partners(){
  '</div>';
 }
 function creator(){
- return head('UNIVERS MA_JESTIK','CODE CRÉATEUR','Un emplacement pour ton éventuel futur code créateur Epic Games. Il n’est pas activé tant que tu n’as pas été admis au programme.',[tag('À venir','gold')])+
- '<section class="panel"><h3>TON CODE S’AFFICHERA ICI</h3><p>Lorsque tu auras obtenu ton code officiel, nous pourrons ajouter un grand encart avec un bouton « Copier le code », et des explications pour l’utiliser dans la boutique Fortnite.</p><span class="tag gold">NON DISPONIBLE POUR LE MOMENT</span></section>';
+ return head('UNIVERS MA_JESTIK','CODE CRÉATEUR','')+
+ '<section class="creator-showcase" aria-labelledby="creatorCardTitle">'+
+  '<div class="creator-card">'+
+   '<div class="creator-card-top"><span>BOUTIQUE FORTNITE</span><span class="creator-card-star" aria-hidden="true">✦</span></div>'+
+   '<p class="creator-card-lead">Soutiens Ma_JesTik directement dans la boutique Fortnite.</p>'+
+   '<div class="creator-card-main">'+
+    '<span class="creator-emblem" aria-hidden="true">★</span>'+
+    '<span class="creator-status">À VENIR</span>'+
+    '<h2 id="creatorCardTitle">LE CODE MA_JESTIK</h2>'+
+    '<p>Je ne dispose pas encore d’un code créateur Epic Games. S’il m’est attribué, tu pourras le retrouver ici et le copier en un clic.</p>'+
+   '</div>'+
+   '<div class="creator-card-foot"><span aria-hidden="true">✧</span><span>Aucun code disponible pour le moment</span></div>'+
+  '</div>'+
+ '</section>';
 }
 const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
 let wheelObserver=null;
