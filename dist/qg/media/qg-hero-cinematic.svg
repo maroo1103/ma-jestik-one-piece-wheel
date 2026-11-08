@@ -39,8 +39,8 @@
 <g opacity=".88">
  <rect x="937" y="109" width="100" height="13" rx="6.5" fill="#9a73e3" opacity=".73"/>
  <path d="M948 115H1025" stroke="#d8baff" stroke-width="2"/>
- <rect x="1565" y="572" width="128" height="42" rx="11" fill="#193a55" stroke="#6db8db" stroke-opacity=".55"/>
- <path d="M1582 594L1594 583L1607 596L1619 587" fill="none" stroke="#f1c47c" stroke-width="3" stroke-linecap="round"/>
+
+
  <rect x="1108" y="680" width="89" height="8" rx="4" fill="#e8b871" opacity=".85"/>
 </g>
 <path d="M0 0H755L1113 780H0Z" fill="#061120" opacity=".53"/>
