@@ -71,7 +71,7 @@ function home(){
   '</section>'+
   '<section class="hq-intro" aria-label="La philosophie du QG">'+
    '<p class="hq-section-overline"><span aria-hidden="true">✦</span> PLUS QU’UN SIMPLE SITE GAMING</p>'+
-   '<h2><span class="hq-quote-mark">“</span> LE HASARD A DU BON. <span class="hq-quote-mark">”</span></h2>'+
+   '<h2><span class="hq-quote-mark">“</span> LES VICTOIRES PASSENT. LES VALEURS RESTENT. <span class="hq-quote-mark">”</span></h2>'+
    '<p>Bienvenue dans mon univers. Ici, la roue choisit ton atterrissage, les défis pimentent tes parties et la communauté a son mot à dire.</p>'+
 
   '</section>'+
