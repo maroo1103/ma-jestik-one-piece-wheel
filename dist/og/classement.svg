@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+ <defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071521"/><stop offset=".51" stop-color="#11263d"/><stop offset="1" stop-color="#130d30"/></linearGradient>
+  <radialGradient id="halo"><stop stop-color="#663bba" stop-opacity=".73"/><stop offset=".55" stop-color="#244b8b" stop-opacity=".32"/><stop offset="1" stop-color="#0d2131" stop-opacity="0"/></radialGradient>
+  <linearGradient id="stripe" x1="0" x2="1"><stop stop-color="#a8dcff" stop-opacity=".85"/><stop offset=".52" stop-color="#edc17c"/><stop offset="1" stop-color="#8f73ed" stop-opacity=".75"/></linearGradient>
+  <linearGradient id="fade" x1="0" x2="1"><stop stop-color="#081522" stop-opacity=".9"/><stop offset=".66" stop-color="#081522" stop-opacity=".35"/><stop offset="1" stop-color="#081522" stop-opacity="0"/></linearGradient>
+ </defs>
+ <rect width="1200" height="630" fill="url(#bg)"/>
+ <circle cx="944" cy="291" r="371" fill="url(#halo)"/>
+ <g opacity=".15" stroke="#91bde7" stroke-width="2" fill="none">
+  <path d="M684 -18L1172 440 M728 -25L1204 408 M663 24L1135 477 M740 655L1150 237 M790 682L1203 272"/>
+  <circle cx="955" cy="296" r="220"/><circle cx="955" cy="296" r="249"/>
+ </g>
+ <path d="M20 104H583" stroke="url(#stripe)" stroke-width="4" stroke-linecap="round"/>
+ <rect x="20" y="18" width="1160" height="594" rx="29" fill="none" stroke="#6b9bb8" stroke-opacity=".43" stroke-width="2"/>
+ <circle cx="76" cy="70" r="7" fill="#f4c47c"/>
+ <text x="98" y="79" fill="#cbe2f5" font-family="Lato,DejaVu Sans,sans-serif" font-size="25" font-weight="900" letter-spacing="2.5">MA_JESTIK</text>
+ <text x="352" y="78" fill="#9eabc6" font-family="Lato,DejaVu Sans,sans-serif" font-size="19" font-weight="700" letter-spacing="2">/ LE QG</text>
+ <rect x="76" y="160" rx="17" width="347" height="35" fill="#213c55" stroke="#487b9a" stroke-width="1.4"/>
+ <text x="98" y="184" fill="#a5d9f5" font-family="Lato,DejaVu Sans,sans-serif" font-size="17" font-weight="800" letter-spacing="1.7">LE TOP DE LA COMMUNAUTÉ</text>
+ <text x="76" y="334" font-family="Lato,DejaVu Sans,sans-serif" font-weight="900" font-size="69" letter-spacing="-2.2" fill="#ffffff">CLASSEMENTS</text>
+ <text x="78" y="431" font-family="Lato,DejaVu Sans,sans-serif" font-size="24" font-weight="700" letter-spacing="1.4" fill="#b6d5e9">LES SCORES DE L&apos;ÉQUIPAGE</text>
+ <path d="M76 528H665" stroke="#517389" stroke-opacity=".7" stroke-width="1.5"/>
+ <text x="76" y="567" font-family="Lato,DejaVu Sans,sans-serif" font-size="24" font-weight="800" fill="#eac58a">ma-jestik.fr</text>
+ <text x="646" y="568" text-anchor="end" font-family="Lato,DejaVu Sans,sans-serif" font-size="16" font-weight="800" letter-spacing="1.8" fill="#79b9e2">NOOB &amp; LEGENDS</text>
+ <g transform="translate(947 305)">
+  <circle r="183" fill="#0a1b33" fill-opacity=".65" stroke="#577cb1" stroke-width="3"/>
+  <circle r="164" fill="none" stroke="#e6bb79" stroke-opacity=".4" stroke-dasharray="9 15" stroke-width="3"/>
+  <path d="M-139 130V54H-48V130 M-46 130V-43H46V130 M48 130V31H139V130" stroke="#9bd4ff" stroke-width="8" fill="#18446a"/><path d="M-46 -43H46V130H-46Z" fill="#e8b967" stroke="#fff1c4" stroke-width="8"/><path d="M-80 -111L-46 -124L-18 -108L10 -126L42 -111L52 -68H-91Z" fill="#e9bf6b" stroke="#fff0c2" stroke-width="5"/><circle cx="-20" cy="-164" r="8" fill="#f9e3ae"/>
+ </g>
+ <path d="M1090 107L1107 124L1090 141L1073 124Z" fill="#efc477" opacity=".9"/>
+ <circle cx="1101" cy="497" r="7" fill="#a179ed" opacity=".85"/>
+ <circle cx="747" cy="127" r="6" fill="#86c6fa" opacity=".7"/>
+</svg>
