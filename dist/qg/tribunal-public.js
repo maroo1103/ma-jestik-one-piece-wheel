@@ -1,6 +1,6 @@
 // Tribunal PUBLIC : interface indépendante de la démonstration locale.
 // Le composant n'est activé que lorsque le Worker Cloudflare est opérationnel.
-import {getQGTwitchSession} from './twitch-auth.js?v=20261107-ranking-optin1';
+import {getQGTwitchSession} from './twitch-auth.js';
 const API=(document.querySelector('meta[name="majestik-tribunal-api"]')?.content||'').replace(/\/+$/,'');
 export const tribunalPublicEnabled=document.querySelector('meta[name="majestik-tribunal-public-enabled"]')?.content==='true'&&/^https:\/\/[a-z0-9.-]+$/i.test(API);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
