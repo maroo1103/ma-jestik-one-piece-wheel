@@ -327,3 +327,22 @@ body{background:#07111c}
  .site-header .qg-social-icon{width:30px;height:30px;flex-basis:30px}
 }
 @media(prefers-reduced-motion:reduce){.site-header .qg-social-instagram{transition:none!important}}
+
+/* Photo personnelle Ma_JesTik — PC redressé, cadrage vertical et intégration bleu nuit/violet. */
+.hq-setup-showcase{grid-template-columns:minmax(340px,.96fr) minmax(380px,1.04fr)}
+.hq-setup-art{position:relative;min-height:575px;overflow:hidden;isolation:isolate;border-radius:28px;background:radial-gradient(ellipse 65% 62% at 51% 50%,#53377a35 0%,#13203d20 65%,transparent 95%)}
+.hq-setup-art::before{content:"";position:absolute;inset:8% 0;z-index:0;border-radius:50%;background:radial-gradient(ellipse at center,#8050b743 0%,#3a2b7966 37%,transparent 72%);filter:blur(42px);pointer-events:none}
+.hq-setup-art .hq-setup-aura{left:7%;right:7%;top:9%;bottom:10%;background:radial-gradient(ellipse,#6e3cab57 0%,#23406d32 46%,transparent 76%);filter:blur(34px)}
+.hq-setup-art img.hq-setup-photo{position:relative;z-index:1;display:block;width:auto;max-width:96%;height:auto;max-height:620px;object-fit:contain;object-position:center;transform:rotate(-1.6deg) scale(1.025);transform-origin:50% 50%;border-radius:0;filter:brightness(1.045) contrast(1.02) drop-shadow(0 24px 35px #03071766);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 90%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 90%,transparent 100%)}
+.hq-setup-art-caption{z-index:2;bottom:9px;right:17px}
+@media(max-width:850px){
+ .hq-setup-showcase{grid-template-columns:1fr}
+ .hq-setup-art{width:min(100%,640px);min-height:0;max-width:100%;margin-inline:auto}
+ .hq-setup-art img.hq-setup-photo{width:auto;max-width:96%;max-height:530px}
+}
+@media(max-width:680px){
+ .hq-setup-art{border-radius:16px}
+ .hq-setup-art img.hq-setup-photo{max-height:440px;max-width:94%}
+ .hq-setup-art-caption{right:9px;bottom:3px;font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.hq-setup-art img.hq-setup-photo{transition:none}}
