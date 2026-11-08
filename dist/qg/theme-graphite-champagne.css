@@ -242,3 +242,76 @@ body,.qg-layout .app-column,.qg-layout #main{background:#08090b;color:#f7f4ee}
 .qg-layout .qg-rank-card-1 .qg-rank-role{background:#d8ad5e;border-color:#f0d19a;color:#231c11}
 .qg-layout .qg-rank-card-2 .qg-rank-role{background:#374048;border-color:#aab6bf;color:#f0f5f8}
 .qg-layout .qg-rank-card-3 .qg-rank-role{background:#784f3e;border-color:#b88065;color:#f8e1d0}
+
+/* Défis de la communauté : même graphite et or que le reste du QG. */
+.qg-layout .challenge-community-panel{
+ margin-top:16px;
+ background:linear-gradient(145deg,#292724,#191a1d);
+ border:1px solid #8b6a40;
+ border-radius:12px;
+ padding:20px;
+}
+.qg-layout .challenge-community-panel h3{
+ font-family:var(--display);
+ font-size:clamp(25px,2.4vw,33px);
+ margin:4px 0 10px;
+ color:#fff9ed;
+}
+.qg-layout .challenge-community-panel p{
+ color:#c8c0b4;
+ margin:8px 0 12px;
+ font-size:13px;
+}
+.qg-layout .challenge-community-form{
+ display:grid;
+ gap:12px;
+}
+.qg-layout .challenge-community-form label{
+ display:grid;
+ gap:6px;
+ color:#eccb95;
+ font-weight:800;
+ font-size:12px;
+}
+.qg-layout .challenge-community-form select,
+.qg-layout .challenge-community-form input,
+.qg-layout .challenge-community-form textarea{
+ width:100%;
+ min-width:0;
+ padding:11px 12px;
+ background:#131416;
+ color:#fff8ed;
+ border:1px solid #856641;
+ border-radius:8px;
+ font:500 14px/1.5 var(--font);
+}
+.qg-layout .challenge-community-form textarea{resize:vertical;min-height:84px}
+.qg-layout .challenge-community-form button{justify-self:start}
+.qg-layout .challenge-community-form small{color:#bdb3a4;font-size:11px}
+.qg-layout .challenge-proposal-feedback{
+ font-size:12px;
+ color:#ebca94;
+ line-height:1.5;
+ margin:10px 0 0;
+}
+.qg-layout .challenge-community-panel .challenge-queue-item{
+ background:#232122;
+ border-color:#785b3c;
+}
+.qg-layout .challenge-community-panel .challenge-queue-actions{
+ display:flex;gap:8px;flex-wrap:wrap;margin-top:10px
+}
+.qg-layout .challenge-community-panel .challenge-queue-actions .btn{
+ border:1px solid #8a6c47;
+ background:#332b20;
+ color:#f9e7cc;
+}
+.qg-layout .challenge-community-panel .challenge-queue-actions .btn.btn-gold{
+ background:linear-gradient(135deg,#f4d9a4,#e4b267);
+ border-color:#f3d8a6;
+ color:#17120b;
+}
+@media(max-width:680px){
+ .qg-layout .challenge-community-panel{padding:15px;margin-top:12px}
+ .qg-layout .challenge-community-form button{width:100%}
+}
