@@ -1,7 +1,7 @@
 /* Défis Ma_JesTik — interface publique de pronostics.
    Off tant que la migration D1 et le compte propriétaire ne sont pas prêts.
    AUCUNE modification du catalogue des 118 défis Fortnite. */
-import {getQGTwitchSession,isQGOwnerSession} from './twitch-auth.js?v=20261107-ranking-optin1';
+import {getQGTwitchSession,isQGOwnerSession} from './twitch-auth.js';
 const enabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const base=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
 const fixedAPI=base==='https://ma-jestik-qg-members.maroodu11.workers.dev';
