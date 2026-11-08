@@ -1,4 +1,4 @@
-import {mountVotePanel} from './votes.js?v=20261108-auth-sync1';
+import {mountVotePanel} from './votes.js?v=20261108-viewers-labels1';
 import {isQGOwnerSession} from './twitch-auth.js';
 import {mountChallengeProposals} from './challenge-proposals.js?v=20261108-right-sidebar1';
 /* Catalogue validé par Ma_JesTik : 88 défis précédents + 30 nouveaux défis exclusifs Trio/Quatuor. */
@@ -26,7 +26,7 @@ let selectedGame="";
 let officialRound=null,verifiedOwner=false;
 const publicActive=()=>officialRound&&["open","locked"].includes(officialRound.status);
 const gameSelector=()=>'<div class="challenge-game-switcher"><div class="challenge-game-switcher-copy"><span class="challenge-game-kicker">SÉLECTION DU JEU</span><strong>Choisis ton univers</strong><small>Les défis disponibles s’affichent selon le jeu choisi.</small></div><label class="challenge-game-field" for="challengeGame"><span>JEU</span><select id="challengeGame"><option value="" '+(!selectedGame?'selected':'')+'>— Sélectionner un jeu —</option>'+GAME_OPTIONS.map(x=>'<option value="'+x.id+'" '+(selectedGame===x.id?'selected ':'')+(!x.available?'disabled ':'')+'>'+x.label+(x.available?'':' · À venir')+'</option>').join("")+'</select></label></div>';
-const neutralChallenge=()=>'<div class="challenge-neutral"><span class="challenge-neutral-icon" aria-hidden="true">⚔️</span><div><span class="challenge-game-kicker">TON PROCHAIN OBJECTIF</span><h2>LE DÉFI DE L’ÉQUIPAGE</h2><p>Sélectionne un jeu dans le menu ci-dessus pour découvrir ses missions.</p></div></div>';
+const neutralChallenge=()=>'<div class="challenge-neutral"><span class="challenge-neutral-icon" aria-hidden="true">⚔️</span><div><span class="challenge-game-kicker">TON PROCHAIN OBJECTIF</span><h2>LE DÉFI DES VIEWERS</h2><p>Sélectionne un jeu dans le menu ci-dessus pour découvrir ses missions.</p></div></div>';
 const initial = () => ({catalogVersion:CATALOG_VERSION,mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:FORTNITE_CHALLENGES.map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
 let data = initial();
 function load(){
@@ -94,7 +94,7 @@ function visitorView(){
  '<div class="challenge-history-row"><span class="challenge-history-state '+(r.status==="resolved"?(r.result==="success"?"success":"failure"):"skipped")+'">'+(r.status==="resolved"?"✓":"—")+'</span><span><strong>'+escapeHtml(r.challenge_title)+'</strong><small>'+escapeHtml(r.status==="cancelled"?"Annulé":r.result==="success"?"Réussite":"Échec")+'</small></span></div>':
  '<p class="challenge-muted">Les résultats officiels apparaîtront ici.</p>';
  return '<section class="challenge-ui challenge-public" id="challengeUi">'+gameSelector()+
- '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DE L’ÉQUIPAGE</h2><p>La mission officielle en direct.</p></div>'+
+ '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DES VIEWERS</h2><p>La mission officielle en direct.</p></div>'+
  sharedMission()+'</section><aside class="challenge-sidebar"><section class="panel"><h3>JOURNAL DES MISSIONS</h3>'+last+'</section><div id="challengeVoteSlot" class="challenge-vote-slot"></div></aside></div></section>';
 }
 function view(message=""){
@@ -104,7 +104,7 @@ function view(message=""){
  if(!verifiedOwner)return visitorView();
  return '<section class="challenge-ui" id="challengeUi">'+gameSelector()+
  '<div class="challenge-stats"><div><span>DÉFIS DISPONIBLES</span><strong>'+count+'</strong></div><div><span>RÉUSSITES</span><strong>'+s.success+'</strong></div><div><span>ÉCHECS</span><strong>'+s.fail+'</strong></div><div><span>PASSÉES</span><strong>'+s.skipped+'</strong></div></div>'+
- '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DE L’ÉQUIPAGE</h2><p>118 missions pour faire vos preuves dans l’arène.</p></div>'+
+ '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DES VIEWERS</h2><p>118 missions pour faire vos preuves dans l’arène.</p></div>'+
  '<div class="challenge-tabs" role="group" aria-label="Mode de création du défi"><button type="button" class="'+(data.mode==="random"?"selected":"")+'" data-action="mode" data-value="random" aria-pressed="'+(data.mode==="random")+'">🎲 Aléatoire</button><button type="button" class="'+(data.mode==="viewer"?"selected":"")+'" data-action="mode" data-value="viewer" aria-pressed="'+(data.mode==="viewer")+'">👥 Proposition viewer</button></div>'+
  (data.mode==="random"?'<div class="challenge-filters">'+teamSelect()+'<label>Filtrer par difficulté <select id="challengeLevel"><option value="all">Toutes</option>'+["Facile","Moyen","Difficile"].map(x=>'<option value="'+x+'" '+(data.level===x?"selected":"")+'>'+x+'</option>').join("")+'</select></label></div><p class="challenge-muted">'+count+' défi(s) compatible(s) avec ce mode et cette difficulté.</p><button type="button" class="btn btn-gold challenge-draw" data-action="draw" '+(data.active?"disabled":"")+'>🎲 TIRER UNE MISSION</button>':
  '<form id="challengeViewerForm" class="challenge-viewer-form">'+teamSelect()+'<label>Pseudo du viewer <input name="viewer" type="text" maxlength="36" placeholder="Ex. ViewerAlpha" required></label><label>Titre du défi <input name="title" type="text" maxlength="80" placeholder="Ex. Le défi du pirate" required></label><label>Règles de la mission <textarea name="description" rows="3" maxlength="350" placeholder="Explique précisément comment réussir le défi…" required></textarea></label><button type="submit" class="btn btn-gold">Ajouter à la file de validation</button><p class="challenge-muted">Cette proposition reste sur cet appareil : elle n’est pas envoyée à Ma_JesTik ni à Twitch/Rumble.</p></form>')+
