@@ -213,7 +213,11 @@ async function click(e){
  busy=true;
  try{
   const id=button.dataset.id;
-  if(action==='vote')await call('/v1/tribunal/polls/'+id+'/vote','POST',{choice_index:Number(button.dataset.choice)},true);
+  if(action==='vote'){
+   await call('/v1/tribunal/polls/'+id+'/vote','POST',{choice_index:Number(button.dataset.choice)},true);
+   // Le vote vient de changer : récupérer immédiatement sa sélection auprès du serveur.
+   verifiedAt=0;
+  }
   else if(action==='close')await call('/v1/tribunal/polls/'+id+'/close','POST',{},true);
   else if(action==='delete')await call('/v1/tribunal/polls/'+id,'DELETE',undefined,true);
   else if(action==='reject')await call('/v1/tribunal/proposals/'+id+'/reject','POST',{},true);
