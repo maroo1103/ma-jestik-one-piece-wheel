@@ -207,7 +207,7 @@ async function refresh(){
   const roleAfter=newIdentity?.owner===true?'owner':newIdentity?'member':'unknown';
   polls=Array.isArray(newPolls.polls)?newPolls.polls:[];
   identity=newIdentity;
-  proposals=Array.isArray(newProposals)?newProposals:[];
+  proposals=(Array.isArray(newProposals)?newProposals:[]).filter(p=>!String(p.question||'').startsWith('🎯 DÉFI · '));
   renderPolls();renderModeration();
   if(roleBefore!==roleAfter||!root.querySelector('#courtPublicSidebar')?.children.length)renderSidebar();
   status('');
