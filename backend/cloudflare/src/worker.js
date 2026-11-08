@@ -125,6 +125,78 @@ async function voteRoute(req,env,origin,path){
   return result({error:"Route inconnue"},404);
 }
 
+
+/* Profils QG personnalisables (migration D1 0005).
+   Les identités viennent exclusivement du token Twitch validé côté Worker.
+   Le client ne peut écrire ni les scores, ni le rang, ni les badges. */
+const profileGames=new Set(["fortnite","warzone","rocket-league","apex-legends","cyberpunk-2077","elden-ring","god-of-war","horizon-zero-dawn","the-witcher-3","the-last-of-us","gta-v","resident-evil-4"]);
+const profileBanners=new Set(["champagne","carbone","violet"]);
+const profileAccents=new Set(["or","violet","bleu"]);
+const profileFields="display_label,bio,banner_key,accent_key,favorite_games_json,primary_game,is_public,instagram,tiktok,discord,updated_at";
+const defaultProfile=()=>({display_label:"",bio:"",banner_key:"champagne",accent_key:"or",favorite_games_json:"[]",primary_game:"",is_public:0,instagram:"",tiktok:"",discord:""});
+function normalizeProfile(row){
+  const p=row||defaultProfile();
+  let games=[];
+  try{const parsed=JSON.parse(p.favorite_games_json||"[]");games=Array.isArray(parsed)?parsed.filter(x=>profileGames.has(x)).slice(0,4):[];}catch{}
+  return {display_name:p.display_label||"",bio:p.bio||"",banner:p.banner_key||"champagne",accent:p.accent_key||"or",games,primary_game:games.includes(p.primary_game)?p.primary_game:"",public_profile:p.is_public===1,instagram:p.instagram||"",tiktok:p.tiktok||"",discord:p.discord||""};
+}
+function validateProfile(data){
+  if(!data||typeof data!=="object"||Array.isArray(data))return null;
+  const keys=["display_name","bio","banner","accent","games","primary_game","public_profile","instagram","tiktok","discord"];
+  if(Object.keys(data).some(k=>!keys.includes(k))||!keys.every(k=>Object.prototype.hasOwnProperty.call(data,k)))return null;
+  for(const k of ["display_name","bio","banner","accent","primary_game","instagram","tiktok","discord"])if(typeof data[k]!=="string")return null;
+  const clean=t=>t.trim().replace(/\s+/g," ");
+  const display=clean(data.display_name),bio=data.bio.trim(),instagram=clean(data.instagram).replace(/^@/,""),tiktok=clean(data.tiktok).replace(/^@/,""),discord=clean(data.discord);
+  if(display.length>32||/[\u0000-\u001f\u007f<>]/.test(display)||bio.length>180||/[\u0000-\u0008\u000b-\u001f\u007f<>]/.test(bio))return null;
+  if(!profileBanners.has(data.banner)||!profileAccents.has(data.accent)||typeof data.public_profile!=="boolean")return null;
+  if(!Array.isArray(data.games)||data.games.length>4||new Set(data.games).size!==data.games.length||data.games.some(g=>typeof g!=="string"||!profileGames.has(g)))return null;
+  if(data.primary_game!==""&&!data.games.includes(data.primary_game))return null;
+  if((instagram&&!/^[A-Za-z0-9._]{1,30}$/.test(instagram))||(tiktok&&!/^[A-Za-z0-9._]{1,24}$/.test(tiktok))||discord.length>40||/[\u0000-\u001f\u007f<>]/.test(discord))return null;
+  return {display,bio,banner:data.banner,accent:data.accent,games:data.games,primary:data.primary_game,isPublic:data.public_profile?1:0,instagram,tiktok,discord};
+}
+async function profileStats(db,member){
+  if(!member)return null;
+  let rank=null;
+  if(member.visible_in_ranking===1&&member.score>0){
+    const r=await db.prepare("SELECT COUNT(*)+1 AS rank FROM members WHERE visible_in_ranking=1 AND score>0 AND (score>? OR (score=? AND joined_at<?))").bind(member.score,member.score,member.joined_at).first();
+    rank=Number(r?.rank)||null;
+  }
+  const v=await db.prepare("SELECT COUNT(*) AS total FROM vote_ballots WHERE twitch_id=?").bind(member.twitch_id).first();
+  return {points:Number(member.score)||0,rank,votes:Number(v?.total)||0,joined_at:member.joined_at};
+}
+async function memberProfileRoute(req,env,origin,path){
+  const result=(data,status=200)=>output(data,status,origin);
+  if(path==="/v1/profiles/me"&&["GET","PATCH"].includes(req.method)){
+    const user=await twitchUser(req,env);
+    if(!user)return result({error:"Connexion Twitch invalide"},401);
+    const member=await env.DB.prepare("SELECT twitch_id,display_name,avatar_url,score,visible_in_ranking,joined_at FROM members WHERE twitch_id=?").bind(user.id).first();
+    if(!member)return result({registered:false,profile:null,stats:null,identity:{name:user.name,avatar:user.avatar}},req.method==="GET"?200:404);
+    if(req.method==="PATCH"){
+      if(!(req.headers.get("Content-Type")||"").startsWith("application/json"))return result({error:"JSON requis"},415);
+      const text=await req.text();
+      if(text.length>2500)return result({error:"Profil trop volumineux"},413);
+      let body;try{body=JSON.parse(text)}catch{return result({error:"JSON invalide"},400)}
+      const p=validateProfile(body);
+      if(!p)return result({error:"Champs du profil invalides"},400);
+      await env.DB.prepare("INSERT INTO member_profiles(twitch_id,display_label,bio,banner_key,accent_key,favorite_games_json,primary_game,is_public,instagram,tiktok,discord) VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(twitch_id) DO UPDATE SET display_label=excluded.display_label,bio=excluded.bio,banner_key=excluded.banner_key,accent_key=excluded.accent_key,favorite_games_json=excluded.favorite_games_json,primary_game=excluded.primary_game,is_public=excluded.is_public,instagram=excluded.instagram,tiktok=excluded.tiktok,discord=excluded.discord,updated_at=CURRENT_TIMESTAMP")
+        .bind(user.id,p.display,p.bio,p.banner,p.accent,JSON.stringify(p.games),p.primary,p.isPublic,p.instagram,p.tiktok,p.discord).run();
+    }
+    const saved=await env.DB.prepare("SELECT "+profileFields+" FROM member_profiles WHERE twitch_id=?").bind(user.id).first();
+    return result({registered:true,profile:normalizeProfile(saved),stats:await profileStats(env.DB,{...member,twitch_id:user.id}),identity:{name:user.name,avatar:user.avatar}});
+  }
+  if(path.startsWith("/v1/profiles/")&&req.method==="GET"){
+    const id=path.slice("/v1/profiles/".length);
+    if(!/^[0-9]{1,30}$/.test(id))return result({error:"Profil introuvable"},404);
+    const data=await env.DB.prepare("SELECT m.twitch_id,m.display_name,m.avatar_url,m.score,m.visible_in_ranking,m.joined_at,p."+profileFields.split(",").join(",p.")+" FROM members m JOIN member_profiles p ON p.twitch_id=m.twitch_id WHERE m.twitch_id=? AND p.is_public=1").bind(id).first();
+    if(!data)return result({error:"Profil privé ou inexistant"},404);
+    const profile=normalizeProfile(data);
+    // Le score et le rang ne sont publics que si la personne a accepté le classement.
+    const stats=data.visible_in_ranking===1?await profileStats(env.DB,data):{points:null,rank:null,votes:null,joined_at:data.joined_at};
+    return result({profile,stats,identity:{name:data.display_name,avatar:data.avatar_url}});
+  }
+  return result({error:"Route inconnue ou méthode interdite"},404);
+}
+
 const sqlProfile="SELECT twitch_id, login, display_name, avatar_url, joined_at, updated_at, visible_in_ranking FROM members WHERE twitch_id=?";
 export default {
   async fetch(req,env){
@@ -141,6 +213,7 @@ export default {
     try {
       if(path==="/v1/health"&&req.method==="GET")return output({status:"ok"},200,origin);
       if(path.startsWith("/v1/votes/"))return await voteRoute(req,env,origin,path);
+      if(path.startsWith("/v1/profiles/"))return await memberProfileRoute(req,env,origin,path);
       if(path==="/v1/ranking"&&req.method==="GET"){
         const res=await env.DB.prepare("SELECT display_name,avatar_url,score FROM members WHERE visible_in_ranking=1 AND score>0 ORDER BY score DESC,joined_at ASC LIMIT 50").all();
         return output({entries:res.results||[]},200,origin);

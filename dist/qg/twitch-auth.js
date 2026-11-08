@@ -6,7 +6,7 @@ const KEY='mj-twitch-session-v1', PENDING='mj-twitch-state-v1';
 const API=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
 const apiReady=API==='https://ma-jestik-qg-members.maroodu11.workers.dev';
 let member=null,memberBusy=false,memberMessage='';
-const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','createur']);
+const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','createur','profil','membre']);
 const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2))?s:'#/accueil';
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
 const put=(k,v)=>{try{sessionStorage.setItem(k,v);return true}catch{return false}};
@@ -78,6 +78,9 @@ function render(open=false){
     if(memberMessage)area.append(make('p','qg-member-error',memberMessage==='offline'?'Profils indisponibles pour le moment.':'Action impossible. Réessaie.'));
     menu.append(area);
   }
+  const profileLink=make('a','qg-account-menu-profile','✦ Mon profil personnalisable');
+  profileLink.href='#/profil';
+  menu.append(profileLink);
   const logout=make('button','qg-account-menu-logout','Se déconnecter');
   logout.type='button';
   logout.addEventListener('click',()=>{clear();render();});
@@ -211,7 +214,7 @@ async function restore(){
   if(!old?.token||typeof old.token!=='string')return;
   try{await check(old.token)}catch{clear();render();}
 }
-export function getQGTwitchSession(){return me?.token?{id:me.id,name:me.name,token:me.token}:null;}
+export function getQGTwitchSession(){return me?.token?{id:me.id,name:me.name,avatar:me.avatar,token:me.token}:null;}
 // Vérification d'affichage uniquement ; les actions restent protégées côté Cloudflare.
 export function isQGOwnerSession(){
  const id=(document.querySelector('meta[name="majestik-owner-twitch-id"]')?.content||'').trim();

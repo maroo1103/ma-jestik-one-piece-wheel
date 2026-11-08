@@ -1,6 +1,7 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-copyrefresh1';
 import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
 import {mountTwitchAuth} from './twitch-auth.js';
+import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile} from './profil.js?v=20261108-profile1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
 import {publicTribunalMarkup,mountPublicTribunal,unmountPublicTribunal,tribunalPublicEnabled} from './tribunal-public.js?v=20261108-copyrefresh1';
@@ -8,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const voteApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
-const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur'};
+const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'Affiliations & partenaires',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre'};
 const modules = [
 {path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
@@ -16,7 +17,7 @@ const modules = [
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Propose des questions, vote avec Twitch et découvre les résultats partagés.',ready:tribunalPublicEnabled},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
 ];
-const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',createur:'univers'};
+const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',createur:'univers',profil:null,membre:null};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
 const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1>'+(description?'<p>'+description+'</p>':'')+(tags.length?'<div class="page-tags">'+tags.join('')+'</div>':'')+'</div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
@@ -215,7 +216,7 @@ function creator(){
   '</div>'+
  '</section>';
 }
-const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,setup:setup,partenaires:partners,createur:creator};
+const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,setup:setup,partenaires:partners,createur:creator,profil:profileMarkup,membre:publicProfileMarkup};
 let wheelObserver=null;
 let setupObserver=null;
 // Mesure la fin du contenu REEL (et non scrollHeight, qui peut inclure
@@ -298,6 +299,8 @@ function route(){
  if(page==='accueil')mountActivityStrip();
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
+  if(page==='profil')void mountProfile();
+  if(page==='membre')void mountPublicProfile();
  if(page==='defis')mountChallenges();
  if(page==='killathon')mountKillathon();
  if(page==='tribunal'){
