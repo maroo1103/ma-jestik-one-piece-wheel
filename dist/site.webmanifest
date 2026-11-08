@@ -1,0 +1,32 @@
+{
+  "id": "/qg/",
+  "name": "Ma_JesTik - Le QG communautaire",
+  "short_name": "Le QG",
+  "description": "Le QG de Ma_JesTik : roue Fortnite, défis, Killathon, Tribunal et classements.",
+  "lang": "fr",
+  "start_url": "/qg/#/accueil",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071725",
+  "theme_color": "#102c40",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
