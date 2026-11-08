@@ -75,7 +75,7 @@ function home(){
    '</div>'+
    '<div class="hq-setup-art">'+
     '<div class="hq-setup-aura" aria-hidden="true"></div>'+
-    '<img src="media/pc-ma-jestik-hd.webp?v=20261108-hd1" alt="Photo HD du véritable setup gaming de Ma_JesTik" loading="lazy" decoding="async" width="1448" height="1086">'+
+    '<img class="hq-setup-photo" src="/pc-ma-jestik-nouveau.webp?v=20261108-reel2" alt="Photo du PC gaming Ma_JesTik, redressée et intégrée au décor du QG" loading="lazy" decoding="async" width="1086" height="1448">'+
     '<span class="hq-setup-art-caption">UNE CONFIGURATION À DÉCOUVRIR</span>'+
    '</div>'+
   '</section>'+
