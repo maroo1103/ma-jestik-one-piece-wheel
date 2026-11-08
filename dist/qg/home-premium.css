@@ -797,3 +797,38 @@ body{background:#07090c;color:#f3f1ed}
                linear-gradient(0deg,#0304059c,transparent 65%);
   }
 }
+
+/* Image hero originale HD validée : PNG fourni par Ma_JesTik sur GitHub, jamais recompressé.
+   Photo entière à toutes les résolutions, sans zoom ni effets de filtre. */
+.hq-hero{
+  background:#040507;
+}
+.hq-hero-scene{
+  background-image:url('media/fond-accueil-mj.png.png?v=20261108-original-hd1');
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center center;
+  background-color:#040507;
+  transform:none;
+  filter:none;
+  opacity:1;
+}
+.hq-hero::before{
+  background:linear-gradient(90deg,rgba(2,3,4,.24) 0%,rgba(2,3,4,.07) 38%,transparent 72%);
+}
+.hq-hero-glow{
+  background:none;
+  mix-blend-mode:normal;
+}
+@media(max-width:850px){
+  .hq-hero-scene{
+    background-size:contain;
+    background-position:center center;
+  }
+}
+@media(max-width:680px){
+  .hq-hero-scene{
+    background-size:contain;
+    background-position:center center;
+  }
+}
