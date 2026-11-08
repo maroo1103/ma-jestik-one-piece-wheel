@@ -1,4 +1,4 @@
-name: Publier la roue Ma_JesTik
+name: Déployer le site Ma_JesTik
 
 on:
   push:
