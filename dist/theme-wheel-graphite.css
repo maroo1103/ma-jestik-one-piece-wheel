@@ -1,0 +1,45 @@
+/* Roue Fortnite — ambiance QG graphite & or, sans modifier roue, POI ni tirages. */
+:root{
+ --bg:#08090b;--surface:#191a1d;--line:#6b563d;
+ --text:#f7f4ee;--muted:#bdb5a9;--gold:#e7b970;--coral:#e3ad61;
+}
+body{background:#08090b;color:#f7f4ee}
+.ambient{
+ background:radial-gradient(ellipse at 30% 25%,#9f7e3421,transparent 54%),
+ radial-gradient(ellipse at 93% 8%,#4a361d1a,transparent 48%)
+}
+.ambient:after{border-color:#987d5030}
+.secondary,.icon-button,.map-launch-button{
+ background:#292622;border-color:#765c3d;color:#f3eadb
+}
+.secondary:hover,.icon-button:hover,.map-launch-button:hover{
+ background:#3c3022;border-color:#dab476
+}
+.wheel-halo{background:#32291f}
+.hub{background:radial-gradient(circle,#42311e,#15171a);border-color:#e7b970}
+.pointer{background:#e7b970}
+.result-card,.history-item,dialog,.map-dialog{
+ background:#202123;border-color:#765e3e;color:#f7f4ee
+}
+.result-art,.poi-card .thumb{background:#242424;border-color:#72583a}
+.art-shade{background:linear-gradient(0deg,#1b1c20,transparent 70%)}
+.art-badge{background:#2a231acb;border-color:#e0b97890;color:#f7e3bd}
+.options select,.poi-card input,.image-editor-preview{
+ background:#17181b;border-color:#826745;color:#f7f4ee
+}
+.poi-card input:checked{background:#dbad69;border-color:#dbad69}
+.launch,.save-image{
+ background:linear-gradient(135deg,#f2d9aa,#dfa95b);color:#17120c;border-color:#eed29c
+}
+.launch:hover:enabled,.save-image:hover:enabled{background:#f6dba9}
+.launch:disabled{background:#39332b;color:#c0b5a3}
+.poi-card .edit-image,.map-dialog-close{
+ background:#342b22;border-color:#8b6e48;color:#f4e7d3
+}
+.poi-card .edit-image:hover:enabled,.map-dialog-close:hover{background:#493724;border-color:#f0c681}
+.image-editor-preview>span,.image-upload{
+ background:#28221b;border-color:#8b6f4a;color:#f0e2cb
+}
+.map-dialog::backdrop,dialog::backdrop{background:#030405d9}
+.map-dialog-frame{background:#131416}
+/* La carte Fortnite et ses illustrations restent fidèles aux images originales. */
