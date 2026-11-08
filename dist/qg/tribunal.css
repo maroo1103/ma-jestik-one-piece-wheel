@@ -158,3 +158,18 @@
 .court-moderation{margin-top:20px}
 [data-court-visitor][hidden]{display:none!important}
 @media(max-width:700px){.court-page-head{padding-bottom:15px;min-height:unset}.court-page-head::before{inset:-20px -20px 0 8%}.court-page-head h1{font-size:48px}.court-page-head p{font-size:13px}}
+
+/* Uniformisation Tribunal novembre 2026 : étiquettes bleues et titre de catégorie jaune. */
+.court-page-head .eyebrow{color:#ffd16e;letter-spacing:1.7px;font-weight:900}
+.court-page-head .eyebrow::before{content:none;display:none}
+.court-demo-note{font-size:11px;line-height:1.55;color:#89aaba;margin:-4px 0 17px}
+.court-overline,.court-proposal-top span{color:#a7d5ed}
+.court-tool-card>summary,.court-suggest-card>summary{color:#b8def4}
+.court-summary>div{border-color:#25778d;background:linear-gradient(145deg,#10394a,#0a2837)}
+.court-summary span{color:#a7d5ed}
+.court-summary strong{color:#b6dffb}
+.court-tabs{background:#0a2837;border-color:#25778d}
+.court-tabs button.active{background:#245777;color:#f7fbff}
+.court-moderation-pill{border-color:#53849a;color:#b8def4;background:#10394a}
+.court-proposal-duration{border-color:#53849a;background:#0a2534}
+.court-tool-card .court-field input{border-color:#53849a;background:#0a2534}
