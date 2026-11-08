@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-label="Icône du setup Ma_JesTik bleu nuit, or et cyan">
+<defs>
+ <radialGradient id="ambient"><stop stop-color="#6d47ba" stop-opacity=".45"/><stop offset=".42" stop-color="#3d438e" stop-opacity=".22"/><stop offset=".75" stop-color="#15385e" stop-opacity=".07"/><stop offset="1" stop-color="#081627" stop-opacity="0"/></radialGradient>
+ <linearGradient id="borderGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b7"/><stop offset=".47" stop-color="#e7b86b"/><stop offset="1" stop-color="#b3854e"/></linearGradient>
+ <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b8f1ff"/><stop offset=".5" stop-color="#75d0f7"/><stop offset="1" stop-color="#668cda"/></linearGradient>
+ <linearGradient id="case" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#12364f"/><stop offset="1" stop-color="#08172d"/></linearGradient>
+ <filter id="glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="13"/></filter>
+</defs>
+<rect width="900" height="900" fill="none"/>
+<circle cx="468" cy="456" r="428" fill="url(#ambient)"/>
+<g transform="translate(466 449)" fill="none">
+ <circle r="339" stroke="#5e80be" stroke-width="2" opacity=".28"/>
+ <circle r="302" stroke="#8399e2" stroke-width="2.2" opacity=".42"/>
+ <circle r="276" stroke="#d5b47a" stroke-width="3.5" stroke-dasharray="7 15" opacity=".62"/>
+ <circle r="243" stroke="#5879b7" stroke-width="2" opacity=".37"/>
+</g>
+<g stroke="#78b9e7" opacity=".13" stroke-width="2" fill="none">
+ <path d="M96 87L267 248M665 35L872 245M75 795L260 604M726 702L894 547"/>
+</g>
+<g opacity=".9">
+ <path d="M730 120l21 21-21 21-21-21Z" fill="url(#borderGold)"/>
+ <circle cx="195" cy="197" r="7" fill="#84d4fa"/>
+ <circle cx="745" cy="726" r="9" fill="#a783e7"/>
+ <circle cx="260" cy="697" r="4" fill="#f0c781"/>
+</g>
+<!-- Silhouette originale de la miniature officielle du setup, agrandie sans changement de forme. -->
+<g transform="translate(470 456) scale(1.72)">
+ <rect x="-100" y="-153" width="197" height="302" rx="25" stroke="#aee3fb" stroke-width="9" fill="#0a263d" opacity=".53" filter="url(#glow)"/>
+ <rect x="-100" y="-153" width="197" height="302" rx="25" stroke="url(#cyan)" stroke-width="8" fill="url(#case)"/>
+ <rect x="-72" y="-131" width="140" height="222" rx="12" stroke="#315f83" stroke-width="4" fill="#102d45"/>
+ <circle cx="-2" cy="-63" r="46" fill="none" stroke="url(#borderGold)" stroke-width="10"/>
+ <circle cx="-2" cy="-63" r="12" fill="#edc987"/>
+ <circle cx="-2" cy="37" r="38" fill="none" stroke="url(#cyan)" stroke-width="9"/>
+ <circle cx="-2" cy="37" r="10" fill="#9ad9fb"/>
+ <circle cx="64" cy="121" r="6" fill="#eabe72"/>
+ <path d="M-72 -110L55 -110" stroke="#7eacd0" stroke-opacity=".15" stroke-width="1.5"/>
+</g>
+<path d="M285 778Q467 816 651 778" stroke="#edbf79" stroke-width="2.3" opacity=".45" fill="none"/>
+</svg>
