@@ -223,6 +223,30 @@ function route(){
  }
  closeMobile();scrollTo({top:0,behavior:'instant'});
 }
+// Les liens de partage possèdent des métadonnées propres, sans fragment #.
+const shareButton=$('qgShareLink');
+if(shareButton)shareButton.addEventListener('click',async()=>{
+ const hashPage=location.hash.startsWith('#/')?location.hash.slice(2):location.hash.slice(1);
+ const raw=decodeURIComponent(hashPage.split('?')[0]);
+ const page=Object.prototype.hasOwnProperty.call(pages,raw)?raw:'accueil';
+ const url=page==='accueil'?'https://ma-jestik.fr/':'https://ma-jestik.fr/partage/'+page+'/';
+ try{
+  if(!navigator.clipboard?.writeText)throw new Error('Presse-papiers indisponibles');
+  await navigator.clipboard.writeText(url);
+  const label=shareButton.querySelector('.qg-share-label');
+  const icon=shareButton.querySelector('.qg-share-icon');
+  if(label)label.textContent='Copié !';
+  if(icon)icon.textContent='✓';
+  shareButton.classList.add('is-copied');
+  setTimeout(()=>{
+   if(label)label.textContent='Partager';
+   if(icon)icon.textContent='↗';
+   shareButton.classList.remove('is-copied');
+  },2000);
+ }catch{
+  window.prompt('Copie le lien de partage de cette rubrique :',url);
+ }
+});
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
  const isOpen=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!isOpen));
 }));
