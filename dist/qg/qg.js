@@ -52,7 +52,7 @@ function home(){
     '<div class="hq-activity-heading"><span aria-hidden="true">✦</span> EN CE MOMENT AU QG</div>'+
     '<div class="hq-activity-cards">'+
      '<a class="hq-activity-card hq-activity-twitch" data-state="neutral" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer" aria-label="Voir le statut du direct Twitch de Ma_JesTik">'+
-      '<span class="hq-activity-symbol" aria-hidden="true">◉</span>'+
+      '<span class="hq-activity-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M2.149 0 .537 4.345v17.391h5.91V24H9.67l3.223-3.218h4.835L24 14.524V0H2.149Zm19.702 13.441-3.762 3.762H12.18l-3.224 3.216v-3.216H4.127V2.149H21.85v11.292Zm-5.91-6.991h2.149v6.443h-2.149V6.45Zm-5.912 0h2.149v6.443h-2.149V6.45Z"/></svg></span>'+
       '<span class="hq-activity-copy"><strong>TWITCH</strong><span class="hq-activity-status" data-activity-status="twitch" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
       '<span class="hq-activity-arrow" aria-hidden="true">↗</span>'+
      '</a>'+
