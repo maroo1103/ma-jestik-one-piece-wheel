@@ -1,7 +1,7 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-copy-clean1';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-head3';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
-import {killathonMarkup,mountKillathon} from './killathon.js?v=20261107-end1';
-import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-layout2';
+import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-head3';
+import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-labels3';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
@@ -23,7 +23,7 @@ function home(){
  '<section class="home-tools"><div class="section-top"><div><h2>OUTILS</h2><p>Les outils et espaces de la communauté réunis au même endroit.</p></div></div><div class="cards">'+modules.map(m=>'<a class="module-card '+(m.ready?'highlight':'')+'" href="#/'+m.path+'"><div class="card-line"><span class="module-icon" aria-hidden="true">'+m.icon+'</span><span class="'+(m.ready?'status-ready':'status-prep')+'">'+(m.ready?'DISPONIBLE':'EN PRÉPARATION')+'</span></div><h3>'+m.title+'</h3><p>'+m.desc+'</p><span class="card-bottom">'+(m.ready?'UTILISER MAINTENANT':'VOIR LE PROJET')+' <span aria-hidden="true">→</span></span></a>').join('')+'</div></section>';
 }
 function wheel(){
- return head('CRÉATION N° 01','LA ROUE FORTNITE','Laisse le hasard choisir ta prochaine destination sur la carte de Fortnite.')+
+ return head('OUTILS GAMING','LA ROUE FORTNITE','Laisse le hasard choisir ta prochaine destination sur la carte de Fortnite.')+
  '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../roue.html" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
 }
 function challenges(){return challengesMarkup();}
