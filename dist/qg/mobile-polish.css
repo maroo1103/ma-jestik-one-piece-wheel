@@ -46,3 +46,44 @@
     padding-bottom: 72px;
   }
 }
+
+/* Killathon : différencier visuellement les actions sur smartphone.
+   Aucune modification du fonctionnement ou des demandes de confirmation. */
+@media (max-width: 680px) {
+  /* Plus d'espace pour les libellés longs et aucune confusion côte à côte. */
+  .qg-layout .kts-panel .kts-actions:has(> [data-kts-action="active"]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+  }
+  .qg-layout .kts-panel .kts-actions:has(> [data-kts-action="active"]) .kts-button {
+    width: 100%;
+    min-height: 48px;
+  }
+  /* Les actions qui font progresser le compteur restent dorées. */
+  .qg-layout .kts-panel .kts-button[data-kts-action="add"],
+  .qg-layout .kts-panel .kts-button[data-kts-action="active"].kts-primary {
+    background: #d7af73;
+    border-color: #f2d29e;
+    color: #17120b;
+  }
+  /* Une correction ou une pause est discrète et distincte du démarrage. */
+  .qg-layout .kts-panel .kts-button[data-kts-action="subtract"],
+  .qg-layout .kts-panel .kts-button[data-kts-action="active"]:not(.kts-primary) {
+    background: #302c28;
+    border-color: #79684e;
+    color: #f3e5cf;
+  }
+  /* Remise à zéro et fin de session ne doivent pas sembler être des actions ordinaires. */
+  .qg-layout .kts-panel .kts-button[data-kts-action="reset"] {
+    background: #2a2523;
+    border-color: #ad8660;
+    color: #f0c68f;
+  }
+  .qg-layout .kts-panel .kts-button[data-kts-action="finish"] {
+    background: #48292f;
+    border-color: #b9797e;
+    color: #ffe4e0;
+    min-height: 48px;
+  }
+}
