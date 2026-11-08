@@ -26,7 +26,7 @@ function home(){
   {path:'tribunal',overline:'02 / LA COMMUNAUTÉ',title:'LE TRIBUNAL',summary:'Des questions, des propositions et des votes qui comptent vraiment.',image:'tribunal',name:'Entrer au Tribunal',featured:true},
   {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'118 défis Zero Build à tenter en solo ou avec ton équipe.',image:'defis',name:'Découvrir les défis'},
   {path:'killathon',overline:'04 / LE COMPTEUR',title:'KILLATHON',summary:'Fixe ton objectif et compte tes éliminations en direct.',image:'killathon',name:'Lancer le Killathon'},
-  {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Retrouve les performances partagées de l’équipage.',image:'classement',name:'Voir les classements'}
+  {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Retrouve les points et les performances de la communauté.',image:'classement',name:'Voir les classements'}
  ];
  const cards=paths.map(p=>'<a class="hq-portal '+(p.featured?'hq-portal-featured ':'')+'hq-portal-'+p.path+'" href="#/'+p.path+'">'+
   '<span class="hq-portal-art"><img src="/og/'+p.image+'.png?v=20261108" alt="" loading="lazy" decoding="async"></span>'+
@@ -41,7 +41,7 @@ function home(){
    '<div class="hq-hero-content">'+
 
     '<h1 id="hqHeroTitle">BIENVENUE<br><span>DANS LE QG</span><br><span>DE MA_JESTIK.</span></h1>'+
-    '<p class="hq-hero-lead">Un univers pensé pour jouer, relever des défis et partager de vrais moments avec la communauté.</p>'+
+    '<p class="hq-hero-lead">Fais tourner la roue Fortnite, relève 118 défis Zero Build et participe aux votes du Tribunal.</p>'+
     '<div class="hq-hero-buttons">'+
      '<button class="hq-hero-primary" type="button" data-scroll="hq-explorer">DÉCOUVRIR LE QG <span aria-hidden="true">↗</span></button>'+
 
@@ -72,7 +72,7 @@ function home(){
   '<section class="hq-intro" aria-label="La philosophie du QG">'+
    '<p class="hq-section-overline"><span aria-hidden="true">✦</span> PLUS QU’UN SIMPLE SITE GAMING</p>'+
    '<h2><span class="hq-quote-mark">“</span> LES VICTOIRES PASSENT. LES VALEURS RESTENT. <span class="hq-quote-mark">”</span></h2>'+
-   '<p>Bienvenue dans mon univers. Ici, la roue choisit ton atterrissage, les défis pimentent tes parties et la communauté a son mot à dire.</p>'+
+   '<p>Entre deux lives, le QG reste ouvert : retrouve nos expériences, propose tes idées et participe à la vie de la communauté.</p>'+
 
   '</section>'+
   '<section class="hq-explorer" id="hq-explorer" aria-labelledby="hqExploreTitle">'+
@@ -102,8 +102,8 @@ function wheel(){
 function challenges(){return challengesMarkup();}
 function court(){return tribunalMarkup();}
 function ranking(){
- if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE L’ÉQUIPAGE','',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit')])+
- '<section class="qg-rankings"><div class="qg-podium-title"><span aria-hidden="true">🏆</span><h2>TOP 3 DE L’ÉQUIPAGE</h2></div>'+
+ if(votesEnabled)return head('COMMUNAUTÉ','CLASSEMENT DE LA COMMUNAUTÉ','',[tag('+1 · Réussite prédite'),tag('+2 · Échec prédit')])+
+ '<section class="qg-rankings"><div class="qg-podium-title"><span aria-hidden="true">🏆</span><h2>TOP 3 DE LA COMMUNAUTÉ</h2></div>'+
  '<div class="qg-podium" id="rankingPodium" aria-live="polite"><p class="qg-podium-empty">Chargement du podium…</p></div>'+
  '<section class="panel qg-ranking-panel" aria-labelledby="rankTableTitle"><div class="qg-rank-table-title"><h2 id="rankTableTitle">CLASSEMENT GÉNÉRAL</h2><p>À partir de la 4ᵉ place</p></div>'+
  '<div class="qg-ranking-scroll"><table class="ranking-table qg-rank-table"><thead><tr><th scope="col">RANG</th><th scope="col">PSEUDO TWITCH</th><th scope="col">POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement…</td></tr></tbody></table></div></section></section>';
@@ -133,7 +133,7 @@ function rankWreathedAvatar(entry){
  return frame;
 }
 function rankCard(entry,place){
- const roles=['Capitaine de l’équipage','Second de bord','Éclaireur'];
+ const roles=['En tête du classement','Deuxième place','Troisième place'];
  const icons=['👑','🥈','🥉'];
  const card=document.createElement('article');card.className='qg-rank-card qg-rank-card-'+place;
  card.setAttribute('aria-label','Place '+place+' : '+entry.display_name+', '+rankScore(entry.score)+' points');

@@ -33,7 +33,7 @@ export function publicTribunalMarkup(){
   '<div><span>SONDAGES TERMINÉS</span><strong id="courtClosedCount">0</strong></div>'+
   '<div id="courtPublicOwnerCount" hidden><span>PROPOSITIONS À EXAMINER</span><strong id="courtProposalCount">0</strong></div></div>'+
   '<div class="court-workspace"><section class="court-primary" aria-labelledby="courtListTitle">'+
-  '<div class="court-list-head"><div><span class="court-overline">LES QUESTIONS DE L’ÉQUIPAGE</span><h2 id="courtListTitle">Liste des sondages</h2></div>'+
+  '<div class="court-list-head"><div><span class="court-overline">LES QUESTIONS DE LA COMMUNAUTÉ</span><h2 id="courtListTitle">Liste des sondages</h2></div>'+
   '<div class="court-tabs" aria-label="Filtrer les sondages">'+
   '<button type="button" data-filter="open" aria-pressed="true">En cours</button>'+
   '<button type="button" data-filter="closed" aria-pressed="false">Terminés</button>'+

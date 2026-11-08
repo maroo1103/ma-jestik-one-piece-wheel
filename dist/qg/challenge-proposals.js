@@ -42,7 +42,7 @@ function memberHtml(){
  ? '<p>Une idée de mission Fortnite ? Envoie-la directement à Ma_JesTik pour validation.</p>'+
    '<form id="challengeCommunityProposalForm" class="challenge-community-form">'+
    '<label>Composition<select name="team" required>'+fields+'</select></label>'+
-   '<label>Nom du défi<input name="title" type="text" required minlength="3" maxlength="80" placeholder="Ex. Le défi du pirate"></label>'+
+   '<label>Nom du défi<input name="title" type="text" required minlength="3" maxlength="80" placeholder="Ex. Une partie sans bouclier"></label>'+
    '<label>Règles du défi<textarea name="description" required minlength="10" maxlength="180" rows="3" placeholder="Décris précisément comment réussir ce défi"></textarea></label>'+
    '<button class="btn btn-gold" type="submit">ENVOYER MA PROPOSITION</button>'+
    '<small>3 propositions maximum par 24 h, quota partagé avec le Tribunal.</small></form>'
