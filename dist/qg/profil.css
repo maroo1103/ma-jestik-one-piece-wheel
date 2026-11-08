@@ -210,3 +210,12 @@
  .qg-layout .mp-picker-art .mp-game-custom span{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.qg-layout .mp-links .mp-social-icon{transition:none}}
+
+/* Cinq miniatures promotionnelles : illustration de secours conservée si CDN indisponible. */
+.qg-layout .mp-picker-art{position:relative}
+.qg-layout .mp-art-frame{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+.qg-layout .mp-art-frame>.mp-game-custom{position:absolute;inset:0}
+.qg-layout .mp-art-frame>.mp-cover-photo{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.qg-layout .mp-photo-world-of-warcraft{object-position:center 72%!important}
+.qg-layout .mp-photo-minecraft{object-position:center 42%!important}
+.qg-layout .mp-photo-gta-vi{object-position:center 40%!important}
