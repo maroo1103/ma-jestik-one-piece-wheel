@@ -328,3 +328,10 @@
     align-self:flex-start;width:122px;height:110px;flex:0 0 110px;
   }
 }
+
+/* Lien de partage Open Graph de la rubrique, compact et lisible sur mobile. */
+.qg-share-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 11px;border:1px solid #38667d;border-radius:8px;background:#132f41;color:#cce7f4;font:800 11px/1.2 var(--font);white-space:nowrap;cursor:pointer;transition:border-color .15s,background .15s}
+.qg-share-link:hover,.qg-share-link:focus-visible{border-color:#edc17a;background:#1e465f}
+.qg-share-link.is-copied{border-color:#79bdab;color:#d7fff1}
+.qg-share-icon{font-size:15px;line-height:1}
+@media(max-width:620px){.qg-share-label{display:none}.qg-share-link{padding:8px;min-width:33px;min-height:33px}}
