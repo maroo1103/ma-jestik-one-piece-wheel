@@ -557,3 +557,89 @@ body{background:#07111c}
   .hq-activity-arrow{font-size:19px}
 }
 @media(prefers-reduced-motion:reduce){.hq-activity-card{transition:none}}
+
+/* Bandeau supérieur v2 : navigation plus lisible et typographie gaming premium.
+   Police Barlow Condensed déjà utilisée sur le QG (aucune dépendance nouvelle). */
+@media (min-width:1171px){
+  .site-header{
+    min-height:94px;
+    padding-top:12px;
+    padding-bottom:12px;
+    gap:clamp(9px,1.15vw,21px);
+  }
+  .site-header .brand{gap:14px;min-width:210px}
+  .site-header .brand-icon{width:50px;height:50px;border-radius:13px}
+  .site-header .brand-text strong{
+    font:900 30px/1 var(--display);
+    letter-spacing:1.2px;
+  }
+  .site-header .brand-text small{
+    font-size:9px;
+    letter-spacing:1.55px;
+  }
+  .site-navigation{gap:clamp(3px,.55vw,12px)}
+  .site-navigation>.nav-link,
+  .site-navigation .group-toggle,
+  .site-navigation>.site-nav-direct{
+    font:800 19px/1.08 var(--display);
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    min-height:48px;
+    padding:12px clamp(9px,.87vw,17px);
+    border-radius:9px;
+  }
+  .site-navigation .chev{
+    font:900 15px/1 var(--font);
+    margin-left:3px;
+  }
+  .site-navigation .submenu a{
+    font:700 15px/1.25 var(--font);
+    min-height:45px;
+    padding:11px 15px;
+  }
+  .site-header .top-actions{gap:9px}
+  .site-header .qg-social-icon{width:41px;height:41px;flex-basis:41px}
+  .site-header .qg-social-icon svg{width:21px;height:21px}
+  .site-header .qg-login{
+    min-height:41px;
+    padding:10px 15px;
+    font-size:13px;
+  }
+}
+/* Entre ordinateur compact et large écran : garder les quatre onglets sur une ligne. */
+@media (min-width:1171px) and (max-width:1430px){
+  .site-header{gap:9px;padding-left:18px;padding-right:18px}
+  .site-header .brand{gap:10px;min-width:188px}
+  .site-header .brand-icon{width:45px;height:45px}
+  .site-header .brand-text strong{font-size:27px}
+  .site-navigation{gap:3px}
+  .site-navigation>.nav-link,
+  .site-navigation .group-toggle,
+  .site-navigation>.site-nav-direct{
+    font-size:17px;
+    padding-left:9px;
+    padding-right:9px;
+  }
+  .site-navigation .submenu a{font-size:14px}
+  .site-header .qg-social-icon{width:36px;height:36px;flex-basis:36px}
+  .site-header .qg-login{font-size:12px;padding-left:10px;padding-right:10px}
+}
+/* Menu mobile ouvert : même identité typographique, confort tactile renforcé. */
+@media (max-width:1170px){
+  .site-navigation>.nav-link,
+  .site-navigation .group-toggle,
+  .site-navigation>.site-nav-direct{
+    font-family:var(--display);
+    font-size:20px;
+    line-height:1.12;
+    font-weight:800;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    min-height:52px;
+  }
+  .site-navigation .submenu a{
+    font-size:15px;
+    min-height:44px;
+    line-height:1.35;
+  }
+}
