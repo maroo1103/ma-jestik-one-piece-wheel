@@ -1,4 +1,4 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-community1';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-community2';
 import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
 import {mountTwitchAuth} from './twitch-auth.js';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
