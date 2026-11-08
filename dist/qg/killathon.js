@@ -2,7 +2,7 @@
    Le vrai compteur local ne doit jamais être accessible directement depuis Internet.
    Pour afficher de vraies données, configurer un flux PUBLIC HTTPS, sans token ni clé
    privée, via la balise meta majestik-killathon-public-feed. */
-import {mountSimpleKillathon} from './killathon-simple.js?v=20261107-end1';
+import {mountSimpleKillathon} from './killathon-simple.js?v=20261108-head3';
 const $ = id => document.getElementById(id);
 const fmt = n => new Intl.NumberFormat('fr-FR').format(n);
 const initial = {kills:0,goal:100,events:[],live:false};
@@ -59,7 +59,7 @@ function display(){
  if(nav){nav.textContent=snapshot.live?'EN DIRECT':'APERÇU';nav.classList.toggle('kt-nav-live',snapshot.live);}
 }
 export function killathonMarkup(){
- return '<section class="kt-page-head"><h1>LE KILLATHON</h1><p>Lance ton Killathon, fixe ton objectif et affiche la progression sur ton live.</p></section>'+
+ return '<section class="kt-page-head"><div class="kt-page-kicker">OUTILS GAMING</div><h1>LE KILLATHON</h1><p>Lance ton Killathon, fixe ton objectif et affiche la progression sur ton live.</p></section>'+
  '<div id="kt-simple-app" aria-live="polite"></div>'+
  '<details class="kt-advanced-details"><summary>Découvrir le Killathon avancé Ma_JesTik</summary><div id="kt-app"></div></details>';
 }
