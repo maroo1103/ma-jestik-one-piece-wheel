@@ -1,6 +1,6 @@
 /* Ma_JesTik · Profil communautaire premium (Twitch + D1, repli local explicite).
    Aucun score, badge ou avantage n'est attribué depuis le navigateur. */
-import {getQGTwitchSession} from "./twitch-auth.js";
+import {getQGTwitchSession,waitForQGTwitchSession,hasStoredQGTwitchSession,retryQGTwitchSession} from "./twitch-auth.js";
 
 const API=(document.querySelector('meta[name="majestik-members-api"]')?.content||"").replace(/\/$/,"");
 const games=[
@@ -177,10 +177,16 @@ function view(state){
    '<div class="mp-form-grid"><label>Instagram (pseudo facultatif) <input name="instagram" maxlength="30" value="'+esc(p.instagram)+'" placeholder="mon_pseudo"></label>'+
    '<label>TikTok (pseudo facultatif) <input name="tiktok" maxlength="24" value="'+esc(p.tiktok)+'" placeholder="mon_pseudo"></label>'+
    '<label class="mp-form-full">Discord (pseudo facultatif) <input name="discord" maxlength="40" value="'+esc(p.discord)+'" placeholder="mon_pseudo"></label></div>'+
-   '<label class="mp-public-toggle"><input name="public_profile" type="checkbox"'+(p.public_profile?' checked':'')+'><span><strong>Rendre mon profil public</strong><small>Les autres visiteurs pourront voir ta bio, tes jeux et tes liens. Ce réglage ne modifie pas la visibilité dans le classement.</small></span></label>'+
+   '<div class="mp-privacy-settings">'+
+    '<label class="mp-public-toggle"><input name="public_profile" type="checkbox"'+(p.public_profile?' checked':'')+'><span><strong>Rendre mon profil public</strong><small>Les autres visiteurs peuvent consulter ta présentation, tes jeux et tes liens.</small></span></label>'+
+    (state.online&&state.rankingVisible!==null?
+      '<label class="mp-public-toggle mp-ranking-toggle"><input name="ranking_visible" type="checkbox"'+(state.rankingVisible?' checked':'')+'><span><strong>Afficher mon profil dans le classement</strong><small>Mon pseudo et mes points peuvent apparaître dans les classements du QG. Indépendant du profil public.</small></span></label>':
+      (state.online?'<p class="mp-ranking-warning" role="status">Réglage du classement indisponible. Recharge la page pour le modifier.</p>':''))+
+   '</div>'+
    '<div class="mp-save-row"><button class="mp-gold-button" type="submit">✓ '+(server?"Enregistrer mon profil":"Enregistrer l’aperçu sur cet appareil")+'</button>'+
     '<span id="mpSaveStatus" role="status"></span></div>'+
   '</form>'+
+  (state.online?'<div class="mp-danger-zone"><div><strong>Suppression du profil QG</strong><p>Action définitive : ton profil, tes points, tes votes des défis et ton Killathon communautaire associé peuvent être effacés. Ton compte Twitch reste indépendant.</p></div><button class="mp-danger-button" id="mpDeleteAccount" type="button">Supprimer mon profil QG</button><span id="mpDeleteStatus" role="status"></span></div>':'')+
  '</section>';
  fillSocialIcons(root);
  root.querySelectorAll(".mp-game-image img,.mp-picker-art img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
@@ -232,24 +238,75 @@ function view(state){
    $("mpSaveStatus").textContent="Vérifie les pseudos des réseaux sociaux.";return;
   }
   const button=f.querySelector('button[type="submit"]');button.disabled=true;$("mpSaveStatus").textContent="Enregistrement…";
+  let failedStep="profil",profileSaved=false;
   try{
    if(state.online){
-    const saved=await request("PATCH","/v1/profiles/me",state.token,payload);
-    state.profile=sanitize(saved.profile);state.stats=saved.stats||state.stats;removeDraft(ident.id);
+    // Ne pas écrire inutilement en D1 si seuls les paramètres de classement ont changé.
+    if(JSON.stringify(sanitize(payload))!==JSON.stringify(state.profile)){
+     const saved=await request("PATCH","/v1/profiles/me",state.token,payload);
+     state.profile=sanitize(saved.profile);state.stats=saved.stats||state.stats;removeDraft(ident.id);
+     profileSaved=true;
+    }
+    const rankingControl=e.namedItem("ranking_visible");
+    if(rankingControl&&state.rankingVisible!==null&&rankingControl.checked!==state.rankingVisible){
+     failedStep="classement";
+     const answer=await request("PATCH","/v1/me/visibility",state.token,{visible:rankingControl.checked});
+     state.rankingVisible=answer.member?.visible_in_ranking===1;
+     window.dispatchEvent(new Event("qg:member-updated"));
+     try{
+      const fresh=await request("GET","/v1/profiles/me",state.token);
+      state.stats=fresh.stats||state.stats;
+     }catch{
+      // La visibilité est enregistrée même si la relecture du classement échoue.
+      if(!state.rankingVisible&&state.stats)state.stats={...state.stats,rank:null};
+     }
+    }
    }else{
     if(!saveDraft(ident.id,payload))throw Error("Stockage local indisponible.");
     state.profile=sanitize(payload);
    }
    if(root.isConnected){view(state);}
-  }catch(error){$("mpSaveStatus").textContent="Impossible d’enregistrer : "+(error.status?"erreur "+error.status:"vérifie ta connexion et réessaie.");button.disabled=false;}
+  }catch(error){
+   const detail=error.status?"erreur "+error.status:"connexion momentanément indisponible";
+   $("mpSaveStatus").textContent=failedStep==="classement"?
+    "Impossible de modifier le classement ("+detail+"). "+(profileSaved?"Les autres changements du profil sont enregistrés.":"Réessaie sans quitter le formulaire."):
+    "Impossible d’enregistrer le profil ("+detail+").";
+   button.disabled=false;
+  }
+ });
+ const delButton=$("mpDeleteAccount");
+ if(delButton)delButton.addEventListener("click",async()=>{
+  const confirmation=window.prompt("La suppression de ton profil QG entraîne la perte de données associées (notamment points, votes et Killathon communautaire). Écris SUPPRIMER pour confirmer :");
+  if(confirmation!=="SUPPRIMER")return;
+  if(!window.confirm("Dernière confirmation : supprimer définitivement ton profil QG ?"))return;
+  delButton.disabled=true;$("mpDeleteStatus").textContent="Suppression en cours…";
+  try{
+   await request("DELETE","/v1/me",state.token);
+   removeDraft(ident.id);
+   window.dispatchEvent(new Event("qg:member-updated"));
+   if(root.isConnected)await mountProfile();
+  }catch(error){
+   if(!root.isConnected)return;
+   $("mpDeleteStatus").textContent="Suppression impossible ("+(error.status||"réseau")+"). Réessaie plus tard.";
+   delButton.disabled=false;
+  }
  });
 }
 export function profileMarkup(){return '<div class="mp-page"><div class="page-head"><div class="eyebrow">UNIVERS MA_JESTIK</div><h1>MON PROFIL</h1><p>Personnalise ton espace gaming et retrouve tes véritables statistiques communautaires.</p></div><div id="mjProfileRoot" aria-live="polite"><p class="mp-loading">Chargement du profil…</p></div></div>';}
 export async function mountProfile(){
  const root=$("mjProfileRoot");if(!root)return;
+ // La page attend la revalidation du jeton avant de conclure à une déconnexion après F5.
+ await waitForQGTwitchSession();
+ if(!root.isConnected||!location.hash.startsWith("#/profil"))return;
  const me=getQGTwitchSession();
- if(!me){root.innerHTML='<div class="mp-panel mp-empty"><h2>Bienvenue dans ton espace membre</h2><p>Connecte-toi avec Twitch pour retrouver ton identité et personnaliser ton profil.</p><button type="button" class="mp-gold-button" id="mpConnect">Se connecter avec Twitch</button></div>';
-  $("mpConnect").addEventListener("click",()=>document.querySelector("#qgTwitchAccount .qg-login")?.click());return;}
+ if(!me){
+  if(hasStoredQGTwitchSession()){
+   root.innerHTML='<div class="mp-panel mp-empty"><h2>Connexion Twitch à vérifier</h2><p>La vérification Twitch est momentanément indisponible. Ta session est conservée dans cet onglet.</p><button type="button" class="mp-gold-button" id="mpRetryLogin">Réessayer</button></div>';
+   $("mpRetryLogin").addEventListener("click",async()=>{await retryQGTwitchSession();if(root.isConnected)void mountProfile();});return;
+  }
+  root.innerHTML='<div class="mp-panel mp-empty"><h2>Bienvenue dans ton espace membre</h2><p>Connecte-toi avec Twitch pour retrouver ton identité et personnaliser ton profil.</p><button type="button" class="mp-gold-button" id="mpConnect">Se connecter avec Twitch</button></div>';
+  $("mpConnect").addEventListener("click",()=>document.querySelector("#qgTwitchAccount .qg-login")?.click());return;
+ }
  const id=me.id,token=me.token;
  let info=null,online=false,registered=false,profile=null,stats=null;
  const identity={id,name:me.name||"Membre Twitch",avatar:me.avatar||""};
@@ -263,7 +320,7 @@ export async function mountProfile(){
  }else{
   profile=sanitize(readDraft(id));stats=info?{points:null,rank:null,votes:null,joined_at:info.joined_at}:null;
  }
- const state={token,identity,profile,stats,online,registered,hasV2:r[1].status==="fulfilled"&&r[1].value.catalog_version>=2};
+ const state={token,identity,profile,stats,online,registered,rankingVisible:info?info.visible_in_ranking===1:null,hasV2:r[1].status==="fulfilled"&&r[1].value.catalog_version>=2};
  if(!registered){
   root.innerHTML='<div class="mp-panel mp-empty"><h2>Active ton profil communautaire</h2><p>Pour participer aux statistiques du QG et enregistrer un profil en ligne, crée d’abord ton profil Twitch dans notre base.</p>'+
    '<button type="button" class="mp-gold-button" id="mpActivate">Créer mon profil QG</button>'+

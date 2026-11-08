@@ -1,11 +1,8 @@
-/* Ma_JesTik · OAuth Twitch sans mot de passe ni secret public.
- Profil vérifié seulement dans ce navigateur. Aucun classement/point persistant.
- Pour une vraie session serveur, passer plus tard à Authorization Code + Workers/D1. */
+/* Ma_JesTik · OAuth Twitch : session d'onglet revalidée après F5.
+   Le jeton reste dans sessionStorage (jamais localStorage).
+   Les écritures sont vérifiées côté Cloudflare Worker. */
 const clientId=(document.querySelector('meta[name="majestik-twitch-client-id"]')?.content||'').trim();
 const KEY='mj-twitch-session-v1', PENDING='mj-twitch-state-v1';
-const API=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
-const apiReady=API==='https://ma-jestik-qg-members.maroodu11.workers.dev';
-let member=null,memberBusy=false,memberMessage='';
 const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','createur','profil','membre']);
 const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2))?s:'#/accueil';
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
@@ -20,6 +17,7 @@ const delPending=()=>{del(PENDING);try{localStorage.removeItem(PENDING)}catch{}}
 const parsePending=raw=>{try{return JSON.parse(raw||"null")}catch{return null}};
 const PENDING_TTL=20*60*1000;
 let root=null,me=null;
+let initPromise=Promise.resolve(); // Pendant le retour OAuth ou la revalidation F5.
 function make(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
 function msg(text,retry=false){
  if(!root)return;
@@ -30,140 +28,73 @@ function msg(text,retry=false){
   b.type='button';b.addEventListener('click',login);root.append(b);
  }
 }
-function clear(){me=null;member=null;memberBusy=false;memberMessage='';del(KEY);window.dispatchEvent(new Event('qg:twitch-session'));}
-function render(open=false){
-  if(!root)return;
-  root.replaceChildren();
-  if(!me){const b=make('button','qg-login','Se connecter');b.setAttribute('aria-label','Se connecter avec Twitch');b.type='button';b.addEventListener('click',login);root.append(b);return;}
-  const wrapper=make('div','qg-account-dropdown');
-  const trigger=make('button','qg-profile');trigger.type='button';
-  trigger.setAttribute('aria-expanded','false');
-  trigger.setAttribute('aria-haspopup','menu');
-  trigger.setAttribute('aria-controls','qgAccountMenu');
-  trigger.setAttribute('aria-label','Compte Twitch de '+me.name+' : ouvrir les options');
-  try{
-    const url=new URL(me.avatar);
-    if(url.protocol==='https:'&&url.hostname==='static-cdn.jtvnw.net'){
-      const img=make('img');img.src=url.href;img.alt='';img.width=27;img.height=27;img.referrerPolicy='no-referrer';trigger.append(img);
-    }
-  }catch{}
-  trigger.append(make('span','qg-profile-name',me.name));
-  trigger.append(make('span','qg-profile-chevron','⌄'));
-  const menu=make('div','qg-account-menu');
-  menu.id='qgAccountMenu';menu.setAttribute('role','group');menu.setAttribute('aria-label','Options Twitch et profil QG');menu.hidden=true;
-  const heading=make('span','qg-account-menu-heading','Compte Twitch');
-  heading.setAttribute('role','presentation');
-  if(apiReady) {
-    const area=make('section','qg-member-area');
-    area.append(make('strong','qg-member-heading','PROFIL COMMUNAUTAIRE'));
-    if(memberBusy)area.append(make('p','qg-member-note','Mise à jour du profil…'));
-    else if(member){
-      area.append(make('p','qg-member-active','✓ Profil QG enregistré'));
-      area.append(make('p','qg-member-note','Ce profil contient ton identifiant Twitch, ton pseudo, ton avatar et sa date de création.'));
-      const label=make('label','qg-member-option');
-      const choice=make('input');choice.type='checkbox';choice.checked=member.visible_in_ranking===1;
-      label.append(choice,make('span','','Afficher mon profil dans le classement'));
-      choice.addEventListener('change',()=>{void profileAction('visibility',{visible:choice.checked});});
-      area.append(label);
-      area.append(make('p','qg-member-note',member.visible_in_ranking===1?'Ton profil apparaît dans le classement dès que tu as des points.':'Tes points sont conservés, mais ton pseudo reste absent du classement tant que cette option est désactivée.'));
-      const erase=make('button','qg-member-erase','Supprimer mon profil QG');erase.type='button';
-      erase.addEventListener('click',()=>{void profileAction('delete');});
-      area.append(erase);
-    }else if(memberMessage!=='offline'){
-      area.append(make('p','qg-member-note','Enregistre ton identifiant Twitch, ton pseudo, ton avatar et ta date d’inscription pour les futurs classements. Tu pourras supprimer ton profil ici.'));
-      const create=make('button','qg-member-create','Créer mon profil QG');create.type='button';
-      create.addEventListener('click',()=>{void profileAction('create');});
-      area.append(create);
-    }
-    if(memberMessage)area.append(make('p','qg-member-error',memberMessage==='offline'?'Profils indisponibles pour le moment.':'Action impossible. Réessaie.'));
-    menu.append(area);
+function clear(){me=null;del(KEY);window.dispatchEvent(new Event('qg:twitch-session'));}
+function render(){
+ if(!root)return;
+ root.replaceChildren();
+ if(!me){
+   const b=make('button','qg-login','Se connecter');
+   b.setAttribute('aria-label','Se connecter avec Twitch');
+   b.type='button';b.addEventListener('click',login);root.append(b);return;
+ }
+ const wrapper=make('div','qg-account-dropdown');
+ const trigger=make('button','qg-profile');trigger.type='button';
+ trigger.setAttribute('aria-expanded','false');
+ trigger.setAttribute('aria-haspopup','true');
+ trigger.setAttribute('aria-controls','qgAccountMenu');
+ trigger.setAttribute('aria-label','Compte Twitch de '+me.name+' : ouvrir les options');
+ try{
+  const url=new URL(me.avatar);
+  if(url.protocol==='https:'&&url.hostname==='static-cdn.jtvnw.net'){
+    const img=make('img');img.src=url.href;img.alt='';img.width=27;img.height=27;img.referrerPolicy='no-referrer';trigger.append(img);
   }
-  const profileLink=make('a','qg-account-menu-profile','✦ Mon profil personnalisable');
-  profileLink.href='#/profil';
-  menu.append(profileLink);
-  const logout=make('button','qg-account-menu-logout','Se déconnecter');
-  logout.type='button';
-  logout.addEventListener('click',()=>{clear();render();});
-  menu.append(heading,logout);
-  trigger.addEventListener('click',()=>{
-    const opening=menu.hidden;
-    menu.hidden=!opening;
-    trigger.setAttribute('aria-expanded',String(opening));
-    if(opening)menu.querySelector('button')?.focus();
-  });
-  wrapper.append(trigger,menu);
-  root.append(wrapper);
-  if(open){menu.hidden=false;trigger.setAttribute('aria-expanded','true');}
+ }catch{}
+ trigger.append(make('span','qg-profile-name',me.name));
+ trigger.append(make('span','qg-profile-chevron','⌄'));
+ const menu=make('div','qg-account-menu');
+ menu.id='qgAccountMenu';menu.setAttribute('role','group');menu.setAttribute('aria-label','Options du compte Twitch');menu.hidden=true;
+ const logout=make('button','qg-account-menu-logout','Se déconnecter');
+ logout.type='button';
+ logout.addEventListener('click',()=>{clear();render();});
+ menu.append(logout);
+ trigger.addEventListener('click',()=>{
+  const opening=menu.hidden;
+  menu.hidden=!opening;
+  trigger.setAttribute('aria-expanded',String(opening));
+  if(opening)logout.focus();
+ });
+ wrapper.append(trigger,menu);
+ root.append(wrapper);
 }
-async function membersFetch(method,path,token,body) {
-  if(!apiReady)throw new Error('API absente');
-  const c=new AbortController(),timeout=setTimeout(()=>c.abort(),10000);
-  const headers={Authorization:'Bearer '+token};
-  if(body!==undefined)headers['Content-Type']='application/json';
-  try {
-    const res=await fetch(API+path,{
-      method,headers,body:body===undefined?undefined:JSON.stringify(body),
-      mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',signal:c.signal
-    });
-    if(!res.ok)throw new Error('API '+res.status);
-    return await res.json();
-  }finally{clearTimeout(timeout);}
+function temporarySessionError(){
+ if(!root)return;
+ msg('Twitch ne répond pas. Ta session est conservée dans cet onglet.');
+ const retry=make('button','qg-login','Réessayer');
+ retry.type='button';
+ retry.addEventListener('click',()=>{void retryQGTwitchSession();});
+ root.append(retry);
 }
-async function loadMember(id,token){
-  if(!apiReady)return;
-  memberBusy=true;memberMessage='';render();
-  try{
-    const data=await membersFetch('GET','/v1/me',token);
-    if(me?.id!==id)return;
-    member=data.member||null;
-  }catch{
-    if(me?.id===id){member=null;memberMessage='offline';}
-  }finally{
-    if(me?.id===id){memberBusy=false;render();}
-  }
-}
-async function profileAction(action,payload){
-  if(!me||memberBusy||!apiReady)return;
-  if(action==='delete'&&!window.confirm('Supprimer définitivement ton profil du QG Ma_JesTik ?'))return;
-  const id=me.id,token=me.token;
-  memberBusy=true;memberMessage='';render(true);
-  try{
-    const spec={
-      create:['POST','/v1/me',undefined],
-      visibility:['PATCH','/v1/me/visibility',payload],
-      delete:['DELETE','/v1/me',undefined]
-    }[action];
-    if(!spec)throw new Error('Action non autorisée');
-    const data=await membersFetch(spec[0],spec[1],token,spec[2]);
-    if(me?.id!==id)return;
-    member=action==='delete'?null:data.member;
-    if(action!=='delete'&&!member)throw new Error('Réponse sans profil');
-    window.dispatchEvent(new Event('qg:member-updated'));
-  }catch{
-    if(me?.id===id)memberMessage='write';
-  }finally{
-    if(me?.id===id){memberBusy=false;render(true);}
-  }
-}
-
 async function getJson(url,headers){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
   try{
     const response=await fetch(url,{headers,signal:controller.signal,cache:'no-store'});
-    if(!response.ok)throw Error('Twitch a répondu '+response.status);
+    if(!response.ok){const error=new Error('Twitch a répondu '+response.status);error.httpStatus=response.status;throw error;}
     return await response.json();
   }finally{clearTimeout(timer);}
 }
 async function check(token){
   const check=await getJson('https://id.twitch.tv/oauth2/validate',{Authorization:'OAuth '+token});
-  if(check.client_id!==clientId||!/^[0-9]+$/.test(String(check.user_id||''))||Number(check.expires_in)<60)throw Error('Validation Twitch invalide');
+  if(check.client_id!==clientId||!/^[0-9]+$/.test(String(check.user_id||''))||Number(check.expires_in)<60){const e=new Error('Session Twitch expirée ou invalide');e.invalidSession=true;throw e;}
   const reply=await getJson('https://api.twitch.tv/helix/users',{Authorization:'Bearer '+token,'Client-Id':clientId});
   const user=reply?.data?.[0];
-  if(!user||String(user.id)!==String(check.user_id))throw Error('Identité non vérifiée');
+  if(!user||String(user.id)!==String(check.user_id)){const e=new Error('Identité non vérifiée');e.invalidSession=true;throw e;}
   const next={token,id:String(user.id),name:String(user.display_name||user.login||'Twitch').slice(0,64),avatar:String(user.profile_image_url||'')};
   if(!put(KEY,JSON.stringify(next)))throw Error('Stockage de session indisponible');
-  me=next;member=null;memberMessage='';render();window.dispatchEvent(new Event('qg:twitch-session'));
-  if(apiReady)void loadMember(next.id,token);
+  const sessionChanged=me?.id!==next.id||me?.token!==next.token;
+  me=next;render();
+  // Ne pas recharger le profil à chaque vérification horaire : cela ferait perdre
+  // les champs en cours d'édition. L'événement sert aux changements de compte.
+  if(sessionChanged)window.dispatchEvent(new Event('qg:twitch-session'));
 }
 function login(){
   const bytes=crypto.getRandomValues(new Uint8Array(24));
@@ -206,13 +137,31 @@ function callback(){
   if(hasHashError||hasQueryError){msg('Connexion Twitch annulée.',true);return true;}
   const token=values.get('access_token');
   if(!token||!/^[\w-]{12,500}$/.test(token)){msg('Jeton Twitch incorrect.',true);return true;}
-  void finish(token);
+  initPromise=finish(token);
   return true;
 }
 async function restore(){
-  let old;try{old=JSON.parse(get(KEY)||'null')}catch{}
-  if(!old?.token||typeof old.token!=='string')return;
-  try{await check(old.token)}catch{clear();render();}
+ let old;try{old=JSON.parse(get(KEY)||'null')}catch{}
+ if(!old?.token||typeof old.token!=='string'){render();return;}
+ try{await check(old.token);}catch(error){
+  // Le rejet Twitch ou un jeton expiré impose la déconnexion.
+  // Une erreur réseau/5xx ne doit pas effacer une session encore valide.
+  if(error?.invalidSession||error?.httpStatus===401||error?.httpStatus===403){
+   clear();render();
+  }else if(me?.token){
+   // Réseau momentanément indisponible : le Worker vérifie toujours les actions.
+   render();
+  }else temporarySessionError();
+ }
+}
+export async function waitForQGTwitchSession(){await initPromise;}
+export function hasStoredQGTwitchSession(){return !!get(KEY);}
+export function retryQGTwitchSession(){
+ if(me?.token)return Promise.resolve();
+ if(!get(KEY)){render();return Promise.resolve();}
+ msg('Vérification de la session Twitch…');
+ initPromise=restore();
+ return initPromise;
 }
 export function getQGTwitchSession(){return me?.token?{id:me.id,name:me.name,avatar:me.avatar,token:me.token}:null;}
 // Vérification d'affichage uniquement ; les actions restent protégées côté Cloudflare.
@@ -228,7 +177,8 @@ export function mountTwitchAuth(){
     }
     return; // ID absent => aucun faux bouton visible
   }
-  root.hidden=false;render();
+  root.hidden=false;
+  if(get(KEY))msg('Vérification de la session Twitch…');else render();
   // Fermer le menu au clic à l'extérieur, via Échap ou après navigation.
   document.addEventListener('pointerdown',e=>{
     const menu=root.querySelector('.qg-account-menu');
@@ -246,7 +196,7 @@ export function mountTwitchAuth(){
     const trigger=root.querySelector('.qg-profile');
     if(menu&&!menu.hidden){menu.hidden=true;trigger?.setAttribute('aria-expanded','false');}
   });
-  if(!callback())void restore();
+  if(!callback())initPromise=restore();
   // Twitch exige la vérification des sessions au lancement et toutes les heures.
-  setInterval(()=>{if(get(KEY))void restore()},3600000);
+  setInterval(()=>{if(get(KEY))initPromise=restore();},3600000);
 }

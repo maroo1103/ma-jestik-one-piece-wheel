@@ -1,7 +1,7 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-copyrefresh1';
 import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
 import {mountTwitchAuth} from './twitch-auth.js';
-import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile} from './profil.js?v=20261108-covers2';
+import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile} from './profil.js?v=20261108-profilsettings1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
 import {publicTribunalMarkup,mountPublicTribunal,unmountPublicTribunal,tribunalPublicEnabled} from './tribunal-public.js?v=20261108-copyrefresh1';
@@ -334,6 +334,12 @@ $('menuMobile').addEventListener('click',()=>{
 $('sidebarShade').addEventListener('click',closeMobile);
 window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('[data-toggle]').forEach(b=>b.setAttribute('aria-expanded','false'));closeMobile();}});
 window.addEventListener('hashchange',route);
+// La déconnexion Twitch doit aussi retirer immédiatement le profil privé affiché.
+window.addEventListener('qg:twitch-session',()=>{
+ const view=document.getElementById('mjProfileRoot');
+ // Si F5 est encore en cours, mountProfile attend déjà la restauration Twitch.
+ if(view&&!view.querySelector('.mp-loading'))void mountProfile();
+});
 window.addEventListener('focus',()=>{
  if(location.hash.startsWith('#/classement')&&votesEnabled)void mountRankings();
 });

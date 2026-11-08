@@ -224,3 +224,28 @@
 .qg-layout .mp-art-frame>.mp-photo-gta-vi{object-position:50% 49%!important}
 .qg-layout .mp-art-frame>.mp-photo-minecraft{object-position:50% 50%!important}
 .qg-layout .mp-art-frame>.mp-photo-valorant{object-position:50% 47%!important}
+
+/* Gestion du classement et du compte centralisée dans l'éditeur de profil. */
+.qg-layout .mp-privacy-settings{display:grid;gap:11px;margin-top:22px}
+.qg-layout .mp-privacy-settings .mp-public-toggle{margin:0}
+.qg-layout .mp-ranking-toggle{background:#1b2424;border-color:#5c796d}
+.qg-layout .mp-ranking-toggle input{accent-color:#d8b374}
+.qg-layout .mp-ranking-warning{padding:11px 14px;color:#edcfa2;font-size:12px;border:1px solid #7a6243;border-radius:8px}
+.qg-layout .mp-danger-zone{
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ gap:13px;margin-top:30px;padding:20px 0 2px;
+ border-top:1px solid #625045;
+}
+.qg-layout .mp-danger-zone>div{flex:1 1 330px;min-width:0}
+.qg-layout .mp-danger-zone strong{display:block;color:#f6c1bc;font-size:13px;font-weight:850}
+.qg-layout .mp-danger-zone p{margin:7px 0 0;color:#c1a6a4;font-size:11px;line-height:1.6}
+.qg-layout .mp-danger-button{flex:0 0 auto;min-height:43px;padding:10px 16px;border:1px solid #a56b70;
+ border-radius:9px;background:#302124;color:#f8bfc2;font-weight:850;font-size:12px;cursor:pointer}
+.qg-layout .mp-danger-button:hover,.qg-layout .mp-danger-button:focus-visible{
+ background:#522d31;border-color:#eaa8a9;color:#fff}
+.qg-layout .mp-danger-button:disabled{opacity:.5;cursor:wait}
+.qg-layout #mpDeleteStatus{color:#f6c1bc;font-size:12px;flex:1 1 100%}
+@media(max-width:680px){
+ .qg-layout .mp-danger-zone{align-items:stretch}
+ .qg-layout .mp-danger-button{width:100%}
+}

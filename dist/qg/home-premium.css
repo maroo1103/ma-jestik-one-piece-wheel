@@ -961,3 +961,10 @@ body{background:#07090c;color:#f3f1ed}
 @media (prefers-reduced-motion:reduce){
   .site-navigation>.nav-link-profile{transition:none}
 }
+
+/* Menu Twitch épuré : une seule action de déconnexion. */
+.site-header .qg-account-menu{min-width:180px;max-width:min(230px,calc(100vw - 20px));padding:6px}
+.site-header .qg-account-menu-logout{min-height:41px;padding:12px 13px;text-align:left;
+ border:1px solid transparent;border-radius:7px;color:#f1d9d3;font-weight:800}
+.site-header .qg-account-menu-logout:hover,
+.site-header .qg-account-menu-logout:focus-visible{border-color:#80545a;background:#3a272f;color:#fff3ed}

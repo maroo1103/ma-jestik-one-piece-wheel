@@ -4,3 +4,12 @@ Pour préserver D1 et la connexion Twitch : **avant tout remplacement du Worker*
 Aucun autre Worker ne doit être remplacé. Ne rien réinitialiser. Les deux nouvelles colonnes facultatives sont rétrocompatibles.
 Le frontend ne propose les 6 couleurs et les 40 jeux que si `GET /v1/profiles/me` renvoie `catalog_version:2`. Avant cela il affiche les trois palettes et les 12 jeux de l'ancienne version pour empêcher les erreurs d'enregistrement.
 Images : miniatures de Steam quand elles existent, cartes graphiques originales en CSS pour les titres sans miniature Steam. Vérifier les droits des images tierces avant l'ouverture officielle.
+
+## Centralisation des réglages du compte et réactualisation F5 (8 novembre 2026)
+- La barre du compte Twitch ne présente plus qu'une action : **Se déconnecter**.
+- La visibilité dans le classement, distincte de la visibilité du profil public, est désormais dans `Mon profil > Modifier mon profil`. Elle utilise le Worker existant `PATCH /v1/me/visibility` et n'autorise pas de modifier les points.
+- La suppression du profil QG, et des données liées par CASCADE, est déplacée dans une zone explicitement destructive de l'éditeur. Une saisie de confirmation et une confirmation finale sont demandées ; aucune suppression automatique.
+- Corrige l'ordre d'initialisation : la page profil attend la revalidation d'un jeton présent dans `sessionStorage` après F5. En cas de panne temporaire Twitch, ne pas supprimer le jeton ; seule une session réellement rejetée/expirée entraîne la déconnexion.
+- Sécurité : aucun jeton Twitch n'est copié dans `localStorage` ou dans D1. La session ne survit pas nécessairement à la fermeture de l'onglet, ni à l'expiration Twitch. Le système reste basé sur l'Implicit Grant existant ; avant ouverture publique complète, l'Authorization Code avec PKCE ou une session serveur HttpOnly devrait faire l'objet d'un audit spécifique.
+- Aucun changement de Worker ni de schéma D1 n'est requis pour ces fonctions. Rafraîchir avec Ctrl + F5 après le déploiement afin de charger les modules JS mis à jour.
+- Tests de recette : compte Twitch connecté > F5 > profil restitué, visibilité du classement cochée/décochée + sauvegarde + F5 ; profil public inchangé ; menu du compte avec déconnexion seule ; déconnexion depuis le profil masque immédiatement les détails ; suppression avec les deux confirmations seulement en test isolé (ne jamais tester sur un compte réel avec des données à conserver).
