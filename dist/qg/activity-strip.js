@@ -46,7 +46,7 @@ async function twitchStatus(id){
   if(body==='OFFLINE'){setState('twitch','Hors ligne','offline');return;}
   // Réponse attendue par DecAPI en direct : durée d'uptime (par ex. "1 hour, 2 minutes").
   if(/\b\d+\s*(?:seconds?|secs?|minutes?|mins?|hours?|hrs?|days?|weeks?|months?|years?)\b/i.test(body)){
-   setState('twitch','En direct','live');return;
+   setState('twitch','En ligne','live');return;
   }
   setState('twitch',ERROR_LABEL);
  }catch{
