@@ -1,7 +1,7 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261107-copy-clean1';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261107-ranking-optin1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261107-end1';
-import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-unlimited1';
+import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-owner-only1';
 const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';

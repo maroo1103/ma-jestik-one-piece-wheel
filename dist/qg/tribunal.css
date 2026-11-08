@@ -133,3 +133,7 @@
 /* Choix de durée lors de la validation d'une question proposée. */
 .court-proposal-duration{background:#142f40;color:#ecf3f6;border:1px solid #507187;border-radius:7px;padding:9px 10px;font:inherit;font-size:11px;font-weight:750;max-width:100%;min-height:37px}
 .court-proposal-duration:focus-visible{outline:2px solid #f0c27e;outline-offset:2px}
+
+/* Contrôles du Tribunal de démonstration réservés à la session Twitch propriétaire. */
+[data-court-owner][hidden],.court-role-note[hidden]{display:none!important}
+.court-role-note{padding:14px 16px;border:1px solid #49657b;border-radius:9px;background:#142b3b;color:#c5d8e2;font-size:12px;line-height:1.65;margin:0}
