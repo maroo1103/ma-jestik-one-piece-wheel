@@ -38,3 +38,7 @@
 
 /* Intitulé de catégorie unifié avec Défis & Missions. */
 .kt-page-head .kt-page-kicker{display:block;margin-bottom:10px;font-size:10px;letter-spacing:1.7px;font-weight:900;color:#ffd16e}
+
+/* Même point jaune que le libellé OUTILS GAMING de la Roue Fortnite. */
+.kt-page-head .kt-page-kicker{display:flex;align-items:center;gap:9px}
+.kt-page-head .kt-page-kicker::before{content:"";display:block;width:6px;height:6px;flex:0 0 6px;background:#ffd16e;border-radius:50%}
