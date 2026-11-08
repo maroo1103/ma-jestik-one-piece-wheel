@@ -34,7 +34,7 @@ function clear(){me=null;member=null;memberBusy=false;memberMessage='';del(KEY);
 function render(open=false){
   if(!root)return;
   root.replaceChildren();
-  if(!me){const b=make('button','qg-login','Connexion Twitch');b.type='button';b.addEventListener('click',login);root.append(b);return;}
+  if(!me){const b=make('button','qg-login','Se connecter');b.setAttribute('aria-label','Se connecter avec Twitch');b.type='button';b.addEventListener('click',login);root.append(b);return;}
   const wrapper=make('div','qg-account-dropdown');
   const trigger=make('button','qg-profile');trigger.type='button';
   trigger.setAttribute('aria-expanded','false');
