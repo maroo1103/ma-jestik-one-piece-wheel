@@ -927,3 +927,37 @@ body{background:#07090c;color:#f3f1ed}
 @media (prefers-reduced-motion:reduce){
   .site-header .qg-social-tiktok{transition:none}
 }
+
+/* Accès direct au profil QG : distingué, sans perturber la navigation existante. */
+.site-navigation>.nav-link-profile{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  color:#f1d09a;border:1px solid #82633c;border-radius:9px;
+  background:linear-gradient(120deg,#33261988,#1a1b1d7a);
+  padding:10px clamp(8px,.8vw,14px);
+  transition:border-color .18s,background .18s,color .18s;
+}
+.site-navigation>.nav-link-profile .nav-profile-icon{
+  flex:0 0 17px;width:17px;height:17px;color:#e5bb79;
+}
+.site-navigation>.nav-link-profile:hover,
+.site-navigation>.nav-link-profile:focus-visible{
+  background:#33281d;border-color:#e8ba77;color:#fff2da;
+}
+.site-navigation>.nav-link-profile.active{
+  background:#352a1c;border-color:#e3b578;color:#ffe1a4;
+  box-shadow:inset 0 -2px #e8ba77;
+}
+@media (min-width:1171px) and (max-width:1380px){
+  .site-navigation>.nav-link-profile{gap:5px;padding-inline:8px}
+  .site-navigation>.nav-link-profile .nav-profile-icon{flex-basis:15px;width:15px;height:15px}
+}
+@media (max-width:1170px){
+  .site-navigation>.nav-link-profile{
+    justify-content:flex-start;min-height:45px;padding:12px;
+    margin-top:9px;width:100%;border-color:#6a5639;
+  }
+  .site-navigation>.nav-link-profile .nav-profile-icon{width:19px;height:19px;flex-basis:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .site-navigation>.nav-link-profile{transition:none}
+}
