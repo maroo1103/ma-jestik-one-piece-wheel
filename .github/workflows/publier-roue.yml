@@ -102,6 +102,35 @@ jobs:
           print('Icones application MJ produites : favicon.ico, Apple Touch, PNG 16 a 512 et maskable')
           PY
 
+      - name: Préparer la photo HD du vrai setup Ma_JesTik
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io
+          import urllib.request
+          from pathlib import Path
+          from PIL import Image, ImageFilter, ImageOps
+
+          # Source publique du setup personnel validé (1448 x 1086).
+          source_url = "https://raw.githubusercontent.com/maroo1103/setup-ma-jestik/main/assets/setup-ma-jestikk.png"
+          request = urllib.request.Request(source_url, headers={"User-Agent": "Ma-JesTik-GitHub-Pages"})
+          with urllib.request.urlopen(request, timeout=35) as reply:
+              image_bytes = reply.read()
+          with Image.open(io.BytesIO(image_bytes)) as src:
+              im = ImageOps.exif_transpose(src).convert("RGB")
+              if min(im.size) < 900:
+                  raise RuntimeError(f"Photo source trop petite : {im.size}")
+              # Taille d'origine préservée, légère netteté et WebP haute qualité.
+              im = im.filter(ImageFilter.UnsharpMask(radius=1.15, percent=118, threshold=3))
+              target = Path("dist/qg/media/pc-ma-jestik-hd.webp")
+              target.parent.mkdir(parents=True, exist_ok=True)
+              im.save(target, "WEBP", quality=93, method=6)
+          with Image.open(target) as test:
+              if min(test.size) < 900 or target.stat().st_size < 60000:
+                  raise RuntimeError("Le visuel HD produit semble trop compressé.")
+          print(f"Photo HD du setup : {test.size}, {target.stat().st_size} octets")
+          PY
+
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v5
 
