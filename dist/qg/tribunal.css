@@ -137,3 +137,24 @@
 /* Contrôles du Tribunal de démonstration réservés à la session Twitch propriétaire. */
 [data-court-owner][hidden],.court-role-note[hidden]{display:none!important}
 .court-role-note{padding:14px 16px;border:1px solid #49657b;border-radius:9px;background:#142b3b;color:#c5d8e2;font-size:12px;line-height:1.65;margin:0}
+
+/* Tribunal : même ambiance bleu nuit / halo violet / étoile que Défis & Killathon. */
+.court-page-head{position:relative;isolation:isolate;min-height:194px;margin:-7px 0 23px;padding:8px 0 36px;overflow:hidden}
+.court-page-head::before{content:"";position:absolute;z-index:-1;inset:-15px -45px -15px 29%;background:linear-gradient(90deg,#09131e 0%,#09131e33 48%,#09131e88 100%),radial-gradient(ellipse at 77% 37%,#6e369f9c,transparent 38%),radial-gradient(ellipse at 85% 80%,#16445e,transparent 50%),linear-gradient(170deg,#0b1c33,#082a48 65%,#09131e);border-radius:20px}
+.court-page-head::after{content:"✦";position:absolute;z-index:-1;right:19%;top:13px;color:#c9a7f8;filter:drop-shadow(0 0 21px #ad71ff);font-size:46px;opacity:.85}
+.court-page-head .eyebrow{color:#c9a7f8;letter-spacing:1.7px;font-weight:900}
+.court-page-head .eyebrow::before{content:"✦";width:auto;height:auto;background:none;border-radius:0;color:#bf8bff;font-size:18px;line-height:1}
+.court-page-head h1{font:900 clamp(48px,5vw,75px)/.98 var(--display,'Arial Narrow',sans-serif);letter-spacing:.01em;margin:0 0 14px;color:#fff;text-shadow:0 2px 14px #0008}
+.court-page-head p{max-width:720px;color:#c1d4df;font-size:14px;line-height:1.6;margin:0}
+.court-warning{border-color:#634a82;background:linear-gradient(115deg,#2a2042,#132d41);margin-bottom:20px}
+.court-warning strong{color:#d7b0fa}
+.court-warning p{color:#cad5df}
+.court-summary span{color:#a7d5ed}
+.court-summary strong{color:#b6dffb}
+.court-overline{color:#bfa0f5}
+.court-tool-card>summary{color:#cba8f4}
+.court-tabs button.active{background:#245777;color:#f7fbff}
+.court-moderation-pill{color:#b8def7;border-color:#446e90;background:#16374e}
+.court-moderation{margin-top:20px}
+[data-court-visitor][hidden]{display:none!important}
+@media(max-width:700px){.court-page-head{padding-bottom:15px;min-height:unset}.court-page-head::before{inset:-20px -20px 0 8%}.court-page-head h1{font-size:48px}.court-page-head p{font-size:13px}}
