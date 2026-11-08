@@ -880,3 +880,50 @@ body{background:#07090c;color:#f3f1ed}
   .hq-hero-scene,.hq-hero::before,.hq-hero-glow{height:610px}
   .hq-hero-scene{background-position:center bottom;background-size:contain}
 }
+
+/* TikTok officiel : logo trois couleurs et fond sombre, comme les autres réseaux. */
+.site-header .qg-social-tiktok{
+  background:#101115;color:#fff;border:1px solid #38535b;
+  box-shadow:inset -2px -1px 0 #fe2c5529,inset 2px 2px 0 #25f4ee24;
+}
+.site-header .qg-social-tiktok:hover,
+.site-header .qg-social-tiktok:focus-visible{
+  background:#191b21;border-color:#25f4ee;
+  box-shadow:0 0 0 1px #fe2c5566;transform:translateY(-2px);
+}
+.site-header .qg-social-tiktok svg{fill:none}
+/* Quatre réseaux : ajustements d'encombrement sur écrans PC compacts. */
+@media (min-width:1171px) and (max-width:1430px){
+  .site-header{gap:7px}
+  .site-header .brand{min-width:184px}
+  .site-header .top-actions{gap:7px}
+  .site-header .qg-social-links{gap:4px}
+  .site-header .qg-social-icon{width:32px;flex-basis:32px}
+}
+/* Téléphones : préserver connexion Twitch et menu avec quatre réseaux visibles. */
+@media (max-width:560px){
+  .site-header .brand-text{display:none}
+  .site-header .brand-icon{width:35px;height:35px}
+  .site-header .top-actions{gap:4px}
+  .site-header .qg-social-links{gap:3px}
+  .site-header .qg-social-icon{width:30px;height:30px;flex-basis:30px}
+}
+@media (max-width:400px){
+  .site-header{gap:6px;padding-left:9px;padding-right:9px}
+  .site-header .brand-icon{width:32px;height:32px}
+  .site-header .top-actions{gap:3px}
+  .site-header .qg-social-links{gap:2px}
+  .site-header .qg-social-icon{width:28px;height:28px;flex-basis:28px;border-radius:7px}
+  .site-header .qg-social-icon svg{width:17px;height:17px}
+  .site-header .qg-login{font-size:10px;min-height:33px;padding:7px}
+  .site-header .menu-mobile{width:34px;height:34px}
+  .site-header .qg-account-dropdown .qg-profile{gap:4px;padding:4px 5px 4px 4px}
+  .site-header .qg-account-dropdown .qg-profile-name{max-width:52px;font-size:10px}
+  .site-header .qg-account-dropdown .qg-profile img{width:24px;height:24px}
+}
+@media (max-width:345px){
+  .site-header .qg-account-dropdown .qg-profile-name{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .site-header .qg-social-tiktok{transition:none}
+}
