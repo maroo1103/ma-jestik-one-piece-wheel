@@ -1,0 +1,214 @@
+/* QG Ma_JesTik | Palette 1 : noir graphite, or champagne.
+   Habillage uniquement. Les liens, états, calculs et interactions restent inchangés. */
+:root{
+ --bg:#08090b;--side:#101114;--panel:#191a1d;--panel2:#24211d;
+ --line:#66523b;--line-light:#8d7048;--text:#f7f4ee;
+ --muted:#bcb5ab;--gold:#e7b970;
+ --graphite:#191a1d;--champagne:#e7b970;
+}
+body,.qg-layout .app-column,.qg-layout #main{background:#08090b;color:#f7f4ee}
+.qg-layout .page-head>p,.qg-layout .section-top p,.qg-layout .panel p,
+.qg-layout .partner-box p,.qg-layout .partner-disclosure{color:#c8c2b7}
+.qg-layout .eyebrow,.qg-layout .step-label,.qg-layout .bottom-heading{color:#e7b970}
+.qg-layout .tag:not(.gold),.qg-layout .capsule,.qg-layout .public-pill{
+ background:#2c261d;border-color:#796042;color:#edce9e
+}
+.qg-layout .tag.gold{background:#372a1a;border-color:#926e3b;color:#f4d29b}
+.qg-layout .panel,.qg-layout .module-card,.qg-layout .info-strip,
+.qg-layout .hardware-card,.qg-layout .hardware-detail,.qg-layout .partner-box,
+.qg-layout .info-dialog{
+ background:linear-gradient(145deg,#202124,#141518);border-color:#71583a;color:#f7f4ee
+}
+.qg-layout .module-card .module-icon{background:#352a1c;border-color:#8c6d42;color:#edc17d}
+.qg-layout .module-card.highlight{background:linear-gradient(145deg,#352c20,#191a1d);border-color:#a17b46}
+.qg-layout .wheel-area{background:#111215;border-color:#765b3c}
+.qg-layout .wheel-area-header{background:#25221d;border-color:#765b3c}
+.qg-layout .loading{color:#d2c8bb}
+.qg-layout .btn:not(.btn-gold):not(.success):not(.failure),
+.qg-layout .icon-btn,.qg-layout .login-coming{
+ background:#302921;border-color:#8c6a42;color:#f8eddb
+}
+.qg-layout .btn-gold,.qg-layout .partner-cta{
+ background:linear-gradient(135deg,#f4d9a4,#e4b267);border-color:#f3d8a6;color:#17120b
+}
+.qg-layout .wheel-area-header strong{color:#f2e5d1}
+.qg-layout .partner-box.partner-live,
+.qg-layout .partner-box.partner-instant,
+.qg-layout .partner-box.partner-amazon-card{
+ background:linear-gradient(120deg,#272526,#18191b);border-color:#74593b
+}
+.qg-layout .partner-box.partner-amazon-card .partner-brand.partner-logo-card{background:#fff}
+.qg-layout .partner-box.partner-instant .partner-brand.partner-logo-card{background:#101012}
+.qg-layout .partner-brand.partner-logo-card{border-color:#856747}
+.qg-layout :is(button,a,input,textarea,select):focus-visible{outline:2px solid #f3ca88;outline-offset:3px}
+
+/* Défis & Missions : tableaux, sélecteur, objectifs, votes. */
+.qg-layout .challenge-page-head::before{
+ background:linear-gradient(90deg,#08090b 0%,#08090b30 53%,#090a0bc0),
+ radial-gradient(ellipse at 79% 38%,#b88c4b42,transparent 43%),
+ linear-gradient(160deg,#17181a,#29241c 70%,#111214)
+}
+.qg-layout .challenge-page-head::after{color:#e8be83;filter:drop-shadow(0 0 14px #c28d484a)}
+.qg-layout .challenge-ui{
+ background:radial-gradient(ellipse 80% 50% at 85% 0%,#9c763521,transparent 60%),
+ linear-gradient(145deg,#242427,#17181a);border-color:#85673f
+}
+.qg-layout .challenge-game-switcher,.qg-layout .challenge-neutral,
+.qg-layout .challenge-active,.qg-layout .challenge-main.panel,
+.qg-layout .challenge-sidebar .panel,.qg-layout .challenge-queue-item,
+.qg-layout .challenge-catalog,.qg-layout .challenge-catalog-row,
+.qg-layout .challenge-empty,.qg-layout .challenge-stats>div{
+ background:linear-gradient(145deg,#2b2926,#191a1d);border-color:#775c3c
+}
+.qg-layout .challenge-neutral{
+ background:radial-gradient(circle at 87% 40%,#a3783d22,transparent 56%),
+ linear-gradient(120deg,#262522,#17191b)
+}
+.qg-layout .challenge-neutral-icon{background:#3b2c1e;border-color:#ae854c;color:#f3ce96}
+.qg-layout .challenge-active{background:linear-gradient(145deg,#3c3021,#1b1b1d);border-color:#a6804a}
+.qg-layout .challenge-game-banner{background:#23201d;border-color:#795f41}
+.qg-layout .challenge-game-switcher{background:#2a2722}
+.qg-layout .challenge-tabs{background:#141517;border-color:#775a37}
+.qg-layout .challenge-tabs button{color:#d3c8b7}
+.qg-layout .challenge-tabs button.selected{
+ background:#473420;border-color:#d5a15d;color:#ffe0a6
+}
+.qg-layout .challenge-ui .challenge-game-field select,
+.qg-layout .challenge-ui select,
+.qg-layout .challenge-ui input:not([type=checkbox]),
+.qg-layout .challenge-ui textarea{
+ background:#141517;border-color:#816441;color:#f8f3e9
+}
+.qg-layout .challenge-catalog-desc,.qg-layout .challenge-muted,
+.qg-layout .challenge-neutral p{color:#c9c1b5}
+.qg-layout .qg-vote-panel,.qg-layout .challenge-sidebar .qg-vote-panel{
+ background:radial-gradient(ellipse at 90% 0%,#a27b401f,transparent 56%),
+ linear-gradient(145deg,#282523,#17191b);border-color:#886b41
+}
+.qg-layout .qg-vote-state.state-idle{background:#35291e;border-color:#8e6f48;color:#ebd0a5}
+.qg-layout .qg-vote-button:not(.vote-success):not(.vote-failure):not(.resolve-success):not(.resolve-failure):not(.cancel),
+.qg-layout .qg-vote-admin .qg-vote-button.start,
+.qg-layout .qg-vote-onboarding .qg-vote-button.profile-create,
+.qg-layout .qg-vote-rank-notice .qg-vote-button.ranking-opt-in{
+ background:#322b22;border-color:#977247;color:#f4e6d0
+}
+.qg-layout .qg-vote-admin .qg-vote-button.start:hover:not(:disabled),
+.qg-layout .qg-vote-button:not(.vote-success):not(.vote-failure):not(.resolve-success):not(.resolve-failure):not(.cancel):hover:not(:disabled){
+ background:#483520;border-color:#e2b670
+}
+.qg-layout .challenge-public .shared-waiting{background:#242224;border-color:#786044}
+/* Les états de réussite, d'échec, d'annulation et de sondage ouvert restent codés. */
+
+/* Tribunal : sondages, propositions, panneaux, filtres. */
+.qg-layout .court-page-head::before{
+ background:linear-gradient(90deg,#08090b 0%,#08090b32 52%,#08090bb8),
+ radial-gradient(ellipse at 78% 38%,#b88c4b42,transparent 45%),
+ linear-gradient(160deg,#18191b,#29231a 70%,#111214)
+}
+.qg-layout .court-page-head::after{color:#e8be83;filter:drop-shadow(0 0 14px #c28d484a)}
+.qg-layout .court-warning,.qg-layout .court-question,.qg-layout .court-results,
+.qg-layout .court-summary>div,.qg-layout .court-tool-card,
+.qg-layout .court-rules>div,.qg-layout .court-role-note,
+.qg-layout .court-empty-list,.qg-layout .court-proposal,
+.qg-layout .court-public-info,.qg-layout .court-poll-card{
+ background:linear-gradient(140deg,#272627,#17181b);border-color:#775c3b;color:#f7f4ee
+}
+.qg-layout .court-warning{background:linear-gradient(115deg,#382b1d,#1a1b1e)}
+.qg-layout .court-poll-card.is-closed{background:linear-gradient(140deg,#1d1c1c,#121315)}
+.qg-layout .court-tabs{background:#171719;border-color:#7b6143}
+.qg-layout .court-tabs button{color:#d4c9b8}
+.qg-layout .court-tabs button.active{background:#4a3822;border-color:#c79955;color:#ffe1a6}
+.qg-layout .court-vote:not(.selected),.qg-layout .court-choice-tools button,
+.qg-layout .court-test-vote,.qg-layout .court-poll-manage,
+.qg-layout .court-proposal-expand,.qg-layout .court-proposal-pagination button{
+ background:#2e2822;border-color:#886a44;color:#f7ece0
+}
+.qg-layout .court-vote:hover:not(:disabled),
+.qg-layout .court-proposal-expand:hover,
+.qg-layout .court-proposal-pagination button:hover:not(:disabled){
+ background:#40301f;border-color:#ddaf6c
+}
+.qg-layout .court-vote-number{background:#41311e;color:#f4d197}
+.qg-layout .court-field textarea,.qg-layout .court-field select,
+.qg-layout .court-option-edit input,.qg-layout .court-tool-card .court-field input,
+.qg-layout .court-public-form .court-field textarea,
+.qg-layout .court-public-form .court-field select,
+.qg-layout .court-public-form [data-answer]{
+ background:#121416;border-color:#806647;color:#f7f2e9
+}
+.qg-layout .court-proposal-duration,.qg-layout .court-moderation-pill{
+ background:#302920;border-color:#926e43;color:#ebcb94
+}
+.qg-layout .court-public-message:not(:empty){background:#27231e;border-color:#8b714c;color:#f6e9d5}
+.qg-layout .court-public-message.is-error{background:#3c2532;border-color:#ad6a64;color:#ffe2d6}
+
+/* Killathon : objectifs, suivi de progression, formulaire personnel. */
+.qg-layout .kt-page-head::before{
+ background:linear-gradient(90deg,#08090b 0%,#08090b30 52%,#08090bba),
+ radial-gradient(ellipse at 77% 38%,#bb904e4b,transparent 44%),
+ linear-gradient(160deg,#18191b,#292319 72%,#101113)
+}
+.qg-layout .kt-page-head::after{color:#e7be80;filter:drop-shadow(0 0 15px #d7a15c53)}
+.qg-layout .kt-shell,.qg-layout .kt-block,.qg-layout .kt-summary>div,
+.qg-layout .kt-boost-list>span,.qg-layout .kt-event-list li,
+.qg-layout .kts-panel,.qg-layout .kts-stats>div,
+.qg-layout .kts-obs,.qg-layout .kt-advanced-details{
+ background:linear-gradient(145deg,#282627,#17181b);border-color:#775d3c
+}
+.qg-layout .kt-summary>div,.qg-layout .kts-stats>div{background:#29251f}
+.qg-layout .kt-progress,.qg-layout .kts-bar{background:#39332b;border-color:#806647}
+.qg-layout .kt-progress>div,.qg-layout .kts-bar span{
+ background:linear-gradient(90deg,#af8040,#f1cd8b);box-shadow:0 0 12px #e6ad5644
+}
+.qg-layout .kts-panel .kts-message:not(.kts-error){
+ background:#30281e;border-color:#9c7848;color:#f5e9d3
+}
+.qg-layout .kts-state:not(.kts-on){background:#352b21;border-color:#947349;color:#ebd4b0}
+.qg-layout .kts-panel input,.qg-layout .kts-panel select{
+ background:#141517;border-color:#866948;color:#f8f3e9
+}
+.qg-layout .kts-button:not(.kts-danger),.qg-layout .kts-button.kts-primary{
+ background:#3d3020;border-color:#c09257;color:#ffe0a7
+}
+.qg-layout .kts-button:not(.kts-danger):hover:not(:disabled),
+.qg-layout .kts-button.kts-primary:hover:not(:disabled){
+ background:#533b22;border-color:#eec482
+}
+/* La réussite en vert et les erreurs en rouge sont volontairement conservées. */
+
+/* Classements : graphite + rangs or, argent et bronze toujours distincts. */
+.qg-layout .qg-ranking-panel{
+ background:linear-gradient(180deg,#282628,#18191b);border-color:#806543
+}
+.qg-layout .qg-podium-empty{background:#1c1d1f;border-color:#775e40;color:#d1c8b9}
+.qg-layout .qg-rank-card{
+ background:radial-gradient(ellipse at 50% 0%,#b8b4a12a,transparent 74%),
+ linear-gradient(160deg,#292a2d,#1a1b1d);border-color:#aab2ba
+}
+.qg-layout .qg-rank-card-1{
+ background:radial-gradient(ellipse at 50% 0%,#d9bb7138,transparent 75%),
+ linear-gradient(160deg,#363128,#1b1c1e);border-color:#d7ac59
+}
+.qg-layout .qg-rank-card-3{
+ background:radial-gradient(ellipse at 50% 0%,#b7826030,transparent 76%),
+ linear-gradient(160deg,#362c26,#1b1b1d);border-color:#be8568
+}
+.qg-layout .qg-rank-position{background:#302921;border-color:#8c6e49;color:#f0d6aa}
+.qg-layout .qg-rank-row:hover{background:#bd9a7119}
+.qg-layout .qg-rank-card-2 .qg-rank-number,
+.qg-layout .qg-rank-card-2 .qg-rank-role{
+ background:#374048;border-color:#aab6bf;color:#f0f5f8
+}
+.qg-layout .qg-rank-card-1 .qg-rank-number,
+.qg-layout .qg-rank-card-1 .qg-rank-role{
+ background:#d8ad5e;border-color:#f0d19a;color:#231c11
+}
+.qg-layout .qg-rank-card-3 .qg-rank-number,
+.qg-layout .qg-rank-card-3 .qg-rank-role{
+ background:#784f3e;border-color:#b88065;color:#f8e1d0
+}
+@media(max-width:680px){
+ .qg-layout .challenge-ui,.qg-layout .kt-shell,.qg-layout .kts-panel{
+  border-color:#977348
+ }
+}
