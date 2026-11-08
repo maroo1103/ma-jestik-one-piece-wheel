@@ -90,7 +90,15 @@ export default {
   }
   const ready=!!env.DB&&/^[a-z0-9]{10,80}$/.test(String(env.TWITCH_CLIENT_ID||''))&&/^[0-9]{1,30}$/.test(String(env.OWNER_TWITCH_ID||''));
   const path=new URL(req.url).pathname.replace(/\/+$/,'')||'/';
-  if(path==='/v1/health'&&req.method==='GET')return out({status:ready?'ok':'not_configured',service:'tribunal',ready},ready?200:503);
+  if(path==='/v1/health'&&req.method==='GET'){
+   if(!ready)return out({status:'not_configured',service:'tribunal',ready:false},503);
+   try{
+    const rows=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('tribunal_polls','tribunal_proposals','tribunal_votes')").all();
+    const tables=new Set((rows.results||[]).map(x=>x.name));
+    const schemaReady=['tribunal_polls','tribunal_proposals','tribunal_votes'].every(name=>tables.has(name));
+    return out({status:schemaReady?'ok':'missing_migration',service:'tribunal',ready:schemaReady},schemaReady?200:503);
+   }catch{return out({status:'db_unavailable',service:'tribunal',ready:false},503);}
+  }
   if(!ready)return out({error:'Tribunal non configuré'},503);
   try{
    if(path==='/v1/tribunal/polls'&&req.method==='GET')return out({polls:await polls(env.DB)});
