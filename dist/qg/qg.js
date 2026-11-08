@@ -38,8 +38,8 @@ function home(){
    '<div class="hq-hero-scene" aria-hidden="true"></div>'+
    '<div class="hq-hero-glow" aria-hidden="true"></div>'+
    '<div class="hq-hero-content">'+
-    '<p class="hq-hero-eyebrow"><span class="hq-hero-dot" aria-hidden="true"></span> MA_JESTIK / NOOB & LEGENDS</p>'+
-    '<h1 id="hqHeroTitle">BIENVENUE<br><span>DANS L’ÉQUIPAGE.</span></h1>'+
+
+    '<h1 id="hqHeroTitle">BIENVENUE<br><span>DANS LE QG</span><br><span>DE MA_JESTIK.</span></h1>'+
     '<p class="hq-hero-lead">Un univers pensé pour jouer, relever des défis et partager de vrais moments avec la communauté.</p>'+
     '<div class="hq-hero-buttons">'+
      '<button class="hq-hero-primary" type="button" data-scroll="hq-explorer">DÉCOUVRIR LE QG <span aria-hidden="true">↗</span></button>'+
@@ -47,10 +47,11 @@ function home(){
     '</div>'+
    '</div>'+
 
-   '<div class="hq-hero-bottom" aria-label="Les expériences du QG">'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">◇</span><strong>12</strong><span>DESTINATIONS</span></div>'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">✦</span><strong>118</strong><span>DÉFIS</span></div>'+
-    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">◈</span><strong>UN</strong><span>ÉQUIPAGE</span></div>'+
+   '<div class="hq-hero-bottom" aria-label="Les activités du QG">'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">⌖</span><strong>12</strong><span>DESTINATIONS FORTNITE</span></div>'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">✦</span><strong>118</strong><span>DÉFIS ZERO BUILD</span></div>'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">◈</span><strong>5</strong><span>RUBRIQUES INTERACTIVES</span></div>'+
+    '<div class="hq-hero-stat"><span class="hq-stat-symbol" aria-hidden="true">☑</span><strong>TWITCH</strong><span>VOTES &amp; PROFILS</span></div>'+
    '</div>'+
   '</section>'+
   '<section class="hq-intro" aria-label="La philosophie du QG">'+
@@ -74,7 +75,7 @@ function home(){
    '</div>'+
    '<div class="hq-setup-art">'+
     '<div class="hq-setup-aura" aria-hidden="true"></div>'+
-    '<img src="media/setup-gaming-illustration.svg" alt="Illustration artistique d’un PC gaming panoramique aux éclairages bleu et violet" loading="lazy" decoding="async">'+
+    '<img src="media/pc-mj-realiste.webp?v=20261108-newpc" alt="Visuel réaliste d’un PC gaming panoramique noir avec éclairages violet et bleu" loading="lazy" decoding="async">'+
     '<span class="hq-setup-art-caption">UNE CONFIGURATION À DÉCOUVRIR</span>'+
    '</div>'+
   '</section>'+
@@ -313,15 +314,18 @@ document.addEventListener('click',e=>{
  if(jump){const id=jump.dataset.scroll;document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
  if(!e.target.closest('.site-navigation'))document.querySelectorAll('[data-toggle]').forEach(b=>b.setAttribute('aria-expanded','false'));
 });
+// Un seul menu déroulant ouvert à la fois sur ordinateur et sur mobile.
 document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>{
- const isOpen=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!isOpen));
+ const isOpen=toggle.getAttribute('aria-expanded')==='true';
+ document.querySelectorAll('[data-toggle]').forEach(other=>other.setAttribute('aria-expanded','false'));
+ toggle.setAttribute('aria-expanded',String(!isOpen));
 }));
 $('menuMobile').addEventListener('click',()=>{
  const open=!$('sidebar').classList.contains('open');
  $('sidebar').classList.toggle('open',open);$('sidebarShade').hidden=!open;$('menuMobile').setAttribute('aria-expanded',String(open));
 });
 $('sidebarShade').addEventListener('click',closeMobile);
-window.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobile()});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('[data-toggle]').forEach(b=>b.setAttribute('aria-expanded','false'));closeMobile();}});
 window.addEventListener('hashchange',route);
 window.addEventListener('focus',()=>{
  if(location.hash.startsWith('#/classement')&&votesEnabled)void mountRankings();
