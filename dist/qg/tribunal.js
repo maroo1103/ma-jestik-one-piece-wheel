@@ -1,7 +1,7 @@
 /* Tribunal Ma_JesTik — démonstration MULTI-SONDAGES locale.
  * Aucun sondage/proposition/vote n'est partagé : l'API communautaire nécessite
  * une authentification Twitch et des vérifications de droits côté Cloudflare. */
-import {isQGOwnerSession} from './twitch-auth.js?v=20261107-ranking-optin1';
+import {isQGOwnerSession} from './twitch-auth.js';
 const STORAGE='mj-qg-tribunal-demo-v3';
 let timer=null,sessionListener=null;
 export function unmountTribunal(){
