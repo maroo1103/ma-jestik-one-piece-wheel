@@ -71,17 +71,21 @@ export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
   if(!active())return;
   root.querySelectorAll('[data-challenge-proposals-slot]').forEach(node=>node.remove());
   const owner=!!isOwner();
-  // Propriétaire : alimenter la file existante, plutôt qu'une seconde carte.
-  // Les visiteurs gardent leur propre formulaire « Proposer un défi ».
-  const host=owner?root.querySelector('.challenge-queue'):
-   (root.querySelector('.challenge-main')||root.querySelector('.challenge-ui'));
-  if(!host)return;
+  // Propriétaire : conserver la file de validation existante.
+  // Membres : placer le formulaire entre Journal des missions et Pronostic.
   if(owner){
+   const host=root.querySelector('.challenge-queue');
+   if(!host)return;
    if(queue.length)host.querySelector('[data-challenge-queue-empty]')?.remove();
    const markup=ownerHtml(queue,message,busy);
    if(markup)host.insertAdjacentHTML('beforeend',markup);
   }else{
-   host.insertAdjacentHTML('beforeend',memberHtml());
+   const voteSlot=root.querySelector('#challengeVoteSlot');
+   if(voteSlot){
+    voteSlot.insertAdjacentHTML('beforebegin',memberHtml());
+   }else{
+    root.querySelector('.challenge-ui')?.insertAdjacentHTML('beforeend',memberHtml());
+   }
   }
  }
  async function refresh(){
