@@ -15,9 +15,42 @@ const games=[
  {id:"the-witcher-3",name:"The Witcher 3",appid:292030,subtitle:"RPG"},
  {id:"the-last-of-us",name:"The Last of Us Part I",appid:1888930,subtitle:"Narratif"},
  {id:"gta-v",name:"Grand Theft Auto V",appid:271590,subtitle:"Monde ouvert"},
- {id:"resident-evil-4",name:"Resident Evil 4",appid:2050650,subtitle:"Survival horror"}
+ {id:"resident-evil-4",name:"Resident Evil 4",appid:2050650,subtitle:"Survival horror"},
+ {"id":"counter-strike-2","name":"Counter-Strike 2","appid":730,"subtitle":"FPS"},
+ {"id":"dota-2","name":"Dota 2","appid":570,"subtitle":"MOBA"},
+ {"id":"pubg","name":"PUBG: Battlegrounds","appid":578080,"subtitle":"Battle Royale"},
+ {"id":"helldivers-2","name":"Helldivers 2","appid":553850,"subtitle":"Coop"},
+ {"id":"baldurs-gate-3","name":"Baldur's Gate 3","appid":1086940,"subtitle":"RPG"},
+ {"id":"red-dead-redemption-2","name":"Red Dead Redemption 2","appid":1174180,"subtitle":"Aventure"},
+ {"id":"hogwarts-legacy","name":"Hogwarts Legacy","appid":990080,"subtitle":"Aventure"},
+ {"id":"spider-man","name":"Marvel's Spider-Man","appid":1817070,"subtitle":"Action"},
+ {"id":"jedi-survivor","name":"Star Wars Jedi: Survivor","appid":1774580,"subtitle":"Aventure"},
+ {"id":"days-gone","name":"Days Gone","appid":1259420,"subtitle":"Survie"},
+ {"id":"plague-tale-requiem","name":"A Plague Tale: Requiem","appid":1182900,"subtitle":"Narratif"},
+ {"id":"god-of-war-ragnarok","name":"God of War Ragnarök","appid":2322010,"subtitle":"Aventure"},
+ {"id":"sea-of-thieves","name":"Sea of Thieves","appid":1172620,"subtitle":"Coop"},
+ {"id":"monster-hunter-wilds","name":"Monster Hunter Wilds","appid":2246340,"subtitle":"Action"},
+ {"id":"palworld","name":"Palworld","appid":1623730,"subtitle":"Survie"},
+ {"id":"overwatch-2","name":"Overwatch 2","appid":2357570,"subtitle":"FPS"},
+ {"id":"rainbow-six-siege","name":"Rainbow Six Siege","appid":359550,"subtitle":"FPS tactique"},
+ {"id":"warframe","name":"Warframe","appid":230410,"subtitle":"Action"},
+ {"id":"destiny-2","name":"Destiny 2","appid":1085660,"subtitle":"FPS"},
+ {"id":"diablo-iv","name":"Diablo IV","appid":2344520,"subtitle":"RPG"},
+ {"id":"path-of-exile","name":"Path of Exile","appid":238960,"subtitle":"RPG"},
+ {"id":"stardew-valley","name":"Stardew Valley","appid":413150,"subtitle":"Simulation"},
+ {"id":"terraria","name":"Terraria","appid":105600,"subtitle":"Aventure"},
+ {"id":"gta-vi","name":"Grand Theft Auto VI","subtitle":"Monde ouvert","art":"miami"},
+ {"id":"league-of-legends","name":"League of Legends","subtitle":"MOBA","art":"runeterra"},
+ {"id":"world-of-warcraft","name":"World of Warcraft","subtitle":"MMORPG","art":"azeroth"},
+ {"id":"minecraft","name":"Minecraft","subtitle":"Construction","art":"voxel"},
+ {"id":"valorant","name":"Valorant","subtitle":"FPS tactique","art":"tactical"}
 ];
 const lookup=new Map(games.map(g=>[g.id,g]));
+const bannerKeys=["champagne","carbone","violet","bleu-nuit","rubis","emeraude"];
+const accentKeys=["or","violet","bleu","rouge","vert","rose"];
+const legacyGameIds=new Set(["fortnite","warzone","rocket-league","apex-legends","cyberpunk-2077","elden-ring","god-of-war","horizon-zero-dawn","the-witcher-3","the-last-of-us","gta-v","resident-evil-4"]);
+const ownerId=(document.querySelector('meta[name="majestik-owner-twitch-id"]')?.content||"").trim();
+const ownerBadge=id=>id&&String(id)===ownerId?'<span class="mp-member-badge mp-owner-badge">♛ LE BOSS DU QG</span>':'<span class="mp-member-badge">✦ MEMBRE DU QG</span>';
 const defaults=()=>({display_name:"",bio:"",banner:"champagne",accent:"or",games:[],primary_game:"",public_profile:false,instagram:"",tiktok:"",discord:""});
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -33,8 +66,8 @@ function sanitize(data){
  return {
   display_name:String(p.display_name||"").slice(0,32),
   bio:String(p.bio||"").slice(0,180),
-  banner:["champagne","carbone","violet"].includes(p.banner)?p.banner:"champagne",
-  accent:["or","violet","bleu"].includes(p.accent)?p.accent:"or",
+  banner:bannerKeys.includes(p.banner)?p.banner:"champagne",
+  accent:accentKeys.includes(p.accent)?p.accent:"or",
   games:Array.isArray(p.games)?[...new Set(p.games.filter(g=>lookup.has(g)))].slice(0,4):[],
   primary_game:String(p.primary_game||""),
   public_profile:p.public_profile===true,
@@ -55,28 +88,37 @@ async function request(method,path,token,payload){
   return data;
  }finally{clearTimeout(timer);}
 }
-function cover(id){const g=lookup.get(id);return g?(g.image||("https://cdn.cloudflare.steamstatic.com/steam/apps/"+g.appid+"/header.jpg")):"";}
+function cover(id){const g=lookup.get(id);return g?(g.image||(g.appid?"https://cdn.cloudflare.steamstatic.com/steam/apps/"+g.appid+"/header.jpg":"")):"";}
+function gameArtwork(id){const g=lookup.get(id);if(!g)return "";const img=cover(id);return img?'<img src="'+esc(img)+'" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">':'<div class="mp-game-custom mp-art-'+esc(g.art||"default")+'" aria-hidden="true"><span>'+esc(g.name)+'</span></div>';}
 function gameCard(id,primary,preview=false){
  const g=lookup.get(id);
  if(!g)return "";
  return '<article class="mp-game-card'+(id===primary?' mp-game-primary':'')+'">'+
-  '<div class="mp-game-image"><img src="'+esc(cover(id))+'" alt="Visuel de '+esc(g.name)+'" loading="lazy" referrerpolicy="no-referrer">'+
+  '<div class="mp-game-image">'+gameArtwork(id)+
   (id===primary&&!preview?'<span class="mp-game-label">★ PRINCIPAL</span>':'')+'</div>'+
   '<div class="mp-game-copy"><strong>'+esc(g.name)+'</strong><small>'+esc(g.subtitle)+'</small></div>'+
  '</article>';
 }
 function statCard(icon,label,value){return '<div class="mp-stat"><span aria-hidden="true">'+icon+'</span><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong></div>';}
+const clipIcon='<svg class="mp-clip" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5 12.5 20a6 6 0 0 1-8.5-8.5l9-9a4 4 0 0 1 5.7 5.6l-9 9a2 2 0 0 1-2.8-2.8l8.2-8.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 function socials(profile,name){
- let entries=[["Twitch","https://www.twitch.tv/"+encodeURIComponent(name),"Twitch"]];
- if(profile.instagram)entries.push(["Instagram","https://www.instagram.com/"+encodeURIComponent(profile.instagram)+"/","Instagram"]);
- if(profile.tiktok)entries.push(["TikTok","https://www.tiktok.com/@"+encodeURIComponent(profile.tiktok),"TikTok"]);
- const items=entries.map(([label,url])=>'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+' <span aria-hidden="true">↗</span></a>');
- if(profile.discord)items.push('<span>Discord : '+esc(profile.discord)+'</span>');
+ const rows=[["twitch","Twitch","https://www.twitch.tv/"+encodeURIComponent(name)]];
+ if(profile.instagram)rows.push(["instagram","Instagram","https://www.instagram.com/"+encodeURIComponent(profile.instagram)+"/"]);
+ if(profile.tiktok)rows.push(["tiktok","TikTok","https://www.tiktok.com/@"+encodeURIComponent(profile.tiktok)]);
+ const items=rows.map(([kind,label,url])=>'<a class="mp-social-icon mp-social-'+kind+'" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" title="'+label+'" aria-label="Voir le profil '+label+'"><span class="mp-social-glyph" data-mp-icon="'+kind+'" aria-hidden="true"></span></a>');
+ if(profile.discord)items.push('<span class="mp-discord-name">Discord : '+esc(profile.discord)+'</span>');
  return items.join("");
+}
+function fillSocialIcons(root){
+ root.querySelectorAll("[data-mp-icon]").forEach(el=>{
+  const svg=document.querySelector(".site-header .qg-social-"+el.dataset.mpIcon+" svg");
+  if(svg)el.replaceChildren(svg.cloneNode(true));
+ });
 }
 function view(state){
  const root=$("mjProfileRoot");if(!root)return;
  const p=state.profile,ident=state.identity,stats=state.stats,server=state.online;
+ root.closest(".mp-page").dataset.accent=p.accent;
  const display=p.display_name||ident.name||"Membre Twitch";
  const pic=avatar(ident.avatar),ava=pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch de '+esc(ident.name)+'" referrerpolicy="no-referrer">':'<span aria-hidden="true">MJ</span>';
  const picked=p.games;
@@ -86,18 +128,15 @@ function view(state){
   '<div class="mp-banner-crown" aria-hidden="true">✦</div>'+
   '<div class="mp-banner-identity"><div class="mp-avatar">'+ava+'<span class="mp-twitch-mark" aria-hidden="true">T</span></div>'+
    '<div><span class="mp-kicker">MON ESPACE COMMUNAUTAIRE</span><h2>'+esc(display)+'</h2>'+
-    '<span class="mp-member-badge">✦ MEMBRE DU QG</span><small>Compte lié à Twitch : '+esc(ident.name)+'</small></div></div>'+
+    ownerBadge(ident.id)+'<small>Compte lié à Twitch : '+esc(ident.name)+'</small></div></div>'+
   '<div class="mp-banner-actions"><button type="button" id="mpEditBtn" class="mp-gold-button">✎ Modifier mon profil</button></div>'+
  '</section>'+
- '<div class="mp-status'+(server?' mp-online':'')+'" role="status">'+
- (server?'✓ Profil synchronisé avec Cloudflare : tes changements seront disponibles sur tes appareils.':'◌ Mode aperçu local : les modifications ne sont pas encore partagées. Activation Cloudflare nécessaire.')+
- '</div>'+
  '<div class="mp-grid">'+
   '<div class="mp-column">'+
    '<section class="mp-panel"><h3>♙ PRÉSENTATION</h3><p class="mp-bio">'+(p.bio?esc(p.bio):'<span class="mp-muted">Aucune présentation pour le moment. Ajoute quelques mots sur toi !</span>')+'</p></section>'+
-   '<section class="mp-panel"><h3>♧ MES LIENS</h3><div class="mp-links">'+socials(p,ident.name||"")+'</div></section>'+
+   '<section class="mp-panel"><h3>'+clipIcon+' MES LIENS</h3><div class="mp-links">'+socials(p,ident.name||"")+'</div></section>'+
    '<section class="mp-panel mp-privacy"><h3>◉ VISIBILITÉ</h3><p>'+((server&&p.public_profile)?'Ton profil peut être consulté par les autres membres.':'Ton profil n’est pas publié pour les autres visiteurs.')+'</p>'+
-    (server&&p.public_profile?'<button class="mp-outline-button" id="mpShareBtn" type="button">Copier le lien public ↗</button>':'<small>Le classement Twitch dispose de son propre réglage de visibilité.</small>')+
+    (server&&p.public_profile?'<button class="mp-outline-button" id="mpShareBtn" type="button">Copier le lien public ↗</button>':'')+
    '</section>'+
   '</div>'+
   '<div class="mp-column">'+
@@ -106,7 +145,7 @@ function view(state){
     statCard("♛","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
     statCard("✓","VOTES",fmt(stats?.votes))+
     statCard("▣","MEMBRE DEPUIS",date(stats?.joined_at))+
-   '</div><small>Seules les données réellement enregistrées dans le QG sont affichées.</small></section>'+
+   '</div></section>'+
    '<section class="mp-panel mp-games"><div class="mp-panel-heading"><h3>♧ MES JEUX</h3><button type="button" id="mpGamesEdit" class="mp-outline-button">+ Personnaliser</button></div>'+
     (!picked.length?'<p class="mp-games-notice">Exemples du catalogue : sélectionne tes jeux favoris pour personnaliser cette section.</p>':'')+
     '<div class="mp-game-grid">'+cards+'</div></section>'+
@@ -119,15 +158,15 @@ function view(state){
     '<label class="mp-form-full">Ma présentation <textarea name="bio" maxlength="180" rows="3" placeholder="Parle de ton univers gaming, de tes jeux, de tes passions…">'+esc(p.bio)+'</textarea><small>180 caractères maximum</small></label>'+
    '</div>'+
    '<fieldset><legend>Bannière de profil</legend><div class="mp-choice-row">'+
-    ["champagne","carbone","violet"].map(k=>'<label class="mp-banner-option mp-banner-'+k+'"><input type="radio" name="banner" value="'+k+'"'+(p.banner===k?' checked':'')+'><span>'+({champagne:"Champagne",carbone:"Carbone",violet:"Violet"}[k])+'</span></label>').join("")+
+    (state.hasV2?bannerKeys:bannerKeys.slice(0,3)).map(k=>'<label class="mp-banner-option mp-banner-'+k+'"><input type="radio" name="banner" value="'+k+'"'+(p.banner===k?' checked':'')+'><span>'+({champagne:"Champagne",carbone:"Carbone",violet:"Violet","bleu-nuit":"Bleu nuit",rubis:"Rouge rubis",emeraude:"Vert émeraude"}[k])+'</span></label>').join("")+
    '</div></fieldset>'+
    '<fieldset><legend>Couleur d’accent</legend><div class="mp-choice-row mp-colors">'+
-    ["or","violet","bleu"].map(k=>'<label><input type="radio" name="accent" value="'+k+'"'+(p.accent===k?' checked':'')+'><span class="mp-color-'+k+'">'+({or:"Or",violet:"Violet",bleu:"Bleu"}[k])+'</span></label>').join("")+
+    (state.hasV2?accentKeys:accentKeys.slice(0,3)).map(k=>'<label><input type="radio" name="accent" value="'+k+'"'+(p.accent===k?' checked':'')+'><span class="mp-color-'+k+'">'+({or:"Or",violet:"Violet",bleu:"Bleu",rouge:"Rouge",vert:"Vert",rose:"Rose"}[k])+'</span></label>').join("")+
    '</div></fieldset>'+
-   '<fieldset><legend>Mes jeux préférés <small>(4 maximum)</small></legend><div class="mp-game-picker">'+
-    games.map(g=>'<button type="button" class="mp-picker-tile'+(picked.includes(g.id)?' is-selected':'')+'" data-mp-game="'+g.id+'" aria-pressed="'+picked.includes(g.id)+'">'+
-      '<img src="'+esc(cover(g.id))+'" alt="" loading="lazy" referrerpolicy="no-referrer"><span>'+esc(g.name)+'</span></button>').join("")+
-   '</div><label class="mp-primary-select">Jeu principal <select name="primary_game" id="mpPrimaryGame"></select></label></fieldset>'+
+   '<fieldset><legend>Mes jeux préférés <small>(4 maximum)</small></legend><label class="mp-search-label" for="mpGameSearch">Rechercher un jeu</label><input id="mpGameSearch" class="mp-game-search" type="search" placeholder="Rechercher un jeu…" autocomplete="off"><div class="mp-game-picker">'+
+    games.filter(g=>state.hasV2||legacyGameIds.has(g.id)).map(g=>'<button type="button" class="mp-picker-tile'+(picked.includes(g.id)?' is-selected':'')+'" data-mp-game="'+g.id+'" aria-pressed="'+picked.includes(g.id)+'">'+
+      '<span class="mp-picker-art">'+gameArtwork(g.id)+'</span><span>'+esc(g.name)+'</span></button>').join("")+
+   '</div><p id="mpSearchEmpty" class="mp-games-notice" hidden>Aucun jeu trouvé.</p><label class="mp-primary-select">Jeu principal <select name="primary_game" id="mpPrimaryGame"></select></label></fieldset>'+
    '<div class="mp-form-grid"><label>Instagram (pseudo facultatif) <input name="instagram" maxlength="30" value="'+esc(p.instagram)+'" placeholder="mon_pseudo"></label>'+
    '<label>TikTok (pseudo facultatif) <input name="tiktok" maxlength="24" value="'+esc(p.tiktok)+'" placeholder="mon_pseudo"></label>'+
    '<label class="mp-form-full">Discord (pseudo facultatif) <input name="discord" maxlength="40" value="'+esc(p.discord)+'" placeholder="mon_pseudo"></label></div>'+
@@ -136,7 +175,8 @@ function view(state){
     '<span id="mpSaveStatus" role="status"></span></div>'+
   '</form>'+
  '</section>';
- root.querySelectorAll(".mp-game-image img,.mp-picker-tile img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
+ fillSocialIcons(root);
+ root.querySelectorAll(".mp-game-image img,.mp-picker-art img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
  const open=()=>{const editor=$("mpEditor");editor.hidden=false;editor.scrollIntoView({behavior:"smooth",block:"start"});};
  $("mpEditBtn").addEventListener("click",open);
  $("mpGamesEdit").addEventListener("click",open);
@@ -155,6 +195,17 @@ function view(state){
   primary.value=chosen.has(previous)?previous:"";
  }
  refreshPicker();
+ const search=$("mpGameSearch");
+ search.addEventListener("input",()=>{
+  const norm=t=>t.toLocaleLowerCase("fr").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const needle=norm(search.value.trim());
+  let total=0;
+  root.querySelectorAll("[data-mp-game]").forEach(b=>{
+   const visible=norm(lookup.get(b.dataset.mpGame)?.name||"").includes(needle);
+   b.hidden=!visible;if(visible)total++;
+  });
+  $("mpSearchEmpty").hidden=total!==0;
+ });
  root.querySelectorAll("[data-mp-game]").forEach(b=>b.addEventListener("click",()=>{
   const id=b.dataset.mpGame;
   if(chosen.has(id))chosen.delete(id);
@@ -182,7 +233,7 @@ function view(state){
     if(!saveDraft(ident.id,payload))throw Error("Stockage local indisponible.");
     state.profile=sanitize(payload);
    }
-   if(root.isConnected){view(state);const status=root.querySelector(".mp-status");status.textContent=state.online?"✓ Profil enregistré sur Cloudflare.":"✓ Aperçu enregistré sur cet appareil uniquement. Pas encore visible par les autres.";}
+   if(root.isConnected){view(state);}
   }catch(error){$("mpSaveStatus").textContent="Impossible d’enregistrer : "+(error.status?"erreur "+error.status:"vérifie ta connexion et réessaie.");button.disabled=false;}
  });
 }
@@ -205,7 +256,7 @@ export async function mountProfile(){
  }else{
   profile=sanitize(readDraft(id));stats=info?{points:null,rank:null,votes:null,joined_at:info.joined_at}:null;
  }
- const state={token,identity,profile,stats,online,registered};
+ const state={token,identity,profile,stats,online,registered,hasV2:r[1].status==="fulfilled"&&r[1].value.catalog_version>=2};
  if(!registered){
   root.innerHTML='<div class="mp-panel mp-empty"><h2>Active ton profil communautaire</h2><p>Pour participer aux statistiques du QG et enregistrer un profil en ligne, crée d’abord ton profil Twitch dans notre base.</p>'+
    '<button type="button" class="mp-gold-button" id="mpActivate">Créer mon profil QG</button>'+
@@ -226,11 +277,14 @@ export async function mountPublicProfile(){
   const data=await request("GET","/v1/profiles/"+id,"");
   if(!root.isConnected)return;
   const p=sanitize(data.profile),identity=data.identity||{},pic=avatar(identity.avatar);
+  root.closest(".mp-page").dataset.accent=p.accent;
   root.innerHTML='<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'"><div class="mp-banner-identity"><div class="mp-avatar">'+(pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch">':'MJ')+'</div><div><span class="mp-kicker">PROFIL PUBLIC DU QG</span><h2>'+esc(p.display_name||identity.name||"Membre Twitch")+'</h2><span class="mp-member-badge">✦ MEMBRE DU QG</span></div></div></section>'+
    '<div class="mp-grid"><section class="mp-panel"><h3>PRÉSENTATION</h3><p class="mp-bio">'+esc(p.bio||"Ce membre n’a pas encore renseigné sa biographie.")+'</p><div class="mp-links">'+socials(p,identity.name||"")+'</div></section>'+
    '<section class="mp-panel"><h3>MES JEUX</h3><div class="mp-game-grid">'+(p.games.length?p.games.map(g=>gameCard(g,p.primary_game)).join(""):'<p>Aucun jeu favori renseigné.</p>')+'</div></section></div>';
+  root.querySelector(".mp-member-badge").outerHTML=ownerBadge(id);
+  fillSocialIcons(root);
   root.querySelectorAll(".mp-game-image img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
- }catch{root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil indisponible</h2><p>Ce profil est privé, inexistant ou la fonctionnalité n’est pas encore activée sur Cloudflare.</p><a href="#/accueil" class="mp-gold-button">Retour au QG</a></div>';}
+ }catch{root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil indisponible</h2><p>Ce profil est privé. Vous n’êtes pas autorisé à consulter son contenu.</p><a href="#/accueil" class="mp-gold-button">Retour au QG</a></div>';}
 }
 window.addEventListener("qg:twitch-session",()=>{if($("mjProfileRoot"))void mountProfile();});
 window.addEventListener("qg:member-updated",()=>{if($("mjProfileRoot"))void mountProfile();});
