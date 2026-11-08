@@ -1,5 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-head3';
-import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity1';
+import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
 import {mountTwitchAuth} from './twitch-auth.js?v=20261108-login-simple1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-head3';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-labels3';
