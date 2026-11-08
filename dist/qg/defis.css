@@ -135,3 +135,7 @@
 
 /* Ne pas reserver d'espace au statut des defis quand aucun avertissement n'est affiche. */
 .challenge-status:empty{display:none}
+
+/* Même point jaune que le libellé OUTILS GAMING de la Roue Fortnite. */
+.challenge-page-head .challenge-game-kicker{display:flex;align-items:center;gap:9px}
+.challenge-page-head .challenge-game-kicker::before{content:"";display:block;width:6px;height:6px;flex:0 0 6px;background:#ffd16e;border-radius:50%}
