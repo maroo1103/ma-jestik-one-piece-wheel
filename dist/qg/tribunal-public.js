@@ -176,8 +176,9 @@ function readForm(form){
  return {question,answers,...(form.querySelector('[data-duration]')?{duration_minutes:Number(form.querySelector('[data-duration]').value)}:{})};
 }
 async function submit(e){
- const form=e.target.closest('[data-form]');if(!form||busy)return;
- e.preventDefault();busy=true;
+ const form=e.target.closest('[data-form]');if(!form)return;
+ e.preventDefault();if(busy)return;
+ busy=true;
  try{
   const type=form.dataset.form,data=readForm(form);
   if(type==='create')await call('/v1/tribunal/polls','POST',data,true);
@@ -244,9 +245,11 @@ export function mountPublicTribunal(){
  sessionHandler=()=>{identity=null;renderSidebar();void refresh()};
  window.addEventListener('qg:twitch-session',sessionHandler);
  renderSidebar();void refresh();
+ let seconds=0;
  interval=setInterval(()=>{
   if(!active)return;
   tick();
-  if(document.visibilityState==='visible'&&Date.now()%15000<1000)void refresh();
+  seconds++;
+  if(document.visibilityState==='visible'&&seconds%12===0)void refresh();
  },1000);
 }
