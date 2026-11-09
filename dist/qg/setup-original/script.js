@@ -1,3 +1,4 @@
+import {openMaterialCard} from "./fiche-produit.js?v=20261109-fiches1";
 (() => {
   "use strict";
   const svg = document.getElementById("scene-map");
@@ -27,6 +28,11 @@
 
   for (const spot of svg.querySelectorAll(".hotspot")) {
     const label = spot.dataset.label || spot.getAttribute("aria-label") || "Équipement";
+    spot.addEventListener("click", event => {
+      event.preventDefault();
+      tooltip.classList.remove("visible");
+      openMaterialCard(spot.dataset.productId,spot);
+    });
     spot.addEventListener("pointerenter", event => {
       if (event.pointerType === "touch") return;
       tooltip.textContent = label;

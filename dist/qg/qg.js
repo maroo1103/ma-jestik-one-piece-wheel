@@ -192,7 +192,7 @@ async function mountRankings(){
 }
 function setup(){
  return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Explore mon installation gaming en détail. Sélectionne un équipement sur la photo pour découvrir ses caractéristiques et ma configuration PC.')+
- '<div class="wheel-area setup-area"><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html?v=20261108-mobile-polish1" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>';
+ '<div class="wheel-area setup-area"><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html?v=20261109-fiches1" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>';
 }
 function about(){
  return head('UNIVERS MA_JESTIK','À PROPOS DU QG','Bienvenue sur le site communautaire indépendant de Ma_JesTik. Ici, on partage des outils gaming, des défis et des moments entre joueurs.',[tag('Projet personnel','gold'),tag('Accès gratuit')])+
