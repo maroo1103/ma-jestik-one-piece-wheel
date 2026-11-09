@@ -13,9 +13,9 @@ const CATEGORIES=[
   ['tribunal','Tribunal, votes ou classements'],
   ['autre','Autre problème technique']
  ]},
- {id:'compte',icon:'♙',title:'Mon compte Twitch',desc:'Connexion, profil et paramètres communautaires.',topics:[
-  ['connexion','Connexion avec Twitch'],
-  ['profil','Mon profil communautaire'],
+ {id:'compte',icon:'♙',title:'Mon compte',desc:'Accès au compte Ma_JesTik, profil et paramètres du QG.',topics:[
+  ['connexion','Accès à mon compte Ma_JesTik'],
+  ['profil','Mon profil sur le QG'],
   ['confidentialite','Visibilité et confidentialité'],
   ['classement','Points ou classement'],
   ['autre','Autre problème de compte']
@@ -138,7 +138,7 @@ export function contactMarkup(){
  '<header class="mj-contact-hero">'+
  '<span class="mj-contact-kicker">MA_JESTIK / NOUS CONTACTER</span>'+
  '<h1 id="mjContactTitle">UNE QUESTION ? <em>PARLONS-EN.</em></h1>'+
- '<p>Un souci technique, une question sur ton compte Twitch, une idée ou une collaboration ? Choisis ton motif et prépare ta demande étape par étape.</p>'+
+ '<p>Un souci technique, une question sur ton compte Ma_JesTik, une idée ou une collaboration ? Choisis ton motif et prépare ta demande étape par étape.</p>'+
  '<div class="mj-contact-highlight"><span aria-hidden="true">✧</span><span>Un parcours simple, adapté à chaque besoin, sans connexion obligatoire.</span></div>'+
  '</header>'+
  '<div class="mj-contact-wizard" id="mjContactWizard"></div>'+
