@@ -3,6 +3,10 @@
    Les écritures sont vérifiées côté Cloudflare Worker. */
 const clientId=(document.querySelector('meta[name="majestik-twitch-client-id"]')?.content||'').trim();
 const KEY='mj-twitch-session-v1', PENDING='mj-twitch-state-v1';
+const activityEnabled=document.querySelector('meta[name="majestik-activity-enabled"]')?.content==='true';
+const memberApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/+$/,'');
+const ACTIVITY_SUCCESS_GAP=30*60*1000,ACTIVITY_FAILURE_GAP=5*60*1000;
+let nextActivityPing=0,activityPending=false;
 const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','apropos','createur','profil','membre','aide']);
 const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2))?s:'#/accueil';
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
@@ -28,7 +32,25 @@ function msg(text,retry=false){
   b.type='button';b.addEventListener('click',login);root.append(b);
  }
 }
-function clear(){me=null;del(KEY);window.dispatchEvent(new Event('qg:twitch-session'));}
+function clear(){me=null;nextActivityPing=0;del(KEY);window.dispatchEvent(new Event('qg:twitch-session'));}
+// Présence authentifiée : aucun suivi si l'onglet est masqué ou le compte déconnecté.
+// Le Worker revérifie Twitch et ne peut enregistrer que le membre du jeton.
+async function touchActivity(){
+  if(!activityEnabled||!memberApi||!me?.token||document.visibilityState!=='visible'||activityPending||Date.now()<nextActivityPing)return;
+  activityPending=true;
+  nextActivityPing=Date.now()+ACTIVITY_FAILURE_GAP;
+  const token=me.token;
+  try{
+    const response=await fetch(memberApi+'/v1/me/activity',{
+      method:'POST',headers:{Authorization:'Bearer '+token},mode:'cors',
+      credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',
+      signal:AbortSignal.timeout(8000)
+    });
+    if(response.ok)nextActivityPing=Date.now()+ACTIVITY_SUCCESS_GAP;
+  }catch{
+    // Jamais bloquer une visite ou la connexion si le suivi est indisponible.
+  }finally{activityPending=false;}
+}
 function render(){
  if(!root)return;
  root.replaceChildren();
@@ -91,7 +113,9 @@ async function check(token){
   const next={token,id:String(user.id),name:String(user.display_name||user.login||'Twitch').slice(0,64),avatar:String(user.profile_image_url||'')};
   if(!put(KEY,JSON.stringify(next)))throw Error('Stockage de session indisponible');
   const sessionChanged=me?.id!==next.id||me?.token!==next.token;
+  if(sessionChanged)nextActivityPing=0;
   me=next;render();
+  void touchActivity();
   // Ne pas recharger le profil à chaque vérification horaire : cela ferait perdre
   // les champs en cours d'édition. L'événement sert aux changements de compte.
   if(sessionChanged)window.dispatchEvent(new Event('qg:twitch-session'));
@@ -196,6 +220,11 @@ export function mountTwitchAuth(){
     const trigger=root.querySelector('.qg-profile');
     if(menu&&!menu.hidden){menu.hidden=true;trigger?.setAttribute('aria-expanded','false');}
   });
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void touchActivity();});
+  window.addEventListener('focus',()=>{void touchActivity();});
+  window.addEventListener('hashchange',()=>{void touchActivity();});
+  document.addEventListener('pointerdown',()=>{void touchActivity();},{passive:true});
+  document.addEventListener('keydown',()=>{void touchActivity();});
   if(!callback())initPromise=restore();
   // Twitch exige la vérification des sessions au lancement et toutes les heures.
   setInterval(()=>{if(get(KEY))initPromise=restore();},3600000);
