@@ -102,3 +102,15 @@
 @media(prefers-reduced-motion:reduce){
 .qg-layout .mj-contact-category,.qg-layout .mj-contact-topic,.qg-layout .mj-contact-primary,.qg-layout .mj-contact-secondary{transition:none}
 }
+
+/* Envoi direct et validation anti-spam dans le thème Ma_JesTik */
+.qg-layout .mj-contact-verification{margin-top:18px;padding:20px;border:1px solid #7c6140;border-radius:12px;background:#1d1b19}
+.qg-layout .mj-contact-verification>strong{display:block;font-size:13px;color:#f0cf9e;margin-bottom:8px}
+.qg-layout .mj-contact-verification>p{font-size:12px;line-height:1.6;color:#c9b8a1;margin:8px 0 12px}
+.qg-layout #mjContactTurnstile{min-height:68px;max-width:100%;overflow:visible}
+.qg-layout .mj-contact-verification #mjContactCaptchaStatus{font-size:11px;margin-top:9px;color:#dfc69e}
+.qg-layout .mj-contact-send-error{min-height:1em;font-size:12px;color:#ffc6b6;margin:13px 0}
+.qg-layout .mj-contact-primary:disabled{cursor:not-allowed;opacity:.52;filter:grayscale(.45);transform:none}
+.qg-layout .mj-contact-sent{border:1px solid #51725e;background:#19241e;border-radius:12px;padding:25px;color:#d9eede}
+.qg-layout .mj-contact-sent strong{font-size:20px;color:#afe1bd}
+.qg-layout .mj-contact-sent p{font-size:13px;line-height:1.7}

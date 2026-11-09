@@ -47,7 +47,9 @@ Le compteur Killathon peut enregistrer l'identifiant du membre, un identifiant p
 Les propositions et sondages peuvent enregistrer le texte des questions, les réponses possibles, les dates et, selon la fonctionnalité, le pseudonyme ou l'identifiant Twitch des auteurs et votants. La présentation des résultats publics ne doit pas être confondue avec l'ensemble des données conservées dans la base.
 
 ### Formulaire de contact
-**À ce jour**, le formulaire guide le visiteur pour préparer sa demande, mais ne transmet pas les champs, les messages ni les pièces jointes à un serveur de contact. Les informations saisies restent dans l'interface de l'onglet tant que la page est ouverte ; les fichiers éventuellement sélectionnés ne sont pas téléversés.
+**Version préparée pour publication sur le QG :** le formulaire transmet, après validation anti-spam Turnstile, la catégorie, le sujet, l'adresse e-mail de réponse, le pseudonyme facultatif, le message et jusqu'à 6 pièces jointes (PNG, JPG, WebP, PDF ; 5 Mo chacune, 12 Mo au total) à un Worker Cloudflare distinct. Ce Worker envoie le courriel et les fichiers via Resend à la boîte `contact@ma-jestik.fr` hébergée chez OVH. Le jeton anti-spam est vérifié auprès de Cloudflare. Resend et OVH peuvent conserver des données liées à l'acheminement et au traitement des courriels selon les paramètres du compte et leurs politiques. Les durées effectives, la répartition des rôles et les éventuels transferts hors EEE restent à vérifier avant publication du document juridique.
+
+**[À VÉRIFIER APRÈS DÉPLOIEMENT]** Le test d'envoi et de réception de bout en bout ainsi que les tests de pièces jointes ne sont pas encore confirmés. L'ancienne interface peut rester en cache jusqu'à la publication GitHub Pages.
 
 **[CHANGEMENT FUTUR NON ENCORE EN PRODUCTION]** Dès qu'un système sécurisé d'envoi via Cloudflare et Resend sera activé, cette section devra être mise à jour **avant** la mise en service pour décrire les informations effectivement transmises, les éventuelles pièces jointes, leurs destinataires et leurs durées de conservation.
 
