@@ -2,7 +2,7 @@ import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-copyrefres
 import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
 import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
-import {contactMarkup,mountContact} from './contact.js?v=20261109-contact1';
+import {contactMarkup,mountContact} from './contact.js?v=20261109-contact2';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile} from './profil.js?v=20261108-profilsettings1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';

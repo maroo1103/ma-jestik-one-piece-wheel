@@ -1,45 +1,206 @@
-// Ma_JesTik — contact direct par e-mail, sans collecte de message sur le site.
-const ADDRESS='contact@ma-jestik.fr';
-const SUBJECT=encodeURIComponent('Contact depuis ma-jestik.fr');
+// Ma_JesTik — parcours de contact guidé.
+// Le site est statique : aucun envoi ni téléversement n'est simulé.
+// La mise en place d'un destinataire serveur sécurisé sera nécessaire à l'envoi direct.
+const MAIL='contact@ma-jestik.fr';
+const MAX_FILES=6;
+const MAX_FILE_SIZE=10*1024*1024;
+const CATEGORIES=[
+ {id:'support',icon:'✦',title:'Support technique',desc:'Un problème sur le site ou avec un outil du QG.',topics:[
+  ['site','Affichage ou navigation du site'],
+  ['roue','La roue interactive'],
+  ['defis','Défis et missions'],
+  ['killathon','Killathon et affichage OBS'],
+  ['tribunal','Tribunal, votes ou classements'],
+  ['autre','Autre problème technique']
+ ]},
+ {id:'compte',icon:'♙',title:'Mon compte Twitch',desc:'Connexion, profil et paramètres communautaires.',topics:[
+  ['connexion','Connexion avec Twitch'],
+  ['profil','Mon profil communautaire'],
+  ['confidentialite','Visibilité et confidentialité'],
+  ['classement','Points ou classement'],
+  ['autre','Autre problème de compte']
+ ]},
+ {id:'idees',icon:'✧',title:'Suggestions & idées',desc:'Partage une idée pour améliorer Ma_JesTik.',topics:[
+  ['fonctionnalite','Une nouvelle fonctionnalité'],
+  ['roue','Des idées pour la roue'],
+  ['defis','De nouveaux défis ou animations'],
+  ['design','Design, navigation ou accessibilité'],
+  ['autre','Autre suggestion']
+ ]},
+ {id:'collaboration',icon:'◇',title:'Collaborations',desc:'Streams communs, projets et partenariats.',topics:[
+  ['stream','Collaboration pour un live'],
+  ['communaute','Projet communautaire'],
+  ['partenariat','Proposition de partenariat'],
+  ['autre','Autre proposition']
+ ]},
+ {id:'autre',icon:'☷',title:'Autre demande',desc:'Une question qui ne figure pas dans ces rubriques.',topics:[
+  ['question','Question générale'],
+  ['signalement','Signaler un contenu ou un comportement'],
+  ['information','Demande d’information'],
+  ['autre','Autre motif']
+ ]}
+];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const category=id=>CATEGORIES.find(c=>c.id===id);
+const topic=(cat,id)=>cat?.topics.find(p=>p[0]===id);
+const state=()=>({step:1,category:null,topic:null,pseudo:'',email:'',message:'',attachments:[],fileError:''});
+let draft=state();
+const nav=step=>'<ol class="mj-contact-steps" aria-label="Étapes de la demande">'+
+ ['Catégorie','Sujet','Ton message','Récapitulatif'].map((s,i)=>'<li class="'+(i+1===step?'is-current':i+1<step?'is-done':'')+'"'+(i+1===step?' aria-current="step"':'')+'><span>'+(i+1)+'</span><small>'+s+'</small></li>').join('')+'</ol>';
+const back=(label='RETOUR')=>'<button type="button" class="mj-contact-secondary" data-contact-back>← '+label+'</button>';
+function selectCategory(){
+ return '<div class="mj-contact-intro"><span class="mj-contact-overline">01 / CHOISIR UNE CATÉGORIE</span>'+
+  '<h2 id="mjContactStepTitle">COMMENT PEUT-ON <em>T’AIDER ?</em></h2>'+
+  '<p>Choisis la catégorie qui correspond à ta demande. Nous préciserons ensuite le sujet.</p></div>'+
+  '<div class="mj-contact-categories">'+CATEGORIES.map(c=>
+   '<button type="button" class="mj-contact-category" data-contact-category="'+c.id+'">'+
+   '<span class="mj-contact-category-icon" aria-hidden="true">'+c.icon+'</span>'+
+   '<strong>'+esc(c.title)+'</strong><small>'+esc(c.desc)+'</small>'+
+   '<span class="mj-contact-category-arrow" aria-hidden="true">↗</span></button>').join('')+'</div>';
+}
+function selectTopic(){
+ const c=category(draft.category);
+ if(!c)return selectCategory();
+ return '<div class="mj-contact-intro"><span class="mj-contact-overline">02 / PRÉCISER TA DEMANDE</span>'+
+ '<h2 id="mjContactStepTitle">'+esc(c.title).toUpperCase()+'</h2>'+
+ '<p>Quel sujet correspond le mieux à ta demande ?</p></div>'+
+ '<div class="mj-contact-topics">'+c.topics.map(t=>
+  '<button type="button" class="mj-contact-topic" data-contact-topic="'+t[0]+'"><span class="mj-contact-radio" aria-hidden="true"></span><span>'+esc(t[1])+'</span><span class="mj-contact-topic-arrow" aria-hidden="true">→</span></button>'
+ ).join('')+'</div><div class="mj-contact-navigation">'+back('CHANGER DE CATÉGORIE')+'</div>';
+}
+function attachInfo(){
+ const items=draft.attachments.length?'<div class="mj-contact-filelist" aria-live="polite">'+draft.attachments.map(f=>'<span>▣ '+esc(f.name)+'</span>').join('')+'</div>':'';
+ return '<section class="mj-contact-fieldset mj-contact-attachments" aria-labelledby="mjContactFilesTitle">'+
+  '<div class="mj-contact-fieldset-title"><h3 id="mjContactFilesTitle">Pièces jointes <span>(facultatives)</span></h3><span>Jusqu’à 6 fichiers</span></div>'+
+  '<p>Pour illustrer ton problème, tu peux préparer des captures d’écran ou un PDF (10 Mo maximum par fichier).</p>'+
+  '<label class="mj-contact-upload">＋ <span>SÉLECTIONNER DES FICHIERS</span><input type="file" id="mjContactFiles" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf" aria-describedby="mjContactFilesHelp"></label>'+
+  items+'<small id="mjContactFilesHelp">Les fichiers ne sont pas envoyés depuis le site actuellement. Tu devras les joindre toi-même dans ta messagerie.</small>'+
+  '<p class="mj-contact-error" id="mjContactFileError" role="alert">'+esc(draft.fileError)+'</p></section>';
+}
+function fillForm(){
+ const c=category(draft.category),t=topic(c,draft.topic);
+ if(!c||!t)return selectCategory();
+ return '<div class="mj-contact-intro"><span class="mj-contact-overline">03 / COMPLÉTER TA DEMANDE</span>'+
+  '<h2 id="mjContactStepTitle">À TOI DE <em>NOUS ÉCRIRE.</em></h2>'+
+  '<p><strong>'+esc(c.title)+'</strong> — '+esc(t[1])+'. Décris précisément ton besoin pour faciliter la réponse.</p></div>'+
+  '<form id="mjContactForm" novalidate>'+
+   '<section class="mj-contact-fieldset"><h3>Ton message</h3>'+
+    '<label class="mj-contact-label" for="mjContactMessage">Explique ta demande <span>*</span></label>'+
+    '<textarea id="mjContactMessage" data-contact-field="message" name="message" maxlength="4000" minlength="20" required rows="8" placeholder="Décris ce qui se passe, la page concernée ou ton idée…">'+esc(draft.message)+'</textarea>'+
+    '<p class="mj-contact-hint">20 caractères minimum. N’indique jamais de mot de passe, de code de sécurité ou d’informations bancaires.</p></section>'+
+    attachInfo()+
+   '<section class="mj-contact-fieldset"><h3>Pour te répondre</h3>'+
+     '<div class="mj-contact-fields">'+
+      '<div><label class="mj-contact-label" for="mjContactPseudo">Ton pseudo <span class="mj-contact-optional">(facultatif)</span></label>'+
+      '<input id="mjContactPseudo" type="text" name="pseudo" data-contact-field="pseudo" maxlength="80" autocomplete="nickname" value="'+esc(draft.pseudo)+'" placeholder="Ton pseudo"></div>'+
+      '<div><label class="mj-contact-label" for="mjContactEmail">Ton adresse e-mail <span>*</span></label>'+
+      '<input id="mjContactEmail" type="email" name="email" data-contact-field="email" required maxlength="254" autocomplete="email" value="'+esc(draft.email)+'" placeholder="tonadresse@exemple.fr"></div>'+
+     '</div>'+
+     '<p class="mj-contact-hint">Cette version prépare ton message sans l’envoyer : aucune donnée n’est transmise par ce formulaire.</p></section>'+
+   '<div class="mj-contact-navigation">'+back('REVENIR AUX SUJETS')+'<button type="submit" class="mj-contact-primary">VÉRIFIER MA DEMANDE <span aria-hidden="true">→</span></button></div>'+
+  '</form>';
+}
+function emailBody(){
+ const c=category(draft.category),t=topic(c,draft.topic);
+ return ['Bonjour,','','Catégorie : '+(c?.title||'Autre demande'),'Sujet : '+(t?.[1]||'Non précisé'),'Pseudo : '+(draft.pseudo.trim()||'Non renseigné'),'Adresse de réponse : '+draft.email.trim(),'','Message :',draft.message.trim(),'',
+  ...(draft.attachments.length?['Pièces jointes à ajouter dans la messagerie :',...draft.attachments.map(f=>'- '+f.name),'']:[]),'Merci.'].join('\n');
+}
+function summary(){
+ const c=category(draft.category),t=topic(c,draft.topic),subject='[Ma_JesTik] '+(c?.title||'Contact')+' - '+(t?.[1]||'Demande');
+ return '<div class="mj-contact-intro"><span class="mj-contact-overline">04 / RÉCAPITULATIF</span>'+
+ '<h2 id="mjContactStepTitle">TA DEMANDE EST <em>PRÊTE.</em></h2>'+
+ '<p>Vérifie les informations puis copie le message pour l’envoyer depuis ton webmail habituel.</p></div>'+
+ '<section class="mj-contact-summary"><dl><div><dt>Catégorie</dt><dd>'+esc(c?.title)+'</dd></div><div><dt>Sujet</dt><dd>'+esc(t?.[1])+'</dd></div><div><dt>Adresse de réponse</dt><dd>'+esc(draft.email)+'</dd></div><div><dt>Destinataire</dt><dd>'+MAIL+'</dd></div></dl>'+
+ '<h3>Message préparé</h3><pre id="mjContactPrepared">'+esc(emailBody())+'</pre>'+
+ (draft.attachments.length?'<p class="mj-contact-summary-note">Pense à ajouter tes '+draft.attachments.length+' pièce(s) jointe(s) dans ton webmail.</p>':'')+
+ '</section>'+
+ '<div class="mj-contact-warning"><strong>Envoi direct pas encore activé.</strong> Le QG ne possède pas encore de service d’envoi sécurisé. Aucun message ni fichier n’a été transmis. Après avoir copié ta demande, envoie-la à <strong>'+MAIL+'</strong> depuis ta messagerie.</div>'+
+ '<div class="mj-contact-navigation">'+back('MODIFIER MON MESSAGE')+
+ '<button type="button" class="mj-contact-primary" data-contact-copy>COPIER MA DEMANDE <span aria-hidden="true">⧉</span></button></div>'+
+ '<div class="mj-contact-finish"><span id="mjContactCopyStatus" role="status" aria-live="polite"></span>'+
+ '<a class="mj-contact-mail" href="mailto:'+MAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(emailBody())+'">OUVRIR MA MESSAGERIE ↗</a>'+
+ '<button type="button" class="mj-contact-restart" data-contact-restart>Créer une autre demande</button></div>';
+}
+function render(root,focus=false){
+ if(!root)return;
+ root.innerHTML=nav(draft.step)+'<div class="mj-contact-view">'+(
+  draft.step===1?selectCategory():draft.step===2?selectTopic():draft.step===3?fillForm():summary()
+ )+'</div>';
+ if(focus){
+  const heading=root.querySelector('#mjContactStepTitle');
+  heading?.setAttribute('tabindex','-1');
+  heading?.focus({preventScroll:true});
+  root.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+ }
+}
 export function contactMarkup(){
  return '<section class="mj-contact" aria-labelledby="mjContactTitle">'+
-  '<div class="mj-contact-hero">'+
-   '<span class="mj-contact-kicker">MA_JESTIK / CONTACT</span>'+
-   '<h1 id="mjContactTitle">ON GARDE <em>LE CONTACT.</em></h1>'+
-   '<p class="mj-contact-lead">Une question sur le QG, une suggestion, un problème technique ou une proposition de collaboration ? Tu peux me joindre directement à mon adresse officielle.</p>'+
-   '<div class="mj-contact-feature">'+
-    '<span class="mj-contact-label">ADRESSE E-MAIL OFFICIELLE</span>'+
-    '<a class="mj-contact-address" href="mailto:'+ADDRESS+'">'+ADDRESS+'</a>'+
-    '<p>Une adresse dédiée au site Ma_JesTik. Aucun compte Twitch ni formulaire à remplir.</p>'+
-    '<div class="mj-contact-actions">'+
-      '<a class="mj-contact-send" href="mailto:'+ADDRESS+'?subject='+SUBJECT+'">ÉCRIRE UN E-MAIL <span aria-hidden="true">&nbsp;↗</span></a>'+
-      '<button type="button" class="mj-contact-copy" id="mjContactCopy">COPIER L’ADRESSE</button>'+
-    '</div>'+
-    '<span class="mj-contact-feedback" id="mjContactFeedback" role="status" aria-live="polite"></span>'+
-   '</div>'+
-  '</div>'+
-  '<div class="mj-contact-cases" aria-label="Pourquoi me contacter ?">'+
-   '<article class="mj-contact-case"><span class="mj-contact-case-index">01 / SUPPORT</span><h2>UN PROBLÈME SUR LE SITE ?</h2><p>Un affichage incorrect, une fonctionnalité qui ne répond pas ou un bug à signaler : indique la page et ce qui ne fonctionne pas.</p></article>'+
-   '<article class="mj-contact-case"><span class="mj-contact-case-index">02 / IDÉES</span><h2>UNE SUGGESTION ?</h2><p>Une amélioration pour la roue, les défis ou les outils communautaires ? Tes propositions sont les bienvenues.</p></article>'+
-   '<article class="mj-contact-case"><span class="mj-contact-case-index">03 / COLLABORATIONS</span><h2>UNE PROPOSITION ?</h2><p>Pour une demande de collaboration, un partenariat ou toute question liée au projet Ma_JesTik, écris-moi à cette adresse.</p></article>'+
-  '</div>'+
-  '<p class="mj-contact-note"><span aria-hidden="true">✦</span><span><strong>À savoir :</strong> le bouton « Écrire un e-mail » ouvre ton application de messagerie. Le message est envoyé depuis ta boîte mail, et non depuis le site. Aucune information personnelle sur l’éditeur du site n’est affichée ici.</span></p>'+
+ '<header class="mj-contact-hero">'+
+ '<span class="mj-contact-kicker">MA_JESTIK / NOUS CONTACTER</span>'+
+ '<h1 id="mjContactTitle">UNE QUESTION ? <em>PARLONS-EN.</em></h1>'+
+ '<p>Un souci technique, une question sur ton compte Twitch, une idée ou une collaboration ? Choisis ton motif et prépare ta demande étape par étape.</p>'+
+ '<div class="mj-contact-highlight"><span aria-hidden="true">✧</span><span>Un parcours simple, adapté à chaque besoin, sans connexion obligatoire.</span></div>'+
+ '</header>'+
+ '<div class="mj-contact-wizard" id="mjContactWizard"></div>'+
+ '<aside class="mj-contact-help"><span>UN CONTACT DIRECT ?</span><p>Tu peux aussi écrire à l’adresse officielle <a href="mailto:'+MAIL+'">'+MAIL+'</a>. Si ton ordinateur ne dispose pas d’application mail, copie l’adresse et utilise ton webmail.</p><button type="button" id="mjContactCopyAddress">COPIER L’ADRESSE</button><span id="mjContactAddressStatus" role="status" aria-live="polite"></span></aside>'+
  '</section>';
 }
+async function copyText(text,feedback){
+ try{
+  if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);}
+  else{
+   const temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.opacity='0';document.body.append(temp);temp.select();
+   const copied=document.execCommand('copy');temp.remove();
+   if(!copied)throw new Error('Copie impossible');
+  }
+  feedback.textContent='Copié ! Tu peux maintenant coller le texte dans ta messagerie.';
+ }catch{
+  feedback.textContent='La copie automatique a échoué. Sélectionne le texte affiché et copie-le manuellement.';
+ }
+}
 export function mountContact(){
- const button=document.getElementById('mjContactCopy');
- const feedback=document.getElementById('mjContactFeedback');
- if(!button||!feedback)return;
- button.addEventListener('click',async()=>{
-  if(!navigator.clipboard?.writeText){
-   feedback.textContent='Copie l’adresse affichée ci-dessus : '+ADDRESS;
-   return;
+ draft=state();
+ const root=document.getElementById('mjContactWizard');
+ if(!root)return;
+ render(root);
+ const directCopy=document.getElementById('mjContactCopyAddress');
+ directCopy?.addEventListener('click',()=>copyText(MAIL,document.getElementById('mjContactAddressStatus')));
+ root.addEventListener('click',e=>{
+  const categoryButton=e.target.closest('[data-contact-category]');
+  if(categoryButton){draft.category=categoryButton.dataset.contactCategory;draft.topic=null;draft.step=2;render(root,true);return;}
+  const topicButton=e.target.closest('[data-contact-topic]');
+  if(topicButton){draft.topic=topicButton.dataset.contactTopic;draft.step=3;render(root,true);return;}
+  if(e.target.closest('[data-contact-back]')){draft.step=draft.step===4?3:draft.step===3?2:1;render(root,true);return;}
+  if(e.target.closest('[data-contact-restart]')){draft=state();render(root,true);return;}
+  if(e.target.closest('[data-contact-copy]')){
+   copyText(emailBody(),document.getElementById('mjContactCopyStatus'));
   }
-  try{
-   await navigator.clipboard.writeText(ADDRESS);
-   feedback.textContent='Adresse copiée : '+ADDRESS;
-  }catch{
-   feedback.textContent='La copie automatique est bloquée. Sélectionne l’adresse affichée ci-dessus.';
-  }
+ });
+ root.addEventListener('input',e=>{
+  const name=e.target.dataset.contactField;
+  if(['pseudo','email','message'].includes(name)){draft[name]=e.target.value;}
+ });
+ root.addEventListener('change',e=>{
+  if(e.target.id!=='mjContactFiles')return;
+  const files=Array.from(e.target.files||[]);
+  draft.fileError='';
+  if(files.length>MAX_FILES){draft.fileError='Maximum : 6 fichiers.';}
+  else if(files.some(f=>f.size>MAX_FILE_SIZE)){draft.fileError='Chaque fichier doit peser 10 Mo maximum.';}
+  else if(files.some(f=>!(/\.(png|jpe?g|webp|pdf)$/i).test(f.name))){draft.fileError='Formats acceptés : PNG, JPG, WebP et PDF.';}
+  if(draft.fileError){e.target.value='';document.getElementById('mjContactFileError').textContent=draft.fileError;return;}
+  draft.attachments=files;
+  render(root);
+ });
+ root.addEventListener('submit',e=>{
+  if(e.target.id!=='mjContactForm')return;
+  e.preventDefault();
+  if(!e.target.reportValidity())return;
+  const message=draft.message.trim();
+  if(message.length<20){document.getElementById('mjContactMessage')?.setCustomValidity('Décris ton besoin en au moins 20 caractères.');document.getElementById('mjContactMessage')?.reportValidity();return;}
+  draft.message=message;
+  draft.email=draft.email.trim();
+  draft.pseudo=draft.pseudo.trim();
+  draft.step=4;
+  render(root,true);
  });
 }

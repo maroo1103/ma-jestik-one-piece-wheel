@@ -1,31 +1,104 @@
-/* Ma_JesTik — page Nous contacter : identité graphite / or champagne, autonome. */
-.qg-layout .mj-contact{max-width:1160px;margin:0 auto 36px;color:#f3ece3}
-.qg-layout .mj-contact-hero{position:relative;overflow:hidden;border:1px solid #80603a;border-radius:23px;padding:clamp(25px,4.2vw,58px);background:radial-gradient(circle at 87% 26%,rgba(196,134,47,.17),transparent 38%),linear-gradient(128deg,#171719,#0c0e11 70%);box-shadow:0 24px 58px rgba(0,0,0,.25)}
-.qg-layout .mj-contact-hero:after{content:"";position:absolute;pointer-events:none;right:-105px;top:-170px;width:490px;height:490px;border:1px solid rgba(240,183,96,.13);border-radius:50%;box-shadow:0 0 0 42px rgba(218,164,85,.035),0 0 0 96px rgba(218,164,85,.025)}
-.qg-layout .mj-contact-kicker{position:relative;z-index:1;display:inline-flex;align-items:center;gap:11px;color:#e6b976;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
-.qg-layout .mj-contact-kicker:before{content:"";display:block;width:9px;height:9px;border-radius:50%;background:#f2c783;box-shadow:0 0 16px rgba(243,180,83,.4)}
-.qg-layout .mj-contact-hero h1{position:relative;z-index:1;font:900 clamp(37px,6vw,76px)/1.06 var(--display),Impact,system-ui,sans-serif;letter-spacing:-.025em;color:#f8efe5;margin:22px 0 16px}
-.qg-layout .mj-contact-hero h1 em{font-style:normal;color:#eab669}
-.qg-layout .mj-contact-lead{position:relative;z-index:1;max-width:610px;font-size:clamp(13px,1.45vw,16px);line-height:1.85;color:#cfc5b8;margin:0 0 29px}
-.qg-layout .mj-contact-feature{position:relative;z-index:1;display:grid;gap:14px;max-width:730px;padding:25px;border:1px solid #80603c;border-radius:15px;background:rgba(8,10,13,.85);box-shadow:inset 0 1px rgba(255,234,198,.07)}
-.qg-layout .mj-contact-label{font-size:10px;font-weight:900;letter-spacing:1.8px;color:#d7a861}
-.qg-layout .mj-contact-address{display:inline-block;width:fit-content;max-width:100%;color:#f8ead2;text-decoration:none;font-size:clamp(21px,3vw,34px);font-weight:850;letter-spacing:-.02em;overflow-wrap:anywhere}
-.qg-layout .mj-contact-address:hover,.qg-layout .mj-contact-address:focus-visible{color:#ffd593;text-decoration:underline;text-underline-offset:5px}
-.qg-layout .mj-contact-feature p{margin:0;color:#b6ada4;font-size:12px;line-height:1.7}
-.qg-layout .mj-contact-actions{display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-top:5px}
-.qg-layout .mj-contact-send,.qg-layout .mj-contact-copy{min-height:46px;padding:12px 18px;border-radius:9px;font:850 11px/1.4 var(--font),system-ui,sans-serif;letter-spacing:.3px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:background .18s,border-color .18s,transform .18s}
-.qg-layout .mj-contact-send{background:linear-gradient(135deg,#f5d69c,#d9a052);border:1px solid #f1ce93;color:#19120b}
-.qg-layout .mj-contact-send:hover,.qg-layout .mj-contact-send:focus-visible{background:#ffe2ab;color:#19120b;transform:translateY(-2px)}
-.qg-layout .mj-contact-copy{background:#28241f;border:1px solid #9a7344;color:#f0dcc0}
-.qg-layout .mj-contact-copy:hover,.qg-layout .mj-contact-copy:focus-visible{background:#3b3022;border-color:#e0b476;color:#fff;transform:translateY(-2px)}
-.qg-layout .mj-contact-feedback{display:block;min-height:18px;font-size:12px;color:#f4ca8d}
-.qg-layout .mj-contact-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:22px}
-.qg-layout .mj-contact-case{background:linear-gradient(135deg,#19191b,#111316);border:1px solid #54432f;border-radius:13px;padding:25px;min-width:0}
-.qg-layout .mj-contact-case-index{font-size:10px;font-weight:900;color:#c89b5b;letter-spacing:1.4px}
-.qg-layout .mj-contact-case h2{font:850 clamp(17px,2vw,24px)/1.25 var(--display),Impact,sans-serif;color:#f5e6d0;margin:17px 0 9px}
-.qg-layout .mj-contact-case p{font-size:12px;line-height:1.75;color:#bdb5ac;margin:0}
-.qg-layout .mj-contact-note{display:flex;align-items:flex-start;gap:10px;margin:22px 0 0;padding:16px 19px;border-left:2px solid #b58b4e;background:#191817;font-size:12px;line-height:1.75;color:#c7bdb1}
-.qg-layout .mj-contact-note strong{color:#efc68e}
-@media(max-width:800px){.qg-layout .mj-contact-cases{grid-template-columns:1fr}.qg-layout .mj-contact-case{padding:20px}}
-@media(max-width:520px){.qg-layout .mj-contact-hero{padding:24px 18px}.qg-layout .mj-contact-feature{padding:18px}.qg-layout .mj-contact-actions{display:grid}.qg-layout .mj-contact-send,.qg-layout .mj-contact-copy{width:100%}}
-@media(prefers-reduced-motion:reduce){.qg-layout .mj-contact-send,.qg-layout .mj-contact-copy{transition:none}}
+/* Ma_JesTik / Contact guidé — cohérent avec le thème graphite et or champagne. */
+.qg-layout .mj-contact{width:min(1160px,100%);margin:0 auto 42px;color:#f6eee2;--c-gold:#e8b771;--c-line:#725431;--c-muted:#bcb3a7;scroll-margin-top:125px}
+.qg-layout .mj-contact *{box-sizing:border-box}
+.qg-layout .mj-contact-hero{position:relative;isolation:isolate;overflow:hidden;padding:clamp(29px,4.5vw,56px);border:1px solid #8a693e;border-radius:21px;background:radial-gradient(ellipse at 85% 30%,rgba(183,119,35,.21),transparent 44%),linear-gradient(135deg,#18191b,#0c0e11 70%);margin-bottom:22px}
+.qg-layout .mj-contact-hero:before{position:absolute;z-index:-1;content:"";width:410px;height:410px;border-radius:50%;right:-100px;top:-170px;border:1px solid rgba(232,183,113,.15);box-shadow:0 0 0 35px rgba(232,183,113,.035),0 0 0 80px rgba(232,183,113,.035)}
+.qg-layout .mj-contact-kicker{font-size:11px;letter-spacing:2px;font-weight:900;color:#eac082}
+.qg-layout .mj-contact-kicker:before{content:"";display:inline-block;margin-right:10px;width:8px;height:8px;border-radius:50%;background:#edbd70;box-shadow:0 0 13px #d8a35560}
+.qg-layout .mj-contact-hero h1{font:900 clamp(35px,5vw,68px)/1.08 var(--display),Impact,system-ui,sans-serif;color:#f8f0e7;margin:23px 0 14px;letter-spacing:-.02em}
+.qg-layout .mj-contact-hero h1 em,.qg-layout .mj-contact-intro h2 em{font-style:normal;color:var(--c-gold)}
+.qg-layout .mj-contact-hero>p{max-width:660px;margin:0;color:#c9c0b4;font-size:clamp(13px,1.5vw,16px);line-height:1.85}
+.qg-layout .mj-contact-highlight{display:flex;gap:13px;align-items:center;margin-top:24px;color:#ddc49f;font-size:12px}
+.qg-layout .mj-contact-highlight>span:first-child{color:#e7b878;font-size:20px}
+.qg-layout .mj-contact-wizard{border-radius:20px;border:1px solid #4d3f30;background:linear-gradient(135deg,#171719,#111215);padding:clamp(20px,3.5vw,39px)}
+.qg-layout .mj-contact-steps{padding:0 0 28px;margin:0 0 32px;list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;border-bottom:1px solid #393129}
+.qg-layout .mj-contact-steps li{display:flex;align-items:center;gap:10px;min-width:0;opacity:.5}
+.qg-layout .mj-contact-steps li>span{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border:1px solid #65513a;border-radius:50%;color:#c6b39b;font-weight:850;font-size:12px}
+.qg-layout .mj-contact-steps li small{font-size:11px;font-weight:850;letter-spacing:.2px;color:#e5ddd2}
+.qg-layout .mj-contact-steps li.is-current,.qg-layout .mj-contact-steps li.is-done{opacity:1}
+.qg-layout .mj-contact-steps li.is-current>span{background:linear-gradient(135deg,#f1d298,#c48d45);border-color:#eac08a;color:#19120a}
+.qg-layout .mj-contact-steps li.is-done>span{background:#2e241c;border-color:#ad854c;color:#eac487}
+.qg-layout .mj-contact-intro{text-align:center;max-width:730px;margin:0 auto 30px}
+.qg-layout .mj-contact-overline{display:block;margin-bottom:14px;font-size:10px;font-weight:900;letter-spacing:2px;color:#c99e60}
+.qg-layout .mj-contact-intro h2{font:900 clamp(23px,3.4vw,40px)/1.15 var(--display),Impact,sans-serif;color:#f6ede3;margin:0 0 14px;outline:none}
+.qg-layout .mj-contact-intro p{color:#c2b8ad;font-size:13px;line-height:1.75;margin:0}
+.qg-layout .mj-contact-intro p strong{color:#eac083}
+.qg-layout .mj-contact-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;max-width:1020px;margin:0 auto}
+.qg-layout .mj-contact-category{display:flex;flex-direction:column;align-items:flex-start;text-align:left;position:relative;min-height:166px;padding:23px 22px;background:linear-gradient(145deg,#222123,#151618);border:1px solid #6c5235;border-radius:14px;color:#f4eade;cursor:pointer;transition:transform .18s,border-color .18s,background .18s,box-shadow .18s}
+.qg-layout .mj-contact-category:hover,.qg-layout .mj-contact-category:focus-visible{transform:translateY(-3px);border-color:#e7b777;box-shadow:0 12px 30px #0005;background:#2c2620}
+.qg-layout .mj-contact-category-icon{display:grid;place-items:center;width:39px;height:39px;border-radius:10px;background:#3b2c1d;color:#f2c889;font-size:24px;margin-bottom:16px}
+.qg-layout .mj-contact-category strong{font-size:17px;line-height:1.25;margin-bottom:8px;color:#f4eee5}
+.qg-layout .mj-contact-category small{font-size:11px;line-height:1.6;color:#b8afa4;max-width:250px;padding-right:8px}
+.qg-layout .mj-contact-category-arrow{position:absolute;right:15px;top:16px;color:#d4a364;font-size:16px}
+.qg-layout .mj-contact-topics{display:grid;gap:11px;max-width:850px;margin:0 auto}
+.qg-layout .mj-contact-topic{display:flex;align-items:center;gap:16px;text-align:left;width:100%;min-height:60px;padding:17px 19px;background:#1c1d1f;color:#e9ded1;font-size:14px;font-weight:650;border:1px solid #695239;border-radius:10px;cursor:pointer;transition:border-color .18s,background .18s}
+.qg-layout .mj-contact-topic:hover,.qg-layout .mj-contact-topic:focus-visible{background:#30261b;border-color:#e5b16c;color:#fff1dc}
+.qg-layout .mj-contact-radio{display:block;flex:none;width:19px;height:19px;border:2px solid #ad8754;border-radius:50%;box-shadow:inset 0 0 0 3px #1c1d1f}
+.qg-layout .mj-contact-topic-arrow{margin-left:auto;color:#c59a5b}
+.qg-layout .mj-contact-navigation{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:25px}
+.qg-layout .mj-contact-primary,.qg-layout .mj-contact-secondary,.qg-layout .mj-contact-mail,.qg-layout .mj-contact-restart{min-height:46px;border-radius:9px;padding:12px 18px;font:850 12px/1.4 var(--font),system-ui,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;gap:11px;align-items:center;justify-content:center;transition:border-color .18s,background .18s,transform .18s}
+.qg-layout .mj-contact-primary{margin-left:auto;background:linear-gradient(135deg,#f4d19c,#dda554);color:#1d150e;border:1px solid #efc98a}
+.qg-layout .mj-contact-primary:hover,.qg-layout .mj-contact-primary:focus-visible{background:#f6dbb0;transform:translateY(-2px)}
+.qg-layout .mj-contact-secondary{background:#211f1d;border:1px solid #755837;color:#e6c79e}
+.qg-layout .mj-contact-secondary:hover,.qg-layout .mj-contact-secondary:focus-visible{border-color:#ce9e5d;background:#2e271f;color:#f6e2be}
+.qg-layout .mj-contact-fieldset{margin:0 0 17px;padding:clamp(18px,2.5vw,28px);background:#191a1c;border:1px solid #5e4b35;border-radius:13px}
+.qg-layout .mj-contact-fieldset h3,.qg-layout .mj-contact-summary h3{font:850 clamp(17px,2vw,24px)/1.2 var(--display),Impact,sans-serif;color:#efd2a5;margin:0 0 17px}
+.qg-layout .mj-contact-label{display:block;font-size:12px;font-weight:850;color:#e6d7c2;margin:0 0 9px}
+.qg-layout .mj-contact-label>span{color:#e5a95c}
+.qg-layout .mj-contact-label .mj-contact-optional{color:#aba49a;font-weight:450}
+.qg-layout .mj-contact-fieldset input[type=text],.qg-layout .mj-contact-fieldset input[type=email],.qg-layout .mj-contact-fieldset textarea{width:100%;font:500 14px/1.65 var(--font),system-ui,sans-serif;background:#0e1012;color:#fff5e9;border:1px solid #806b4c;border-radius:9px;padding:13px 15px}
+.qg-layout .mj-contact-fieldset input:focus,.qg-layout .mj-contact-fieldset textarea:focus{outline:2px solid #ddaa64;outline-offset:2px}
+.qg-layout .mj-contact-fieldset textarea{resize:vertical;min-height:170px}
+.qg-layout .mj-contact-fieldset input::placeholder,.qg-layout .mj-contact-fieldset textarea::placeholder{color:#8c8580}
+.qg-layout .mj-contact-fields{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}
+.qg-layout .mj-contact-hint,.qg-layout .mj-contact-fieldset>p{margin:11px 0 0;color:#b3a99e;font-size:11px;line-height:1.7}
+.qg-layout .mj-contact-fieldset-title{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.qg-layout .mj-contact-fieldset-title h3{margin:0}
+.qg-layout .mj-contact-fieldset-title h3 span{font:500 12px var(--font),sans-serif;color:#bbb0a0}
+.qg-layout .mj-contact-fieldset-title>span{font-size:10px;color:#c99b60}
+.qg-layout .mj-contact-attachments .mj-contact-upload{position:relative;display:inline-flex;align-items:center;gap:13px;min-height:54px;margin:14px 0 8px;padding:11px 19px;border:1px dashed #a4804c;border-radius:10px;color:#e8bd80;font-weight:900;font-size:11px;cursor:pointer;background:#28231e}
+.qg-layout .mj-contact-upload input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+.qg-layout .mj-contact-upload:focus-within{outline:2px solid #e9bb77;outline-offset:3px}
+.qg-layout .mj-contact-attachments small{display:block;color:#bcae9c;font-size:11px;line-height:1.6}
+.qg-layout .mj-contact-filelist{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.qg-layout .mj-contact-filelist span{max-width:100%;overflow-wrap:anywhere;padding:7px 10px;border-radius:7px;border:1px solid #695339;color:#ebcca3;background:#30271e;font-size:11px}
+.qg-layout .mj-contact-fieldset p.mj-contact-error{font-size:12px;color:#ffb4a8}
+.qg-layout .mj-contact-summary{padding:clamp(19px,3vw,28px);background:#19191b;border:1px solid #69523b;border-radius:12px}
+.qg-layout .mj-contact-summary dl{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:0 0 24px}
+.qg-layout .mj-contact-summary dl>div{padding:13px 15px;background:#111315;border-radius:8px}
+.qg-layout .mj-contact-summary dt{color:#bca37e;font-size:10px;letter-spacing:1px;font-weight:850;text-transform:uppercase}
+.qg-layout .mj-contact-summary dd{margin:7px 0 0;color:#f6eadb;font-size:13px;overflow-wrap:anywhere}
+.qg-layout .mj-contact-summary pre{white-space:pre-wrap;overflow-wrap:anywhere;font:500 13px/1.75 var(--font),system-ui,sans-serif;color:#d8cec3;background:#0f1113;border:1px solid #53432f;border-radius:9px;padding:16px}
+.qg-layout .mj-contact-summary-note{color:#e3c394;font-size:12px}
+.qg-layout .mj-contact-warning{margin-top:17px;border-left:3px solid #d8a867;padding:17px;background:#2a2119;color:#d9c7ac;font-size:12px;line-height:1.75}
+.qg-layout .mj-contact-warning strong{color:#f5d39e}
+.qg-layout .mj-contact-finish{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:17px}
+.qg-layout #mjContactCopyStatus{font-size:12px;color:#f0cd93;flex:1 1 180px}
+.qg-layout .mj-contact-mail{border:1px solid #846541;background:#2c261e;color:#eecb99}
+.qg-layout .mj-contact-restart{border:1px solid #554836;background:#191a1c;color:#b7ad9f}
+.qg-layout .mj-contact-help{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;border:1px solid #58442f;border-radius:13px;padding:20px 24px;margin-top:20px;background:#161719}
+.qg-layout .mj-contact-help>span:first-child{font-size:11px;letter-spacing:1.4px;font-weight:900;color:#e9b977}
+.qg-layout .mj-contact-help p{font-size:11px;color:#bdb4aa;line-height:1.7;margin:0}
+.qg-layout .mj-contact-help a{color:#ebc58a}
+.qg-layout .mj-contact-help button{border:1px solid #997044;padding:11px 13px;color:#ead0ac;background:#2a231b;border-radius:7px;font-size:10px;font-weight:900;cursor:pointer}
+.qg-layout #mjContactAddressStatus{grid-column:1/-1;font-size:11px;color:#efca8d}
+@media(max-width:850px){
+.qg-layout .mj-contact-categories{grid-template-columns:repeat(2,minmax(0,1fr))}
+.qg-layout .mj-contact-help{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+.qg-layout .mj-contact-wizard{padding:20px 14px}
+.qg-layout .mj-contact-steps{gap:5px;padding-bottom:20px}
+.qg-layout .mj-contact-steps li{justify-content:center}
+.qg-layout .mj-contact-steps li small{display:none}
+.qg-layout .mj-contact-categories{grid-template-columns:1fr;gap:10px}
+.qg-layout .mj-contact-category{min-height:120px;padding:17px 20px}
+.qg-layout .mj-contact-category-icon{margin-bottom:8px}
+.qg-layout .mj-contact-fields,.qg-layout .mj-contact-summary dl{grid-template-columns:1fr}
+.qg-layout .mj-contact-navigation{align-items:stretch}
+.qg-layout .mj-contact-navigation>button{width:100%;margin-left:0}
+.qg-layout .mj-contact-hero{padding:28px 22px}
+}
+@media(prefers-reduced-motion:reduce){
+.qg-layout .mj-contact-category,.qg-layout .mj-contact-topic,.qg-layout .mj-contact-primary,.qg-layout .mj-contact-secondary{transition:none}
+}
