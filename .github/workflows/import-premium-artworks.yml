@@ -1,11 +1,19 @@
 name: Import images premium
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-premium-artworks.yml'
 permissions:
   contents: read
+  pages: write
+  id-token: write
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo 'Validation visuels'
+      - name: Download validated image
+        run: |
+          curl --fail --location --silent --show-error 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/11e8e9ce-5e68-430c-a053-df5e9172a953.png' -o /tmp/qg.png
+          file /tmp/qg.png
