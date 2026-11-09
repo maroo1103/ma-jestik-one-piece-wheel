@@ -1,9 +1,12 @@
-// Ma_JesTik — parcours de contact guidé.
-// Le site est statique : aucun envoi ni téléversement n'est simulé.
-// La mise en place d'un destinataire serveur sécurisé sera nécessaire à l'envoi direct.
+// Ma_JesTik — contact guidé et envoi via Cloudflare / Resend, protégé par Turnstile.
+// Aucune clé privée dans les fichiers publics.
 const MAIL='contact@ma-jestik.fr';
 const MAX_FILES=6;
-const MAX_FILE_SIZE=10*1024*1024;
+const MAX_FILE_SIZE=5*1024*1024;
+const MAX_TOTAL_SIZE=12*1024*1024;
+const CONTACT_API=(document.querySelector('meta[name="majestik-contact-api"]')?.content||'').replace(/\/+$/,'');
+const TURNSTILE_SITE_KEY=document.querySelector('meta[name="majestik-turnstile-sitekey"]')?.content||'';
+let captchaScriptPromise=null,captchaWidgetId=null;
 const CATEGORIES=[
  {id:'support',icon:'✦',title:'Support technique',desc:'Un problème sur le site ou avec un outil du QG.',topics:[
   ['site','Affichage ou navigation du site'],
@@ -43,7 +46,7 @@ const CATEGORIES=[
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const category=id=>CATEGORIES.find(c=>c.id===id);
 const topic=(cat,id)=>cat?.topics.find(p=>p[0]===id);
-const state=()=>({step:1,category:null,topic:null,pseudo:'',email:'',message:'',attachments:[],fileError:''});
+const state=()=>({step:1,category:null,topic:null,pseudo:'',email:'',message:'',attachments:[],fileError:'',captchaToken:'',captchaError:'',sendError:'',sending:false,sent:false});
 let draft=state();
 const nav=step=>'<ol class="mj-contact-steps" aria-label="Étapes de la demande">'+
  ['Catégorie','Sujet','Ton message','Récapitulatif'].map((s,i)=>'<li class="'+(i+1===step?'is-current':i+1<step?'is-done':'')+'"'+(i+1===step?' aria-current="step"':'')+'><span>'+(i+1)+'</span><small>'+s+'</small></li>').join('')+'</ol>';
@@ -72,9 +75,9 @@ function attachInfo(){
  const items=draft.attachments.length?'<div class="mj-contact-filelist" aria-live="polite">'+draft.attachments.map(f=>'<span>▣ '+esc(f.name)+'</span>').join('')+'</div>':'';
  return '<section class="mj-contact-fieldset mj-contact-attachments" aria-labelledby="mjContactFilesTitle">'+
   '<div class="mj-contact-fieldset-title"><h3 id="mjContactFilesTitle">Pièces jointes <span>(facultatives)</span></h3><span>Jusqu’à 6 fichiers</span></div>'+
-  '<p>Pour illustrer ton problème, tu peux préparer des captures d’écran ou un PDF (10 Mo maximum par fichier).</p>'+
+  '<p>Tu peux joindre jusqu’à 6 captures d’écran ou PDF : 5 Mo par fichier et 12 Mo au total.</p>'+
   '<label class="mj-contact-upload">＋ <span>SÉLECTIONNER DES FICHIERS</span><input type="file" id="mjContactFiles" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf" aria-describedby="mjContactFilesHelp"></label>'+
-  items+'<small id="mjContactFilesHelp">Les fichiers ne sont pas envoyés depuis le site actuellement. Tu devras les joindre toi-même dans ta messagerie.</small>'+
+  items+'<small id="mjContactFilesHelp">Les fichiers seront envoyés avec ton message. N’ajoute pas de mots de passe ou de documents sensibles inutiles.</small>'+
   '<p class="mj-contact-error" id="mjContactFileError" role="alert">'+esc(draft.fileError)+'</p></section>';
 }
 function fillForm(){
@@ -96,7 +99,7 @@ function fillForm(){
       '<div><label class="mj-contact-label" for="mjContactEmail">Ton adresse e-mail <span>*</span></label>'+
       '<input id="mjContactEmail" type="email" name="email" data-contact-field="email" required maxlength="254" autocomplete="email" value="'+esc(draft.email)+'" placeholder="tonadresse@exemple.fr"></div>'+
      '</div>'+
-     '<p class="mj-contact-hint">Cette version prépare ton message sans l’envoyer : aucune donnée n’est transmise par ce formulaire.</p></section>'+
+     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. Contact pour tes droits : contact@ma-jestik.fr.</p></section>'+
    '<div class="mj-contact-navigation">'+back('REVENIR AUX SUJETS')+'<button type="submit" class="mj-contact-primary">VÉRIFIER MA DEMANDE <span aria-hidden="true">→</span></button></div>'+
   '</form>';
 }
@@ -106,26 +109,133 @@ function emailBody(){
   ...(draft.attachments.length?['Pièces jointes à ajouter dans la messagerie :',...draft.attachments.map(f=>'- '+f.name),'']:[]),'Merci.'].join('\n');
 }
 function summary(){
- const c=category(draft.category),t=topic(c,draft.topic),subject='[Ma_JesTik] '+(c?.title||'Contact')+' - '+(t?.[1]||'Demande');
+ const c=category(draft.category),t=topic(c,draft.topic);
+ if(draft.sent){
+  return '<div class="mj-contact-intro"><span class="mj-contact-overline">04 / ENVOI CONFIRMÉ</span>'+
+   '<h2 id="mjContactStepTitle">MESSAGE <em>ENVOYÉ !</em></h2>'+
+   '<p>Ta demande a été transmise à Ma_JesTik. Nous pourrons te répondre à <strong>'+esc(draft.email)+'</strong>.</p></div>'+
+   '<div class="mj-contact-sent" role="status"><strong>✓ Envoi confirmé</strong>'+
+   '<p>Tu n’as rien d’autre à faire. Pense à vérifier ta messagerie, y compris les indésirables.</p></div>'+
+   '<div class="mj-contact-navigation"><button type="button" class="mj-contact-primary" data-contact-restart>CRÉER UNE AUTRE DEMANDE ↗</button></div>';
+ }
  return '<div class="mj-contact-intro"><span class="mj-contact-overline">04 / RÉCAPITULATIF</span>'+
  '<h2 id="mjContactStepTitle">TA DEMANDE EST <em>PRÊTE.</em></h2>'+
- '<p>Vérifie les informations puis copie le message pour l’envoyer depuis ton webmail habituel.</p></div>'+
- '<section class="mj-contact-summary"><dl><div><dt>Catégorie</dt><dd>'+esc(c?.title)+'</dd></div><div><dt>Sujet</dt><dd>'+esc(t?.[1])+'</dd></div><div><dt>Adresse de réponse</dt><dd>'+esc(draft.email)+'</dd></div><div><dt>Destinataire</dt><dd>'+MAIL+'</dd></div></dl>'+
- '<h3>Message préparé</h3><pre id="mjContactPrepared">'+esc(emailBody())+'</pre>'+
- (draft.attachments.length?'<p class="mj-contact-summary-note">Pense à ajouter tes '+draft.attachments.length+' pièce(s) jointe(s) dans ton webmail.</p>':'')+
+ '<p>Vérifie les informations, puis valide la protection anti-spam avant l’envoi direct.</p></div>'+
+ '<section class="mj-contact-summary"><dl><div><dt>Catégorie</dt><dd>'+esc(c?.title)+'</dd></div><div><dt>Sujet</dt><dd>'+esc(t?.[1])+'</dd></div>'+
+ '<div><dt>Adresse de réponse</dt><dd>'+esc(draft.email)+'</dd></div><div><dt>Destinataire</dt><dd>'+MAIL+'</dd></div></dl>'+
+ '<h3>Message à envoyer</h3><pre id="mjContactPrepared">'+esc(emailBody())+'</pre>'+
+ (draft.attachments.length?'<p class="mj-contact-summary-note">Pièces jointes : '+draft.attachments.length+' ('+Math.ceil(draft.attachments.reduce((sum,f)=>sum+f.size,0)/1024)+' Ko).</p>':'')+
  '</section>'+
- '<div class="mj-contact-warning"><strong>Envoi direct pas encore activé.</strong> Le QG ne possède pas encore de service d’envoi sécurisé. Aucun message ni fichier n’a été transmis. Après avoir copié ta demande, envoie-la à <strong>'+MAIL+'</strong> depuis ta messagerie.</div>'+
+ '<div class="mj-contact-verification"><strong>Protection anti-spam Cloudflare</strong>'+
+ '<p>Une courte vérification protège notre boîte de réception des robots.</p>'+
+ '<div id="mjContactTurnstile" aria-label="Vérification anti-spam"></div>'+
+ '<p id="mjContactCaptchaStatus" role="status">'+esc(draft.captchaError||'Chargement de la vérification de sécurité…')+'</p></div>'+
+ '<p class="mj-contact-send-error" id="mjContactSendStatus" role="alert" aria-live="polite">'+esc(draft.sendError)+'</p>'+
  '<div class="mj-contact-navigation">'+back('MODIFIER MON MESSAGE')+
- '<button type="button" class="mj-contact-primary" data-contact-copy>COPIER MA DEMANDE <span aria-hidden="true">⧉</span></button></div>'+
- '<div class="mj-contact-finish"><span id="mjContactCopyStatus" role="status" aria-live="polite"></span>'+
- '<a class="mj-contact-mail" href="mailto:'+MAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(emailBody())+'">OUVRIR MA MESSAGERIE ↗</a>'+
- '<button type="button" class="mj-contact-restart" data-contact-restart>Créer une autre demande</button></div>';
+ '<button type="button" class="mj-contact-primary" data-contact-send disabled>ENVOYER MA DEMANDE →</button></div>'+
+ '<div class="mj-contact-finish"><button type="button" class="mj-contact-secondary" data-contact-copy>COPIER LE MESSAGE (SECOURS)</button>'+
+ '<span id="mjContactCopyStatus" role="status" aria-live="polite"></span></div>';
+}
+function destroyCaptcha(){
+ if(captchaWidgetId!==null&&window.turnstile?.remove){
+  try{window.turnstile.remove(captchaWidgetId)}catch{}
+ }
+ captchaWidgetId=null;
+ draft.captchaToken='';
+}
+function updateSendButton(root){
+ const button=root.querySelector('[data-contact-send]');
+ if(!button)return;
+ button.disabled=draft.sending||!draft.captchaToken;
+ button.textContent=draft.sending?'ENVOI EN COURS…':'ENVOYER MA DEMANDE →';
+}
+function loadCaptchaScript(){
+ if(window.turnstile?.render)return Promise.resolve(window.turnstile);
+ if(captchaScriptPromise)return captchaScriptPromise;
+ captchaScriptPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');
+  script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  script.async=true;
+  script.onload=()=>window.turnstile?.render?resolve(window.turnstile):reject(new Error('Turnstile indisponible'));
+  script.onerror=()=>reject(new Error('Chargement de Turnstile impossible'));
+  document.head.appendChild(script);
+ }).catch(error=>{captchaScriptPromise=null;throw error;});
+ return captchaScriptPromise;
+}
+async function setupCaptcha(root){
+ const slot=root.querySelector('#mjContactTurnstile');
+ if(!slot)return;
+ const status=root.querySelector('#mjContactCaptchaStatus');
+ if(!TURNSTILE_SITE_KEY||!CONTACT_API){
+  if(status)status.textContent='Service temporairement indisponible. Contacte-nous par e-mail.';
+  return;
+ }
+ try{
+  const turnstile=await loadCaptchaScript();
+  if(!slot.isConnected||draft.step!==4||draft.sent)return;
+  captchaWidgetId=turnstile.render(slot,{
+   sitekey:TURNSTILE_SITE_KEY,action:'majestik_contact',theme:'auto',size:'flexible',
+   callback:token=>{
+    if(draft.step!==4||draft.sent)return;
+    draft.captchaToken=token;
+    if(status?.isConnected)status.textContent='Vérification réussie, tu peux envoyer ta demande.';
+    updateSendButton(root);
+   },
+   'expired-callback':()=>{
+    draft.captchaToken='';
+    if(status?.isConnected)status.textContent='Vérification expirée. Effectue-la de nouveau.';
+    updateSendButton(root);
+   },
+   'error-callback':()=>{
+    draft.captchaToken='';
+    if(status?.isConnected)status.textContent='Vérification indisponible. Actualise la page si nécessaire.';
+    updateSendButton(root);
+   }
+  });
+  if(status?.isConnected&&!draft.captchaToken)status.textContent='Effectue la vérification pour activer l’envoi.';
+ }catch{
+  if(status?.isConnected)status.textContent='Impossible de charger la sécurité anti-spam. Vérifie ta connexion ou les bloqueurs de scripts.';
+ }
+}
+async function sendContact(root){
+ if(draft.sending||draft.sent||!draft.captchaToken||!CONTACT_API)return;
+ const current=draft,data=new FormData();
+ for(const field of ['category','topic','pseudo','email','message'])data.append(field,current[field]||'');
+ data.append('website','');
+ data.append('cf-turnstile-response',current.captchaToken);
+ for(const file of current.attachments)data.append('attachments',file,file.name);
+ current.sending=true;
+ current.sendError='';
+ updateSendButton(root);
+ const status=root.querySelector('#mjContactSendStatus');
+ if(status)status.textContent='Transmission sécurisée en cours…';
+ try{
+  const response=await fetch(CONTACT_API+'/v1/contact',{
+   method:'POST',mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',
+   body:data,signal:AbortSignal.timeout(35000)
+  });
+  const result=await response.json().catch(()=>null);
+  if(!response.ok||result?.sent!==true)throw new Error(result?.error||'Envoi impossible pour le moment.');
+  if(draft!==current)return;
+  current.sent=true;
+  current.sending=false;
+  render(root,true);
+ }catch(error){
+  if(draft!==current)return;
+  current.sendError=error?.name==='TimeoutError'
+   ?'Le serveur n’a pas répondu. Vérifie tes e-mails avant de réessayer pour éviter un doublon.'
+   :String(error?.message||'Envoi impossible. Réessaie ou écris à contact@ma-jestik.fr.').slice(0,230);
+  current.sending=false;
+  render(root);
+ }
 }
 function render(root,focus=false){
  if(!root)return;
+ destroyCaptcha();
  root.innerHTML=nav(draft.step)+'<div class="mj-contact-view">'+(
   draft.step===1?selectCategory():draft.step===2?selectTopic():draft.step===3?fillForm():summary()
  )+'</div>';
+ if(draft.step===4&&!draft.sent)void setupCaptcha(root);
  if(focus){
   const heading=root.querySelector('#mjContactStepTitle');
   heading?.setAttribute('tabindex','-1');
@@ -138,7 +248,7 @@ export function contactMarkup(){
  '<header class="mj-contact-hero">'+
  '<span class="mj-contact-kicker">MA_JESTIK / NOUS CONTACTER</span>'+
  '<h1 id="mjContactTitle">UNE QUESTION ? <em>PARLONS-EN.</em></h1>'+
- '<p>Un souci technique, une question sur ton compte Ma_JesTik, une idée ou une collaboration ? Choisis ton motif et prépare ta demande étape par étape.</p>'+
+ '<p>Un souci technique, une question sur ton compte Ma_JesTik, une idée ou une collaboration ? Choisis ton motif et envoie ta demande directement depuis le QG.</p>'+
  '<div class="mj-contact-highlight"><span aria-hidden="true">✧</span><span>Un parcours simple, adapté à chaque besoin, sans connexion obligatoire.</span></div>'+
  '</header>'+
  '<div class="mj-contact-wizard" id="mjContactWizard"></div>'+
@@ -166,6 +276,8 @@ export function mountContact(){
  const directCopy=document.getElementById('mjContactCopyAddress');
  directCopy?.addEventListener('click',()=>copyText(MAIL,document.getElementById('mjContactAddressStatus')));
  root.addEventListener('click',e=>{
+  if(draft.sending)return;
+  if(e.target.closest('[data-contact-send]')){void sendContact(root);return;}
   const categoryButton=e.target.closest('[data-contact-category]');
   if(categoryButton){draft.category=categoryButton.dataset.contactCategory;draft.topic=null;draft.step=2;render(root,true);return;}
   const topicButton=e.target.closest('[data-contact-topic]');
@@ -185,7 +297,8 @@ export function mountContact(){
   const files=Array.from(e.target.files||[]);
   draft.fileError='';
   if(files.length>MAX_FILES){draft.fileError='Maximum : 6 fichiers.';}
-  else if(files.some(f=>f.size>MAX_FILE_SIZE)){draft.fileError='Chaque fichier doit peser 10 Mo maximum.';}
+  else if(files.some(f=>f.size>MAX_FILE_SIZE)){draft.fileError='Chaque fichier doit peser 5 Mo maximum.';}
+  else if(files.reduce((sum,f)=>sum+f.size,0)>MAX_TOTAL_SIZE){draft.fileError='La taille totale ne doit pas dépasser 12 Mo.';}
   else if(files.some(f=>!(/\.(png|jpe?g|webp|pdf)$/i).test(f.name))){draft.fileError='Formats acceptés : PNG, JPG, WebP et PDF.';}
   if(draft.fileError){e.target.value='';document.getElementById('mjContactFileError').textContent=draft.fileError;return;}
   draft.attachments=files;
