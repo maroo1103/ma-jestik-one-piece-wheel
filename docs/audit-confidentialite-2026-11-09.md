@@ -48,7 +48,9 @@ Les finalités sont identifiées, mais il faut attribuer une base juridique appr
 - **Constat :** la base `members` contient `joined_at` et `updated_at`, mais **pas de champ dédié `last_active_at`**. Le champ `updated_at` est modifié par certains changements de profil/points ; il **ne constitue pas un indicateur fiable de dernière utilisation**.
 - **Préconditions avant automatisation :** ajouter un champ de dernière activité, le mettre à jour côté serveur lorsqu'un utilisateur authentifié interagit (en limitant les écritures excessives), prévoir une migration non destructive, effectuer une sauvegarde de D1, tester la purge sur une base de développement et résoudre la question des références du Tribunal.
 - **Mesure de protection lors du lancement :** pour les comptes existants, **ne jamais calculer immédiatement les six mois à partir de `joined_at` ou `updated_at`** ; initialiser un point de départ prudent pour éviter toute suppression rétroactive injustifiée. Informer les membres clairement avant la première purge et envisager un avertissement préalable.
-- **Statut :** règle choisie, **non encore mise en production**. Aucun compte, point ni vote n'a été supprimé lors de cet audit.
+- **Code préparé et commité sur GitHub :** `backend/cloudflare/migrations/0007_member_activity.sql` (nouvelle table `member_activity`, initialisation des comptes existants à la date de migration), `POST /v1/me/activity` authentifié côté Worker et émission contrôlée depuis `dist/qg/twitch-auth.js`. Détail et ordre de déploiement dans `backend/cloudflare/SUIVI_INACTIVITE_6_MOIS.md`.
+- **Commutateurs de sécurité :** `majestik-activity-enabled=false` dans le HTML et `ACTIVITY_TRACKING_ENABLED` requis à `true` dans le Worker. Aucun appel n'est effectué par le navigateur avant activation.
+- **Statut :** règle choisie, **non encore activée en production**. Aucun compte, point ni vote n'a été supprimé lors de cet audit.
 
 ## Décisions à prendre avec l'éditeur avant modifications de la base
 
