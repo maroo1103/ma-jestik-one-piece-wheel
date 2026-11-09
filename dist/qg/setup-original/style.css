@@ -134,3 +134,7 @@ body.mj-product-open{overflow:hidden}
   .mj-product-dialog .mj-product-close{margin-bottom:4px}
 }
 @media(prefers-reduced-motion:reduce){.mj-product-dialog,.mj-part-open{transition:none}}
+
+/* Les photos produit sont des carrés 1200 × 1200 : conserver leur cadrage. */
+.mj-product-figure .mj-photo-surface{aspect-ratio:1;min-height:0}
+.mj-photo-surface .mj-owned-photo{object-fit:contain}

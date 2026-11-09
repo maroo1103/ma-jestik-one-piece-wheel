@@ -58,3 +58,14 @@ Date : 9 novembre 2026 · Périmètre : `dist/qg/setup-original/` et URL de l'if
 - Le chargement initial de la **photo originale du setup** conserve son URL, sa taille 1448 × 1086, ses contours SVG et le zoom existants.
 - Les écrans et les autres fonctionnalités du QG, Twitch, profils, votes, Tribunal, Killathon, roue, backend Cloudflare n'ont pas été modifiés.
 - **À valider visuellement dans un navigateur** : position/cadrage des recadrages, ergonomie iOS/Android, compatibilité dialog dans iframe, restitution du focus et chargement des photos. Les tests automatisés statiques ne remplacent pas un essai sur mobile.
+
+## Mise à jour des visuels — novembre 2026
+- ZIP fourni par le propriétaire : `photos-ma-jestik.zip`, 24 fichiers (11 composants PC et 13 périphériques).
+- Noms normalisés : `manette-scuf.jpg` → `scuf.webp` ; `ps5.jpg.jpg` → `ps5.webp`.
+- Les 24 fichiers ont été convertis en WebP **1200 × 1200** avec fond graphite et détourage non génératif autant que possible. Le fichier ZIP de livraison `photos-ma-jestik-optimisees.zip` contient les 24 WebP et un aperçu.
+- Le catalogue `materiel.js` pointe vers `./images/products/{id}.webp` pour **chacune des 24 fiches**. Les anciennes images recadrées du setup ne sont plus utilisées dans les fiches.
+- **Attention : le connecteur GitHub ne permet pas dans cette session d'envoyer directement les fichiers WebP binaires issus d'une archive locale.** Les images ne seront pas présentes dans le dépôt tant qu'elles n'ont pas été téléversées dans `dist/qg/setup-original/images/products/`. Le code prévoit un affichage de secours « PHOTO À AJOUTER » pour les fichiers manquants.
+- Vérifier le droit de republication des images reçues avant leur mise en ligne publique : elles peuvent provenir de fabricants ou boutiques. Le ZIP ne fournit pas de preuve de licence.
+- `pc-tower.webp` et `case.webp` ont chacun un visuel distinct, tel que fourni.
+- Les sources initiales basse résolution (300–500 pixels) sont interpolées pour l'uniformité, mais ne gagnent pas de détail réel.
+- La photo du setup servant aux **13 zones SVG** reste totalement inchangée, ainsi que le zoom et les autres pages du QG.
