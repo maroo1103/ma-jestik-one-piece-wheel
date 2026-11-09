@@ -52,9 +52,9 @@ function drawWheel() {
   for(let i=0;i<48;i++){const a=i/48*TAU;const major=i%4===0; $('rim').append(svgElement('circle',{cx:360+Math.sin(a)*350,cy:360-Math.cos(a)*350,r:major?2.8:1.2,fill:major?'#efc978':'#718e91'}));}
   angle=0; applyRotation();
   $('wheel').setAttribute('aria-label',`Roue de ${count} lieux sélectionnés : ${items.map(p=>p.name).join(', ')}`);
-  $('selectedCount').textContent=`${count} / 12`;
+  $('selectedCount').textContent=`${count} / ${POIS.length}`;
   $('odds').textContent=`${count} lieu${count>1?'x':''} · chances égales`;
-  $('selectAll').disabled=spinning || count===12;
+  $('selectAll').disabled=spinning || count===POIS.length;
   $('resultNumber').textContent=`? / ${count}`;
   $('spin').disabled=spinning;
 }
@@ -67,21 +67,21 @@ function renderCards(){
     const input=document.createElement('input');input.type='checkbox';input.checked=selected.has(poi.id);input.dataset.id=poi.id;input.setAttribute('aria-label',`Inclure ${poi.name}`);
     const thumb=document.createElement('span');thumb.className='thumb';const img=document.createElement('img');img.src=poi.image;img.dataset.poiId=poi.id;img.alt=`Image de ${poi.name}`;img.width=512;img.height=512;img.loading='lazy';thumb.append(img);
     const name=document.createElement('span');name.className='name';name.textContent=poi.name;
-    const index=document.createElement('span');index.className='poi-index';index.textContent=`ESCALE ${poi.id}`;
+    const index=document.createElement('span');index.className='poi-index';index.textContent=`CHOIX ${poi.id}`;
     const edit=document.createElement('button');edit.type='button';edit.className='edit-image';edit.textContent="Changer l'image";edit.setAttribute('aria-label',`Changer l'image de ${poi.name}`);edit.disabled=spinning||!imageStoreReady;edit.addEventListener('click',()=>openImageEditor(poi));
     const badge=document.createElement('span');badge.className='custom-image-badge';badge.textContent='IMAGE PERSO';badge.hidden=!customImages.has(poi.id);
     label.append(input,thumb,name,index);card.append(label,badge,edit);$('poiGrid').append(card);
-    input.addEventListener('change',()=>{ if(spinning){input.checked=selected.has(poi.id);return;} if(!input.checked&&selected.size===1){input.checked=true;$('selectionMessage').textContent='Garde au moins une destination dans le tirage.';return;} $('selectionMessage').textContent='';if(input.checked)selected.add(poi.id);else selected.delete(poi.id);drawWheel();resetResult();persist(); });
+    input.addEventListener('change',()=>{ if(spinning){input.checked=selected.has(poi.id);return;} if(!input.checked&&selected.size===1){input.checked=true;$('selectionMessage').textContent='Garde au moins un choix dans le tirage.';return;} $('selectionMessage').textContent='';if(input.checked)selected.add(poi.id);else selected.delete(poi.id);drawWheel();resetResult();persist(); });
   }
 }
 function renderHistory(){
   $('history').replaceChildren();
-  if(!history.length){const span=document.createElement('span');span.className='empty-history';span.textContent='Les dernières escales apparaîtront ici.';$('history').append(span);return;}
+  if(!history.length){const span=document.createElement('span');span.className='empty-history';span.textContent='Les derniers tirages apparaîtront ici.';$('history').append(span);return;}
   history.forEach((id,i)=>{const p=POIS.find(p=>p.id===id);const el=document.createElement('span');el.className='history-item';el.title=i===0?'Dernier tirage':`Tirage précédent ${i}`;const img=document.createElement('img');img.src=p.image;img.dataset.poiId=p.id;img.alt='';const name=document.createElement('span');name.textContent=p.name;el.append(img,name);$('history').append(el);});
 }
 function setImage(poi) { $('resultImage').src=poi.image; $('resultImage').dataset.poiId=poi.id; $('resultImage').alt=`Image de ${poi.name}`; }
 function resetResult(){
-  $('wheelStatus').textContent="L'équipage attend ton signal.";$('spin').querySelector('span').textContent='LANCER LA ROUE';$('announcement').textContent='';$('resultCard').classList.remove('winner','reveal');$('resultLabel').textContent='PROCHAINE ESCALE';$('resultOverline').textContent='PRÊT À PRENDRE LE LARGE ?';$('resultName').textContent="Le prochain cap t'attend.";$('resultDetail').textContent='Lance la roue et découvre ton point de chute.';$('artBadge').textContent='LE GRAND DÉPART';setImage(active()[0]);
+  $('wheelStatus').textContent="La roue attend ton signal.";$('spin').querySelector('span').textContent='LANCER LA ROUE';$('announcement').textContent='';$('resultCard').classList.remove('winner','reveal');$('resultLabel').textContent='PROCHAIN RÉSULTAT';$('resultOverline').textContent='LAISSE LE HASARD DÉCIDER';$('resultName').textContent="Le prochain choix t'attend.";$('resultDetail').textContent='Lance la roue et découvre le résultat.';$('artBadge').textContent='PRÊT AU TIRAGE';setImage(active()[0]);
 }
 function tick(final=false){
   if(!soundOn||!audio)return;
@@ -130,7 +130,7 @@ async function spin(){
   const items=active(),index=randomIndex(items.length),winner=items[index],startAngle=normalise(angle),endAngle=targetAngle(startAngle,index,items.length),duration=reducedMotion.matches?700:Number($('duration').value)*1000;
   angle=startAngle;lastTick=-1;document.body.classList.add('spinning');$('resultCard').classList.remove('winner','reveal');$('spin').disabled=true;$('spin').querySelector('span').textContent='LE DESTIN EST EN MARCHE…';$('duration').disabled=true;$('selectAll').disabled=true;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=true);
   document.querySelectorAll('.edit-image').forEach(e=>e.disabled=true);
-  $('resultLabel').textContent='CAP EN COURS';$('artBadge').textContent='EN APPROCHE';$('resultOverline').textContent='GARDE LE CAP…';$('resultDetail').textContent='La roue ralentit. Le point de chute arrive.';$('wheelStatus').textContent='Tous les regards sur la roue.';$('announcement').textContent='Tirage en cours.';
+  $('resultLabel').textContent='TIRAGE EN COURS';$('artBadge').textContent='EN COURS';$('resultOverline').textContent='LE HASARD DÉCIDE…';$('resultDetail').textContent='La roue ralentit. Le résultat arrive.';$('wheelStatus').textContent='Tous les regards sur la roue.';$('announcement').textContent='Tirage en cours.';
   if(soundOn){try{audio ??= new (window.AudioContext||window.webkitAudioContext)();await audio.resume();void getDestinationSound(winner.id);}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}
   const started=performance.now();
   function frame(now){
@@ -138,8 +138,8 @@ async function spin(){
     angle=reducedMotion.matches?(progress===1?endAngle:startAngle):startAngle+(endAngle-startAngle)*ease;applyRotation();
     if(!reducedMotion.matches)showPassing(indexAtPointer(angle,items.length),items);
     if(progress<1){requestAnimationFrame(frame);return;}
-    angle=normalise(endAngle);applyRotation();spinning=false;document.body.classList.remove('spinning');setImage(winner);$('resultName').textContent=winner.name;$('resultLabel').textContent='DESTINATION CHOISIE';$('resultOverline').textContent="L'ÉQUIPAGE A SON CAP !";$('artBadge').textContent='TERRE EN VUE';$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;$('resultDetail').textContent='Prochain arrêt : '+winner.name+'. Bon drop !';$('resultCard').classList.add('winner','reveal');$('wheelStatus').textContent='Cap sur '+winner.name+' !';$('announcement').textContent='Destination choisie : '+winner.name;tick(true);void playDestinationSound(winner.id, session);
-    history.unshift(winner.id);history=history.slice(0,6);renderHistory();persist();$('spin').disabled=false;$('spin').querySelector('span').textContent='RELANCER LA ROUE';$('duration').disabled=false;$('selectAll').disabled=selected.size===12;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=false);
+    angle=normalise(endAngle);applyRotation();spinning=false;document.body.classList.remove('spinning');setImage(winner);$('resultName').textContent=winner.name;$('resultLabel').textContent='RÉSULTAT DU TIRAGE';$('resultOverline').textContent="LE HASARD A CHOISI !";$('artBadge').textContent='CHOIX TIRÉ AU SORT';$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;$('resultDetail').textContent='Choix sélectionné : '+winner.name+'. Bonne partie !';$('resultCard').classList.add('winner','reveal');$('wheelStatus').textContent='Résultat : '+winner.name+' !';$('announcement').textContent='Destination choisie : '+winner.name;tick(true);void playDestinationSound(winner.id, session);
+    history.unshift(winner.id);history=history.slice(0,6);renderHistory();persist();$('spin').disabled=false;$('spin').querySelector('span').textContent='RELANCER LA ROUE';$('duration').disabled=false;$('selectAll').disabled=selected.size===POIS.length;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=false);
     document.querySelectorAll('.edit-image').forEach(e=>e.disabled=!imageStoreReady);
   }
   requestAnimationFrame(frame);
@@ -147,7 +147,7 @@ async function spin(){
 $('spin').addEventListener('click',spin);
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.repeat&&!['INPUT','SELECT','BUTTON','TEXTAREA','A'].includes(document.activeElement.tagName)&&!$('sourcesDialog').open&&!$('imageDialog').open){e.preventDefault();spin();}});
 $('duration').addEventListener('change',persist);
-$('selectAll').addEventListener('click',()=>{if(spinning)return;selected=new Set(POIS.map(p=>p.id));renderCards();drawWheel();resetResult();persist();$('selectionMessage').textContent='Les 12 destinations sont dans le tirage.';});
+$('selectAll').addEventListener('click',()=>{if(spinning)return;selected=new Set(POIS.map(p=>p.id));renderCards();drawWheel();resetResult();persist();$('selectionMessage').textContent=`${POIS.length} choix sont dans le tirage.`;});
 $('sound').addEventListener('click',()=>{soundOn=!soundOn;$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').querySelector('span').textContent=soundOn?'Son activé':'Son désactivé';if(!soundOn)stopDestinationSound();if(soundOn){try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();tick();}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}});
 $('streamMode').addEventListener('click',()=>{const enabled=document.body.classList.toggle('stream');$('streamMode').setAttribute('aria-pressed',String(enabled));$('streamMode').querySelector('span').textContent=enabled?'Quitter le mode stream':'Mode stream';});
 $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{$('wheelStatus').textContent='Plein écran indisponible ici. Utilise F11 dans ton navigateur.';}});
