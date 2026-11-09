@@ -1,22 +1,9 @@
-# Affiches premium Ma_JesTik Gaming — Open Graph
+# Affiches Open Graph Ma_JesTik
 
-Ce dossier est réservé aux **6 visuels validés** et fournis au format **PNG 1200 × 630** :
+Les 5 références validées par l'utilisateur sont conservées dans ce dossier en PNG 1200 × 630 : qg, tribunal, defis, killathon, classement.
 
-- `qg.png` : Le QG communautaire
-- `roue.png` : **LA ROUE** (aucune mention Fortnite ni nombre fixe de destinations)
-- `tribunal.png` : Le Tribunal
-- `defis.png` : Défis & missions
-- `killathon.png` : Killathon
-- `classement.png` : Classements
+Le déploiement privilégie chaque PNG premium présent ; la roue utilise son SVG graphite, or et violet déjà approuvé. Setup, À propos et Code créateur utilisent leurs nouveaux SVG graphite et or en attendant des visuels premium dédiés.
 
-## Ajout des fichiers sur GitHub
+Chaque image produit un PNG pour le partage Discord et un WebP pour les cartes du QG.
 
-1. Extraire les six PNG depuis `visuels-premium-ma-jestik-OG.zip`.
-2. Depuis ce dossier `dist/og/premium/`, utiliser **Add file → Upload files** puis sélectionner les six **fichiers PNG**, pas le ZIP.
-3. Valider le commit sur `main`. Le workflow `publier-roue.yml` prend le relais automatiquement.
-
-À chaque déploiement, GitHub Actions génère `dist/og/{nom}.png` en reprenant les pixels du PNG premium, ainsi que `dist/og/{nom}.webp` optimisé pour les cartes de l'accueil. Les deux rendus utilisent donc le même visuel.
-
-Si un PNG premium manque, le SVG préexistant reste un secours afin de ne jamais casser les miniatures. Les trois miniatures `setup`, `partenaires` et `createur` restent en attente d'une refonte validée.
-
-Les images d'origine du setup, les zones cliquables, les profils Twitch et les Workers ne sont pas concernés.
+Les anciennes images sont remplacées sans modifier les fonctionnalités ou la navigation.

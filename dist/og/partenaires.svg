@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
  <defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071521"/><stop offset=".51" stop-color="#11263d"/><stop offset="1" stop-color="#130d30"/></linearGradient>
-  <radialGradient id="halo"><stop stop-color="#663bba" stop-opacity=".73"/><stop offset=".55" stop-color="#244b8b" stop-opacity=".32"/><stop offset="1" stop-color="#0d2131" stop-opacity="0"/></radialGradient>
-  <linearGradient id="stripe" x1="0" x2="1"><stop stop-color="#a8dcff" stop-opacity=".85"/><stop offset=".52" stop-color="#edc17c"/><stop offset="1" stop-color="#8f73ed" stop-opacity=".75"/></linearGradient>
-  <linearGradient id="fade" x1="0" x2="1"><stop stop-color="#081522" stop-opacity=".9"/><stop offset=".66" stop-color="#081522" stop-opacity=".35"/><stop offset="1" stop-color="#081522" stop-opacity="0"/></linearGradient>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#060606"/><stop offset=".51" stop-color="#16120e"/><stop offset="1" stop-color="#070607"/></linearGradient>
+  <radialGradient id="halo"><stop stop-color="#d69c46" stop-opacity=".73"/><stop offset=".55" stop-color="#835021" stop-opacity=".32"/><stop offset="1" stop-color="#080808" stop-opacity="0"/></radialGradient>
+  <linearGradient id="stripe" x1="0" x2="1"><stop stop-color="#b9772c" stop-opacity=".85"/><stop offset=".52" stop-color="#edc17c"/><stop offset="1" stop-color="#f7cf83" stop-opacity=".75"/></linearGradient>
+  <linearGradient id="fade" x1="0" x2="1"><stop stop-color="#090807" stop-opacity=".9"/><stop offset=".66" stop-color="#090807" stop-opacity=".35"/><stop offset="1" stop-color="#090807" stop-opacity="0"/></linearGradient>
  </defs>
  <rect width="1200" height="630" fill="url(#bg)"/>
  <circle cx="944" cy="291" r="371" fill="url(#halo)"/>
- <g opacity=".15" stroke="#91bde7" stroke-width="2" fill="none">
+ <g opacity=".15" stroke="#b8833c" stroke-width="2" fill="none">
   <path d="M684 -18L1172 440 M728 -25L1204 408 M663 24L1135 477 M740 655L1150 237 M790 682L1203 272"/>
   <circle cx="955" cy="296" r="220"/><circle cx="955" cy="296" r="249"/>
  </g>
  <path d="M20 104H583" stroke="url(#stripe)" stroke-width="4" stroke-linecap="round"/>
- <rect x="20" y="18" width="1160" height="594" rx="29" fill="none" stroke="#6b9bb8" stroke-opacity=".43" stroke-width="2"/>
+ <rect x="20" y="18" width="1160" height="594" rx="29" fill="none" stroke="#dfac57" stroke-opacity=".43" stroke-width="2"/>
  <circle cx="76" cy="70" r="7" fill="#f4c47c"/>
- <text x="98" y="79" fill="#cbe2f5" font-family="Lato,DejaVu Sans,sans-serif" font-size="25" font-weight="900" letter-spacing="2.5">MA_JESTIK</text>
- <text x="352" y="78" fill="#9eabc6" font-family="Lato,DejaVu Sans,sans-serif" font-size="19" font-weight="700" letter-spacing="2">/ LE QG</text>
- <rect x="76" y="160" rx="17" width="295" height="35" fill="#213c55" stroke="#487b9a" stroke-width="1.4"/>
- <text x="98" y="184" fill="#a5d9f5" font-family="Lato,DejaVu Sans,sans-serif" font-size="17" font-weight="800" letter-spacing="1.7">L&apos;UNIVERS MA_JESTIK</text>
+ <text x="98" y="79" fill="#f9f1e6" font-family="Lato,DejaVu Sans,sans-serif" font-size="25" font-weight="900" letter-spacing="2.5">MA_JESTIK</text>
+ <text x="352" y="78" fill="#ddd2c2" font-family="Lato,DejaVu Sans,sans-serif" font-size="19" font-weight="700" letter-spacing="2">/ LE QG</text>
+ <rect x="76" y="160" rx="17" width="295" height="35" fill="#1b1410" stroke="#cc8c3b" stroke-width="1.4"/>
+ <text x="98" y="184" fill="#f7e6c5" font-family="Lato,DejaVu Sans,sans-serif" font-size="17" font-weight="800" letter-spacing="1.7">L&apos;UNIVERS MA_JESTIK</text>
  <text x="76" y="334" font-family="Lato,DejaVu Sans,sans-serif" font-weight="900" font-size="69" letter-spacing="-2.2" fill="#ffffff">À PROPOS</text>
- <text x="78" y="431" font-family="Lato,DejaVu Sans,sans-serif" font-size="24" font-weight="700" letter-spacing="1.4" fill="#b6d5e9">LE QG COMMUNAUTAIRE</text>
- <path d="M76 528H665" stroke="#517389" stroke-opacity=".7" stroke-width="1.5"/>
+ <text x="78" y="431" font-family="Lato,DejaVu Sans,sans-serif" font-size="24" font-weight="700" letter-spacing="1.4" fill="#eee0c7">LE QG COMMUNAUTAIRE</text>
+ <path d="M76 528H665" stroke="#af792f" stroke-opacity=".7" stroke-width="1.5"/>
  <text x="76" y="567" font-family="Lato,DejaVu Sans,sans-serif" font-size="24" font-weight="800" fill="#eac58a">ma-jestik.fr</text>
- <text x="646" y="568" text-anchor="end" font-family="Lato,DejaVu Sans,sans-serif" font-size="16" font-weight="800" letter-spacing="1.8" fill="#79b9e2">NOOB &amp; LEGENDS</text>
+ 
  <g transform="translate(947 305)">
-  <circle r="183" fill="#0a1b33" fill-opacity=".65" stroke="#577cb1" stroke-width="3"/>
+ <circle r="268" fill="none" stroke="#c18a40" stroke-opacity=".17"/>
+ <circle r="225" fill="none" stroke="#b47c38" stroke-opacity=".28"/>
+ <circle r="203" fill="none" stroke="#d6a251" stroke-opacity=".25" stroke-width="2"/>
+  <circle r="183" fill="#100d0b" fill-opacity=".65" stroke="#dba65c" stroke-width="3"/>
   <circle r="164" fill="none" stroke="#e6bb79" stroke-opacity=".4" stroke-dasharray="9 15" stroke-width="3"/>
-  <g transform="rotate(-29)"><rect x="-155" y="-49" width="190" height="99" rx="49" fill="none" stroke="#f5cf8b" stroke-width="23"/><rect x="-35" y="-49" width="190" height="99" rx="49" fill="none" stroke="#91d5fb" stroke-width="23"/></g>
+  <g transform="rotate(-29)"><rect x="-155" y="-49" width="190" height="99" rx="49" fill="none" stroke="#f5cf8b" stroke-width="23"/><rect x="-35" y="-49" width="190" height="99" rx="49" fill="none" stroke="#d49b4e" stroke-width="23"/></g>
+  <circle r="174" fill="none" stroke="#e9b85d" stroke-opacity=".65" stroke-width="3"/>
+  <circle r="195" fill="none" stroke="#b87d2e" stroke-dasharray="2 12" stroke-width="2"/>
  </g>
  <path d="M1090 107L1107 124L1090 141L1073 124Z" fill="#efc477" opacity=".9"/>
  <circle cx="1101" cy="497" r="7" fill="#a179ed" opacity=".85"/>
  <circle cx="747" cy="127" r="6" fill="#86c6fa" opacity=".7"/>
+<path d="M575 628 Q730 501 865 500" fill="none" stroke="#c18a38" stroke-opacity=".27" stroke-width="36"/>
+<path d="M578 626 Q735 508 860 494" fill="none" stroke="#ffe3ab" stroke-opacity=".36" stroke-width="3"/>
 </svg>
