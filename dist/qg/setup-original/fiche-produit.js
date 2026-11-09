@@ -1,5 +1,5 @@
 /* Fiches produit statiques — dialog natif (focus, Échap) + catalogue commun aux deux pages. */
-import {MATERIAL,ORIGINAL_SETUP_PHOTO,PC_COMPONENT_IDS} from "./materiel.js?v=20261109-fiches1";
+import {MATERIAL,ORIGINAL_SETUP_PHOTO,PC_COMPONENT_IDS} from "./materiel.js?v=20261109-modal2";
 const SVG_NS="http://www.w3.org/2000/svg";
 let modal=null,lastTrigger=null;
 const node=(tag,cls,text)=>{
@@ -23,7 +23,7 @@ function photoElement(item,{small=false}={}){
  if(!info){visual.append(emptyVisual(item,small));return visual;}
  if(info.kind==="owned-webp"){
   const photo=node("img","mj-owned-photo");
-  photo.src=info.src;photo.alt=info.alt;photo.loading="lazy";photo.decoding="async";
+  photo.src=new URL(info.src,document.baseURI).href;photo.alt=info.alt;photo.loading="lazy";photo.decoding="async";
   photo.addEventListener("error",()=>visual.replaceChildren(emptyVisual(item,small)),{once:true});
   visual.append(photo);return visual;
  }
@@ -45,9 +45,18 @@ function photoElement(item,{small=false}={}){
  visual.append(emptyVisual(item,small));
  return visual;
 }
+function dialogHostDocument(){
+ try{
+  if(window.parent!==window&&window.frameElement?.id==="setupFrame"&&window.parent.document?.body)
+   return window.parent.document;
+ }catch{} // Autonome ou hors même origine.
+ return document;
+}
 function makeDialog(){
- if(modal)return modal;
- modal=node("dialog","mj-product-dialog");
+ if(modal?.isConnected)return modal;
+ const host=dialogHostDocument();
+ modal=host.createElement("dialog");
+ modal.className="mj-product-dialog";
  modal.setAttribute("aria-labelledby","mj-product-title");
  modal.setAttribute("aria-describedby","mj-product-description");
  modal.innerHTML='<div class="mj-product-window"><button type="button" class="mj-product-close" aria-label="Fermer la fiche produit"><span aria-hidden="true">×</span></button><div class="mj-product-content"></div></div>';
@@ -56,21 +65,27 @@ function makeDialog(){
   if(event.target===modal)modal.close();
  });
  modal.addEventListener("close",()=>{
-  document.body.classList.remove("mj-product-open");
+  modal.ownerDocument.body.classList.remove("mj-product-open");
   if(lastTrigger&&lastTrigger.isConnected){
    try{lastTrigger.focus({preventScroll:true});}catch{lastTrigger.focus();}
   }
   lastTrigger=null;
  });
- document.body.append(modal);
+ host.body.append(modal);
  return modal;
 }
+window.addEventListener("pagehide",()=>{
+ if(modal&&modal.ownerDocument!==document){
+  if(modal.open)modal.close();
+  modal.remove();
+  modal=null;
+ }
+});
 function buildDetail(item){
  const grid=node("div","mj-product-layout");
  const media=node("figure","mj-product-figure");
  media.append(photoElement(item));
- const caption=node("figcaption","mj-product-credit",item.image?.credit||"Aucune photographie du produit disponible pour le moment.");
- media.append(caption);grid.append(media);
+ grid.append(media);
  const content=node("div","mj-product-info");
  content.append(node("span","mj-product-kicker",item.category));
  content.append(node("h2","mj-product-title",item.name));
@@ -89,11 +104,16 @@ function buildDetail(item){
  }
  if(item.configLink){
   const link=node("a","mj-product-config-link","Explorer ma configuration PC →");
-  link.href="config-pc.html";
-  link.addEventListener("click",()=>{if(modal?.open)modal.close();});
+  link.href=new URL("config-pc.html?v=20261109-modal2",document.baseURI).href;
+  link.addEventListener("click",event=>{
+   if(modal?.open)modal.close();
+   if(modal?.ownerDocument!==document){
+    event.preventDefault();
+    window.location.assign(link.href);
+   }
+  });
   content.append(link);
  }
- content.append(node("p","mj-product-independent","Fiche de présentation personnelle · Aucun achat ni affiliation."));
  grid.append(content);return grid;
 }
 export function openMaterialCard(id,trigger){
@@ -103,7 +123,7 @@ export function openMaterialCard(id,trigger){
  dlg.querySelector(".mj-product-content").replaceChildren(buildDetail(item));
  lastTrigger=trigger||document.activeElement;
  dlg.showModal();
- document.body.classList.add("mj-product-open");
+ dlg.ownerDocument.body.classList.add("mj-product-open");
  dlg.querySelector(".mj-product-close").focus();
  return true;
 }

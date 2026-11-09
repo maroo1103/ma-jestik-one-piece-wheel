@@ -1,4 +1,4 @@
-import {openMaterialCard} from "./fiche-produit.js?v=20261109-fiches1";
+import {openMaterialCard} from "./fiche-produit.js?v=20261109-modal2";
 (() => {
   "use strict";
   const svg = document.getElementById("scene-map");

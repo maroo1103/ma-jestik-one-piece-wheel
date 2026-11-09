@@ -90,11 +90,10 @@ export const MATERIAL=Object.freeze({
   image:productPhoto("pc-tower","Le PC gaming Ma_JesTik"),configLink:true
  },
  "chair":{
-  category:"MOBILIER",name:"Chaise gaming",
-  specs:[["Type","Fauteuil gaming"],["Usage","Assise au bureau"],["Référence","À confirmer"]],
-  description:"Mon fauteuil utilisé pendant mes sessions de gaming et de streaming.",
-  image:productPhoto("chair","Chaise gaming"),
-  caution:"Marque et modèle exacts non renseignés : nom existant conservé."
+  category:"MOBILIER",name:"CORSAIR TC100 RELAXED",
+  specs:[["Type","Fauteuil CORSAIR"],["Usage","Bureau gaming"],["Référence","TC100 RELAXED"]],
+  description:"Mon fauteuil CORSAIR TC100 RELAXED utilisé pendant mes sessions de gaming et de streaming.",
+  image:productPhoto("chair","CORSAIR TC100 RELAXED")
  },
  "case":{
   category:"01 · BOÎTIER",name:"NZXT H6 Flow ARGB — noir",

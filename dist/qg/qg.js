@@ -192,7 +192,7 @@ async function mountRankings(){
 }
 function setup(){
  return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Explore mon installation gaming en détail. Sélectionne un équipement sur la photo pour découvrir ses caractéristiques et ma configuration PC.')+
- '<div class="wheel-area setup-area"><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html?v=20261109-fiches1" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>';
+ '<div class="wheel-area setup-area"><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html?v=20261109-modal2" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>';
 }
 function about(){
  return head('UNIVERS MA_JESTIK','À PROPOS DU QG','Bienvenue sur le site communautaire indépendant de Ma_JesTik. Ici, on partage des outils gaming, des défis et des moments entre joueurs.',[tag('Projet personnel','gold'),tag('Accès gratuit')])+
@@ -201,7 +201,7 @@ function about(){
  '<article class="mj-about-card"><span class="mj-about-n">02 / LES OUTILS</span><h2>JOUER ENSEMBLE</h2><p>Roue Fortnite, défis, Killathon communautaire, Tribunal et classements : des outils pour animer les parties et les échanges, sans obligation d\'achat.</p></article>'+
  '<article class="mj-about-card"><span class="mj-about-n">03 / LA COMMUNAUTÉ</span><h2>DES PROFILS À TON IMAGE</h2><p>La connexion Twitch donne accès aux fonctions communautaires. Chacun choisit la visibilité de son profil et de ses résultats dans le classement.</p></article>'+
  '</section>'+
- '<section class="mj-about-bottom"><div><span class="mj-about-n">LE HASARD A DU BON.</span><h2>UN SITE SANS BOUTIQUE</h2><p>Aucune vente ni lien affilié Amazon ou Instant Gaming n’est proposé actuellement sur le QG. Si le projet évolue, ses informations seront mises à jour avant toute nouvelle fonctionnalité commerciale.</p></div><div class="mj-about-actions"><a class="btn btn-gold" href="#/aide">Consulter la FAQ</a><a class="btn btn-ghost" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Rejoindre le Discord ↗</a></div></section>';
+ '<section class="mj-about-bottom"><div><span class="mj-about-n">MA_JESTIK GAMING</span><h2>UN SITE SANS BOUTIQUE</h2><p>Aucune vente ni lien affilié Amazon ou Instant Gaming n’est proposé actuellement sur le QG. Si le projet évolue, ses informations seront mises à jour avant toute nouvelle fonctionnalité commerciale.</p></div><div class="mj-about-actions"><a class="btn btn-gold" href="#/aide">Consulter la FAQ</a><a class="btn btn-ghost" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Rejoindre le Discord ↗</a></div></section>';
 }
 function creator(){
  return head('UNIVERS MA_JESTIK','CODE CRÉATEUR','')+
