@@ -197,6 +197,10 @@ async function memberProfileRoute(req,env,origin,path){
   return result({error:"Route inconnue ou méthode interdite"},404);
 }
 
+// Suivi QG : date serveur, sans création de compte ni effacement automatique.
+async function touchMemberActivity(db,twitchId){
+  await db.prepare("INSERT INTO member_activity(twitch_id,last_active_at) SELECT twitch_id,unixepoch() FROM members WHERE twitch_id=? ON CONFLICT(twitch_id) DO UPDATE SET last_active_at=excluded.last_active_at WHERE member_activity.last_active_at<=excluded.last_active_at-1800").bind(twitchId).run();
+}
 const sqlProfile="SELECT twitch_id, login, display_name, avatar_url, joined_at, updated_at, visible_in_ranking FROM members WHERE twitch_id=?";
 export default {
   async fetch(req,env){
@@ -212,6 +216,18 @@ export default {
     const path=new URL(req.url).pathname.replace(/\/+$/,"")||"/";
     try {
       if(path==="/v1/health"&&req.method==="GET")return output({status:"ok"},200,origin);
+      // Nécessite la migration 0007 et ACTIVITY_TRACKING_ENABLED=true.
+      if(path==="/v1/me/activity"){
+        if(!["GET","POST"].includes(req.method))return output({error:"Méthode refusée"},405,origin);
+        if(env.ACTIVITY_TRACKING_ENABLED!=="true")return output({error:"Suivi d'activité non activé"},503,origin);
+        const user=await twitchUser(req,env);
+        if(!user)return output({error:"Connexion Twitch invalide"},401,origin);
+        const registered=await env.DB.prepare("SELECT twitch_id FROM members WHERE twitch_id=?").bind(user.id).first();
+        if(!registered)return output({error:"Profil QG non créé"},404,origin);
+        if(req.method==="POST")await touchMemberActivity(env.DB,user.id);
+        const activity=await env.DB.prepare("SELECT last_active_at FROM member_activity WHERE twitch_id=?").bind(user.id).first();
+        return output({last_active_at:activity?.last_active_at??null},200,origin);
+      }
       if(path.startsWith("/v1/votes/"))return await voteRoute(req,env,origin,path);
       if(path.startsWith("/v1/profiles/"))return await memberProfileRoute(req,env,origin,path);
       if(path==="/v1/ranking"&&req.method==="GET"){
@@ -229,6 +245,7 @@ export default {
       }
       if(req.method==="POST"){
         await env.DB.prepare("INSERT INTO members(twitch_id,login,display_name,avatar_url) VALUES(?,?,?,?) ON CONFLICT(twitch_id) DO UPDATE SET login=excluded.login,display_name=excluded.display_name,avatar_url=excluded.avatar_url,updated_at=CURRENT_TIMESTAMP").bind(user.id,user.login,user.name,user.avatar).run();
+        if(env.ACTIVITY_TRACKING_ENABLED==="true")await touchMemberActivity(env.DB,user.id);
         const me=await env.DB.prepare(sqlProfile).bind(user.id).first();
         return output({member:me},200,origin);
       }
