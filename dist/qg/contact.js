@@ -106,7 +106,7 @@ function fillForm(){
 function emailBody(){
  const c=category(draft.category),t=topic(c,draft.topic);
  return ['Bonjour,','','Catégorie : '+(c?.title||'Autre demande'),'Sujet : '+(t?.[1]||'Non précisé'),'Pseudo : '+(draft.pseudo.trim()||'Non renseigné'),'Adresse de réponse : '+draft.email.trim(),'','Message :',draft.message.trim(),'',
-  ...(draft.attachments.length?['Pièces jointes à ajouter dans la messagerie :',...draft.attachments.map(f=>'- '+f.name),'']:[]),'Merci.'].join('\n');
+  ...(draft.attachments.length?['Pièces jointes sélectionnées :',...draft.attachments.map(f=>'- '+f.name),'']:[]),'Merci.'].join('\n');
 }
 function summary(){
  const c=category(draft.category),t=topic(c,draft.topic);
