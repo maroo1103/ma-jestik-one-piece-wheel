@@ -50,11 +50,17 @@ export const MATERIAL=Object.freeze({
   image:productPhoto("screen-second","AOC CQ27G2S")
  },
  "monitor-arm":{
-  category:"SUPPORT",name:"Support double écran",
-  specs:[["Utilisation","Montage des deux écrans"],["Installation","Bureau"],["Référence","À confirmer"]],
-  description:"Le support qui maintient mes deux moniteurs et permet d'organiser mon espace de jeu.",
-  image:productPhoto("monitor-arm","Support double écran"),
-  caution:"Marque et référence exactes non renseignées : nom existant conservé."
+  category:"SUPPORT DOUBLE ÉCRAN",name:"Ergosolid — bras double écran",
+  specs:[
+   ["Marque","Ergosolid"],
+   ["Écrans compatibles","17 à 27 pouces"],
+   ["Mécanisme","Bras à gaz"],
+   ["Fixations VESA","75 × 75 / 100 × 100 mm"],
+   ["Charge maximale","2 × 9 kg (9 kg par écran)"],
+   ["Installation","Bureau"]
+  ],
+  description:"Mon bras double écran Ergosolid pour installer mes deux moniteurs, ajuster leur position et libérer de l'espace sur le bureau.",
+  image:productPhoto("monitor-arm","Ergosolid — bras double écran")
  },
  "micro":{
   category:"MICROPHONE",name:"RØDE NT-USB+",

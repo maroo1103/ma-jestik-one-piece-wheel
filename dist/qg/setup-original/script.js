@@ -1,4 +1,4 @@
-import {openMaterialCard} from "./fiche-produit.js?v=20261109-notes-ps5-g502-1";
+import {openMaterialCard} from "./fiche-produit.js?v=20261109-ergosolid1";
 (() => {
   "use strict";
   const svg = document.getElementById("scene-map");

@@ -1,5 +1,5 @@
 /* Fiches produit statiques — dialog natif (focus, Échap) + catalogue commun aux deux pages. */
-import {MATERIAL,ORIGINAL_SETUP_PHOTO,PC_COMPONENT_IDS} from "./materiel.js?v=20261109-notes-ps5-g502-1";
+import {MATERIAL,ORIGINAL_SETUP_PHOTO,PC_COMPONENT_IDS} from "./materiel.js?v=20261109-ergosolid1";
 const SVG_NS="http://www.w3.org/2000/svg";
 let modal=null,lastTrigger=null;
 const node=(tag,cls,text)=>{
