@@ -17,15 +17,13 @@ export const MATERIAL=Object.freeze({
   category:"CONSOLE",name:"PlayStation 5",
   specs:[["Plateforme","Sony PlayStation 5"],["Type","Console de salon"],["Utilisation","Jeux sur console"]],
   description:"Ma console pour profiter des exclusivités PlayStation et jouer en dehors du PC.",
-  image:productPhoto("ps5","PlayStation 5"),
-  caution:"Édition et révision matérielle exactes à confirmer."
+  image:productPhoto("ps5","PlayStation 5")
  },
  "ps5-pad":{
   category:"MANETTE CONSOLE",name:"Manette PS5 blanche",
   specs:[["Compatibilité","PlayStation 5"],["Couleur","Blanc"],["Usage","Jeux sur console"]],
   description:"La manette blanche présente à côté de la console dans mon installation.",
-  image:productPhoto("ps5-pad","Manette PS5 blanche"),
-  caution:"Version précise de la manette non confirmée."
+  image:productPhoto("ps5-pad","Manette PS5 blanche")
  },
  "scuf":{
   category:"MANETTE PC",name:"SCUF Envision Pro",
@@ -80,8 +78,7 @@ export const MATERIAL=Object.freeze({
   category:"SOURIS",name:"Logitech G502",
   specs:[["Gamme","G502"],["Marque","Logitech G"],["Usage","Jeux et navigation PC"]],
   description:"Ma souris principale, appréciée pour ses commandes et ses réglages en jeu.",
-  image:productPhoto("mouse","Logitech G502"),
-  caution:"Variante précise de la G502 à confirmer (modèle conservé)."
+  image:productPhoto("mouse","Logitech G502")
  },
  "pc-tower":{
   category:"TOUR PC",name:"Le PC gaming Ma_JesTik",
