@@ -1,0 +1,31 @@
+/* Ma_JesTik — page Nous contacter : identité graphite / or champagne, autonome. */
+.qg-layout .mj-contact{max-width:1160px;margin:0 auto 36px;color:#f3ece3}
+.qg-layout .mj-contact-hero{position:relative;overflow:hidden;border:1px solid #80603a;border-radius:23px;padding:clamp(25px,4.2vw,58px);background:radial-gradient(circle at 87% 26%,rgba(196,134,47,.17),transparent 38%),linear-gradient(128deg,#171719,#0c0e11 70%);box-shadow:0 24px 58px rgba(0,0,0,.25)}
+.qg-layout .mj-contact-hero:after{content:"";position:absolute;pointer-events:none;right:-105px;top:-170px;width:490px;height:490px;border:1px solid rgba(240,183,96,.13);border-radius:50%;box-shadow:0 0 0 42px rgba(218,164,85,.035),0 0 0 96px rgba(218,164,85,.025)}
+.qg-layout .mj-contact-kicker{position:relative;z-index:1;display:inline-flex;align-items:center;gap:11px;color:#e6b976;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.qg-layout .mj-contact-kicker:before{content:"";display:block;width:9px;height:9px;border-radius:50%;background:#f2c783;box-shadow:0 0 16px rgba(243,180,83,.4)}
+.qg-layout .mj-contact-hero h1{position:relative;z-index:1;font:900 clamp(37px,6vw,76px)/1.06 var(--display),Impact,system-ui,sans-serif;letter-spacing:-.025em;color:#f8efe5;margin:22px 0 16px}
+.qg-layout .mj-contact-hero h1 em{font-style:normal;color:#eab669}
+.qg-layout .mj-contact-lead{position:relative;z-index:1;max-width:610px;font-size:clamp(13px,1.45vw,16px);line-height:1.85;color:#cfc5b8;margin:0 0 29px}
+.qg-layout .mj-contact-feature{position:relative;z-index:1;display:grid;gap:14px;max-width:730px;padding:25px;border:1px solid #80603c;border-radius:15px;background:rgba(8,10,13,.85);box-shadow:inset 0 1px rgba(255,234,198,.07)}
+.qg-layout .mj-contact-label{font-size:10px;font-weight:900;letter-spacing:1.8px;color:#d7a861}
+.qg-layout .mj-contact-address{display:inline-block;width:fit-content;max-width:100%;color:#f8ead2;text-decoration:none;font-size:clamp(21px,3vw,34px);font-weight:850;letter-spacing:-.02em;overflow-wrap:anywhere}
+.qg-layout .mj-contact-address:hover,.qg-layout .mj-contact-address:focus-visible{color:#ffd593;text-decoration:underline;text-underline-offset:5px}
+.qg-layout .mj-contact-feature p{margin:0;color:#b6ada4;font-size:12px;line-height:1.7}
+.qg-layout .mj-contact-actions{display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-top:5px}
+.qg-layout .mj-contact-send,.qg-layout .mj-contact-copy{min-height:46px;padding:12px 18px;border-radius:9px;font:850 11px/1.4 var(--font),system-ui,sans-serif;letter-spacing:.3px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:background .18s,border-color .18s,transform .18s}
+.qg-layout .mj-contact-send{background:linear-gradient(135deg,#f5d69c,#d9a052);border:1px solid #f1ce93;color:#19120b}
+.qg-layout .mj-contact-send:hover,.qg-layout .mj-contact-send:focus-visible{background:#ffe2ab;color:#19120b;transform:translateY(-2px)}
+.qg-layout .mj-contact-copy{background:#28241f;border:1px solid #9a7344;color:#f0dcc0}
+.qg-layout .mj-contact-copy:hover,.qg-layout .mj-contact-copy:focus-visible{background:#3b3022;border-color:#e0b476;color:#fff;transform:translateY(-2px)}
+.qg-layout .mj-contact-feedback{display:block;min-height:18px;font-size:12px;color:#f4ca8d}
+.qg-layout .mj-contact-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:22px}
+.qg-layout .mj-contact-case{background:linear-gradient(135deg,#19191b,#111316);border:1px solid #54432f;border-radius:13px;padding:25px;min-width:0}
+.qg-layout .mj-contact-case-index{font-size:10px;font-weight:900;color:#c89b5b;letter-spacing:1.4px}
+.qg-layout .mj-contact-case h2{font:850 clamp(17px,2vw,24px)/1.25 var(--display),Impact,sans-serif;color:#f5e6d0;margin:17px 0 9px}
+.qg-layout .mj-contact-case p{font-size:12px;line-height:1.75;color:#bdb5ac;margin:0}
+.qg-layout .mj-contact-note{display:flex;align-items:flex-start;gap:10px;margin:22px 0 0;padding:16px 19px;border-left:2px solid #b58b4e;background:#191817;font-size:12px;line-height:1.75;color:#c7bdb1}
+.qg-layout .mj-contact-note strong{color:#efc68e}
+@media(max-width:800px){.qg-layout .mj-contact-cases{grid-template-columns:1fr}.qg-layout .mj-contact-case{padding:20px}}
+@media(max-width:520px){.qg-layout .mj-contact-hero{padding:24px 18px}.qg-layout .mj-contact-feature{padding:18px}.qg-layout .mj-contact-actions{display:grid}.qg-layout .mj-contact-send,.qg-layout .mj-contact-copy{width:100%}}
+@media(prefers-reduced-motion:reduce){.qg-layout .mj-contact-send,.qg-layout .mj-contact-copy{transition:none}}
