@@ -82,8 +82,8 @@ function attachInfo(){
  return '<section class="mj-contact-fieldset mj-contact-attachments" aria-labelledby="mjContactFilesTitle">'+
   '<div class="mj-contact-fieldset-title"><h3 id="mjContactFilesTitle">Pièces jointes <span>(facultatives)</span></h3><span>6 fichiers maximum</span></div>'+
   '<p>PNG, JPG, WebP ou PDF · 5 Mo par fichier · 12 Mo au total.</p>'+
-  '<label class="mj-contact-upload">＋ <span>AJOUTER DES FICHIERS</span><input type="file" id="mjContactFiles" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf" aria-describedby="mjContactFilesHelp"></label>'+
-  items+'<small id="mjContactFilesHelp">Les fichiers seront envoyés avec ton message. N’ajoute pas de mots de passe ou de documents sensibles inutiles.</small>'+
+  '<label class="mj-contact-upload">＋ <span>AJOUTER DES FICHIERS</span><input type="file" id="mjContactFiles" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf"></label>'+
+  items+
   '<p class="mj-contact-error" id="mjContactFileError" role="alert">'+esc(draft.fileError)+'</p></section>';
 }
 function fillForm(){
@@ -105,7 +105,7 @@ function fillForm(){
       '<div><label class="mj-contact-label" for="mjContactEmail">Ton adresse e-mail <span>*</span></label>'+
       '<input id="mjContactEmail" type="email" name="email" data-contact-field="email" required maxlength="254" autocomplete="email" value="'+esc(draft.email)+'" placeholder="tonadresse@exemple.fr"></div>'+
      '</div>'+
-     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. Contact pour tes droits : contact@ma-jestik.fr.</p></section>'+
+     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. </p></section>'+
    '<div class="mj-contact-navigation">'+back('REVENIR AUX SUJETS')+'<button type="submit" class="mj-contact-primary">VÉRIFIER MA DEMANDE <span aria-hidden="true">→</span></button></div>'+
   '</form>';
 }
@@ -258,7 +258,6 @@ export function contactMarkup(){
  '<div class="mj-contact-highlight"><span aria-hidden="true">✧</span><span>Un parcours simple, adapté à chaque besoin, sans connexion obligatoire.</span></div>'+
  '</header>'+
  '<div class="mj-contact-wizard" id="mjContactWizard"></div>'+
- '<aside class="mj-contact-help"><span>UN CONTACT DIRECT ?</span><p>Tu peux aussi écrire à l’adresse officielle <a href="mailto:'+MAIL+'">'+MAIL+'</a>. Si ton ordinateur ne dispose pas d’application mail, copie l’adresse et utilise ton webmail.</p><button type="button" id="mjContactCopyAddress">COPIER L’ADRESSE</button><span id="mjContactAddressStatus" role="status" aria-live="polite"></span></aside>'+
  '</section>';
 }
 async function copyText(text,feedback){
@@ -279,8 +278,6 @@ export function mountContact(){
  const root=document.getElementById('mjContactWizard');
  if(!root)return;
  render(root);
- const directCopy=document.getElementById('mjContactCopyAddress');
- directCopy?.addEventListener('click',()=>copyText(MAIL,document.getElementById('mjContactAddressStatus')));
  root.addEventListener('click',e=>{
   if(draft.sending)return;
   const remove=e.target.closest('[data-contact-remove-file]');
