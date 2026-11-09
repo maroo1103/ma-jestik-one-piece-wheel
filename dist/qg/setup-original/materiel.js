@@ -1,15 +1,14 @@
-/* Catalogue unique des fiches d'équipement du setup Ma_JesTik.
-   Toutes les photographies proviennent des photos du setup ou de la tour de Ma_JesTik.
-   Ne jamais utiliser de visuels de boutiques sans droits vérifiés. */
+/* Catalogue unique du setup Ma_JesTik. La photographie du setup reste originale ;
+   les 24 images de fiche sont des rendus graphiques validés, pas des photos documentaires. */
 export const ORIGINAL_SETUP_PHOTO="https://maroo1103.github.io/setup-ma-jestik/assets/setup-ma-jestikk.png";
-/* Les 24 WebP 1200x1200 fournis dans le paquet d'images du setup.
-   Tant qu'ils ne sont pas déposés dans images/products/ avec des droits d'usage
-   autorisés, les cartes affichent un emplacement « Photo à ajouter ». */
+/* Les 24 visuels WebP sans perte 1254 × 1254 sont distribués dans
+   photos-ma-jestik-premium-sans-perte.zip. Emplacements temporaires tant
+   que les fichiers ne sont pas placés sous images/products/. */
 const productPhoto=(id,name)=>({
  kind:"owned-webp",
  src:"./images/products/"+id+".webp",
- alt:"Photographie du produit "+name,
- credit:"Visuel du produit · fond graphite · WebP"
+ alt:"Rendu de présentation du produit "+name,
+ credit:"Visuel graphique premium · fond graphite · WebP sans perte"
 });
 export const HOTSPOT_IDS=Object.freeze(["ps5","ps5-pad","scuf","webcam","screen-main","screen-second","monitor-arm","micro","headphones","keyboard","mouse","pc-tower","chair"]);
 export const PC_COMPONENT_IDS=Object.freeze(["case","cpu","motherboard","gpu","ram","ssd","psu","aio","front-fans","rear-fan","bottom-fans"]);
