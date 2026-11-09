@@ -41,9 +41,18 @@ Des stockages techniques locaux ont été constatés. Aucune preuve concluante d
 
 Les finalités sont identifiées, mais il faut attribuer une base juridique appropriée à chacune ; les informations relatives aux transferts internationaux et à l'identité du responsable du traitement nécessitent validation. La demande à GitHub concernant l'identité de l'éditeur est en attente. Ne pas affirmer que l'exemption de publication de l'identité de l'éditeur au titre de la LCEN vaut automatiquement dispense des obligations d'information du RGPD.
 
+## Décision validée par l'éditeur le 9 novembre 2026 : comptes inactifs
+
+- **Règle décidée :** suppression du compte QG après **6 mois consécutifs d'inactivité**, avec son profil, ses points et ses informations personnelles associées dans les limites prévues par la politique d'effacement. Le compte Twitch lui-même n'est jamais supprimé par Ma_JesTik.
+- **Définition technique proposée :** activité authentifiée sur le QG (connexion effective ou action sur le compte, un vote, le Tribunal, un défi communautaire ou le Killathon). L'ouverture du site sans connexion ne permet pas de rattacher l'activité à un membre.
+- **Constat :** la base `members` contient `joined_at` et `updated_at`, mais **pas de champ dédié `last_active_at`**. Le champ `updated_at` est modifié par certains changements de profil/points ; il **ne constitue pas un indicateur fiable de dernière utilisation**.
+- **Préconditions avant automatisation :** ajouter un champ de dernière activité, le mettre à jour côté serveur lorsqu'un utilisateur authentifié interagit (en limitant les écritures excessives), prévoir une migration non destructive, effectuer une sauvegarde de D1, tester la purge sur une base de développement et résoudre la question des références du Tribunal.
+- **Mesure de protection lors du lancement :** pour les comptes existants, **ne jamais calculer immédiatement les six mois à partir de `joined_at` ou `updated_at`** ; initialiser un point de départ prudent pour éviter toute suppression rétroactive injustifiée. Informer les membres clairement avant la première purge et envisager un avertissement préalable.
+- **Statut :** règle choisie, **non encore mise en production**. Aucun compte, point ni vote n'a été supprimé lors de cet audit.
+
 ## Décisions à prendre avec l'éditeur avant modifications de la base
 
-- La durée de vie ou les critères d'inactivité applicables aux comptes QG ;
+- Définir précisément la liste des interactions authentifiées qui réinitialisent le délai de six mois et les modalités de notification ;
 - Le délai de conservation/anonymisation des propositions et résultats du Tribunal ;
 - Les règles de conservation des futurs courriels et pièces jointes du formulaire ;
 - L'étendue de l'effacement lors de la suppression du profil QG, tout en conservant éventuellement des statistiques anonymes.
