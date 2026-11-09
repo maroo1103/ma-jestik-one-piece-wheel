@@ -24,3 +24,11 @@ Date : 8 novembre 2026. Déploiement sans frais supplémentaires ni modification
 3. Sur mobile, vérifier le passage en deux colonnes et l'absence de défilement horizontal.
 4. Ouvrir les liens sociaux et Discord ; vérifier la destination sans modifier les paramètres des comptes.
 5. Vérifier que les boutons de menu, le retour OAuth Twitch, les profils et les votes fonctionnent comme avant.
+
+## Navigation du pied de page — ajustement mobile du 9 novembre 2026
+- Accordéons natifs sur mobile (largeur ≤ 760 px), fermés par défaut : « LE QG », « COMMUNAUTÉ », « AIDE & INFOS », « RÉSEAUX SOCIAUX ».
+- Une seule rubrique ouverte à la fois grâce à l'attribut HTML `name="mj-footer-mobile"` sur les éléments `<details>`. Pas de JS supplémentaire, ni d'appels serveur.
+- Les réseaux ne s'affichent plus en icônes dans le pied de page. Ils figurent dans la rubrique « RÉSEAUX SOCIAUX » sous forme de liens texte Twitch, Instagram, TikTok et Discord.
+- Sur ordinateur, la navigation est visible sans clic sous quatre colonnes de liens à côté de la présentation Ma_JesTik ; l'en-tête et ses icônes restent inchangés.
+- Le lien Discord a été regroupé dans « RÉSEAUX SOCIAUX » pour éviter le doublon.
+- Aucun nouveau lien inventé : adresses réutilisées depuis l'en-tête et le pied de page préexistants. Aucune modification de profil, D1 ou Worker.
