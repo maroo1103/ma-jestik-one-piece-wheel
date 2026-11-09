@@ -72,11 +72,17 @@ function selectTopic(){
  ).join('')+'</div><div class="mj-contact-navigation">'+back('CHANGER DE CATÉGORIE')+'</div>';
 }
 function attachInfo(){
- const items=draft.attachments.length?'<div class="mj-contact-filelist" aria-live="polite">'+draft.attachments.map(f=>'<span>▣ '+esc(f.name)+'</span>').join('')+'</div>':'';
+ const items=draft.attachments.length?
+  '<div class="mj-contact-filelist" aria-live="polite">'+draft.attachments.map((f,i)=>
+   '<div class="mj-contact-file" role="group" aria-label="Pièce jointe '+(i+1)+'">'+
+   '<span class="mj-contact-file-name" title="'+esc(f.name)+'">▣ '+esc(f.name)+'</span>'+
+   '<small class="mj-contact-file-size">'+(f.size/1024/1024).toFixed(2)+' Mo</small>'+
+   '<button type="button" class="mj-contact-file-remove" data-contact-remove-file="'+i+'" aria-label="Retirer '+esc(f.name)+'" title="Retirer ce fichier">×</button></div>'
+  ).join('')+'</div><button type="button" class="mj-contact-files-clear" data-contact-clear-files>TOUT RETIRER</button>':'';
  return '<section class="mj-contact-fieldset mj-contact-attachments" aria-labelledby="mjContactFilesTitle">'+
-  '<div class="mj-contact-fieldset-title"><h3 id="mjContactFilesTitle">Pièces jointes <span>(facultatives)</span></h3><span>Jusqu’à 6 fichiers</span></div>'+
-  '<p>Tu peux joindre jusqu’à 6 captures d’écran ou PDF : 5 Mo par fichier et 12 Mo au total.</p>'+
-  '<label class="mj-contact-upload">＋ <span>SÉLECTIONNER DES FICHIERS</span><input type="file" id="mjContactFiles" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf" aria-describedby="mjContactFilesHelp"></label>'+
+  '<div class="mj-contact-fieldset-title"><h3 id="mjContactFilesTitle">Pièces jointes <span>(facultatives)</span></h3><span>6 fichiers maximum</span></div>'+
+  '<p>PNG, JPG, WebP ou PDF · 5 Mo par fichier · 12 Mo au total.</p>'+
+  '<label class="mj-contact-upload">＋ <span>AJOUTER DES FICHIERS</span><input type="file" id="mjContactFiles" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf" aria-describedby="mjContactFilesHelp"></label>'+
   items+'<small id="mjContactFilesHelp">Les fichiers seront envoyés avec ton message. N’ajoute pas de mots de passe ou de documents sensibles inutiles.</small>'+
   '<p class="mj-contact-error" id="mjContactFileError" role="alert">'+esc(draft.fileError)+'</p></section>';
 }
@@ -277,6 +283,22 @@ export function mountContact(){
  directCopy?.addEventListener('click',()=>copyText(MAIL,document.getElementById('mjContactAddressStatus')));
  root.addEventListener('click',e=>{
   if(draft.sending)return;
+  const remove=e.target.closest('[data-contact-remove-file]');
+  if(remove){
+   const index=Number(remove.dataset.contactRemoveFile);
+   if(Number.isInteger(index)&&index>=0&&index<draft.attachments.length){
+    draft.attachments.splice(index,1);
+    draft.fileError='';
+    render(root);
+   }
+   return;
+  }
+  if(e.target.closest('[data-contact-clear-files]')){
+   draft.attachments=[];
+   draft.fileError='';
+   render(root);
+   return;
+  }
   if(e.target.closest('[data-contact-send]')){void sendContact(root);return;}
   const categoryButton=e.target.closest('[data-contact-category]');
   if(categoryButton){draft.category=categoryButton.dataset.contactCategory;draft.topic=null;draft.step=2;render(root,true);return;}
@@ -294,13 +316,21 @@ export function mountContact(){
  });
  root.addEventListener('change',e=>{
   if(e.target.id!=='mjContactFiles')return;
-  const files=Array.from(e.target.files||[]);
+  const selected=Array.from(e.target.files||[]);
+  if(!selected.length)return;
+  // Repeated selections append; duplicates do not count twice.
+  const additions=selected.filter(f=>!draft.attachments.some(old=>old.name===f.name&&old.size===f.size&&old.lastModified===f.lastModified));
+  const files=[...draft.attachments,...additions];
   draft.fileError='';
   if(files.length>MAX_FILES){draft.fileError='Maximum : 6 fichiers.';}
-  else if(files.some(f=>f.size>MAX_FILE_SIZE)){draft.fileError='Chaque fichier doit peser 5 Mo maximum.';}
+  else if(files.some(f=>f.size===0||f.size>MAX_FILE_SIZE)){draft.fileError='Chaque fichier doit peser entre 1 octet et 5 Mo.';}
   else if(files.reduce((sum,f)=>sum+f.size,0)>MAX_TOTAL_SIZE){draft.fileError='La taille totale ne doit pas dépasser 12 Mo.';}
   else if(files.some(f=>!(/\.(png|jpe?g|webp|pdf)$/i).test(f.name))){draft.fileError='Formats acceptés : PNG, JPG, WebP et PDF.';}
-  if(draft.fileError){e.target.value='';document.getElementById('mjContactFileError').textContent=draft.fileError;return;}
+  if(draft.fileError){
+   e.target.value='';
+   document.getElementById('mjContactFileError').textContent=draft.fileError;
+   return;
+  }
   draft.attachments=files;
   render(root);
  });
