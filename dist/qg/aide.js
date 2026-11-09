@@ -26,7 +26,7 @@ const faq=[
   {q:"Le site est-il utilisable sur téléphone ?",a:'Oui. L’interface du QG est adaptée aux ordinateurs et aux mobiles. Si un affichage semble ancien, actualise le navigateur ; sur ordinateur, tu peux également utiliser <strong>Ctrl + F5</strong>.'},
   {q:"Que faire si une fonctionnalité semble bloquée ?",a:'Commence par actualiser la page et vérifier ta connexion Twitch. Si une action nécessite Twitch, assure-toi d’être connecté. Certaines fonctionnalités communautaires sont encore en développement et peuvent être momentanément indisponibles.'},
   {q:"Quelles informations sont enregistrées dans mon profil ?",a:'Le QG utilise ton identifiant et ton avatar Twitch ainsi que les préférences que tu renseignes volontairement, comme ta présentation, tes jeux et tes liens. Les profils et points sont gérés par les services du site ; tu contrôles la visibilité publique et celle du classement.'},
-  {q:"Le site est-il affilié à Epic Games ou Twitch ?",a:'Ma_JesTik est un <strong>site communautaire indépendant</strong>. Les noms des jeux, plateformes et marques cités appartiennent à leurs titulaires. Les éventuels liens affiliés sont identifiés sur la page <a href="#/partenaires">Affiliations & partenaires</a>.'}
+  {q:"Le site est-il affilié à Epic Games ou Twitch ?",a:'Ma_JesTik est un <strong>site communautaire indépendant</strong>. Les noms des jeux, plateformes et marques cités appartiennent à leurs titulaires. Le QG ne propose actuellement ni boutique ni liens d’affiliation. Découvre le projet dans <a href="#/apropos">À propos du QG</a>.'}
  ]}
 ];
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");

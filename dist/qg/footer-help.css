@@ -185,3 +185,15 @@
 @media(prefers-reduced-motion:reduce){
   .qg-layout .mj-footer-disclosure-chevron{transition:none}
 }
+/* À propos : remplacer la promotion commerciale par une présentation du projet. */
+.qg-layout .mj-about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:24px 0}
+.qg-layout .mj-about-card{min-width:0;border:1px solid #5f4a30;border-radius:13px;background:linear-gradient(145deg,#211d1a,#111316);padding:25px}
+.qg-layout .mj-about-n{display:block;color:#d9ac70;font-size:10px;font-weight:900;letter-spacing:1.2px;margin-bottom:13px}
+.qg-layout .mj-about-card h2{font:900 25px/1.15 var(--display),Impact,sans-serif;color:#f1dbb8;margin:0 0 12px}
+.qg-layout .mj-about-card p{color:#c3b9ad;font-size:13px;line-height:1.8;margin:0}
+.qg-layout .mj-about-bottom{display:flex;align-items:center;justify-content:space-between;gap:22px;border:1px solid #6d5133;background:linear-gradient(120deg,#272118,#15171a);border-radius:13px;padding:27px}
+.qg-layout .mj-about-bottom h2{font:900 28px/1.2 var(--display),Impact,sans-serif;color:#f3d6a6;margin:0 0 10px}
+.qg-layout .mj-about-bottom p{font-size:12px;line-height:1.7;color:#c7bcb0;margin:0;max-width:640px}
+.qg-layout .mj-about-actions{display:flex;flex-wrap:wrap;gap:9px;flex-shrink:0}
+@media(max-width:1000px){.qg-layout .mj-about-grid{grid-template-columns:1fr}.qg-layout .mj-about-bottom{flex-direction:column;align-items:stretch}}
+@media(max-width:600px){.qg-layout .mj-about-card{padding:20px}.qg-layout .mj-about-bottom{padding:20px}.qg-layout .mj-about-actions{flex-direction:column}.qg-layout .mj-about-actions a{width:100%}}
