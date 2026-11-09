@@ -195,14 +195,43 @@ function setup(){
  return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Explore mon installation gaming en détail. Sélectionne un équipement sur la photo pour découvrir ses caractéristiques et ma configuration PC.')+
  '<div class="wheel-area setup-area"><iframe class="setup-embed" id="setupFrame" src="setup-original/index.html?v=20261109-modal2" title="Setup interactif original de Ma_JesTik avec photo et composants cliquables" loading="eager" scrolling="no"></iframe></div>';
 }
+
 function about(){
- return head('UNIVERS MA_JESTIK','À PROPOS DU QG','Bienvenue sur le site communautaire indépendant de Ma_JesTik. Ici, on partage des outils gaming, des défis et des moments entre joueurs.',[tag('Projet personnel','gold'),tag('Accès gratuit')])+
- '<section class="mj-about-grid" aria-label="Découvrir le projet">'+
- '<article class="mj-about-card"><span class="mj-about-n">01 / LE PROJET</span><h2>UNE PASSION, UN QG</h2><p>Ma_JesTik est un projet personnel créé pour le plaisir de jouer, d\'échanger et de rassembler une communauté autour du gaming. Il n\'est pas exploité par une entreprise.</p></article>'+
- '<article class="mj-about-card"><span class="mj-about-n">02 / LES OUTILS</span><h2>JOUER ENSEMBLE</h2><p>La roue, les défis, le Killathon communautaire, le Tribunal et les classements : des outils pour animer les parties et les échanges, sans obligation d\'achat.</p></article>'+
- '<article class="mj-about-card"><span class="mj-about-n">03 / LA COMMUNAUTÉ</span><h2>DES PROFILS À TON IMAGE</h2><p>La connexion Twitch donne accès aux fonctions communautaires. Chacun choisit la visibilité de son profil et de ses résultats dans le classement.</p></article>'+
+ const features=[
+  ['roue','01','◉','LA ROUE','Un tirage pour choisir une destination ou varier les parties, quel que soit le jeu.'],
+  ['defis','02','⚔','DÉFIS & MISSIONS','Des objectifs et des idées pour sortir de ses habitudes de jeu.'],
+  ['killathon','03','✦','KILLATHON','Une animation pensée pour les sessions gaming et les lives.'],
+  ['tribunal','04','⚖','LE TRIBUNAL','Vote, participe et prends part aux décisions de la communauté.'],
+  ['classement','05','★','CLASSEMENTS','Retrouve les résultats des animations et des membres du QG.'],
+  ['setup','06','⌘','MON SETUP','Explore mon installation gaming et les composants de mon PC.']
+ ];
+ return head('UNIVERS MA_JESTIK','À PROPOS DU QG',
+  'Un lieu pour partager ma passion du gaming, retrouver les outils du QG et vivre les animations de la communauté.',
+  [tag('Projet personnel','gold'),tag('Accès gratuit')])+
+ '<section class="mj-about-intro" aria-label="Présentation du QG">'+
+  '<div><span class="mj-about-n">L’ESPRIT DU PROJET</span><h2>LE GAMING, <em>À NOTRE FAÇON.</em></h2></div>'+
+  '<div class="mj-about-intro-text"><p>Le QG réunit au même endroit les outils, les défis et les petites animations qui rendent les parties plus vivantes.</p>'+
+  '<p>Le projet évolue au fil des idées et des retours. Tu peux explorer les espaces librement, puis participer à ton rythme.</p></div>'+
  '</section>'+
- '<section class="mj-about-bottom"><div><span class="mj-about-n">MA_JESTIK GAMING</span><h2>UN SITE SANS BOUTIQUE</h2><p>Aucune vente ni lien affilié Amazon ou Instant Gaming n’est proposé actuellement sur le QG. Si le projet évolue, ses informations seront mises à jour avant toute nouvelle fonctionnalité commerciale.</p></div><div class="mj-about-actions"><a class="btn btn-gold" href="#/aide">Consulter la FAQ</a><a class="btn btn-ghost" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Rejoindre le Discord ↗</a></div></section>';
+ '<section class="mj-about-grid" aria-label="Les fondations du QG">'+
+  '<article class="mj-about-card"><span class="mj-about-n">01 / LE PROJET</span><h2>UN PROJET PERSONNEL</h2><p>Un site indépendant créé par passion pour les jeux vidéo, le streaming et les échanges entre joueurs.</p></article>'+
+  '<article class="mj-about-card"><span class="mj-about-n">02 / LES OUTILS</span><h2>JOUER AUTREMENT</h2><p>Une roue interactive, des défis, des votes et des animations qui donnent de nouvelles idées de parties.</p></article>'+
+  '<article class="mj-about-card"><span class="mj-about-n">03 / LA COMMUNAUTÉ</span><h2>CHACUN SA PLACE</h2><p>Explore le site sans compte. La connexion Twitch donne accès aux fonctions communautaires et aux réglages du profil.</p></article>'+
+ '</section>'+
+ '<section class="mj-about-explore" aria-labelledby="mjAboutExploreTitle">'+
+  '<header class="mj-about-explore-head"><div><span class="mj-about-n">À DÉCOUVRIR</span><h2 id="mjAboutExploreTitle">EXPLORE LE <em>QG.</em></h2></div>'+
+  '<p>Retrouve les différents univers et choisis ce qui te donne envie.</p></header>'+
+  '<div class="mj-about-features">'+features.map(f=>
+   '<a class="mj-about-feature" href="#/'+f[0]+'"><span class="mj-about-feature-top"><span>'+f[1]+' / UNIVERS</span><span class="mj-about-feature-icon" aria-hidden="true">'+f[2]+'</span></span>'+
+   '<strong>'+f[3]+'</strong><span class="mj-about-feature-description">'+f[4]+'</span>'+
+   '<span class="mj-about-feature-link">DÉCOUVRIR <span aria-hidden="true">↗</span></span></a>'
+  ).join('')+'</div>'+
+ '</section>'+
+ '<section class="mj-about-bottom" aria-labelledby="mjAboutQuestionTitle"><div>'+
+  '<span class="mj-about-n">LE QG ÉVOLUE AVEC VOUS</span><h2 id="mjAboutQuestionTitle">UNE QUESTION, UNE IDÉE ?</h2>'+
+  '<p>Un problème technique, une suggestion ou un projet à proposer ? Retrouve-nous sur la page de contact.</p>'+
+  '</div><div class="mj-about-actions"><a class="btn btn-gold" href="#/aide">Consulter la FAQ</a>'+
+  '<a class="btn btn-ghost mj-about-email" href="#/contact" aria-label="Ouvrir le formulaire de contact : contact@ma-jestik.fr">✉ contact@ma-jestik.fr</a></div></section>';
 }
 function creator(){
  return head('UNIVERS MA_JESTIK','CODE CRÉATEUR','')+
