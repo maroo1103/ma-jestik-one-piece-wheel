@@ -34,3 +34,10 @@ La table indépendante `member_activity` conserve uniquement `twitch_id` et `las
 `SELECT datetime(last_active_at,'unixepoch') FROM member_activity ORDER BY last_active_at DESC LIMIT 10;`
 
 Ne pas partager les identifiants Twitch ni données de membres dans les captures.
+
+## Mise en ligne du frontend (9 novembre 2026)
+La table D1 `member_activity` a été créée et initialisée pour les **3 comptes** existants (3 suivis, 0 manquant), d'après les tests de la console Cloudflare transmis par l'éditeur. Le Worker `ma-jestik-qg-members` a été déployé, sa route `/v1/health` a répondu `{"status":"ok"}` et sa route `/v1/me/activity` sans jeton a renvoyé `Connexion Twitch invalide`. La variable de production `ACTIVITY_TRACKING_ENABLED=true` a été confirmée dans l'interface.
+
+La balise `majestik-activity-enabled` est désormais **true** côté GitHub Pages ; le module Twitch est chargé avec une version de cache différente pour prendre en compte le changement. Une revalidation Twitch automatique toutes les heures sans interaction ne compte pas à elle seule comme une nouvelle activité.
+
+**Reste à confirmer en production :** navigation connectée au QG après déploiement GitHub Pages, réponse `200` de `POST /v1/me/activity` et nouvelle date dans D1. Aucune purge automatique n'est ajoutée par cette mise en ligne.

@@ -115,7 +115,8 @@ async function check(token){
   const sessionChanged=me?.id!==next.id||me?.token!==next.token;
   if(sessionChanged)nextActivityPing=0;
   me=next;render();
-  void touchActivity();
+  // Revalidation Twitch périodique ≠ activité de l'utilisateur.
+  if(sessionChanged)void touchActivity();
   // Ne pas recharger le profil à chaque vérification horaire : cela ferait perdre
   // les champs en cours d'édition. L'événement sert aux changements de compte.
   if(sessionChanged)window.dispatchEvent(new Event('qg:twitch-session'));
