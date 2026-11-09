@@ -56,13 +56,31 @@ jobs:
           found = {p.stem for p in social.glob('*.svg')}
           if found != expected:
               raise SystemExit(f'Miniatures manquantes ou inattendues : {expected ^ found}')
+          # Les créations validées sont déposées dans dist/og/premium/.
+          # En l'absence d'un visuel final, conserver l'ancien SVG : aucun
+          # lien d'image cassé pendant l'import progressif.
+          premium_dir = social / 'premium'
           for artwork in sorted(social.glob('*.svg')):
               destination = artwork.with_suffix('.png')
-              cairosvg.svg2png(url=str(artwork), write_to=str(destination), output_width=1200, output_height=630)
-              with Image.open(destination) as im:
-                  if im.size != (1200, 630):
+              premium = premium_dir / (artwork.stem + '.png')
+              if premium.is_file():
+                  with Image.open(premium) as source:
+                      source.load()
+                      if source.size != (1200, 630):
+                          raise SystemExit(f'Visuel premium mal dimensionne : {premium} ({source.size})')
+                      source.convert('RGB').save(destination, format='PNG', optimize=True)
+                  origin = 'premium'
+              else:
+                  cairosvg.svg2png(url=str(artwork), write_to=str(destination), output_width=1200, output_height=630)
+                  origin = 'svg de secours'
+              with Image.open(destination) as result:
+                  if result.size != (1200, 630):
                       raise SystemExit(f'Format incorrect pour {destination}')
-              print(f'Miniature creee : {destination} ({destination.stat().st_size} octets)')
+                  # Les cartes du QG utilisent la version WebP légère.
+                  result.convert('RGB').save(
+                      artwork.with_suffix('.webp'), format='WEBP', quality=94, method=6
+                  )
+              print(f'Miniature creee : {destination} ({origin}, {destination.stat().st_size} octets)')
           PY
 
       - name: Generer les icones installables MJ

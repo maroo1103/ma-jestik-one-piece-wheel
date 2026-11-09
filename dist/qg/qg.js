@@ -10,9 +10,9 @@ const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const voteApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
-const names = {accueil:'Accueil',roue:'Roue Fortnite',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide'};
+const names = {accueil:'Accueil',roue:'La roue',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide'};
 const modules = [
-{path:'roue',icon:'🎡',title:'Roue Fortnite One Piece',desc:'Notre roue originale, avec ses 12 destinations, ses images et ses sons. Accessible directement ici.',ready:true},
+{path:'roue',icon:'🎡',title:'La roue',desc:'Un outil interactif pour laisser le hasard choisir. De nouvelles utilisations pourront être ajoutées progressivement.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
 {path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Compteur personnel, objectif et affichage OBS pour chaque streamer. Prêt à utiliser.',ready:true},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Propose des questions, vote avec Twitch et découvre les résultats partagés.',ready:tribunalPublicEnabled},
@@ -24,14 +24,14 @@ const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div cla
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
 function home(){
  const paths=[
-  {path:'roue',overline:'01 / LE HASARD',title:'LA ROUE FORTNITE',summary:'Douze destinations. Une seule décision : celle de la roue.',image:'roue',name:'Explorer la roue',featured:true},
+  {path:'roue',overline:'01 / LE HASARD',title:'LA ROUE',summary:'Un tirage, une décision : laisse le hasard choisir.',image:'roue',name:'Explorer la roue',featured:true},
   {path:'tribunal',overline:'02 / LA COMMUNAUTÉ',title:'LE TRIBUNAL',summary:'Des questions, des propositions et des votes qui comptent vraiment.',image:'tribunal',name:'Entrer au Tribunal',featured:true},
   {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'118 défis Zero Build à tenter en solo ou avec ton équipe.',image:'defis',name:'Découvrir les défis'},
   {path:'killathon',overline:'04 / LE COMPTEUR',title:'KILLATHON',summary:'Fixe ton objectif et compte tes éliminations en direct.',image:'killathon',name:'Lancer le Killathon'},
   {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Retrouve les points et les performances de la communauté.',image:'classement',name:'Voir les classements'}
  ];
  const cards=paths.map(p=>'<a class="hq-portal '+(p.featured?'hq-portal-featured ':'')+'hq-portal-'+p.path+'" href="#/'+p.path+'">'+
-  '<span class="hq-portal-art"><img src="/og/'+p.image+'.png?v=20261108" alt="" loading="lazy" decoding="async"></span>'+
+  '<span class="hq-portal-art"><img src="/og/'+p.image+'.webp?v=20261109-premium1" alt="" loading="lazy" decoding="async"></span>'+
   '<span class="hq-portal-content"><span class="hq-portal-overline">'+p.overline+'</span>'+
   '<span class="hq-portal-title">'+p.title+'</span>'+
   '<span class="hq-portal-summary">'+p.summary+'</span>'+
@@ -43,7 +43,7 @@ function home(){
    '<div class="hq-hero-content">'+
 
     '<h1 id="hqHeroTitle">BIENVENUE<br><span>DANS LE QG</span><br><span>DE MA_JESTIK.</span></h1>'+
-    '<p class="hq-hero-lead">Fais tourner la roue Fortnite, relève 118 défis Zero Build et participe aux votes du Tribunal.</p>'+
+    '<p class="hq-hero-lead">Fais tourner la roue, relève 118 défis Zero Build et participe aux votes du Tribunal.</p>'+
     '<div class="hq-hero-buttons">'+
      '<button class="hq-hero-primary" type="button" data-scroll="hq-explorer">DÉCOUVRIR LE QG <span aria-hidden="true">↗</span></button>'+
 
@@ -98,7 +98,7 @@ function home(){
  '</div>';
 }
 function wheel(){
- return head('OUTILS GAMING','LA ROUE FORTNITE','Laisse le hasard choisir ta prochaine destination sur la carte de Fortnite.')+
+ return head('OUTILS GAMING','LA ROUE','Un tirage, une décision ! Lance la roue et laisse le hasard choisir.')+
  '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="Roue interactive Fortnite One Piece Ma_JesTik" src="../roue.html?v=20261108-mobile-polish1" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
 }
 function challenges(){return challengesMarkup();}
@@ -198,7 +198,7 @@ function about(){
  return head('UNIVERS MA_JESTIK','À PROPOS DU QG','Bienvenue sur le site communautaire indépendant de Ma_JesTik. Ici, on partage des outils gaming, des défis et des moments entre joueurs.',[tag('Projet personnel','gold'),tag('Accès gratuit')])+
  '<section class="mj-about-grid" aria-label="Découvrir le projet">'+
  '<article class="mj-about-card"><span class="mj-about-n">01 / LE PROJET</span><h2>UNE PASSION, UN QG</h2><p>Ma_JesTik est un projet personnel créé pour le plaisir de jouer, d\'échanger et de rassembler une communauté autour du gaming. Il n\'est pas exploité par une entreprise.</p></article>'+
- '<article class="mj-about-card"><span class="mj-about-n">02 / LES OUTILS</span><h2>JOUER ENSEMBLE</h2><p>Roue Fortnite, défis, Killathon communautaire, Tribunal et classements : des outils pour animer les parties et les échanges, sans obligation d\'achat.</p></article>'+
+ '<article class="mj-about-card"><span class="mj-about-n">02 / LES OUTILS</span><h2>JOUER ENSEMBLE</h2><p>La roue, les défis, le Killathon communautaire, le Tribunal et les classements : des outils pour animer les parties et les échanges, sans obligation d\'achat.</p></article>'+
  '<article class="mj-about-card"><span class="mj-about-n">03 / LA COMMUNAUTÉ</span><h2>DES PROFILS À TON IMAGE</h2><p>La connexion Twitch donne accès aux fonctions communautaires. Chacun choisit la visibilité de son profil et de ses résultats dans le classement.</p></article>'+
  '</section>'+
  '<section class="mj-about-bottom"><div><span class="mj-about-n">MA_JESTIK GAMING</span><h2>UN SITE SANS BOUTIQUE</h2><p>Aucune vente ni lien affilié Amazon ou Instant Gaming n’est proposé actuellement sur le QG. Si le projet évolue, ses informations seront mises à jour avant toute nouvelle fonctionnalité commerciale.</p></div><div class="mj-about-actions"><a class="btn btn-gold" href="#/aide">Consulter la FAQ</a><a class="btn btn-ghost" href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Rejoindre le Discord ↗</a></div></section>';
