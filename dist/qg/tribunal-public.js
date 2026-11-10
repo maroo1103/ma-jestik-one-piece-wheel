@@ -153,7 +153,9 @@ function renderModeration(){
     const form=reopened.querySelector('form');
     form.querySelector('[data-question]').value=draftData.question;
     form.querySelector('[data-answer-list]').innerHTML=inputs(draftData.answers);
-    form.querySelector('[data-duration]').value=String(draftData.duration_minutes);
+    // Ancien brouillon « sans limite » : rétablir une durée valide de 10 min.
+    const previousDuration=String(draftData.duration_minutes);
+    form.querySelector('[data-duration]').value=dur.some(([value])=>value===previousDuration)?previousDuration:'10';
    }
   }
  }
