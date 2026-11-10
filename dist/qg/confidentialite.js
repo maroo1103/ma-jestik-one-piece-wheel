@@ -2,7 +2,7 @@
    Ne remplace pas les mentions légales : l'identification du responsable reste à finaliser.
    Aucun secret, identifiant personnel ou adresse privée n'est inclus. */
 export function privacyMarkup(){
- return \`
+ return `
  <div class="mj-privacy">
   <header class="mj-privacy-hero" aria-labelledby="mjPrivacyTitle">
    <div class="mj-privacy-eyebrow">AIDE &amp; INFORMATIONS <span aria-hidden="true">✦</span> DONNÉES PERSONNELLES</div>
@@ -116,7 +116,7 @@ export function privacyMarkup(){
    </div>
   </div>
   <div class="mj-privacy-bottom"><span aria-hidden="true">✦</span> MA_JESTIK · UN QG QUI ÉVOLUE, UNE INFORMATION QUI RESTE ACCESSIBLE.</div>
- </div>\`;
+ </div>`;
 }
 
 export function mountPrivacy(){
