@@ -8,7 +8,7 @@ let active=false,interval=null,sessionHandler=null,requestId=0,root=null,busy=fa
 let polls=[],proposals=[],identity=null,selectedFilter='open',notice='',verifiedId='',verifiedAt=0;
 const PROPOSALS_PER_PAGE=8;
 let proposalPage=0,proposalRenderSignature='';
-const dur=[['5','5 minutes'],['10','10 minutes'],['15','15 minutes'],['30','30 minutes'],['60','1 heure'],['1440','24 heures'],['0','♾️ Sans limite']];
+const dur=[['5','5 minutes'],['10','10 minutes'],['15','15 minutes'],['30','30 minutes'],['60','1 heure'],['1440','24 heures']];
 const durationOptions=()=>dur.map(([v,l])=>'<option value="'+v+'" '+(v==='10'?'selected':'')+'>'+l+'</option>').join('');
 function inputs(answers){
  return answers.map((value,i)=>'<label class="court-option-edit"><span>'+String(i+1).padStart(2,'0')+'</span>'+
@@ -106,7 +106,7 @@ function renderSidebar(){
  }
  if(identity.owner){
   sidebar.innerHTML='<details open class="panel court-tool-card"><summary>CRÉER UN SONDAGE <span>＋</span></summary>'+
-   '<p>Publie une question avec 2 à 4 réponses. Durée définie ou sans limite.</p>'+editorForm('create',null,'',['Oui','Non'])+'</details>';
+   '<p>Publie une question avec 2 à 4 réponses et une durée de 5 minutes à 24 heures.</p>'+editorForm('create',null,'',['Oui','Non'])+'</details>';
  }else{
   sidebar.innerHTML='<details open class="panel court-tool-card court-suggest-card"><summary>PROPOSER UNE QUESTION <span>✎</span></summary>'+
    '<p>Connecté avec Twitch : '+esc(identity.name)+'. Ta question sera envoyée à Ma_JesTik pour validation (3 par 24 h).</p>'+
