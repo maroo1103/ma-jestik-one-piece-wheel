@@ -84,16 +84,13 @@ function home(){
    '</div>'+
    '<div class="hq-portal-grid">'+cards+'</div>'+
   '</section>'+
-  '<section class="hq-setup-showcase" aria-labelledby="hqSetupTitle">'+
+  '<section class="hq-setup-showcase hq-setup-banner" aria-labelledby="hqSetupTitle">'+
    '<div class="hq-setup-copy">'+
     '<p class="hq-section-overline"><span aria-hidden="true">✦</span> DANS LES COULISSES</p>'+
     '<h2 id="hqSetupTitle">DÉCOUVRE MON <em>SETUP GAMING.</em></h2>'+
     '<p>Une configuration pensée pour jouer, streamer et profiter des plus beaux univers. Entre dans les coulisses et explore mon matériel.</p>'+
     ''+
     '<a class="hq-setup-cta" href="#/setup">EXPLORER MON SETUP </a>'+
-   '</div>'+
-   '<div class="hq-setup-art">'+
-    '<img class="hq-setup-illustration" src="media/setup-tour-gold.webp?v=20261110-gold1" alt="Illustration d’une tour PC gaming noire avec éclairages dorés, Ma_JesTik" loading="lazy" decoding="async" width="980" height="838">'+
    '</div>'+
   '</section>'+
   '<section class="hq-endnote"><span class="hq-endnote-line"></span><span>MA_JESTIK</span><strong>À TRÈS VITE DANS LE QG.</strong><span class="hq-endnote-line"></span></section>'+
