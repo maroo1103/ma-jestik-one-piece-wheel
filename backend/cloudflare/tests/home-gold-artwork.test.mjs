@@ -28,25 +28,25 @@ test("Setup : fond panoramique WebP noir et or, sans rectangle et avec version m
  assert.ok(bytes("dist/qg/media/setup-tour-gold.webp").length>20000);
  const js=src("dist/qg/qg.js");
  assert.match(js,/class="hq-setup-showcase hq-setup-banner"/);
- assert.doesNotMatch(js,/media\\/setup-tour-gold\\.webp/);
+ assert.doesNotMatch(js,/media\/setup-tour-gold\.webp/);
  assert.doesNotMatch(js,/class="hq-setup-art"/);
  assert.match(js,/EXPLORER MON SETUP/);
  const css=src("dist/qg/home-premium.css");
- assert.match(css,/media\\/setup-banner-pc-gold\\.webp\\?v=20261110-setup-banner1/);
- assert.match(css,/\\.hq-setup-showcase\\.hq-setup-banner/);
+ assert.match(css,/media\/setup-banner-pc-gold\.webp\?v=20261110-setup-banner1/);
+ assert.match(css,/\.hq-setup-showcase\.hq-setup-banner/);
  assert.match(css,/background-size:cover,cover/);
- assert.match(css,/@media\\(max-width:850px\\)/);
+ assert.match(css,/@media\(max-width:850px\)/);
  assert.match(css, /background-size:cover,auto 405px/);
  assert.match(css, /background-size:cover,auto 320px/);
 });
 
 test("Accueil : les cinq affiches validees sont conservees et les ressources sont actualisees",()=>{
  const js=src("dist/qg/qg.js");
- assert.match(js,/p\\.image==='roue'\\?'20261110-gold2':'20261109-artworks2'/);
+ assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);
  for(const key of ["tribunal","defis","killathon","classement"]){
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\\.js\\?v=20261110-setup-banner1/);
- assert.match(html,/home-premium\\.css\\?v=20261110-setup-banner1/);
+ assert.match(html,/qg\.js\?v=20261110-setup-banner1/);
+ assert.match(html,/home-premium\.css\?v=20261110-setup-banner1/);
 });
