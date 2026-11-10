@@ -1,5 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-copyrefresh1';
-import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
+import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261110-activity-cards1';
 import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
@@ -52,25 +52,35 @@ function home(){
     '</div>'+
    '</div>'+
 
-   '<div class="hq-hero-bottom hq-activity-board" aria-label="Activité actuelle du QG">'+
-    '<div class="hq-activity-heading"><span aria-hidden="true">✦</span> EN CE MOMENT AU QG</div>'+
-    '<div class="hq-activity-cards">'+
-     '<a class="hq-activity-card hq-activity-twitch" data-state="neutral" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer" aria-label="Voir le statut du direct Twitch de Ma_JesTik">'+
-      '<span class="hq-activity-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M2.149 0 .537 4.345v17.391h5.91V24H9.67l3.223-3.218h4.835L24 14.524V0H2.149Zm19.702 13.441-3.762 3.762H12.18l-3.224 3.216v-3.216H4.127V2.149H21.85v11.292Zm-5.91-6.991h2.149v6.443h-2.149V6.45Zm-5.912 0h2.149v6.443h-2.149V6.45Z"/></svg></span>'+
-      '<span class="hq-activity-copy"><strong>TWITCH</strong><span class="hq-activity-status" data-activity-status="twitch" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
-      ''+
-     '</a>'+
-     '<a class="hq-activity-card hq-activity-tribunal" data-state="neutral" href="#/tribunal" aria-label="Ouvrir le Tribunal et consulter les sondages">'+
-      '<span class="hq-activity-symbol" aria-hidden="true">⚖</span>'+
-      '<span class="hq-activity-copy"><strong>TRIBUNAL</strong><span class="hq-activity-status" data-activity-status="tribunal" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
-      ''+
-     '</a>'+
-     '<a class="hq-activity-card hq-activity-defis" data-state="neutral" href="#/defis" aria-label="Ouvrir les défis et missions de Ma_JesTik">'+
-      '<span class="hq-activity-symbol" aria-hidden="true">⚔</span>'+
-      '<span class="hq-activity-copy"><strong>DÉFIS</strong><span class="hq-activity-status" data-activity-status="defis" data-state="neutral" role="status" aria-live="polite">Vérification…</span></span>'+
-      ''+
-     '</a>'+
-    '</div>'+
+  '</section>'+
+  '<section class="hq-activity-board hq-activity-showcase" aria-labelledby="hqActivityTitle">'+
+   '<div class="hq-activity-intro">'+
+    '<p class="hq-activity-heading"><span aria-hidden="true">✦</span> EN CE MOMENT AU QG</p>'+
+    '<h2 id="hqActivityTitle">LES INFOS UTILES <em>EN UN COUP D’ŒIL.</em></h2>'+
+    '<p class="hq-activity-lead">Suis l’activité du QG, participe aux décisions de la communauté et relève de nouveaux défis.</p>'+
+   '</div>'+
+   '<div class="hq-activity-cards">'+
+    '<article class="hq-activity-card hq-activity-twitch" data-state="neutral">'+
+     '<div class="hq-activity-ribbon"><span class="hq-activity-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M2.149 0 .537 4.345v17.391h5.91V24H9.67l3.223-3.218h4.835L24 14.524V0H2.149Zm19.702 13.441-3.762 3.762H12.18l-3.224 3.216v-3.216H4.127V2.149H21.85v11.292Zm-5.91-6.991h2.149v6.443h-2.149V6.45Zm-5.912 0h2.149v6.443h-2.149V6.45Z"/></svg></span><strong>TWITCH</strong></div>'+
+     '<span class="hq-activity-status" data-activity-status="twitch" data-state="neutral" role="status" aria-live="polite">Vérification…</span>'+
+     '<h3 data-activity-title="twitch">Vérification en cours</h3>'+
+     '<p class="hq-activity-detail" data-activity-detail="twitch">Consultation du statut de la chaîne Twitch.</p>'+
+     '<a class="hq-activity-action" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer">Voir la chaîne</a>'+
+    '</article>'+
+    '<article class="hq-activity-card hq-activity-tribunal" data-state="neutral">'+
+     '<div class="hq-activity-ribbon"><span class="hq-activity-symbol" aria-hidden="true">⚖</span><strong>TRIBUNAL</strong></div>'+
+     '<span class="hq-activity-status" data-activity-status="tribunal" data-state="neutral" role="status" aria-live="polite">Vérification…</span>'+
+     '<h3 data-activity-title="tribunal">Vérification en cours</h3>'+
+     '<p class="hq-activity-detail" data-activity-detail="tribunal">Consultation des sondages de la communauté.</p>'+
+     '<a class="hq-activity-action" href="#/tribunal">Ouvrir le Tribunal</a>'+
+    '</article>'+
+    '<article class="hq-activity-card hq-activity-defis" data-state="neutral">'+
+     '<div class="hq-activity-ribbon"><span class="hq-activity-symbol" aria-hidden="true">⚔</span><strong>DÉFIS</strong></div>'+
+     '<span class="hq-activity-status" data-activity-status="defis" data-state="neutral" role="status" aria-live="polite">Vérification…</span>'+
+     '<h3 data-activity-title="defis">Vérification en cours</h3>'+
+     '<p class="hq-activity-detail" data-activity-detail="defis">Consultation des défis proposés au QG.</p>'+
+     '<a class="hq-activity-action" href="#/defis">Voir les défis</a>'+
+    '</article>'+
    '</div>'+
   '</section>'+
   '<section class="hq-intro" aria-label="La philosophie du QG">'+
