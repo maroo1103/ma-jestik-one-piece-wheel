@@ -343,7 +343,7 @@ export default {
       if(path.startsWith("/v1/votes/"))return await voteRoute(req,env,origin,path);
       if(path.startsWith("/v1/profiles/"))return await memberProfileRoute(req,env,origin,path);
       if(path==="/v1/ranking"&&req.method==="GET"){
-        const res=await env.DB.prepare("SELECT display_name,avatar_url,score FROM members WHERE visible_in_ranking=1 AND score>0 ORDER BY score DESC,joined_at ASC LIMIT 50").all();
+        const res=await env.DB.prepare("SELECT twitch_id,display_name,avatar_url,score FROM members WHERE visible_in_ranking=1 AND score>0 ORDER BY score DESC,joined_at ASC LIMIT 50").all();
         return output({entries:res.results||[]},200,origin);
       }
       if(path!=="/v1/me"&&path!=="/v1/me/visibility")return output({error:"Route inconnue"},404,origin);
