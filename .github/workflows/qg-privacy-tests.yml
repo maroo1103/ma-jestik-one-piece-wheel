@@ -12,6 +12,9 @@ on:
       - 'dist/qg/index.html'
       - 'dist/qg/twitch-auth.js'
       - 'dist/qg/profil.js'
+      - 'dist/qg/contact.js'
+      - 'dist/qg/confidentialite.js'
+      - 'dist/qg/confidentialite.css'
       - 'backend/cloudflare/schema.sql'
       - 'backend/cloudflare/migrations/**'
       - 'backend/cloudflare/tests/**'
@@ -41,5 +44,7 @@ jobs:
           node --check dist/qg/twitch-auth.js
           node --check dist/qg/profil.js
           node --check dist/qg/qg.js
+          node --check dist/qg/confidentialite.js
+          node --check dist/qg/contact.js
       - name: Tester en SQLite isolé (aucun accès à D1 de production)
         run: node --experimental-sqlite --test backend/cloudflare/tests/*.test.mjs
