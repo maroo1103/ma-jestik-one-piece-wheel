@@ -1,0 +1,33 @@
+# Export manuel des sources du projet Ma_JesTik — aucune modification de production.
+# Une première exécution a lieu à la création de ce workflow.
+name: Exporter les sources Ma_JesTik
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-sources.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt GitHub
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Créer le ZIP des sources (sans les secrets GitHub et sans .git)
+        shell: bash
+        run: |
+          git archive --format=zip --output=ma-jestik-source-complete.zip HEAD
+          test -s ma-jestik-source-complete.zip
+          unzip -t ma-jestik-source-complete.zip >/dev/null
+      - name: Rendre l'archive disponible
+        uses: actions/upload-artifact@v4
+        with:
+          name: ma-jestik-source-complete
+          path: ma-jestik-source-complete.zip
+          retention-days: 30
