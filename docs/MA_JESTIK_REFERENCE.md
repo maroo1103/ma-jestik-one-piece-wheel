@@ -36,19 +36,23 @@
 
 ## 4. Dernier travail confirmé sur GitHub
 
+- **10/11/2026 — NOUVEAU : fond panoramique du setup validé par l'utilisateur et publié.** Visuel 2048 × 768 (tour PC seule, noir et or, grand espace sombre à gauche), optimisé en WebP à 86 Ko : `dist/qg/media/setup-banner-pc-gold.webp`. Il remplace l'image encadrée **uniquement en affichage** dans la section « Découvre mon setup gaming » (`dist/qg/qg.js`, `dist/qg/home-premium.css`). La tour est intégrée comme fond pleine largeur, texte et CTA conservés à gauche ; adaptation prévue sur mobile avec tour sous le texte. L'ancien `setup-tour-gold.webp` reste dans le dépôt comme archive, non utilisé sur l'accueil. **Commit `c0f70ac66966c497e992a55d01b7aa42a5bf5e95`, publication GitHub Pages `42854999474` : SUCCESS.** Tests du setup réactualisés dans `backend/cloudflare/tests/home-gold-artwork.test.mjs`, dernier correctif `4a2794dd5e89e91beeb5ee0ac95a64ca617a8a88`, vérifications automatisées `42855319891` : SUCCESS. **Le contrôle esthétique final PC/mobile par l'utilisateur reste à effectuer.** Aucun Worker Cloudflare ni donnée D1 modifié.
+
 - **Modification la plus récente (10/11/2026) :** allègement des cinq cartes d'accueil du QG. Les grands titres répétés sous les affiches ont été masqués visuellement mais restent accessibles aux lecteurs d'écran ; les cinq descriptions ont été simplifiées et les liens d'action agrandis. La marge noire inférieure de l'affiche « La Roue » a été compensée **dans la carte uniquement** par une règle CSS ciblée (`height:108%; object-fit:fill; object-position:center top`), sans modifier les cinq fichiers graphiques sources ni leurs aperçus Open Graph. **Contrôle visuel PC/mobile encore à effectuer** pour confirmer que cette compensation est satisfaisante.
 - **Fichiers édités :** `dist/qg/qg.js` et `dist/qg/home-premium.css`.
 - **Commits repères :** `38e6106c76033f6dbec4caec129990355e9d4a82` (cartes) et `1e702b4f84f589a34d2b9eeacd59772ea5337bbd` (CSS).
 - **Déploiement GitHub Pages confirmé réussi :** exécution `42849284701` (génération Open Graph, préparation du site et publication réussies).
 - **Modification précédente :** intégration de l'affiche finale « La Roue » dans `dist/og/premium/roue.png`, commit `d5119ec72e4ca3735f5169a307a5e5783b95b572`, exécution réussie `42839633393`.
 - **Important :** la réussite technique ne remplace pas un contrôle visuel.
-- L'illustration actuelle du setup est dans `dist/qg/media/setup-tour-gold.webp` et affichée par `dist/qg/qg.js`.
+- Le **fond actif** du setup est `dist/qg/media/setup-banner-pc-gold.webp` (chargé depuis `home-premium.css`). L'ancien visuel `dist/qg/media/setup-tour-gold.webp` est conservé dans GitHub mais n'est plus affiché sur l'accueil.
 
-## 5. Priorité actuelle : intégration de la tour PC
+## 5. Priorité actuelle : validation du nouveau fond PC
 
-La **tour PC gaming noire et dorée** actuelle est reconnaissable et appréciée en tant qu'objet, mais son image a un **fond rectangulaire visible**, ce qui donne l'impression qu'elle est collée par-dessus le décor de la page d'accueil.
+**La nouvelle image a été approuvée et intégrée le 10/11/2026.** L'ancienne bande d'image rectangulaire a disparu : l'image 8:3 devient le fond continu de la section « Découvre mon setup gaming ». La mise en page préserve le texte et le bouton à gauche sur ordinateur ; en format étroit, la tour descend sous le texte.
 
-**Prochaine mission :** conserver un PC simple et élégant noir/or champagne, supprimer ou fondre ce rectangle et intégrer visuellement la tour dans le décor existant. Préserver les proportions et la lisibilité du sujet ; tester le rendu sur PC et mobile. **Présenter le visuel à valider avant intégration**, puis modifier GitHub et vérifier la publication. **Ne pas retoucher la nouvelle affiche La Roue ni les quatre autres affiches.**
+**Point restant :** demander à l'utilisateur de vérifier le cadrage réel sur PC et mobile et d'envoyer une capture uniquement si un ajustement est nécessaire. L'absence d'erreur dans GitHub Actions ne suffit pas à valider le rendu visuel. Ne pas modifier les cinq affiches validées, la navigation ou les fonctionnalités non demandées.
+
+**Ensuite :** revenir aux droits RGPD du Tribunal sans profil, à la vérification des Workers/CRON en mode `DRY_RUN` et aux mentions légales, selon les priorités validées.
 
 ## 6. RGPD, données et mentions légales
 
