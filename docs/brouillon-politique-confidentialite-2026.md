@@ -83,6 +83,10 @@ Les éléments de connexion temporaires et les informations stockées dans le na
 - les règles de conservation et d'effacement du formulaire de contact une fois activé ;
 - les cas où une conservation limitée est nécessaire au traitement d'une contestation ou au respect d'une obligation légale.
 
+**Décisions de conservation validées le 10 novembre 2026, en cours d'implémentation :** propositions du Tribunal en attente : 3 mois ; refusées : 30 jours après décision ; acceptées : 6 mois après décision ; sondages clôturés et leurs votes : 12 mois après la clôture (ou l'expiration de leur durée). Les nouveaux sondages ne proposent plus l'option « Sans limite » dans les formulaires ; l'ancienne option doit également être supprimée du Worker Cloudflare déployé. Les éventuels anciens sondages sans limite seront clos manuellement puis soumis au délai de 12 mois. Messages du formulaire : 6 mois à compter du dernier échange dans la boîte OVH, avec pièces jointes supprimées dès qu'elles ne sont plus utiles ; cette gestion du courrier n'est **pas automatisée**. La politique de conservation détaillée est consignée dans `docs/proposition-durees-conservation-2026-11-10.md` (décisions internes validées, application technique à compléter).
+
+**[PRODUCTION À VÉRIFIER]** Le code source prévoit un nettoyage Tribunal, mais son déploiement et son activation en production ne sont pas confirmés. Les changements ne doivent donc pas être présentés comme des durées d'effacement automatiques déjà en vigueur.
+
 Ne pas afficher une durée arbitraire ou une promesse d'effacement automatique tant qu'elle n'est pas effectivement appliquée.
 
 ## 7. Visibilité et suppression des informations
