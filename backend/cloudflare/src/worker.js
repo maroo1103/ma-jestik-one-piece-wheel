@@ -197,6 +197,59 @@ async function memberProfileRoute(req,env,origin,path){
   return result({error:"Route inconnue ou méthode interdite"},404);
 }
 
+// Suppression complète d'un compte QG : cinq opérations atomiques sur D1.
+// Le Tribunal ne référence pas members par clé étrangère. Il doit être nettoyé
+// explicitement AVANT la suppression du compte (qui déclenche les autres cascades).
+// Les questions/réponses des sondages publiés restent consultables, sans auteur.
+function memberEraseStatements(db,twitchId,inactiveOnly=false){
+  const guard=inactiveOnly
+    ?" AND EXISTS (SELECT 1 FROM member_activity a WHERE a.twitch_id=? AND a.last_active_at>0 AND a.last_active_at<=unixepoch('now','-6 months'))"
+    :"";
+  const stmt=sql=>db.prepare(sql+guard).bind(...(inactiveOnly?[twitchId,twitchId]:[twitchId]));
+  return [
+    stmt("DELETE FROM tribunal_votes WHERE twitch_id=?"),
+    stmt("UPDATE tribunal_polls SET proposed_by_name=NULL WHERE id IN (SELECT published_poll_id FROM tribunal_proposals WHERE author_twitch_id=? AND published_poll_id IS NOT NULL)"),
+    // created_by_twitch_id est NOT NULL dans le schéma actuel : chaîne vide
+    // volontaire, ne correspondant à aucun identifiant Twitch valide.
+    stmt("UPDATE tribunal_polls SET created_by_twitch_id='' WHERE created_by_twitch_id=?"),
+    stmt("DELETE FROM tribunal_proposals WHERE author_twitch_id=?"),
+    stmt("DELETE FROM members WHERE twitch_id=?")
+  ];
+}
+async function eraseMemberData(db,twitchId,inactiveOnly=false){
+  // D1.batch garantit une transaction : tout ou rien en cas d'échec.
+  const results=await db.batch(memberEraseStatements(db,twitchId,inactiveOnly));
+  return Number(results[4]?.meta?.changes||0)===1;
+}
+
+// À activer explicitement dans Cloudflare après sauvegarde et audit.
+// MEMBER_PURGE_ENABLED=true + ACTIVITY_TRACKING_ENABLED=true
+// MEMBER_PURGE_DRY_RUN=true pour l'observation ; =false pour autoriser l'effacement.
+// Le Cron Trigger est à configurer séparément dans le Worker Cloudflare.
+async function purgeInactiveMembers(env){
+  if(!env.DB || env.MEMBER_PURGE_ENABLED!=="true" || env.ACTIVITY_TRACKING_ENABLED!=="true"){
+    console.log("Purge QG inactive : options non activées.");
+    return;
+  }
+  const rows=await env.DB.prepare(
+    "SELECT m.twitch_id FROM members m JOIN member_activity a ON a.twitch_id=m.twitch_id "+
+    "WHERE a.last_active_at>0 AND a.last_active_at<=unixepoch('now','-6 months') "+
+    "ORDER BY a.last_active_at ASC LIMIT 25"
+  ).all();
+  const members=rows.results||[];
+  if(env.MEMBER_PURGE_DRY_RUN!=="false"){
+    console.log("Purge QG en simulation : "+members.length+" compte(s) admissible(s) dans ce lot. Aucun effacement.");
+    return;
+  }
+  let deleted=0;
+  for(const member of members){
+    // Le filtre d'inactivité est revérifié dans chaque instruction de la
+    // transaction, afin de protéger un membre redevenu actif entre-temps.
+    if(await eraseMemberData(env.DB,member.twitch_id,true))deleted++;
+  }
+  console.log("Purge QG : "+deleted+" compte(s) supprimé(s), lot plafonné à 25.");
+}
+
 // Suivi QG : date serveur, sans création de compte ni effacement automatique.
 async function touchMemberActivity(db,twitchId){
   await db.prepare("INSERT INTO member_activity(twitch_id,last_active_at) SELECT twitch_id,unixepoch() FROM members WHERE twitch_id=? ON CONFLICT(twitch_id) DO UPDATE SET last_active_at=excluded.last_active_at WHERE member_activity.last_active_at<=excluded.last_active_at-1800").bind(twitchId).run();
@@ -250,7 +303,7 @@ export default {
         return output({member:me},200,origin);
       }
       if(req.method==="DELETE"){
-        await env.DB.prepare("DELETE FROM members WHERE twitch_id=?").bind(user.id).run();
+        await eraseMemberData(env.DB,user.id);
         return output({deleted:true},200,origin);
       }
       if(req.method==="PATCH"){
@@ -268,5 +321,8 @@ export default {
       console.error("QG backend",String(error?.message||error).slice(0,100));
       return output({error:"Service momentanément indisponible"},500,origin);
     }
+  },
+  async scheduled(_controller,env){
+    await purgeInactiveMembers(env);
   }
 };
