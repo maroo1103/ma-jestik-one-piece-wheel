@@ -19,29 +19,34 @@ test("La Roue : affiche premium 1200 × 630 enregistrée dans les sources du sit
  assert.doesNotMatch(svg,/id="violet"|#842a93|#481253/);
 });
 
-test("Setup : vraie tour PC WebP noir et or, alternative descriptive et intégration responsive",()=>{
- const webp=bytes("dist/qg/media/setup-tour-gold.webp");
+test("Setup : fond panoramique WebP noir et or, sans rectangle et avec version mobile",()=>{
+ const webp=bytes("dist/qg/media/setup-banner-pc-gold.webp");
  assert.ok(webp.length>20000 && webp.length<500000);
  assert.equal(webp.toString("ascii",0,4),"RIFF");
  assert.equal(webp.toString("ascii",8,12),"WEBP");
+ // Ne pas supprimer l'ancien visuel source, meme s'il n'est plus affiche.
+ assert.ok(bytes("dist/qg/media/setup-tour-gold.webp").length>20000);
  const js=src("dist/qg/qg.js");
- assert.match(js,/media\/setup-tour-gold\.webp\?v=20261110-gold1/);
- assert.doesNotMatch(js,/media\/setup-icon-premium\.svg/);
- assert.match(js,/width="980" height="838"/);
+ assert.match(js,/class="hq-setup-showcase hq-setup-banner"/);
+ assert.doesNotMatch(js,/media\\/setup-tour-gold\\.webp/);
+ assert.doesNotMatch(js,/class="hq-setup-art"/);
+ assert.match(js,/EXPLORER MON SETUP/);
  const css=src("dist/qg/home-premium.css");
- assert.match(css,/Accueil noir et or/);
- assert.match(css,/mask-image:radial-gradient/);
- assert.match(css,/@media\(max-width:680px\)/);
+ assert.match(css,/media\\/setup-banner-pc-gold\\.webp\\?v=20261110-setup-banner1/);
+ assert.match(css,/\\.hq-setup-showcase\\.hq-setup-banner/);
+ assert.match(css,/background-size:cover,cover/);
+ assert.match(css,/@media\\(max-width:850px\\)/);
+ assert.match(css, /background-size:cover,auto 405px/);
+ assert.match(css, /background-size:cover,auto 320px/);
 });
 
-test("Accueil : la roue premium seulement, sans altérer les 4 autres affiches",()=>{
+test("Accueil : les cinq affiches validees sont conservees et les ressources sont actualisees",()=>{
  const js=src("dist/qg/qg.js");
- assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);
- assert.match(js,/image:'tribunal'/);
- assert.match(js,/image:'defis'/);
- assert.match(js,/image:'killathon'/);
- assert.match(js,/image:'classement'/);
+ assert.match(js,/p\\.image==='roue'\\?'20261110-gold2':'20261109-artworks2'/);
+ for(const key of ["tribunal","defis","killathon","classement"]){
+  assert.ok(js.includes("image:'"+key+"'"));
+ }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-gold-home2/);
- assert.match(html,/home-premium\.css\?v=20261110-gold-setup1/);
+ assert.match(html,/qg\\.js\\?v=20261110-setup-banner1/);
+ assert.match(html,/home-premium\\.css\\?v=20261110-setup-banner1/);
 });
