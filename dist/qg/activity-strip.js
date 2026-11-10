@@ -10,13 +10,38 @@ const POLL_MS=90000;
 const ERROR_LABEL='Indisponible';
 let interval=null,session=0,controllers=new Set(),lastRefresh=0;
 
+// Les textes des cartes reflètent uniquement les états reçus des API.
+const ACTIVITY_COPY={
+ twitch:{
+  live:['En direct','Le live est en cours : rejoins-nous sur Twitch.'],
+  offline:['Hors ligne','Retrouve la chaîne et ses derniers contenus.'],
+  neutral:['Statut indisponible','Consulte la chaîne pour les dernières informations.']
+ },
+ tribunal:{
+  live:['Sondage en cours','Un sondage est ouvert : participe aux décisions du QG.'],
+  offline:['Aucun sondage actif','Propose une idée ou reviens découvrir les prochains votes.'],
+  neutral:['Statut indisponible','Ouvre le Tribunal pour consulter ses propositions et sondages.']
+ },
+ defis:{
+  live:['Défi en cours','Un défi communautaire est actuellement proposé.'],
+  offline:['Aucun défi en cours','118 défis Zero Build à découvrir en solo ou en équipe.'],
+  neutral:['Statut indisponible','Découvre les défis disponibles sur le QG.']
+ }
+};
 function setState(name,text,state='neutral'){
  const el=document.querySelector('[data-activity-status="'+name+'"]');
  if(!el)return;
  el.textContent=text;
  el.dataset.state=state;
  const card=el.closest('.hq-activity-card');
- if(card)card.dataset.state=state;
+ if(card){
+  card.dataset.state=state;
+  const copy=ACTIVITY_COPY[name]?.[state]||ACTIVITY_COPY[name]?.neutral;
+  const title=card.querySelector('[data-activity-title]');
+  const detail=card.querySelector('[data-activity-detail]');
+  if(copy&&title)title.textContent=copy[0];
+  if(copy&&detail)detail.textContent=copy[1];
+ }
 }
 
 function abortRequests(){
