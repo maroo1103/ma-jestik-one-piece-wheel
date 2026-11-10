@@ -50,8 +50,8 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-setup-banner1/);
- assert.match(html,/home-premium\.css\?v=20261110-quote-compact1/);
+ assert.match(html,/qg\.js\?v=20261110-activity-showcase1/);
+ assert.match(html,/home-premium\.css\?v=20261110-activity-showcase1/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -63,4 +63,28 @@ test("Accueil : citation conservee et espaces verticaux reduits sur desktop et m
  assert.match(css,/padding-top:clamp\(54px,5vw,80px\)/);
  assert.match(css,/padding-bottom:clamp\(54px,5vw,80px\)/);
  assert.match(css,/\.hq-intro\{padding:46px 22px 54px\}/);
+});
+
+test("Accueil : trois cartes d'activité panoramiques, statuts fiables et versions actuelles",()=>{
+ const js=src("dist/qg/qg.js");
+ const css=src("dist/qg/home-premium.css");
+ const strip=src("dist/qg/activity-strip.js");
+ assert.match(js,/hq-activity-board hq-activity-showcase/);
+ assert.match(js,/LES INFOS UTILES/);
+ assert.match(js,/EN UN COUP D’ŒIL/);
+ for(const key of ["twitch","tribunal","defis"]){
+  assert.ok(js.includes('data-activity-title="'+key+'"'));
+  assert.ok(js.includes('data-activity-detail="'+key+'"'));
+  assert.ok(js.includes('data-activity-status="'+key+'"'));
+ }
+ assert.match(css,/Activité QG : cartes panoramiques/);
+ assert.match(css,/hq-activity-ribbon/);
+ assert.match(css,/width:100%;min-width:0;min-height:52px/);
+ assert.match(css,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+ assert.match(css,/@media\(max-width:730px\)/);
+ assert.match(strip,/const ACTIVITY_COPY/);
+ assert.match(strip,/Statut indisponible/);
+ assert.match(js,/Voir la chaîne/);
+ assert.match(js,/Ouvrir le Tribunal/);
+ assert.match(js,/Voir les défis/);
 });
