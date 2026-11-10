@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-no-url-cards1/);
+ assert.match(html,/qg\.js\?v=20261110-footer-unified1/);
  assert.match(html,/home-premium\.css\?v=20261110-no-url-cards1/);
 });
 
