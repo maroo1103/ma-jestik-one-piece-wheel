@@ -118,7 +118,9 @@ function socials(profile,name){
 }
 function fillSocialIcons(root){
  root.querySelectorAll("[data-mp-icon]").forEach(el=>{
-  const svg=document.querySelector(".site-header .qg-social-"+el.dataset.mpIcon+" svg");
+  const labels={twitch:"Twitch",instagram:"Instagram",tiktok:"TikTok"};
+  const label=labels[el.dataset.mpIcon];
+  const svg=label?document.querySelector('.mj-footer-brand-networks a[title="'+label+'"] svg'):null;
   if(svg)el.replaceChildren(svg.cloneNode(true));
  });
 }
@@ -333,6 +335,24 @@ export async function mountProfile(){
  view(state);
 }
 export function publicProfileMarkup(){return '<div class="mp-page"><div class="page-head"><div class="eyebrow">COMMUNAUTÉ MA_JESTIK</div><h1>PROFIL MEMBRE</h1><p>Présentation et jeux favoris d’un membre de la communauté.</p></div><div id="mjPublicProfileRoot"><p class="mp-loading">Chargement…</p></div></div>';}
+
+// Composant partagé par la page Profil Membre et l'aperçu du classement.
+// Les données sont filtrées par le Worker : aucune donnée privée n'arrive ici.
+export function renderPublicMember(root,data,id){
+ if(!root||!data?.profile)throw Error("Profil public absent");
+ const p=sanitize(data.profile),identity=data.identity||{},pic=avatar(identity.avatar);
+ const page=root.closest(".mp-page");if(page)page.dataset.accent=p.accent;
+ root.innerHTML='<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'"><div class="mp-banner-identity"><div class="mp-avatar">'+(pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch" referrerpolicy="no-referrer">':'<span aria-hidden="true">MJ</span>')+'</div><div><span class="mp-kicker">PROFIL PUBLIC DU QG</span><h2>'+esc(p.display_name||identity.name||"Membre Twitch")+'</h2>'+ownerBadge(id)+'</div></div></section>'+
+  '<div class="mp-grid"><section class="mp-panel"><h3>PRÉSENTATION</h3><p class="mp-bio">'+esc(p.bio||"Ce membre n’a pas encore renseigné sa biographie.")+'</p><div class="mp-links">'+socials(p,identity.name||"")+'</div></section>'+
+  '<section class="mp-panel"><h3>MES JEUX</h3><div class="mp-game-grid">'+(p.games.length?p.games.map(g=>gameCard(g,p.primary_game)).join(""):'<p>Aucun jeu favori renseigné.</p>')+'</div></section></div>';
+ fillSocialIcons(root);
+ root.querySelectorAll(".mp-game-image img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
+}
+export function renderPrivateMember(root,withReturn=false){
+ if(!root)return;
+ root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil indisponible</h2><p>Ce profil est privé. Vous n’êtes pas autorisé à consulter son contenu.</p>'+
+  (withReturn?'<a href="#/accueil" class="mp-gold-button">Retour au QG</a>':'')+'</div>';
+}
 export async function mountPublicProfile(){
  const root=$("mjPublicProfileRoot");if(!root)return;
  const id=new URLSearchParams(location.hash.split("?")[1]||"").get("id")||"";
@@ -340,15 +360,12 @@ export async function mountPublicProfile(){
  try{
   const data=await request("GET","/v1/profiles/"+id,"");
   if(!root.isConnected)return;
-  const p=sanitize(data.profile),identity=data.identity||{},pic=avatar(identity.avatar);
-  root.closest(".mp-page").dataset.accent=p.accent;
-  root.innerHTML='<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'"><div class="mp-banner-identity"><div class="mp-avatar">'+(pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch">':'MJ')+'</div><div><span class="mp-kicker">PROFIL PUBLIC DU QG</span><h2>'+esc(p.display_name||identity.name||"Membre Twitch")+'</h2><span class="mp-member-badge">✦ MEMBRE DU QG</span></div></div></section>'+
-   '<div class="mp-grid"><section class="mp-panel"><h3>PRÉSENTATION</h3><p class="mp-bio">'+esc(p.bio||"Ce membre n’a pas encore renseigné sa biographie.")+'</p><div class="mp-links">'+socials(p,identity.name||"")+'</div></section>'+
-   '<section class="mp-panel"><h3>MES JEUX</h3><div class="mp-game-grid">'+(p.games.length?p.games.map(g=>gameCard(g,p.primary_game)).join(""):'<p>Aucun jeu favori renseigné.</p>')+'</div></section></div>';
-  root.querySelector(".mp-member-badge").outerHTML=ownerBadge(id);
-  fillSocialIcons(root);
-  root.querySelectorAll(".mp-game-image img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
- }catch{root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil indisponible</h2><p>Ce profil est privé. Vous n’êtes pas autorisé à consulter son contenu.</p><a href="#/accueil" class="mp-gold-button">Retour au QG</a></div>';}
+  renderPublicMember(root,data,id);
+ }catch(e){
+  if(!root.isConnected)return;
+  if(e?.status===404)renderPrivateMember(root,true);
+  else root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil temporairement indisponible</h2><p>Impossible de charger ce profil pour le moment. Réessaie plus tard.</p></div>';
+ }
 }
 window.addEventListener("qg:twitch-session",()=>{if($("mjProfileRoot"))void mountProfile();});
 window.addEventListener("qg:member-updated",()=>{if($("mjProfileRoot"))void mountProfile();});
