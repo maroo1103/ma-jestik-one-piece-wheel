@@ -4,7 +4,7 @@ import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
 import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
-import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile} from './profil.js?v=20261108-profilsettings1';
+import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile,renderPublicMember,renderPrivateMember} from './profil.js?v=20261110-ranking-profiles1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
 import {publicTribunalMarkup,mountPublicTribunal,unmountPublicTribunal,tribunalPublicEnabled} from './tribunal-public.js?v=20261108-copyrefresh1';
@@ -139,8 +139,10 @@ function rankWreathedAvatar(entry){
 function rankCard(entry,place){
  const roles=['En tête du classement','Deuxième place','Troisième place'];
  const icons=['👑','🥈','🥉'];
- const card=document.createElement('article');card.className='qg-rank-card qg-rank-card-'+place;
- card.setAttribute('aria-label','Place '+place+' : '+entry.display_name+', '+rankScore(entry.score)+' points');
+ const id=String(entry.twitch_id||''),clickable=/^[0-9]{1,30}$/.test(id);
+ const card=document.createElement(clickable?'button':'article');card.className='qg-rank-card qg-rank-card-'+place+(clickable?' qg-rank-open':'');
+ if(clickable){card.type='button';card.dataset.memberId=id;card.setAttribute('aria-label','Consulter le profil de '+entry.display_name+' dans une fenêtre');}
+ else card.setAttribute('aria-label','Place '+place+' : '+entry.display_name+', '+rankScore(entry.score)+' points');
  const icon=document.createElement('span');icon.className='qg-rank-medal';icon.setAttribute('aria-hidden','true');icon.textContent=icons[place-1];
  const number=document.createElement('span');number.className='qg-rank-number';number.textContent='#'+place;
  const name=document.createElement('strong');name.className='qg-rank-name';name.textContent=entry.display_name.slice(0,64);
@@ -167,7 +169,9 @@ function renderRankings(entries,podium,tbody){
  entries.slice(3,50).forEach((entry,i)=>{
   const row=document.createElement('tr');row.className='qg-rank-row';
   const rank=document.createElement('td');const badge=document.createElement('span');badge.className='qg-rank-position';badge.textContent=String(i+4);rank.append(badge);
-  const who=document.createElement('td'),person=document.createElement('span');person.className='ranking-person';
+  const who=document.createElement('td'),id=String(entry.twitch_id||''),clickable=/^[0-9]{1,30}$/.test(id);
+  const person=document.createElement(clickable?'button':'span');person.className='ranking-person'+(clickable?' qg-rank-open':'');
+  if(clickable){person.type='button';person.dataset.memberId=id;person.setAttribute('aria-label','Consulter le profil de '+entry.display_name+' dans une fenêtre');}
   const name=document.createElement('span');name.textContent=entry.display_name.slice(0,64);
   person.append(rankAvatar(entry),name);who.append(person);
   const score=document.createElement('td');score.className='qg-rank-points';score.textContent=String(rankScore(entry.score));
@@ -182,7 +186,7 @@ async function mountRankings(){
   if(!res.ok)throw Error('Classement inaccessible');
   const data=await res.json();if(!tbody.isConnected||!podium.isConnected)return;
   const entries=Array.isArray(data.entries)?data.entries.filter(e=>e&&typeof e.display_name==='string'&&e.display_name.trim()).slice(0,50):[];
-  const signature=JSON.stringify(entries.map(e=>[e.display_name,rankScore(e.score),e.avatar_url]));
+  const signature=JSON.stringify(entries.map(e=>[e.twitch_id,e.display_name,rankScore(e.score),e.avatar_url]));
   if(rankingNode===tbody&&rankingSignature===signature)return;
   renderRankings(entries,podium,tbody);rankingNode=tbody;rankingSignature=signature;
  }catch{
@@ -191,6 +195,61 @@ async function mountRankings(){
    const msg=document.createElement('p');msg.className='qg-podium-empty';msg.textContent='Le podium est temporairement indisponible.';podium.replaceChildren(msg);
   }
  }finally{clearTimeout(timer);}
+}
+
+/* Prévisualisation accessible des profils : aucun changement de route.
+   Les données privées ne sont jamais retournées par le Worker. */
+let memberPreviewRequest=null,memberPreviewSeq=0,memberPreviewOrigin=null;
+const memberPreviewDialog=$('qgMemberDialog');
+const memberPreviewBody=$('qgMemberDialogContent');
+function closeMemberPreview(){
+ if(memberPreviewDialog?.open)memberPreviewDialog.close();
+}
+async function openMemberPreview(id,name,origin){
+ if(!memberPreviewDialog||!/^[0-9]{1,30}$/.test(String(id)))return;
+ const seq=++memberPreviewSeq;
+ memberPreviewRequest?.abort();
+ const ctrl=new AbortController();memberPreviewRequest=ctrl;
+ memberPreviewOrigin=origin;
+ memberPreviewBody.removeAttribute('data-accent');
+ memberPreviewBody.innerHTML='<p class="mp-loading" role="status">Chargement du profil…</p>';
+ $('qgMemberDialogTitle').textContent='PROFIL MEMBRE · '+String(name||'').slice(0,64);
+ if(!memberPreviewDialog.open)memberPreviewDialog.showModal();
+ const timer=setTimeout(()=>ctrl.abort(),10000);
+ try{
+  const res=await fetch(voteApi+'/v1/profiles/'+id,{
+   method:'GET',cache:'no-store',credentials:'omit',mode:'cors',referrerPolicy:'no-referrer',
+   signal:ctrl.signal,headers:{Accept:'application/json'}
+  });
+  if(!memberPreviewDialog.open||seq!==memberPreviewSeq)return;
+  if(res.status===404){renderPrivateMember(memberPreviewBody);return;}
+  if(!res.ok)throw Error('Profil temporairement indisponible');
+  const data=await res.json();
+  if(!memberPreviewDialog.open||seq!==memberPreviewSeq)return;
+  renderPublicMember(memberPreviewBody,data,id);
+ }catch(e){
+  if(memberPreviewDialog.open&&seq===memberPreviewSeq){
+   memberPreviewBody.innerHTML='<div class="mp-panel mp-empty"><h2>Chargement impossible</h2><p>Le profil est momentanément indisponible. Réessaie plus tard.</p></div>';
+  }
+ }finally{
+  clearTimeout(timer);
+  if(memberPreviewRequest===ctrl)memberPreviewRequest=null;
+ }
+}
+if(memberPreviewDialog){
+ $('qgMemberDialogClose').addEventListener('click',closeMemberPreview);
+ memberPreviewDialog.addEventListener('click',e=>{if(e.target===memberPreviewDialog)closeMemberPreview();});
+ memberPreviewDialog.addEventListener('close',()=>{
+  ++memberPreviewSeq;
+  memberPreviewRequest?.abort();memberPreviewRequest=null;
+  if(memberPreviewOrigin?.isConnected)memberPreviewOrigin.focus({preventScroll:true});
+  memberPreviewOrigin=null;
+ });
+ root.addEventListener('click',e=>{
+  const target=e.target.closest('.qg-rank-open[data-member-id]');
+  if(!target||!root.contains(target))return;
+  void openMemberPreview(target.dataset.memberId,target.querySelector('.qg-rank-name')?.textContent||target.querySelector('.ranking-person>span:last-child')?.textContent,target);
+ });
 }
 function setup(){
  return head('UNIVERS MA_JESTIK','MON VRAI SETUP INTERACTIF','Explore mon installation gaming en détail. Sélectionne un équipement sur la photo pour découvrir ses caractéristiques et ma configuration PC.')+
@@ -297,6 +356,7 @@ function closeMobile(){
  $('menuMobile').setAttribute('aria-expanded','false');
 }
 function route(){
+ closeMemberPreview();
  unmountActivityStrip();
  unmountTribunal();
  unmountPublicTribunal();
