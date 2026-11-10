@@ -105,7 +105,7 @@ function fillForm(){
       '<div><label class="mj-contact-label" for="mjContactEmail">Ton adresse e-mail <span>*</span></label>'+
       '<input id="mjContactEmail" type="email" name="email" data-contact-field="email" required maxlength="254" autocomplete="email" value="'+esc(draft.email)+'" placeholder="tonadresse@exemple.fr"></div>'+
      '</div>'+
-     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. </p></section>'+
+     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. <a href="#/confidentialite" target="_blank" rel="noopener noreferrer">Consulter la confidentialité ↗</a> (nouvel onglet).</p></section>'+
    '<div class="mj-contact-navigation">'+back('REVENIR AUX SUJETS')+'<button type="submit" class="mj-contact-primary">VÉRIFIER MA DEMANDE <span aria-hidden="true">→</span></button></div>'+
   '</form>';
 }
