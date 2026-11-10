@@ -12,7 +12,7 @@ test("La Roue : affiche premium 1200 × 630 enregistrée dans les sources du sit
  assert.deepEqual([...png.subarray(0,8)],[137,80,78,71,13,10,26,10]);
  assert.equal(png.readUInt32BE(16),1200);
  assert.equal(png.readUInt32BE(20),630);
- assert.match(src("dist/partage/roue/index.html"),/roue\.png\?v=20261110-gold1/);
+ assert.match(src("dist/partage/roue/index.html"),/roue\.png\?v=20261110-gold2/);
  assert.doesNotMatch(src("dist/partage/roue/index.html"),/violette/);
  const svg=src("dist/og/roue.svg");
  assert.match(svg,/id="goldSlice"/);
@@ -36,12 +36,12 @@ test("Setup : vraie tour PC WebP noir et or, alternative descriptive et intégra
 
 test("Accueil : la roue premium seulement, sans altérer les 4 autres affiches",()=>{
  const js=src("dist/qg/qg.js");
- assert.match(js,/p\.image==='roue'\?'20261110-gold1':'20261109-artworks2'/);
+ assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);
  assert.match(js,/image:'tribunal'/);
  assert.match(js,/image:'defis'/);
  assert.match(js,/image:'killathon'/);
  assert.match(js,/image:'classement'/);
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-gold-home1/);
+ assert.match(html,/qg\.js\?v=20261110-gold-home2/);
  assert.match(html,/home-premium\.css\?v=20261110-gold-setup1/);
 });
