@@ -108,6 +108,34 @@ export default {
     const v=await env.DB.prepare('SELECT poll_id,choice_index FROM tribunal_votes WHERE twitch_id=? ORDER BY created_at DESC LIMIT 100').bind(u.id).all();
     return out({owner:isOwner(u,env),name:u.name,votes:v.results||[]});
    }
+   // Droit d'accès / effacement des participations Tribunal, y compris sans profil QG.
+   // L'identité est déterminée uniquement à partir du jeton Twitch vérifié.
+   // Un effacement ne supprime ni les sondages publiés, ni les votes d'autrui.
+   if(path==='/v1/tribunal/me/data'&&(req.method==='GET'||req.method==='DELETE')){
+    const u=await userFromTwitch(req,env);
+    if(!u)return out({error:'Connexion Twitch requise'},401);
+    if(req.method==='GET'){
+     const counts=await Promise.all([
+      env.DB.prepare('SELECT COUNT(*) AS n FROM tribunal_votes WHERE twitch_id=?').bind(u.id).first(),
+      env.DB.prepare('SELECT COUNT(*) AS n FROM tribunal_proposals WHERE author_twitch_id=?').bind(u.id).first(),
+      env.DB.prepare('SELECT COUNT(*) AS n FROM tribunal_polls WHERE created_by_twitch_id=?').bind(u.id).first(),
+      env.DB.prepare('SELECT COUNT(*) AS n FROM tribunal_polls WHERE id IN (SELECT published_poll_id FROM tribunal_proposals WHERE author_twitch_id=? AND published_poll_id IS NOT NULL)').bind(u.id).first()
+     ]);
+     return out({participations:{votes:Number(counts[0]?.n||0),proposals:Number(counts[1]?.n||0),
+      polls_created:Number(counts[2]?.n||0),polls_proposed:Number(counts[3]?.n||0)}});
+    }
+    // Transaction atomique : effacer les votes et propositions, anonymiser
+    // l'attribution des sondages existants sans casser les résultats collectifs.
+    const results=await env.DB.batch([
+     env.DB.prepare('DELETE FROM tribunal_votes WHERE twitch_id=?').bind(u.id),
+     env.DB.prepare('UPDATE tribunal_polls SET proposed_by_name=NULL WHERE id IN (SELECT published_poll_id FROM tribunal_proposals WHERE author_twitch_id=? AND published_poll_id IS NOT NULL)').bind(u.id),
+     env.DB.prepare("UPDATE tribunal_polls SET created_by_twitch_id='' WHERE created_by_twitch_id=?").bind(u.id),
+     env.DB.prepare('DELETE FROM tribunal_proposals WHERE author_twitch_id=?').bind(u.id)
+    ]);
+    return out({deleted:true,votes:Number(results[0]?.meta?.changes||0),
+     polls_attribution_removed:Number(results[1]?.meta?.changes||0)+Number(results[2]?.meta?.changes||0),
+     proposals:Number(results[3]?.meta?.changes||0)});
+   }
    if(path==='/v1/tribunal/proposals'&&req.method==='GET'){
     const u=await userFromTwitch(req,env);
     if(!isOwner(u,env))return out({error:'Accès administrateur requis'},403);
