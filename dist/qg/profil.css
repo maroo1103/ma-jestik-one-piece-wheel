@@ -249,3 +249,55 @@
  .qg-layout .mp-danger-zone{align-items:stretch}
  .qg-layout .mp-danger-button{width:100%}
 }
+
+
+/* Fenêtre Profil membre : même identité graphique que le profil complet. */
+.qg-layout .mj-member-dialog{
+ box-sizing:border-box;
+ position:fixed;
+ width:min(940px,calc(100vw - 32px));
+ max-width:940px;
+ max-height:min(90dvh,880px);
+ margin:auto;padding:0;overflow-y:auto;overflow-x:hidden;
+ border:1px solid #987346;border-radius:18px;color:#f5eee3;
+ background:linear-gradient(155deg,#161719,#0a0b0e);
+ box-shadow:0 35px 110px #000c,0 0 0 1px #a67b3030;
+}
+.qg-layout .mj-member-dialog::backdrop{background:#020406d9;backdrop-filter:blur(6px)}
+.qg-layout .mj-member-dialog-top{
+ position:sticky;top:0;z-index:6;display:flex;justify-content:space-between;align-items:center;gap:16px;
+ min-height:66px;padding:15px clamp(17px,3vw,28px);
+ border-bottom:1px solid #544029;background:#141416f7;
+}
+.qg-layout .mj-member-dialog-top>span{font-size:12px;font-weight:900;letter-spacing:1.4px;color:#ecc687;overflow-wrap:anywhere}
+.qg-layout .mj-member-dialog-close{
+ appearance:none;display:grid;place-items:center;flex-shrink:0;width:38px;height:38px;
+ border:1px solid #796144;border-radius:9px;color:#f4d6a7;background:#28231d;font-size:19px;cursor:pointer;
+}
+.qg-layout .mj-member-dialog-close:hover,.qg-layout .mj-member-dialog-close:focus-visible{
+ background:#4a3421;border-color:#e1b777;outline-offset:2px
+}
+.qg-layout .mj-member-dialog .mj-member-dialog-content{
+ box-sizing:border-box;width:100%;max-width:none;margin:0;padding:clamp(16px,3vw,28px);
+}
+.qg-layout .mj-member-dialog .mp-banner{min-height:165px;align-items:center;padding:23px clamp(18px,3vw,33px)}
+.qg-layout .mj-member-dialog .mp-avatar{width:76px;height:76px;flex-basis:76px;font-size:25px}
+.qg-layout .mj-member-dialog .mp-banner h2{font-size:clamp(27px,4vw,43px)}
+.qg-layout .mj-member-dialog .mp-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.qg-layout .mj-member-dialog .mp-panel{padding:19px}
+.qg-layout .mj-member-dialog .mp-panel h3{font-size:clamp(19px,2.5vw,25px)}
+.qg-layout .mj-member-dialog .mp-game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.qg-layout .mj-member-dialog .mp-empty{text-align:center;padding:36px 20px}
+.qg-layout .mj-member-dialog .mp-empty h2{font:900 clamp(24px,4vw,36px)/1.2 var(--display);color:#f0cb95;margin:0 0 14px}
+.qg-layout .mj-member-dialog .mp-empty p{max-width:510px;margin-inline:auto}
+@media(max-width:680px){
+ .qg-layout .mj-member-dialog{width:calc(100vw - 16px);max-height:92dvh;border-radius:13px}
+ .qg-layout .mj-member-dialog-top{padding:12px 15px;min-height:58px}
+ .qg-layout .mj-member-dialog .mj-member-dialog-content{padding:15px}
+ .qg-layout .mj-member-dialog .mp-banner{min-height:132px;padding:17px}
+ .qg-layout .mj-member-dialog .mp-banner-identity{gap:14px}
+ .qg-layout .mj-member-dialog .mp-avatar{width:62px;height:62px;flex-basis:62px}
+ .qg-layout .mj-member-dialog .mp-banner h2{font-size:clamp(25px,6vw,35px)}
+ .qg-layout .mj-member-dialog .mp-grid{grid-template-columns:1fr}
+ .qg-layout .mj-member-dialog .mp-game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
