@@ -74,10 +74,10 @@ Le rôle précis de chaque prestataire, la localisation effective des traitement
 
 ## 6. Combien de temps sont conservées les données ?
 
-Les éléments de connexion temporaires et les informations stockées dans le navigateur dépendent de leur type et des actions du visiteur (fin de session, effacement local, modification des réglages). Le dépôt GitHub contient désormais une purge des comptes inactifs **préparée et désactivée par défaut** ainsi qu'un nettoyage du Tribunal lors de l'effacement volontaire d'un profil. **Ces corrections ne sont pas encore confirmées comme déployées ni activées dans Cloudflare en production.**
+Les éléments de connexion temporaires et les informations stockées dans le navigateur dépendent de leur type et des actions du visiteur (fin de session, effacement local, modification des réglages). Le code de nettoyage du Tribunal lors de l'effacement volontaire d'un profil a été déployé dans le Worker membres le 10 novembre 2026 ; les contrôles non destructifs (santé et affichage du profil) ont réussi. La purge des comptes inactifs fonctionne uniquement **en simulation** : elle est programmée quotidiennement, mais la suppression réelle reste désactivée. L'effacement volontaire n'a pas été testé sur un vrai compte en production.
 
 **[À DÉFINIR ET METTRE EN ŒUVRE AVANT PUBLICATION]**
-- **Règle décidée le 9 novembre 2026 :** les comptes QG doivent être supprimés après **six mois consécutifs sans activité authentifiée**, avec leurs profils et points associés. Au 10 novembre, la table `member_activity` existait en D1 et les trois comptes avaient un suivi d'activité. Le code de purge a été **préparé et testé hors production**, mais n'a pas été déployé ni activé. Le suivi réel de connexion Twitch et le déclencheur planifié restent à valider avant toute promesse publique d'effacement automatique ;
+- **Règle décidée le 9 novembre 2026 :** les comptes QG doivent être supprimés après **six mois consécutifs sans activité authentifiée**, avec leurs profils et points associés. Au 10 novembre, la table `member_activity` existait en D1 et les trois comptes avaient un suivi d'activité. Le code de purge a été déployé et le déclencheur quotidien configuré le 10 novembre, **uniquement en mode simulation sans suppression réelle**. La première exécution planifiée et ses journaux restent à vérifier ; il ne faut donc pas annoncer l'effacement automatique comme actif ;
 - des durées spécifiques pour les votes, propositions, résultats et historiques ;
 - les durées applicables aux journaux techniques et sauvegardes, si disponibles ;
 - les règles de conservation et d'effacement du formulaire de contact une fois activé ;
@@ -89,7 +89,7 @@ Ne pas afficher une durée arbitraire ou une promesse d'effacement automatique t
 
 Un membre peut modifier ses informations de profil et ses réglages de visibilité depuis le QG. La fonctionnalité de suppression du profil appelle une demande d'effacement du compte membre dans Cloudflare D1. Certains enregistrements de la base, liés par des contraintes de suppression en cascade, sont alors supprimés automatiquement.
 
-**Limite de déploiement :** le schéma Tribunal conserve des références Twitch sans cascade vers `members`. Le code source GitHub a été corrigé le 10 novembre pour nettoyer ces références lors de la suppression d'un profil, mais **son déploiement sur le Worker Cloudflare n'est pas confirmé**. Les textes libres, journaux, sauvegardes et données de visiteurs du Tribunal sans profil membre peuvent nécessiter un traitement séparé. Pour toute demande : **contact@ma-jestik.fr**.
+**Limite de vérification :** le schéma Tribunal conserve des références Twitch sans cascade vers `members`. Le code source corrigé a été déployé dans le Worker Cloudflare le 10 novembre, mais son fonctionnement sur une suppression réelle en production n'a pas été testé (les tests automatiques GitHub sont réalisés hors production). Les textes libres, journaux, sauvegardes et données de visiteurs du Tribunal sans profil membre peuvent nécessiter un traitement séparé. Pour toute demande : **contact@ma-jestik.fr**.
 
 ## 8. Vos droits
 
