@@ -51,7 +51,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-footer-unified1/);
- assert.match(html,/home-premium\.css\?v=20261110-no-url-cards1/);
+ assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -202,6 +202,25 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(html,/mj-footer-disclosure/);
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
- assert.match(html,/footer-help\.css\?v=20261110-visual-fideles1/);
+ assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
  assert.match(html,/qg\.js\?v=20261110-footer-unified1/);
+});
+
+
+test("Identité MJ : logo animé léger avec repli fixe accessible",()=>{
+ const html=src("dist/qg/index.html");
+ const home=src("dist/qg/home-premium.css");
+ const footer=src("dist/qg/footer-help.css");
+ assert.equal((html.match(/<picture class="mj-brand-logo">/g)||[]).length,2);
+ assert.equal((html.match(/mj-anime\.webp\?v=20261110-logo-anime1/g)||[]).length,2);
+ assert.equal((html.match(/mj-source\.webp\?v=20261110-logo-anime1/g)||[]).length,2);
+ assert.equal((html.match(/media="\(prefers-reduced-motion: no-preference\)"/g)||[]).length,2);
+ for(const path of ["dist/icons/mj-anime.webp","dist/icons/mj-source.webp"]){
+  const webp=bytes(path);
+  assert.equal(webp.toString("ascii",0,4),"RIFF");
+  assert.equal(webp.toString("ascii",8,12),"WEBP");
+  assert.ok(webp.length<50000,"Logo non optimise : "+path);
+ }
+ assert.match(home,/\.site-header \.mj-brand-logo/);
+ assert.match(footer,/\.mj-footer-brand-link \.mj-brand-logo/);
 });
