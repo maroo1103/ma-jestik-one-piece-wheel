@@ -1051,3 +1051,32 @@ body{background:#07090c;color:#f3f1ed}
     background-size:cover,auto 285px;
   }
 }
+
+/* 10/11/2026 — Setup : equilibrer la composition sans changer la tour validee.
+   La typographie reprend l'echelle du titre principal ; le fond recule
+   legerement vers le texte, avec un fondu a droite pour eviter une jonction. */
+@media (min-width:851px){
+  .hq-setup-showcase.hq-setup-banner{
+    --setup-image-shift:clamp(35px,3.6vw,74px);
+    background-image:
+      linear-gradient(90deg,#08090ce6 0%,#08090cb8 28%,#08090c40 53%,transparent 76%),
+      linear-gradient(90deg,transparent calc(100% - var(--setup-image-shift) - 90px),#08090c calc(100% - var(--setup-image-shift))),
+      url("media/setup-banner-pc-gold.webp?v=20261110-setup-banner1");
+    background-size:cover,cover,auto 100%;
+    background-position:center,center,right var(--setup-image-shift) center;
+  }
+  .hq-setup-showcase.hq-setup-banner .hq-setup-copy{
+    width:min(51%,700px);
+    max-width:700px;
+  }
+  .hq-setup-showcase.hq-setup-banner .hq-setup-copy h2{
+    font-size:clamp(67px,6.15vw,116px);
+    line-height:.9;
+    letter-spacing:-.02em;
+  }
+}
+@media (min-width:851px) and (max-width:1170px){
+  .hq-setup-showcase.hq-setup-banner .hq-setup-copy h2{
+    font-size:clamp(58px,6.15vw,72px);
+  }
+}
