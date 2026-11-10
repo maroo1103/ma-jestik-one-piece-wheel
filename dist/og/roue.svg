@@ -5,8 +5,8 @@
 <linearGradient id="gold" x1="0" x2="1" y1="0" y2=".5"><stop stop-color="#f7da93"/><stop offset=".27" stop-color="#cb852c"/><stop offset=".5" stop-color="#fff0bd"/><stop offset=".75" stop-color="#be7825"/><stop offset="1" stop-color="#ffe1a0"/></linearGradient>
 <linearGradient id="goldVert" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#fff3c8"/><stop offset=".38" stop-color="#f8bf62"/><stop offset=".68" stop-color="#934a14"/><stop offset="1" stop-color="#f7c579"/></linearGradient>
 <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d0d02" stop-opacity="0"/><stop offset=".26" stop-color="#c58436" stop-opacity=".26"/><stop offset=".49" stop-color="#ffdf9c" stop-opacity="1"/><stop offset=".55" stop-color="#b76b21" stop-opacity=".78"/><stop offset="1" stop-color="#2a0f04" stop-opacity="0"/></linearGradient>
-<linearGradient id="violet" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16071e"/><stop offset=".4" stop-color="#842a93"/><stop offset=".64" stop-color="#481253"/><stop offset="1" stop-color="#07020d"/></linearGradient>
-<linearGradient id="blackSlice" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050305"/><stop offset=".6" stop-color="#241627"/><stop offset="1" stop-color="#080408"/></linearGradient>
+<linearGradient id="goldSlice" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#442607"/><stop offset=".4" stop-color="#e8b256"/><stop offset=".64" stop-color="#b77c2d"/><stop offset="1" stop-color="#1d1005"/></linearGradient>
+<linearGradient id="blackSlice" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050505"/><stop offset=".6" stop-color="#241c13"/><stop offset="1" stop-color="#080705"/></linearGradient>
 <radialGradient id="halo"><stop stop-color="#ffbb61" stop-opacity=".28"/><stop offset=".5" stop-color="#af5b1a" stop-opacity=".13"/><stop offset="1" stop-color="#9c5216" stop-opacity="0"/></radialGradient>
 <radialGradient id="spark"><stop stop-color="#fffbdc"/><stop offset=".3" stop-color="#f6c76d" stop-opacity=".95"/><stop offset="1" stop-color="#bb7024" stop-opacity="0"/></radialGradient>
 </defs>
@@ -41,13 +41,13 @@
 <circle r="179" fill="#060406" stroke="url(#goldVert)" stroke-width="12"/>
 <circle r="165" fill="none" stroke="#ffdea3" stroke-width="2"/>
 <circle r="157" fill="#060506" stroke="#a26222" stroke-width="3"/>
-<path d="M0 0 L0.000 -153.000 A153 153 0 0 1 108.187 -108.187Z" fill="url(#violet)" stroke="#bb7b31" stroke-width="1.6"/>
+<path d="M0 0 L0.000 -153.000 A153 153 0 0 1 108.187 -108.187Z" fill="url(#goldSlice)" stroke="#bb7b31" stroke-width="1.6"/>
 <path d="M0 0 L108.187 -108.187 A153 153 0 0 1 153.000 0.000Z" fill="url(#blackSlice)" stroke="#bb7b31" stroke-width="1.6"/>
-<path d="M0 0 L153.000 0.000 A153 153 0 0 1 108.187 108.187Z" fill="url(#violet)" stroke="#bb7b31" stroke-width="1.6"/>
+<path d="M0 0 L153.000 0.000 A153 153 0 0 1 108.187 108.187Z" fill="url(#goldSlice)" stroke="#bb7b31" stroke-width="1.6"/>
 <path d="M0 0 L108.187 108.187 A153 153 0 0 1 0.000 153.000Z" fill="url(#blackSlice)" stroke="#bb7b31" stroke-width="1.6"/>
-<path d="M0 0 L0.000 153.000 A153 153 0 0 1 -108.187 108.187Z" fill="url(#violet)" stroke="#bb7b31" stroke-width="1.6"/>
+<path d="M0 0 L0.000 153.000 A153 153 0 0 1 -108.187 108.187Z" fill="url(#goldSlice)" stroke="#bb7b31" stroke-width="1.6"/>
 <path d="M0 0 L-108.187 108.187 A153 153 0 0 1 -153.000 0.000Z" fill="url(#blackSlice)" stroke="#bb7b31" stroke-width="1.6"/>
-<path d="M0 0 L-153.000 0.000 A153 153 0 0 1 -108.187 -108.187Z" fill="url(#violet)" stroke="#bb7b31" stroke-width="1.6"/>
+<path d="M0 0 L-153.000 0.000 A153 153 0 0 1 -108.187 -108.187Z" fill="url(#goldSlice)" stroke="#bb7b31" stroke-width="1.6"/>
 <path d="M0 0 L-108.187 -108.187 A153 153 0 0 1 -0.000 -153.000Z" fill="url(#blackSlice)" stroke="#bb7b31" stroke-width="1.6"/>
 <circle r="157" fill="none" stroke="#eead41" stroke-width="4"/>
 <circle r="172" fill="none" stroke="#fff0c0" stroke-opacity=".78" stroke-width="1.7"/>

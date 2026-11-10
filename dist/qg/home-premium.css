@@ -971,3 +971,27 @@ body{background:#07090c;color:#f3f1ed}
 
 /* Liens et boutons sans pictogramme de flèche : garder le texte centré. */
 .hq-hero-primary,.hq-setup-cta{justify-content:center}
+
+
+/* Accueil noir et or : intégration de la véritable tour PC, sans bleu ni violet.
+   Les styles historiques restent inchangés pour les autres rubriques. */
+.hq-setup-art{
+ background:radial-gradient(ellipse 62% 66% at 58% 49%,#ad78212b 0%,#34210b16 55%,transparent 85%);
+}
+.hq-setup-art img.hq-setup-illustration{
+ width:min(100%,700px);
+ max-height:100%;
+ height:auto;
+ object-fit:contain;
+ object-position:center;
+ border-radius:12px;
+ filter:drop-shadow(0 22px 30px #0009);
+ -webkit-mask-image:radial-gradient(ellipse 80% 77% at 54% 52%,#000 62%,transparent 100%);
+ mask-image:radial-gradient(ellipse 80% 77% at 54% 52%,#000 62%,transparent 100%);
+}
+@media(max-width:850px){
+ .hq-setup-art img.hq-setup-illustration{width:min(100%,640px);max-height:100%}
+}
+@media(max-width:680px){
+ .hq-setup-art img.hq-setup-illustration{width:100%;max-height:100%}
+}

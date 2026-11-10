@@ -22,6 +22,6 @@ Ces cinq fichiers font **1200 × 630 px**, optimisés à partir des images valid
 
 Un nouveau déploiement GitHub Pages démarre automatiquement. Le workflow `.github/workflows/publier-roue.yml` prend les PNG premium comme source de référence pour produire `dist/og/*.png` (partage Discord) et `dist/og/*.webp` (cartes du QG).
 
-La roue reste en SVG noir graphite/or/violet déjà réalisé. Les rubriques Setup, À propos, et Code créateur disposent de SVG harmonisés noir et or. Les images OG de ces rubriques sont générées au déploiement à partir des SVG.
+La roue possède désormais un PNG premium noir et or (`roue.png`) validé le 10 novembre 2026 ; son SVG noir/or constitue le visuel de secours. Les rubriques Setup, À propos, et Code créateur disposent de SVG harmonisés noir et or. Les images OG de ces rubriques sont générées au déploiement à partir des SVG.
 
 **Important :** tant que les cinq PNG ne sont pas envoyés ici, GitHub génère encore les SVG de secours pour les cinq rubriques.

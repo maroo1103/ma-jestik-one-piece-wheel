@@ -33,7 +33,7 @@ function home(){
   {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Retrouve les points et les performances de la communauté.',image:'classement',name:'Voir les classements'}
  ];
  const cards=paths.map(p=>'<a class="hq-portal '+(p.featured?'hq-portal-featured ':'')+'hq-portal-'+p.path+'" href="#/'+p.path+'">'+
-  '<span class="hq-portal-art"><img src="/og/'+p.image+'.webp?v=20261109-artworks2'+'" alt="" loading="lazy" decoding="async"></span>'+
+  '<span class="hq-portal-art"><img src="/og/'+p.image+'.webp?v='+(p.image==='roue'?'20261110-gold1':'20261109-artworks2')+'" alt="" loading="lazy" decoding="async"></span>'+
   '<span class="hq-portal-content"><span class="hq-portal-overline">'+p.overline+'</span>'+
   '<span class="hq-portal-title">'+p.title+'</span>'+
   '<span class="hq-portal-summary">'+p.summary+'</span>'+
@@ -93,7 +93,7 @@ function home(){
     '<a class="hq-setup-cta" href="#/setup">EXPLORER MON SETUP </a>'+
    '</div>'+
    '<div class="hq-setup-art">'+
-    '<img class="hq-setup-illustration" src="media/setup-icon-premium.svg?v=20261108-icon1" alt="Illustration de la tour PC Ma_JesTik en bleu nuit, cyan, violet et or" loading="lazy" decoding="async" width="900" height="900">'+
+    '<img class="hq-setup-illustration" src="media/setup-tour-gold.webp?v=20261110-gold1" alt="Illustration d’une tour PC gaming noire avec éclairages dorés, Ma_JesTik" loading="lazy" decoding="async" width="980" height="838">'+
    '</div>'+
   '</section>'+
   '<section class="hq-endnote"><span class="hq-endnote-line"></span><span>MA_JESTIK</span><strong>À TRÈS VITE DANS LE QG.</strong><span class="hq-endnote-line"></span></section>'+
