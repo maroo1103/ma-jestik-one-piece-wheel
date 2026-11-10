@@ -51,7 +51,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-activity-showcase1/);
- assert.match(html,/home-premium\.css\?v=20261110-activity-showcase1/);
+ assert.match(html,/home-premium\.css\?v=20261110-activity-wide2/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -80,6 +80,8 @@ test("Accueil : trois cartes d'activité panoramiques, statuts fiables et versio
  assert.match(css,/Activité QG : cartes panoramiques/);
  assert.match(css,/hq-activity-ribbon/);
  assert.match(css,/width:100%;min-width:0;min-height:52px/);
+ assert.match(css,/width:100%;max-width:none/);
+ assert.match(css,/align-items:center;justify-content:center;width:100%;min-width:0;min-height:52px/);
  assert.match(css,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
  assert.match(css,/@media\(max-width:730px\)/);
  assert.match(strip,/const ACTIVITY_COPY/);

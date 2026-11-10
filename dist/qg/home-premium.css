@@ -1131,7 +1131,8 @@ body{background:#07090c;color:#f3f1ed}
 }
 .hq-activity-showcase .hq-activity-cards{
  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
- gap:clamp(12px,1.5vw,24px);max-width:1560px;margin:0 auto;
+ width:100%;max-width:none;
+ gap:clamp(12px,1.5vw,24px);margin:0 auto;
 }
 .hq-activity-showcase .hq-activity-card{
  position:relative;display:flex;flex-direction:column;align-items:stretch;
@@ -1150,7 +1151,7 @@ body{background:#07090c;color:#f3f1ed}
  box-shadow:inset 0 1px #ffe0b21b,0 16px 36px #0007;
 }
 .hq-activity-showcase .hq-activity-ribbon{
- display:flex;align-items:center;width:100%;min-width:0;min-height:52px;
+ display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:52px;
  box-sizing:border-box;padding:6px 16px;margin:0 0 16px;
  border:1px solid #9e7744;border-radius:13px;
  background:linear-gradient(105deg,#5941277d,#221e1a);
