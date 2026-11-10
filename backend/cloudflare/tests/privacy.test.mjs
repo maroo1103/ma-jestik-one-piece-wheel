@@ -178,3 +178,38 @@ test('purge : une activité récente entre lecture et effacement protège le com
     assert.equal(count(sql, 'tribunal_proposals','author_twitch_id=?',['111']), 1);
   } finally { sql.close(); }
 });
+
+
+test('le classement expose les identifiants uniquement pour les membres ayant activé ce classement', async () => {
+  const { sql, env } = fixture();
+  try {
+    sql.exec("UPDATE members SET score=5,visible_in_ranking=1 WHERE twitch_id='111'");
+    sql.exec("UPDATE members SET score=5,visible_in_ranking=0 WHERE twitch_id='222'");
+    const request = new Request('https://example.test/v1/ranking',{ method:'GET' });
+    const rank = await worker.fetch(request,env);
+    assert.equal(rank.status,200);
+    let data=await rank.json();
+    assert.deepEqual(data.entries.map(x=>x.twitch_id),['111']);
+    assert.ok(!('bio' in data.entries[0]));
+    sql.exec("UPDATE members SET visible_in_ranking=1 WHERE twitch_id='222'");
+    const changed = await worker.fetch(new Request('https://example.test/v1/ranking'),env);
+    data=await changed.json();
+    assert.deepEqual(data.entries.map(x=>x.twitch_id).sort(),['111','222']);
+  } finally { sql.close(); }
+});
+
+test('un profil privé reste inaccessible même si le joueur accepte le classement', async () => {
+  const { sql, env } = fixture();
+  try {
+    sql.exec("UPDATE members SET score=5,visible_in_ranking=1");
+    sql.exec("UPDATE member_profiles SET is_public=1,bio='Biographie publique' WHERE twitch_id='111'");
+    sql.exec("UPDATE member_profiles SET is_public=0,bio='Biographie privée' WHERE twitch_id='222'");
+    const inaccessible = await worker.fetch(new Request('https://example.test/v1/profiles/222'),env);
+    assert.equal(inaccessible.status,404);
+    const body = JSON.stringify(await inaccessible.json());
+    assert.ok(!body.includes('Biographie privée'));
+    const accessible = await worker.fetch(new Request('https://example.test/v1/profiles/111'),env);
+    assert.equal(accessible.status,200);
+    assert.equal((await accessible.json()).profile.bio,'Biographie publique');
+  } finally { sql.close(); }
+});
