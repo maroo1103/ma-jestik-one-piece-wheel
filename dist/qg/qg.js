@@ -33,7 +33,7 @@ function home(){
   {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Découvre les scores et performances de la communauté.',image:'classement',name:'Voir les classements'}
  ];
  const cards=paths.map(p=>'<a class="hq-portal '+(p.featured?'hq-portal-featured ':'')+'hq-portal-'+p.path+'" href="#/'+p.path+'">'+
-  '<span class="hq-portal-art"><img src="/og/'+p.image+'.webp?v='+(p.image==='roue'?'20261110-gold2':'20261109-artworks2')+'" alt="" loading="lazy" decoding="async"></span>'+
+  '<span class="hq-portal-art"><img src="/og/'+p.image+'-sans-url.webp?v=20261110-no-url1'+'" alt="" loading="lazy" decoding="async"></span>'+
   '<span class="hq-portal-content"><span class="hq-portal-overline">'+p.overline+'</span>'+
   '<span class="hq-portal-title hq-portal-sr-only">'+p.title+'</span>'+
   '<span class="hq-portal-summary">'+p.summary+'</span>'+

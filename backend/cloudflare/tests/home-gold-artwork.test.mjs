@@ -45,13 +45,13 @@ test("Setup : fond panoramique WebP noir et or, sans rectangle et avec version m
 
 test("Accueil : les cinq affiches validees sont conservees et les ressources sont actualisees",()=>{
  const js=src("dist/qg/qg.js");
- assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);
+ assert.ok(js.includes("p.image+'-sans-url.webp?v=20261110-no-url1'"));
  for(const key of ["tribunal","defis","killathon","classement"]){
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-activity-clean3/);
- assert.match(html,/home-premium\.css\?v=20261110-explorer-noarrow2/);
+ assert.match(html,/qg\.js\?v=20261110-no-url-cards1/);
+ assert.match(html,/home-premium\.css\?v=20261110-no-url-cards1/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -159,9 +159,25 @@ test("Accueil : Choisis ton aventure élargi sans toucher aux cinq affiches",()=
  assert.doesNotMatch(css,/\.hq-portal-cta::after/);
  assert.match(css,/text-decoration:underline/);
  assert.match(css,/margin-top:auto;padding-top:13px/);
- assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);
+ assert.ok(js.includes("p.image+'-sans-url.webp?v=20261110-no-url1'"));
  for(const name of ["roue","tribunal","defis","killathon","classement"]){
   assert.ok(js.includes("image:'"+name+"'"));
  }
  assert.equal((js.match(/featured:true/g)||[]).length,2);
+});
+
+test("Accueil : les cinq fichiers WebP sans URL existent et sont réellement utilisés",()=>{
+ const js=src("dist/qg/qg.js");
+ const css=src("dist/qg/home-premium.css");
+ for(const name of ["roue","tribunal","defis","killathon","classement"]){
+  const data=bytes("dist/og/"+name+"-sans-url.webp");
+  assert.ok(data.length>10000,name+" : WebP absent ou vide");
+  assert.equal(data.toString("ascii",0,4),"RIFF",name+" : conteneur RIFF invalide");
+  assert.equal(data.toString("ascii",8,12),"WEBP",name+" : format WebP invalide");
+  assert.ok(js.includes("image:'"+name+"'"),name+" absent de la page");
+ }
+ assert.ok(js.includes("p.image+'-sans-url.webp?v=20261110-no-url1'"));
+ assert.match(css,/\.hq-portal-roue \.hq-portal-art img\{height:100%;object-fit:cover;object-position:center\}/);
+ assert.equal((js.match(/featured:true/g)||[]).length,2);
+ assert.match(src("dist/qg/index.html"),/og:image/);
 });
