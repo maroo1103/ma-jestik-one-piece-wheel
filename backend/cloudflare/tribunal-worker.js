@@ -1,7 +1,7 @@
 // Tribunal Ma_JesTik : Worker autonome (ne remplace PAS le Worker profils/votes ou Killathon).
 // Configuration obligatoire : DB (D1), TWITCH_CLIENT_ID, OWNER_TWITCH_ID, ALLOWED_ORIGIN.
 const ORIGIN='https://ma-jestik.fr';
-const DURATIONS=new Set([0,5,10,15,30,60,1440]);
+const DURATIONS=new Set([5,10,15,30,60,1440]);
 const OPEN="closed_at IS NULL AND (ends_at IS NULL OR ends_at>unixepoch())";
 function respond(data,status,origin){
  const h=new Headers({'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Vary':'Origin'});
@@ -136,9 +136,9 @@ export default {
     const id=crypto.randomUUID();
     const result=await env.DB.prepare(
      "INSERT INTO tribunal_polls(id,question,answers_json,created_by_twitch_id,ends_at) "+
-     "SELECT ?,?,?,?,CASE WHEN ?=0 THEN NULL ELSE unixepoch()+(?*60) END "+
+     "SELECT ?,?,?,?,unixepoch()+(?*60) "+
      "WHERE (SELECT COUNT(*) FROM tribunal_polls WHERE "+OPEN+")<20"
-    ).bind(id,p.question,JSON.stringify(p.answers),u.id,d,d).run();
+    ).bind(id,p.question,JSON.stringify(p.answers),u.id,d).run();
     return updated(result)?out({created:true,id},201):out({error:'Maximum de 20 sondages ouverts atteint'},409);
    }
    const pv=path.match(/^\/v1\/tribunal\/polls\/([a-f0-9-]{36})\/(vote|close)$/i);
@@ -188,9 +188,9 @@ export default {
      ).bind(p.question,JSON.stringify(p.answers),pollId,id),
      env.DB.prepare(
       "INSERT INTO tribunal_polls(id,question,answers_json,created_by_twitch_id,proposed_by_name,ends_at) "+
-      "SELECT ?,question,answers_json,?,author_name,CASE WHEN ?=0 THEN NULL ELSE unixepoch()+(?*60) END "+
+      "SELECT ?,question,answers_json,?,author_name,unixepoch()+(?*60) "+
       "FROM tribunal_proposals WHERE id=? AND status='accepted' AND published_poll_id=?"
-     ).bind(pollId,u.id,d,d,id,pollId)
+     ).bind(pollId,u.id,d,id,pollId)
     ]);
     return updated(results[0])&&updated(results[1])
      ?out({published:true,poll_id:pollId},201):out({error:'Proposition déjà traitée ou limite de sondages atteinte'},409);
