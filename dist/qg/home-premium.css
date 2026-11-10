@@ -1013,8 +1013,9 @@ body{background:#07090c;color:#f3f1ed}
   background-image:
     linear-gradient(90deg,#08090ce6 0%,#08090cb8 28%,#08090c40 53%,transparent 76%),
     url("media/setup-banner-pc-gold.webp?v=20261110-setup-banner1");
-  background-size:cover,cover;
-  background-position:center,center;
+  /* Ajuster l'image a la hauteur : la tour complete doit rester visible (haut et pieds). */
+  background-size:cover,auto 100%;
+  background-position:center,right center;
   background-repeat:no-repeat;
 }
 .hq-setup-showcase.hq-setup-banner::before{display:none}
