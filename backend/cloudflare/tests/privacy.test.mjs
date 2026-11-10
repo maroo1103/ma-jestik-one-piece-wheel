@@ -113,9 +113,9 @@ test('DELETE /v1/me efface les données personnelles et conserve les votes des a
     assert.equal(count(sql, 'tribunal_proposals', 'author_twitch_id=?', ['111']), 0);
     assert.equal(count(sql, 'tribunal_proposals', 'author_twitch_id=?', ['222']), 1);
     assert.equal(count(sql, 'tribunal_polls'), 2);
-    assert.deepEqual(sql.prepare("SELECT created_by_twitch_id,proposed_by_name FROM tribunal_polls WHERE id='poll1'").get(),
+    assert.deepEqual({...sql.prepare("SELECT created_by_twitch_id,proposed_by_name FROM tribunal_polls WHERE id='poll1'").get()},
       { created_by_twitch_id: '', proposed_by_name: null });
-    assert.deepEqual(sql.prepare("SELECT created_by_twitch_id,proposed_by_name FROM tribunal_polls WHERE id='poll2'").get(),
+    assert.deepEqual({...sql.prepare("SELECT created_by_twitch_id,proposed_by_name FROM tribunal_polls WHERE id='poll2'").get()},
       { created_by_twitch_id: '222', proposed_by_name: 'Bravo' });
     assert.equal(count(sql, 'vote_rounds'), 1);
   } finally { restore(); sql.close(); }
