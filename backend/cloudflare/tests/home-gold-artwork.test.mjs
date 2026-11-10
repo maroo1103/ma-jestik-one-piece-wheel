@@ -50,8 +50,8 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-activity-showcase1/);
- assert.match(html,/home-premium\.css\?v=20261110-activity-wide2/);
+ assert.match(html,/qg\.js\?v=20261110-activity-clean3/);
+ assert.match(html,/home-premium\.css\?v=20261110-activity-clean3/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -73,7 +73,7 @@ test("Accueil : trois cartes d'activité panoramiques, statuts fiables et versio
  assert.match(js,/LES INFOS UTILES/);
  assert.match(js,/EN UN COUP D’ŒIL/);
  for(const key of ["twitch","tribunal","defis"]){
-  assert.ok(js.includes('data-activity-title="'+key+'"'));
+  assert.ok(!js.includes('data-activity-title="'+key+'"'));
   assert.ok(js.includes('data-activity-detail="'+key+'"'));
   assert.ok(js.includes('data-activity-status="'+key+'"'));
  }
@@ -86,6 +86,28 @@ test("Accueil : trois cartes d'activité panoramiques, statuts fiables et versio
  assert.match(css,/@media\(max-width:730px\)/);
  assert.match(strip,/const ACTIVITY_COPY/);
  assert.match(strip,/Statut indisponible/);
+ assert.match(js,/Voir la chaîne/);
+ assert.match(js,/Ouvrir le Tribunal/);
+ assert.match(js,/Voir les défis/);
+});
+
+test("Accueil : enlever les grands titres mais conserver pastilles et états dynamiques",()=>{
+ const js=src("dist/qg/qg.js");
+ const css=src("dist/qg/home-premium.css");
+ const strip=src("dist/qg/activity-strip.js");
+ for(const name of ["twitch","tribunal","defis"]){
+  assert.ok(js.includes('data-activity-status="'+name+'"'));
+  assert.ok(js.includes('data-activity-detail="'+name+'"'));
+  assert.ok(!js.includes('data-activity-title="'+name+'"'));
+ }
+ assert.match(js,/aria-live="polite"/);
+ assert.match(strip,/function setState\(name,text,state='neutral'\)/);
+ assert.match(strip,/const ACTIVITY_COPY/);
+ assert.match(strip,/if\(copy&&detail\)detail.textContent=copy\[1\]/);
+ assert.match(css,/display:flex;flex:1 1 auto;align-items:center;justify-content:center/);
+ assert.match(css,/align-self:stretch;text-align:center/);
+ assert.match(css,/font:600 clamp\(16px,1\.28vw,21px\)/);
+ assert.match(css,/display:inline-flex;align-self:center;align-items:center;justify-content:center/);
  assert.match(js,/Voir la chaîne/);
  assert.match(js,/Ouvrir le Tribunal/);
  assert.match(js,/Voir les défis/);

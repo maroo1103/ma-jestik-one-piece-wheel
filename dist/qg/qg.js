@@ -63,21 +63,18 @@ function home(){
     '<article class="hq-activity-card hq-activity-twitch" data-state="neutral">'+
      '<div class="hq-activity-ribbon"><span class="hq-activity-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M2.149 0 .537 4.345v17.391h5.91V24H9.67l3.223-3.218h4.835L24 14.524V0H2.149Zm19.702 13.441-3.762 3.762H12.18l-3.224 3.216v-3.216H4.127V2.149H21.85v11.292Zm-5.91-6.991h2.149v6.443h-2.149V6.45Zm-5.912 0h2.149v6.443h-2.149V6.45Z"/></svg></span><strong>TWITCH</strong></div>'+
      '<span class="hq-activity-status" data-activity-status="twitch" data-state="neutral" role="status" aria-live="polite">Vérification…</span>'+
-     '<h3 data-activity-title="twitch">Vérification en cours</h3>'+
      '<p class="hq-activity-detail" data-activity-detail="twitch">Consultation du statut de la chaîne Twitch.</p>'+
      '<a class="hq-activity-action" href="https://www.twitch.tv/Ma_Jestikk" target="_blank" rel="noopener noreferrer">Voir la chaîne</a>'+
     '</article>'+
     '<article class="hq-activity-card hq-activity-tribunal" data-state="neutral">'+
      '<div class="hq-activity-ribbon"><span class="hq-activity-symbol" aria-hidden="true">⚖</span><strong>TRIBUNAL</strong></div>'+
      '<span class="hq-activity-status" data-activity-status="tribunal" data-state="neutral" role="status" aria-live="polite">Vérification…</span>'+
-     '<h3 data-activity-title="tribunal">Vérification en cours</h3>'+
      '<p class="hq-activity-detail" data-activity-detail="tribunal">Consultation des sondages de la communauté.</p>'+
      '<a class="hq-activity-action" href="#/tribunal">Ouvrir le Tribunal</a>'+
     '</article>'+
     '<article class="hq-activity-card hq-activity-defis" data-state="neutral">'+
      '<div class="hq-activity-ribbon"><span class="hq-activity-symbol" aria-hidden="true">⚔</span><strong>DÉFIS</strong></div>'+
      '<span class="hq-activity-status" data-activity-status="defis" data-state="neutral" role="status" aria-live="polite">Vérification…</span>'+
-     '<h3 data-activity-title="defis">Vérification en cours</h3>'+
      '<p class="hq-activity-detail" data-activity-detail="defis">Consultation des défis proposés au QG.</p>'+
      '<a class="hq-activity-action" href="#/defis">Voir les défis</a>'+
     '</article>'+

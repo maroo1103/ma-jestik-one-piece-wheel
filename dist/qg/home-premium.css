@@ -1194,17 +1194,18 @@ body{background:#07090c;color:#f3f1ed}
  color:#a8e4c3;background:#172d24;border-color:#48765d;
 }
 .hq-activity-showcase .hq-activity-status[data-state="offline"]{color:#cbcbc7}
-.hq-activity-showcase .hq-activity-card h3{
- margin:0 0 9px;color:#fbf8f3;
- font:900 clamp(26px,2.05vw,36px)/1.04 var(--display);
+/* Descriptions centrales plus lisibles ; la pastille d'etat reste autonome. */
+.hq-activity-showcase .hq-activity-detail{
+ display:flex;flex:1 1 auto;align-items:center;justify-content:center;
+ align-self:stretch;text-align:center;
+ max-width:44ch;min-height:88px;
+ margin:12px auto 24px;padding:0 5px;box-sizing:border-box;
+ color:#e8e1d7;
+ font:600 clamp(16px,1.28vw,21px)/1.5 var(--font);
  letter-spacing:0;overflow-wrap:anywhere;
 }
-.hq-activity-showcase .hq-activity-detail{
- margin:0 0 22px;color:#d1cbc2;
- font:400 clamp(13px,1vw,15px)/1.5 var(--font);letter-spacing:0;
-}
 .hq-activity-showcase .hq-activity-action{
- display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;
+ display:inline-flex;align-self:center;align-items:center;justify-content:center;
  box-sizing:border-box;max-width:100%;min-height:43px;
  margin-top:auto;padding:10px 19px;
  border:1px solid #dbad6d;border-radius:10px;
