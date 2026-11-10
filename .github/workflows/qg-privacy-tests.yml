@@ -12,6 +12,8 @@ on:
       - 'dist/qg/index.html'
       - 'dist/qg/twitch-auth.js'
       - 'dist/qg/profil.js'
+      - 'dist/qg/profil.css'
+      - 'dist/qg/qg.css'
       - 'dist/qg/contact.js'
       - 'dist/qg/confidentialite.js'
       - 'dist/qg/confidentialite.css'
