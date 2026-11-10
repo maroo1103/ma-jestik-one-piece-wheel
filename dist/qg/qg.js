@@ -26,16 +26,16 @@ const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div cla
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
 function home(){
  const paths=[
-  {path:'roue',overline:'01 / LE HASARD',title:'LA ROUE',summary:'Un tirage, une décision : laisse le hasard choisir.',image:'roue',name:'Explorer la roue',featured:true},
-  {path:'tribunal',overline:'02 / LA COMMUNAUTÉ',title:'LE TRIBUNAL',summary:'Des questions, des propositions et des votes qui comptent vraiment.',image:'tribunal',name:'Entrer au Tribunal',featured:true},
-  {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'118 défis Zero Build à tenter en solo ou avec ton équipe.',image:'defis',name:'Découvrir les défis'},
-  {path:'killathon',overline:'04 / LE COMPTEUR',title:'KILLATHON',summary:'Fixe ton objectif et compte tes éliminations en direct.',image:'killathon',name:'Lancer le Killathon'},
-  {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Retrouve les points et les performances de la communauté.',image:'classement',name:'Voir les classements'}
+  {path:'roue',overline:'01 / LE HASARD',title:'LA ROUE',summary:'Une décision à prendre ? Laisse le hasard trancher.',image:'roue',name:'Explorer la roue',featured:true},
+  {path:'tribunal',overline:'02 / LA COMMUNAUTÉ',title:'LE TRIBUNAL',summary:'Propose tes idées, participe aux votes et découvre les résultats.',image:'tribunal',name:'Entrer au Tribunal',featured:true},
+  {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'118 défis Zero Build à relever en solo ou en équipe.',image:'defis',name:'Découvrir les défis'},
+  {path:'killathon',overline:'04 / LE COMPTEUR',title:'KILLATHON',summary:'Fixe ton objectif et suis tes éliminations en direct.',image:'killathon',name:'Lancer le Killathon'},
+  {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Découvre les scores et performances de la communauté.',image:'classement',name:'Voir les classements'}
  ];
  const cards=paths.map(p=>'<a class="hq-portal '+(p.featured?'hq-portal-featured ':'')+'hq-portal-'+p.path+'" href="#/'+p.path+'">'+
   '<span class="hq-portal-art"><img src="/og/'+p.image+'.webp?v='+(p.image==='roue'?'20261110-gold2':'20261109-artworks2')+'" alt="" loading="lazy" decoding="async"></span>'+
   '<span class="hq-portal-content"><span class="hq-portal-overline">'+p.overline+'</span>'+
-  '<span class="hq-portal-title">'+p.title+'</span>'+
+  '<span class="hq-portal-title hq-portal-sr-only">'+p.title+'</span>'+
   '<span class="hq-portal-summary">'+p.summary+'</span>'+
   '<span class="hq-portal-cta">'+p.name+' </span></span></a>').join('');
  return '<div class="hq-home">'+
