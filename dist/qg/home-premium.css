@@ -86,7 +86,7 @@ body{background:#07111c}
 .hq-quote-mark{font-family:Georgia,serif;font-weight:400;color:#a886ee}
 .hq-intro>p:not(.hq-section-overline){color:#bfc6da;line-height:1.85;max-width:690px;font-size:clamp(14px,1.05vw,17px);margin:0 auto 24px}
 .hq-intro-signature{font-size:11px;font-weight:900;letter-spacing:2px;color:#f1c580}
-.hq-explorer{padding:clamp(73px,7vw,122px) clamp(22px,5vw,100px) clamp(80px,7vw,120px);max-width:1740px;margin:auto;scroll-margin-top:95px}
+.hq-explorer{padding:clamp(73px,7vw,122px) clamp(20px,3.9vw,76px) clamp(80px,7vw,120px);max-width:1920px;margin:auto;scroll-margin-top:95px}
 .hq-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:32px}
 .hq-section-head .hq-section-overline{margin-bottom:10px}
 .hq-section-head h2{font-size:clamp(48px,5vw,83px);line-height:.95;font-weight:900;margin:0;letter-spacing:-.01em;color:#f6f6f4}
@@ -107,8 +107,8 @@ body{background:#07111c}
 .hq-portal-title{font:900 clamp(26px,2.3vw,42px)/1 var(--display);color:#f8f5ef}
 /* Le nom est deja inscrit sur l'affiche : conserver celui du DOM pour les lecteurs d'ecran. */
 .hq-portal-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.hq-portal-summary{font-size:13px;color:#b6c7d8;line-height:1.6;flex:1}
-.hq-portal-cta{align-self:flex-start;display:flex;align-items:center;gap:22px;margin-top:12px;color:#f0c78a;font-weight:900;letter-spacing:.35px;font-size:13px;line-height:1.45}
+.hq-portal-summary{font-size:clamp(14px,.94vw,16px);color:#d9d3ca;line-height:1.65;flex:1}
+.hq-portal-cta{align-self:flex-start;display:inline-flex;align-items:center;gap:9px;margin-top:auto;padding-top:13px;color:#f0c78a;font-weight:900;letter-spacing:.25px;font-size:clamp(13px,.83vw,15px);line-height:1.45;text-decoration:underline;text-decoration-color:#b98d4d;text-decoration-thickness:1px;text-underline-offset:5px}
 .hq-portal-cta>span{font-size:16px;transition:transform .2s}
 .hq-portal:hover .hq-portal-cta>span{transform:translate(3px,-3px)}
 .hq-community-showcase{position:relative;display:grid;grid-template-columns:minmax(280px,0.9fr) minmax(360px,1.1fr);align-items:center;min-height:510px;gap:clamp(25px,7vw,130px);padding:clamp(64px,7vw,115px) clamp(27px,8vw,155px);background:radial-gradient(circle at 22% 49%,#4b2e77aa,transparent 38%),linear-gradient(120deg,#111932,#09172a 70%,#0b1e32);border-top:1px solid #554273;border-bottom:1px solid #3c315b}
@@ -764,7 +764,7 @@ body{background:#07090c;color:#f3f1ed}
   background:linear-gradient(0deg,#090a0ce0,transparent 53%),
              linear-gradient(115deg,#99601e22,transparent 66%);
 }
-.hq-portal-summary{color:#c9c6c1}
+.hq-portal-summary{color:#ded7cc}
 .hq-portal-overline,.hq-portal-cta{color:#edc27e}
 .hq-setup-showcase{
   background:radial-gradient(ellipse 38% 67% at 80% 49%,#9e6b233f,transparent 88%),
@@ -1235,4 +1235,28 @@ body{background:#07090c;color:#f3f1ed}
 }
 @media(prefers-reduced-motion:reduce){
  .hq-activity-showcase .hq-activity-card{transition:none}
+}
+
+/* Cartes 'Choisis ton aventure' : lien visuellement identifiable sans bouton.
+   La carte entière reste cliquable et les cinq affiches sont inchangées. */
+.hq-portal-cta::after{
+ content:"→";
+ display:inline-block;
+ color:#eec47c;
+ font-size:1.2em;
+ line-height:1;
+ text-decoration:none;
+ transition:transform .2s ease;
+}
+.hq-portal:hover .hq-portal-cta::after,
+.hq-portal:focus-visible .hq-portal-cta::after{
+ transform:translateX(4px);
+}
+.hq-portal:hover .hq-portal-cta,
+.hq-portal:focus-visible .hq-portal-cta{
+ color:#ffe0a2;
+ text-decoration-color:#ffe0a2;
+}
+@media(prefers-reduced-motion:reduce){
+ .hq-portal-cta::after{transition:none}
 }

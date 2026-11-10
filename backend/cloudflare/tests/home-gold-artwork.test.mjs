@@ -51,7 +51,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-activity-clean3/);
- assert.match(html,/home-premium\.css\?v=20261110-activity-compact5/);
+ assert.match(html,/home-premium\.css\?v=20261110-explorer-polish1/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -144,4 +144,24 @@ test("Accueil : supprimer définitivement l'espacement historique entre les él�
   assert.ok(js.includes('data-activity-status="'+name+'"'));
   assert.ok(js.includes('data-activity-detail="'+name+'"'));
  }
+});
+
+test("Accueil : Choisis ton aventure élargi sans toucher aux cinq affiches",()=>{
+ const css=src("dist/qg/home-premium.css");
+ const js=src("dist/qg/qg.js");
+ assert.match(css,/max-width:1920px/);
+ assert.match(css,/clamp\(20px,3\.9vw,76px\)/);
+ assert.match(css,/\.hq-portal-featured\{grid-column:span 6\}/);
+ assert.match(css,/\.hq-portal\{grid-column:span 4/);
+ assert.match(css,/@media\(max-width:680px\)/);
+ assert.match(css,/\.hq-portal-grid\{grid-template-columns:1fr/);
+ assert.match(css,/\.hq-portal-summary\{font-size:clamp\(14px,\.94vw,16px\)/);
+ assert.match(css,/\.hq-portal-cta::after/);
+ assert.match(css,/text-decoration:underline/);
+ assert.match(css,/margin-top:auto;padding-top:13px/);
+ assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);
+ for(const name of ["roue","tribunal","defis","killathon","classement"]){
+  assert.ok(js.includes("image:'"+name+"'"));
+ }
+ assert.equal((js.match(/featured:true/g)||[]).length,2);
 });
