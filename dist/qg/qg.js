@@ -2,7 +2,8 @@ import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-copyrefres
 import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261108-activity2';
 import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
-import {contactMarkup,mountContact} from './contact.js?v=20261109-cleanup3';
+import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
+import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile} from './profil.js?v=20261108-profilsettings1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
@@ -11,7 +12,7 @@ const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const voteApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
-const names = {accueil:'Accueil',roue:'La roue',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide',contact:'Nous contacter'};
+const names = {accueil:'Accueil',roue:'La roue',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide',contact:'Nous contacter',confidentialite:'Politique de confidentialité'};
 const modules = [
 {path:'roue',icon:'🎡',title:'La roue',desc:'Un outil interactif pour laisser le hasard choisir. De nouvelles utilisations pourront être ajoutées progressivement.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
@@ -19,7 +20,7 @@ const modules = [
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Propose des questions, vote avec Twitch et découvre les résultats partagés.',ready:tribunalPublicEnabled},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
 ];
-const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',apropos:'univers',createur:'univers',profil:null,membre:null,aide:null,contact:null};
+const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',setup:'univers',partenaires:'univers',apropos:'univers',createur:'univers',profil:null,membre:null,aide:null,contact:null,confidentialite:null};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
 const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1>'+(description?'<p>'+description+'</p>':'')+(tags.length?'<div class="page-tags">'+tags.join('')+'</div>':'')+'</div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
@@ -233,7 +234,7 @@ function creator(){
   '</div>'+
  '</section>';
 }
-const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,setup:setup,partenaires:about,apropos:about,createur:creator,profil:profileMarkup,membre:publicProfileMarkup,aide:helpMarkup,contact:contactMarkup};
+const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,setup:setup,partenaires:about,apropos:about,createur:creator,profil:profileMarkup,membre:publicProfileMarkup,aide:helpMarkup,contact:contactMarkup,confidentialite:privacyMarkup};
 let wheelObserver=null;
 let setupObserver=null;
 // Mesure la fin du contenu REEL (et non scrollHeight, qui peut inclure
@@ -319,6 +320,7 @@ function route(){
   if(page==='profil')void mountProfile();
    if(page==='aide')mountHelp();
   if(page==='contact')mountContact();
+  if(page==='confidentialite')mountPrivacy();
   if(page==='membre')void mountPublicProfile();
  if(page==='defis')mountChallenges();
  if(page==='killathon')mountKillathon();
