@@ -1096,3 +1096,140 @@ body{background:#07090c;color:#f3f1ed}
 @media(max-width:390px){
   .hq-intro{padding-top:40px;padding-bottom:48px}
 }
+/* Activité QG : cartes panoramiques noir/or et étiquettes pleine largeur.
+   Violet Twitch et bleu Défis volontairement sourds, sans néon. */
+.hq-activity-showcase.hq-activity-board{
+ display:block;position:relative;width:100%;min-height:0;
+ box-sizing:border-box;
+ padding:clamp(50px,5vw,82px) clamp(18px,4.7vw,88px) clamp(58px,5vw,86px);
+ border-top:1px solid #8c673c91;border-bottom:1px solid #654d2e8a;
+ background:radial-gradient(ellipse 40% 70% at 0% 20%,#72512c24,transparent 78%),
+            radial-gradient(ellipse 35% 64% at 100% 80%,#75522c15,transparent 90%),
+            linear-gradient(180deg,#0c0d10,#090a0d);
+}
+.hq-activity-showcase .hq-activity-intro{text-align:center;max-width:1300px;margin:0 auto clamp(28px,3.5vw,54px)}
+.hq-activity-showcase .hq-activity-heading{
+ display:flex;align-items:center;justify-content:center;gap:12px;
+ margin:0 0 20px;font:900 11px/1.4 var(--font);
+ letter-spacing:3px;color:#ebbd77;
+}
+.hq-activity-showcase .hq-activity-heading::before,
+.hq-activity-showcase .hq-activity-heading::after{
+ content:"";display:block;width:clamp(22px,8vw,132px);height:1px;
+ background:linear-gradient(90deg,transparent,#bc8a48);
+}
+.hq-activity-showcase .hq-activity-heading::after{transform:rotate(180deg)}
+.hq-activity-showcase .hq-activity-intro h2{
+ margin:0 auto 18px;color:#faf7f2;
+ font:900 clamp(36px,4.3vw,75px)/.98 var(--display);
+ letter-spacing:-.015em;text-wrap:balance;
+}
+.hq-activity-showcase .hq-activity-intro h2 em{font-style:normal;color:#eec07c}
+.hq-activity-showcase .hq-activity-lead{
+ margin:0 auto;max-width:800px;color:#cac5bb;
+ font-size:clamp(13px,1.05vw,16px);line-height:1.65;letter-spacing:0;
+}
+.hq-activity-showcase .hq-activity-cards{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:clamp(12px,1.5vw,24px);max-width:1560px;margin:0 auto;
+}
+.hq-activity-showcase .hq-activity-card{
+ position:relative;display:flex;flex-direction:column;align-items:stretch;
+ min-height:310px;min-width:0;box-sizing:border-box;
+ padding:clamp(15px,1.5vw,24px);
+ border:1px solid #8c693f;border-radius:18px;
+ background:radial-gradient(ellipse at 85% 92%,#95662413,transparent 67%),
+            linear-gradient(146deg,#1a1c20,#0c0e11 84%);
+ color:#f5f2ec;
+ box-shadow:inset 0 1px #ffdaa815,0 12px 30px #0005;
+ transition:transform .18s,border-color .18s,box-shadow .18s;
+}
+.hq-activity-showcase .hq-activity-card:hover,
+.hq-activity-showcase .hq-activity-card:focus-within{
+ transform:translateY(-3px);border-color:#d4a662;
+ box-shadow:inset 0 1px #ffe0b21b,0 16px 36px #0007;
+}
+.hq-activity-showcase .hq-activity-ribbon{
+ display:flex;align-items:center;width:100%;min-width:0;min-height:52px;
+ box-sizing:border-box;padding:6px 16px;margin:0 0 16px;
+ border:1px solid #9e7744;border-radius:13px;
+ background:linear-gradient(105deg,#5941277d,#221e1a);
+}
+.hq-activity-showcase .hq-activity-symbol{
+ flex:0 0 40px;display:grid;place-items:center;
+ width:40px;height:35px;margin:0 14px 0 0;padding-right:12px;
+ border:0;border-right:1px solid #e2bc7b85;border-radius:0;
+ background:transparent;color:#e9c285;font-size:25px;
+}
+.hq-activity-showcase .hq-activity-symbol svg{display:block;width:24px;height:24px}
+.hq-activity-showcase .hq-activity-ribbon strong{
+ display:block;color:#f8f4ed;
+ font:900 clamp(17px,1.5vw,24px)/1 var(--display);
+ letter-spacing:.6px;white-space:nowrap;
+}
+.hq-activity-showcase .hq-activity-twitch .hq-activity-ribbon{
+ border-color:#756080;
+ background:linear-gradient(105deg,#4d3c537a,#27212b,#1a1a1f);
+}
+.hq-activity-showcase .hq-activity-twitch .hq-activity-symbol{
+ color:#c8b1d0;border-right-color:#927e9b;
+}
+.hq-activity-showcase .hq-activity-defis .hq-activity-ribbon{
+ border-color:#587180;
+ background:linear-gradient(105deg,#304d596d,#222b31,#181d20);
+}
+.hq-activity-showcase .hq-activity-defis .hq-activity-symbol{
+ color:#a2becd;border-right-color:#7b9099;
+}
+.hq-activity-showcase .hq-activity-status{
+ display:inline-flex;align-self:flex-start;align-items:center;
+ min-height:28px;max-width:100%;box-sizing:border-box;
+ margin:0 0 12px;padding:6px 12px;
+ border:1px solid #494e56;border-radius:999px;
+ background:#242930;color:#d1d1d0;
+ font:750 12px/1.2 var(--font);letter-spacing:0;text-transform:none;
+}
+.hq-activity-showcase .hq-activity-status[data-state="live"]{
+ color:#a8e4c3;background:#172d24;border-color:#48765d;
+}
+.hq-activity-showcase .hq-activity-status[data-state="offline"]{color:#cbcbc7}
+.hq-activity-showcase .hq-activity-card h3{
+ margin:0 0 9px;color:#fbf8f3;
+ font:900 clamp(26px,2.05vw,36px)/1.04 var(--display);
+ letter-spacing:0;overflow-wrap:anywhere;
+}
+.hq-activity-showcase .hq-activity-detail{
+ margin:0 0 22px;color:#d1cbc2;
+ font:400 clamp(13px,1vw,15px)/1.5 var(--font);letter-spacing:0;
+}
+.hq-activity-showcase .hq-activity-action{
+ display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;
+ box-sizing:border-box;max-width:100%;min-height:43px;
+ margin-top:auto;padding:10px 19px;
+ border:1px solid #dbad6d;border-radius:10px;
+ background:linear-gradient(120deg,#ebc98d,#cf9e58);
+ color:#20170e;font:900 13px/1.3 var(--font);
+ letter-spacing:.1px;text-decoration:none;
+ box-shadow:0 6px 18px #9d6a3023;
+}
+.hq-activity-showcase .hq-activity-action:hover,
+.hq-activity-showcase .hq-activity-action:focus-visible{
+ background:#f4d7a3;border-color:#fce2b4;
+ outline:2px solid #e9bf77;outline-offset:3px;
+}
+@media(max-width:1100px){
+ .hq-activity-showcase .hq-activity-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .hq-activity-showcase .hq-activity-card:last-child{grid-column:1 / -1}
+}
+@media(max-width:730px){
+ .hq-activity-showcase.hq-activity-board{padding:45px 17px 53px}
+ .hq-activity-showcase .hq-activity-heading{font-size:9px;letter-spacing:1.6px;gap:8px}
+ .hq-activity-showcase .hq-activity-heading::before,
+ .hq-activity-showcase .hq-activity-heading::after{width:26px}
+ .hq-activity-showcase .hq-activity-cards{grid-template-columns:minmax(0,1fr);gap:13px}
+ .hq-activity-showcase .hq-activity-card:last-child{grid-column:auto}
+ .hq-activity-showcase .hq-activity-card{min-height:280px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hq-activity-showcase .hq-activity-card{transition:none}
+}
