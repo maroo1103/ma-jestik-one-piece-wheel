@@ -59,7 +59,7 @@ function selectCategory(){
    '<button type="button" class="mj-contact-category" data-contact-category="'+c.id+'">'+
    '<span class="mj-contact-category-icon" aria-hidden="true">'+c.icon+'</span>'+
    '<strong>'+esc(c.title)+'</strong><small>'+esc(c.desc)+'</small>'+
-   '<span class="mj-contact-category-arrow" aria-hidden="true">↗</span></button>').join('')+'</div>';
+   '</button>').join('')+'</div>';
 }
 function selectTopic(){
  const c=category(draft.category);
@@ -68,7 +68,7 @@ function selectTopic(){
  '<h2 id="mjContactStepTitle">'+esc(c.title).toUpperCase()+'</h2>'+
  '<p>Quel sujet correspond le mieux à ta demande ?</p></div>'+
  '<div class="mj-contact-topics">'+c.topics.map(t=>
-  '<button type="button" class="mj-contact-topic" data-contact-topic="'+t[0]+'"><span class="mj-contact-radio" aria-hidden="true"></span><span>'+esc(t[1])+'</span><span class="mj-contact-topic-arrow" aria-hidden="true">→</span></button>'
+  '<button type="button" class="mj-contact-topic" data-contact-topic="'+t[0]+'"><span class="mj-contact-radio" aria-hidden="true"></span><span>'+esc(t[1])+'</span></button>'
  ).join('')+'</div><div class="mj-contact-navigation">'+back('CHANGER DE CATÉGORIE')+'</div>';
 }
 function attachInfo(){
@@ -105,8 +105,8 @@ function fillForm(){
       '<div><label class="mj-contact-label" for="mjContactEmail">Ton adresse e-mail <span>*</span></label>'+
       '<input id="mjContactEmail" type="email" name="email" data-contact-field="email" required maxlength="254" autocomplete="email" value="'+esc(draft.email)+'" placeholder="tonadresse@exemple.fr"></div>'+
      '</div>'+
-     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. <a href="#/confidentialite" target="_blank" rel="noopener noreferrer">Consulter la confidentialité ↗</a> (nouvel onglet).</p></section>'+
-   '<div class="mj-contact-navigation">'+back('REVENIR AUX SUJETS')+'<button type="submit" class="mj-contact-primary">VÉRIFIER MA DEMANDE <span aria-hidden="true">→</span></button></div>'+
+     '<p class="mj-contact-hint">Tes informations et fichiers seront transmis par Cloudflare et Resend à notre boîte professionnelle OVH pour traiter ta demande. <a href="#/confidentialite" target="_blank" rel="noopener noreferrer">Consulter la confidentialité</a> (nouvel onglet).</p></section>'+
+   '<div class="mj-contact-navigation">'+back('REVENIR AUX SUJETS')+'<button type="submit" class="mj-contact-primary">VÉRIFIER MA DEMANDE </button></div>'+
   '</form>';
 }
 function emailBody(){
@@ -122,7 +122,7 @@ function summary(){
    '<p>Ta demande a été transmise à Ma_JesTik. Nous pourrons te répondre à <strong>'+esc(draft.email)+'</strong>.</p></div>'+
    '<div class="mj-contact-sent" role="status"><strong>✓ Envoi confirmé</strong>'+
    '<p>Tu n’as rien d’autre à faire. Pense à vérifier ta messagerie, y compris les indésirables.</p></div>'+
-   '<div class="mj-contact-navigation"><button type="button" class="mj-contact-primary" data-contact-restart>CRÉER UNE AUTRE DEMANDE ↗</button></div>';
+   '<div class="mj-contact-navigation"><button type="button" class="mj-contact-primary" data-contact-restart>CRÉER UNE AUTRE DEMANDE</button></div>';
  }
  return '<div class="mj-contact-intro"><span class="mj-contact-overline">04 / RÉCAPITULATIF</span>'+
  '<h2 id="mjContactStepTitle">TA DEMANDE EST <em>PRÊTE.</em></h2>'+
@@ -138,7 +138,7 @@ function summary(){
  '<p id="mjContactCaptchaStatus" role="status">'+esc(draft.captchaError||'Chargement de la vérification de sécurité…')+'</p></div>'+
  '<p class="mj-contact-send-error" id="mjContactSendStatus" role="alert" aria-live="polite">'+esc(draft.sendError)+'</p>'+
  '<div class="mj-contact-navigation">'+back('MODIFIER MON MESSAGE')+
- '<button type="button" class="mj-contact-primary" data-contact-send disabled>ENVOYER MA DEMANDE →</button></div>'+
+ '<button type="button" class="mj-contact-primary" data-contact-send disabled>ENVOYER MA DEMANDE</button></div>'+
  '<div class="mj-contact-finish"><button type="button" class="mj-contact-secondary" data-contact-copy>COPIER LE MESSAGE (SECOURS)</button>'+
  '<span id="mjContactCopyStatus" role="status" aria-live="polite"></span></div>';
 }
@@ -153,7 +153,7 @@ function updateSendButton(root){
  const button=root.querySelector('[data-contact-send]');
  if(!button)return;
  button.disabled=draft.sending||!draft.captchaToken;
- button.textContent=draft.sending?'ENVOI EN COURS…':'ENVOYER MA DEMANDE →';
+ button.textContent=draft.sending?'ENVOI EN COURS…':'ENVOYER MA DEMANDE';
 }
 function loadCaptchaScript(){
  if(window.turnstile?.render)return Promise.resolve(window.turnstile);

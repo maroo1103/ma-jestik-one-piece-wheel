@@ -103,7 +103,7 @@ function buildDetail(item){
   content.append(notice);
  }
  if(item.configLink){
-  const link=node("a","mj-product-config-link","Explorer ma configuration PC →");
+  const link=node("a","mj-product-config-link","Explorer ma configuration PC");
   link.href=new URL("config-pc.html?v=20261109-modal2",document.baseURI).href;
   link.addEventListener("click",event=>{
    if(modal?.open)modal.close();
@@ -144,7 +144,7 @@ export function fillPCParts(){
   copy.append(node("h2",null,item.name));
   copy.append(node("p",null,item.description));
   card.append(copy);
-  const action=node("button","mj-part-open","Découvrir la fiche →");
+  const action=node("button","mj-part-open","Découvrir la fiche");
   action.type="button";action.dataset.productId=id;
   action.setAttribute("aria-label","Découvrir la fiche de "+item.name);
   action.addEventListener("click",()=>openMaterialCard(id,action));

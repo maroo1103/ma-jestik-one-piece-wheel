@@ -143,7 +143,7 @@ function view(state){
    '<section class="mp-panel"><h3>♙ PRÉSENTATION</h3><p class="mp-bio">'+(p.bio?esc(p.bio):'<span class="mp-muted">Aucune présentation pour le moment. Ajoute quelques mots sur toi !</span>')+'</p></section>'+
    '<section class="mp-panel"><h3>'+clipIcon+' MES LIENS</h3><div class="mp-links">'+socials(p,ident.name||"")+'</div></section>'+
    '<section class="mp-panel mp-privacy"><h3>◉ VISIBILITÉ</h3><p>'+((server&&p.public_profile)?'Ton profil peut être consulté par les autres membres.':'Ton profil n’est pas publié pour les autres visiteurs.')+'</p>'+
-    (server&&p.public_profile?'<button class="mp-outline-button" id="mpShareBtn" type="button">Copier le lien public ↗</button>':'')+
+    (server&&p.public_profile?'<button class="mp-outline-button" id="mpShareBtn" type="button">Copier le lien public</button>':'')+
    '</section>'+
   '</div>'+
   '<div class="mp-column">'+

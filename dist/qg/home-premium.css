@@ -968,3 +968,6 @@ body{background:#07090c;color:#f3f1ed}
  border:1px solid transparent;border-radius:7px;color:#f1d9d3;font-weight:800}
 .site-header .qg-account-menu-logout:hover,
 .site-header .qg-account-menu-logout:focus-visible{border-color:#80545a;background:#3a272f;color:#fff3ed}
+
+/* Liens et boutons sans pictogramme de flèche : garder le texte centré. */
+.hq-hero-primary,.hq-setup-cta{justify-content:center}

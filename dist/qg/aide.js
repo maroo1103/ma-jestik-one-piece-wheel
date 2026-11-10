@@ -52,7 +52,7 @@ export function helpMarkup(){
   '<p class="mj-help-noresult" id="mjHelpNoResult" role="status" hidden>Aucune réponse trouvée. Essaie avec un autre mot-clé.</p>'+
   '<aside class="mj-help-discord"><div><span class="mj-help-kicker">RESTONS CONNECTÉS</span><h2>REJOINS LA COMMUNAUTÉ</h2>'+
   '<p>Retrouve le Discord Ma_JesTik pour discuter avec les membres. Une page de contact dédiée sera ajoutée ultérieurement.</p></div>'+
-  '<a href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Rejoindre le Discord <span aria-hidden="true">↗</span></a></aside>'+
+  '<a href="https://discord.gg/nyuC5YE467" target="_blank" rel="noopener noreferrer">Rejoindre le Discord </a></aside>'+
  '</div>';
 }
 export function mountHelp(){
