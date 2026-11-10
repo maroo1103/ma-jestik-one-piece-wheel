@@ -76,3 +76,15 @@ Les tests automatiques GitHub sont définis dans `.github/workflows/qg-privacy-t
 - Gestion des sauvegardes, des demandes de suppression étendue, des textes libres de Tribunal contenant éventuellement des informations personnelles.
 
 **Ne pas annoncer publiquement la purge automatique après six mois avant son déploiement et ses essais.**
+
+## 5. État de déploiement constaté le 10 novembre 2026
+
+Cette section **actualise** les indications préalables ci-dessus, qui avaient été rédigées avant le déploiement :
+
+- Sauvegarde exportée par l'éditeur sur son PC : `ma-jestik-qg-members-2026-11-10.sql` (12 586 octets). Export confirmé ; restauration de test non réalisée.
+- Le Worker `ma-jestik-qg-members` a été remplacé manuellement dans Cloudflare ; version montrée active : `cfbc779a`.
+- L'endpoint `/v1/health` renvoie `{"status":"ok"}` ; le profil Twitch et l'interface Tribunal s'affichent correctement selon les tests de l'éditeur.
+- `ACTIVITY_TRACKING_ENABLED=true`, `MEMBER_PURGE_ENABLED=true`, `MEMBER_PURGE_DRY_RUN=true`.
+- Cron `0 3 * * *` enregistré, première exécution prévue le 11 novembre 2026 à 03:00 UTC. **Le premier journal Cron n'a pas encore été examiné.**
+- **La purge réelle reste interdite par le garde-fou dry-run.** Ne pas modifier `MEMBER_PURGE_DRY_RUN` sans validation explicite.
+- Pour les arbitrages de durée toujours ouverts, consulter `docs/proposition-durees-conservation-2026-11-10.md` : propositions non encore approuvées, aucune purge additionnelle implémentée.
