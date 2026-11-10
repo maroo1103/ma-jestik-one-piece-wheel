@@ -4,12 +4,15 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=path=>readFileSync(new URL('../../../dist/qg/'+path,import.meta.url),'utf8');
 
-test('podium et tableau : vrais boutons activables au clavier, associés à l’identifiant Twitch',()=>{
+test('podium et tableau : seul le pseudo est un bouton accessible et associé au profil',()=>{
  const code=read('qg.js');
- assert.match(code,/const card=document\.createElement\(clickable\?'button':'article'\)/);
- assert.match(code,/const person=document\.createElement\(clickable\?'button':'span'\)/);
- assert.match(code,/card\.dataset\.memberId=id/);
- assert.match(code,/person\.dataset\.memberId=id/);
+ assert.match(code,/const card=document\.createElement\('article'\)/);
+ assert.match(code,/const person=document\.createElement\('span'\)/);
+ assert.match(code,/const name=document\.createElement\(clickable\?'button':'strong'\)/);
+ assert.match(code,/const name=document\.createElement\(clickable\?'button':'span'\)/);
+ assert.match(code,/name\.dataset\.memberId=id/);
+ assert.doesNotMatch(code,/card\.dataset\.memberId|person\.dataset\.memberId/);
+ assert.match(code,/target\.textContent\?\.trim\(\)/);
  assert.match(code,/root\.addEventListener\('click'/);
  assert.match(code,/memberPreviewDialog\.showModal\(\)/);
  assert.match(code,/fetch\(voteApi\+'\/v1\/profiles\/'\+id/);
@@ -38,4 +41,15 @@ test('profil privé et profil public réutilisent le rendu du profil complet',()
  assert.match(profile,/p\.games\.map\(g=>gameCard/);
  assert.match(profile,/\.mj-footer-brand-networks a\[title=/);
  assert.doesNotMatch(profile,/site-header \.qg-social-/);
+});
+
+test('Fenêtre plus compacte, dorée, sans cadre navigateur et responsive',()=>{
+ const html=read('index.html'),css=read('ranking-profile-dialog.css');
+ assert.match(html,/ranking-profile-dialog\.css\?v=20261110-modal2/);
+ assert.match(html,/qg\.js\?v=20261110-ranking-modal2/);
+ assert.match(css,/dialog#qgMemberDialog\{/);
+ assert.match(css,/width:min\(740px,calc\(100vw - 36px\)\) !important/);
+ assert.match(css,/border:1px solid #b18b57 !important/);
+ assert.match(css,/#qgMemberDialog #qgMemberDialogTitle/);
+ assert.match(css,/@media\(max-width:630px\)/);
 });
