@@ -347,21 +347,23 @@
 }
 
 
-/* Classement : podium et pseudos ouvrent le profil dans une fenêtre, avec navigation clavier. */
-.qg-layout button.qg-rank-card{
- font:inherit;color:inherit;cursor:pointer;width:100%;
- transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+/* Seul le pseudo est cliquable. Les cartes et leurs médailles restent statiques. */
+.qg-layout .qg-rank-name-link{
+ appearance:none;display:inline-block;width:auto;max-width:100%;
+ padding:3px 5px;margin:-3px -5px;border:0;border-radius:5px;
+ background:transparent;box-shadow:none;color:inherit;
+ font-family:inherit;line-height:inherit;text-align:inherit;
+ cursor:pointer;text-decoration:none;transition:color .15s ease;
 }
-.qg-layout button.qg-rank-card:hover{transform:translateY(-3px);border-color:#f3d29a;box-shadow:0 13px 31px #0008}
-.qg-layout button.qg-rank-card:focus-visible,
-.qg-layout .qg-rank-row button.ranking-person:focus-visible{outline:3px solid #f0c887;outline-offset:4px}
-.qg-layout .qg-rank-row button.ranking-person{
- appearance:none;display:inline-flex;align-items:center;gap:9px;min-width:0;
- padding:6px 8px;margin:-6px -8px;background:transparent;border:0;border-radius:7px;
- color:inherit;font:inherit;font-weight:750;text-align:left;cursor:pointer;
+.qg-layout .qg-rank-card .qg-rank-name-link{
+ font-size:clamp(15px,1.6vw,22px);font-weight:900;overflow-wrap:anywhere;
 }
-.qg-layout .qg-rank-row button.ranking-person:hover{color:#f3cb8d;background:#e4b66f12}
-@media(prefers-reduced-motion:reduce){
- .qg-layout button.qg-rank-card{transition:none}
- .qg-layout button.qg-rank-card:hover{transform:none}
+.qg-layout .ranking-person .qg-rank-name-link{font-size:inherit;font-weight:750}
+.qg-layout .qg-rank-name-link:hover{
+ color:#ecc282;text-decoration:underline;text-underline-offset:4px;
 }
+.qg-layout .qg-rank-name-link:focus-visible{
+ outline:2px solid #f0c887;outline-offset:3px;color:#f0c887;
+}
+@media(max-width:620px){.qg-layout .qg-rank-card .qg-rank-name-link{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.qg-layout .qg-rank-name-link{transition:none}}
