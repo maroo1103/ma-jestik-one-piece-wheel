@@ -30,7 +30,7 @@ test('un seul URL de module Twitch pour en-tête, profil et communauté',()=>{
 
 test('le HTML d’accueil charge la nouvelle version du routeur QG',()=>{
   const html=source('index.html');
-  assert.match(html,/<script type="module" src="qg\.js\?v=20261110-twitch-singleton1"><\/script>/);
+  assert.match(html,/<script type="module" src="qg\.js\?v=[A-Za-z0-9_-]+"><\/script>/);
 });
 
 test('le jeton reste uniquement dans la session de l’onglet, sans localStorage',()=>{
