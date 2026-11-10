@@ -51,7 +51,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-activity-clean3/);
- assert.match(html,/home-premium\.css\?v=20261110-explorer-polish1/);
+ assert.match(html,/home-premium\.css\?v=20261110-explorer-noarrow2/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -156,7 +156,7 @@ test("Accueil : Choisis ton aventure élargi sans toucher aux cinq affiches",()=
  assert.match(css,/@media\(max-width:680px\)/);
  assert.match(css,/\.hq-portal-grid\{grid-template-columns:1fr/);
  assert.match(css,/\.hq-portal-summary\{font-size:clamp\(14px,\.94vw,16px\)/);
- assert.match(css,/\.hq-portal-cta::after/);
+ assert.doesNotMatch(css,/\.hq-portal-cta::after/);
  assert.match(css,/text-decoration:underline/);
  assert.match(css,/margin-top:auto;padding-top:13px/);
  assert.match(js,/p\.image==='roue'\?'20261110-gold2':'20261109-artworks2'/);

@@ -1237,26 +1237,9 @@ body{background:#07090c;color:#f3f1ed}
  .hq-activity-showcase .hq-activity-card{transition:none}
 }
 
-/* Cartes 'Choisis ton aventure' : lien visuellement identifiable sans bouton.
-   La carte entière reste cliquable et les cinq affiches sont inchangées. */
-.hq-portal-cta::after{
- content:"→";
- display:inline-block;
- color:#eec47c;
- font-size:1.2em;
- line-height:1;
- text-decoration:none;
- transition:transform .2s ease;
-}
-.hq-portal:hover .hq-portal-cta::after,
-.hq-portal:focus-visible .hq-portal-cta::after{
- transform:translateX(4px);
-}
+/* Cartes 'Choisis ton aventure' : liens soulignés sans flèche. La carte entière reste cliquable. */
 .hq-portal:hover .hq-portal-cta,
 .hq-portal:focus-visible .hq-portal-cta{
  color:#ffe0a2;
  text-decoration-color:#ffe0a2;
-}
-@media(prefers-reduced-motion:reduce){
- .hq-portal-cta::after{transition:none}
 }
