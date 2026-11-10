@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'backend/cloudflare/src/worker.js'
+      - 'backend/cloudflare/tribunal-worker.js'
+      - 'dist/qg/tribunal-public.js'
+      - 'dist/qg/tribunal.js'
       - 'backend/cloudflare/schema.sql'
       - 'backend/cloudflare/migrations/**'
       - 'backend/cloudflare/tests/**'
@@ -26,6 +29,10 @@ jobs:
         with:
           node-version: '22'
       - name: Vérifier la syntaxe du Worker
-        run: node --check backend/cloudflare/src/worker.js
+        run: |
+          node --check backend/cloudflare/src/worker.js
+          node --check backend/cloudflare/tribunal-worker.js
+          node --check dist/qg/tribunal-public.js
+          node --check dist/qg/tribunal.js
       - name: Tester en SQLite isolé (aucun accès à D1 de production)
-        run: node --experimental-sqlite --test backend/cloudflare/tests/privacy.test.mjs
+        run: node --experimental-sqlite --test backend/cloudflare/tests/*.test.mjs
