@@ -1,6 +1,6 @@
 # Ma_JesTik — Politique de confidentialité
 **Brouillon de travail — ne pas publier sur le site avant validation**  
-Établi le 9 novembre 2026 à partir d'un audit du code public de la branche `main` du dépôt `maroo1103/ma-jestik-site`.
+Établi le 9 novembre 2026, mis à jour le 10 novembre 2026 après examen du code GitHub et des résultats de l'audit Cloudflare D1.
 
 Ce texte est un projet destiné à être relu et adapté aux traitements réels en production. Les mentions `[À COMPLÉTER]` ou `[À VÉRIFIER]` ne doivent pas être laissées dans une version juridique présentée comme finalisée. Le dépôt GitHub est public : ne jamais y écrire d'adresse postale privée, de donnée d'identité confidentielle ni de secret technique.
 
@@ -47,15 +47,15 @@ Le compteur Killathon peut enregistrer l'identifiant du membre, un identifiant p
 Les propositions et sondages peuvent enregistrer le texte des questions, les réponses possibles, les dates et, selon la fonctionnalité, le pseudonyme ou l'identifiant Twitch des auteurs et votants. La présentation des résultats publics ne doit pas être confondue avec l'ensemble des données conservées dans la base.
 
 ### Formulaire de contact
-**Version préparée pour publication sur le QG :** le formulaire transmet, après validation anti-spam Turnstile, la catégorie, le sujet, l'adresse e-mail de réponse, le pseudonyme facultatif, le message et jusqu'à 6 pièces jointes (PNG, JPG, WebP, PDF ; 5 Mo chacune, 12 Mo au total) à un Worker Cloudflare distinct. Ce Worker envoie le courriel et les fichiers via Resend à la boîte `contact@ma-jestik.fr` hébergée chez OVH. Le jeton anti-spam est vérifié auprès de Cloudflare. Resend et OVH peuvent conserver des données liées à l'acheminement et au traitement des courriels selon les paramètres du compte et leurs politiques. Les durées effectives, la répartition des rôles et les éventuels transferts hors EEE restent à vérifier avant publication du document juridique.
+**Fonctionnement confirmé par un test réel d'envoi/réception le 9 novembre 2026 :** le formulaire transmet, après validation anti-spam Turnstile, la catégorie, le sujet, l'adresse e-mail de réponse, le pseudonyme facultatif, le message et jusqu'à 6 pièces jointes (PNG, JPG, WebP, PDF ; 5 Mo chacune, 12 Mo au total) à un Worker Cloudflare distinct. Ce Worker envoie le courriel et les fichiers via Resend à la boîte `contact@ma-jestik.fr` hébergée chez OVH. Le jeton anti-spam est vérifié auprès de Cloudflare. Resend et OVH peuvent conserver des données liées à l'acheminement et au traitement des courriels selon les paramètres du compte et leurs politiques. Les durées effectives, la répartition des rôles et les éventuels transferts hors EEE restent à vérifier avant publication du document juridique.
 
-**[À VÉRIFIER APRÈS DÉPLOIEMENT]** Le test d'envoi et de réception de bout en bout ainsi que les tests de pièces jointes ne sont pas encore confirmés. L'ancienne interface peut rester en cache jusqu'à la publication GitHub Pages.
+**[À VÉRIFIER]** L'éditeur a confirmé la bonne réception d'un message test dans sa boîte professionnelle. Les limites et l'envoi des pièces jointes doivent encore être testés séparément, ainsi que leur durée de conservation dans les services concernés.
 
-**[CHANGEMENT FUTUR NON ENCORE EN PRODUCTION]** Dès qu'un système sécurisé d'envoi via Cloudflare et Resend sera activé, cette section devra être mise à jour **avant** la mise en service pour décrire les informations effectivement transmises, les éventuelles pièces jointes, leurs destinataires et leurs durées de conservation.
+
 
 ## 4. Pourquoi ces données sont-elles utilisées ?
 
-Les finalités visées sont : authentifier les membres qui choisissent de se connecter ; enregistrer et personnaliser leur profil ; faire fonctionner leurs votes, propositions, points et Killathon ; permettre l'affichage public qu'ils ont choisi d'activer ; assurer le fonctionnement technique et la sécurité du service ; répondre à leurs demandes lorsqu'un système de contact sera opérationnel.
+Les finalités visées sont : authentifier les membres qui choisissent de se connecter ; enregistrer et personnaliser leur profil ; faire fonctionner leurs votes, propositions, points et Killathon ; permettre l'affichage public qu'ils ont choisi d'activer ; assurer le fonctionnement technique et la sécurité du service ; répondre aux messages transmis par le formulaire de contact.
 
 **[À ARBITRER AVANT PUBLICATION]** Associer à chaque finalité une base légale appropriée (par exemple exécution d'un service expressément demandé, intérêt légitime pour certaines mesures de sécurité, ou consentement lorsque requis). Il ne faut pas déduire automatiquement une base légale unique du seul fait que la connexion Twitch est facultative.
 
@@ -67,17 +67,17 @@ Selon les fonctions utilisées :
 - **Cloudflare** (Workers / base D1), pour les fonctions communautaires et la base de données ;
 - **GitHub Pages**, pour l'hébergement des pages et ressources statiques ;
 - les autres visiteurs, uniquement pour les informations effectivement rendues publiques par le service (ex. profil public, classement et résultats publiés) ;
-- **[FUTUR] Resend**, lorsque l'envoi de formulaires sera activé ;
+- **Resend** (acheminement des messages du formulaire) et **OVHcloud** (boîte de réception professionnelle) ;
 - les plateformes sociales ou services externes que le membre décide de consulter.
 
 Le rôle précis de chaque prestataire, la localisation effective des traitements et les garanties contractuelles correspondantes restent **[À VÉRIFIER]**.
 
 ## 6. Combien de temps sont conservées les données ?
 
-Les éléments de connexion temporaires et les informations stockées dans le navigateur dépendent de leur type et des actions du visiteur (fin de session, effacement local, modification des réglages). Les données communautaires de la base D1 sont conservées selon le fonctionnement actuel du service ; **aucune politique d'effacement automatique périodique globale n'a été confirmée dans le code examiné**.
+Les éléments de connexion temporaires et les informations stockées dans le navigateur dépendent de leur type et des actions du visiteur (fin de session, effacement local, modification des réglages). Le dépôt GitHub contient désormais une purge des comptes inactifs **préparée et désactivée par défaut** ainsi qu'un nettoyage du Tribunal lors de l'effacement volontaire d'un profil. **Ces corrections ne sont pas encore confirmées comme déployées ni activées dans Cloudflare en production.**
 
 **[À DÉFINIR ET METTRE EN ŒUVRE AVANT PUBLICATION]**
-- **Règle décidée le 9 novembre 2026 :** les comptes QG doivent être supprimés après **six mois consécutifs sans activité authentifiée**, avec leurs profils et points associés. **Cette suppression automatique n'est pas encore implémentée** : la migration et le suivi de dernière activité sont préparés dans le dépôt GitHub, mais ne sont pas activés dans la base Cloudflare en production. Aucune durée effective ne doit être promise aux visiteurs avant la vérification du suivi, la programmation de la purge et ses tests. Pour les comptes déjà créés, prévoir un démarrage non rétroactif de la période afin d'éviter toute suppression injustifiée ;
+- **Règle décidée le 9 novembre 2026 :** les comptes QG doivent être supprimés après **six mois consécutifs sans activité authentifiée**, avec leurs profils et points associés. Au 10 novembre, la table `member_activity` existait en D1 et les trois comptes avaient un suivi d'activité. Le code de purge a été **préparé et testé hors production**, mais n'a pas été déployé ni activé. Le suivi réel de connexion Twitch et le déclencheur planifié restent à valider avant toute promesse publique d'effacement automatique ;
 - des durées spécifiques pour les votes, propositions, résultats et historiques ;
 - les durées applicables aux journaux techniques et sauvegardes, si disponibles ;
 - les règles de conservation et d'effacement du formulaire de contact une fois activé ;
@@ -89,7 +89,7 @@ Ne pas afficher une durée arbitraire ou une promesse d'effacement automatique t
 
 Un membre peut modifier ses informations de profil et ses réglages de visibilité depuis le QG. La fonctionnalité de suppression du profil appelle une demande d'effacement du compte membre dans Cloudflare D1. Certains enregistrements de la base, liés par des contraintes de suppression en cascade, sont alors supprimés automatiquement.
 
-**Limite connue :** les schémas actuels des tables du Tribunal contiennent des identifiants Twitch sans tous les liens de suppression en cascade vers la table des membres. Il ne faut donc pas promettre que la suppression du profil efface automatiquement l'intégralité des anciennes propositions, sondages, votes, journaux, archives ou sauvegardes. Pour une demande plus étendue ou en cas de doute : **contact@ma-jestik.fr**.
+**Limite de déploiement :** le schéma Tribunal conserve des références Twitch sans cascade vers `members`. Le code source GitHub a été corrigé le 10 novembre pour nettoyer ces références lors de la suppression d'un profil, mais **son déploiement sur le Worker Cloudflare n'est pas confirmé**. Les textes libres, journaux, sauvegardes et données de visiteurs du Tribunal sans profil membre peuvent nécessiter un traitement séparé. Pour toute demande : **contact@ma-jestik.fr**.
 
 ## 8. Vos droits
 
@@ -126,8 +126,8 @@ La politique pourra être mise à jour lors de l'ajout de nouvelles fonctionnali
 | Profil public et réseaux sociaux | `migrations/0005_member_profiles.sql`, `dist/qg/profil.js` | Durées / données publiques après changement de visibilité |
 | Votes des défis | `migrations/0002_defi_votes.sql` | Conservation des historiques et points |
 | Killathon | `migrations/0003_killathon_simple.sql` | Durée de conservation |
-| Tribunal | `migrations/0004_tribunal_public.sql` | Vérifier l'effacement complet après suppression d'un membre |
-| Formulaire de contact | `dist/qg/contact.js` | Actuellement aucune transmission serveur ; révision obligatoire avant activation Cloudflare/Resend |
+| Tribunal | `migrations/0004_tribunal_public.sql`, `src/worker.js` | Correction GitHub testée ; déploiement Cloudflare à réaliser, cas des visiteurs sans profil à traiter |
+| Formulaire de contact | `dist/qg/contact.js`, `backend/cloudflare/contact-worker.js` | Envoi/réception confirmé ; pièces jointes et durées de conservation à vérifier |
 | Services | GitHub Pages + Cloudflare Workers / D1 + Twitch | Informations contractuelles et transferts internationaux |
 | Traceurs | stockage local constaté | Test navigateur réel, scripts externes, cookies et statistiques éventuels |
 | Responsable du traitement | Éditeur Ma_JesTik, contact professionnel | Obligations d'identification, mentions légales en attente de réponse GitHub |
@@ -139,9 +139,9 @@ La politique pourra être mise à jour lors de l'ajout de nouvelles fonctionnali
 2. **Auditer les tables Tribunal** et la suppression des données par identifiant Twitch ; assurer la cohérence suppression / archivage.
 3. **Valider les bases légales** pour chacun des traitements et la manière de porter ces informations à la connaissance des utilisateurs avant de collecter leurs données.
 4. **Vérifier les cookies et ressources tierces** en environnement réel, sur ordinateur et mobile.
-5. **Examiner les conditions des prestataires** GitHub, Cloudflare, Twitch, puis Resend au moment de son activation (traitements hors EEE, DPA et garanties).
+5. **Examiner les conditions des prestataires** GitHub, Cloudflare, Twitch, Resend et OVHcloud (traitements hors EEE, DPA et garanties).
 6. **Valider l'identification du responsable** de traitement et les modalités de contact, sans mettre d'adresse privée dans un dépôt public.
-7. **Réviser préalablement la rubrique Contact** avant activation de l'envoi direct et des pièces jointes.
+7. **Finaliser la rubrique Contact** en documentant les durées de conservation et les essais de pièces jointes.
 8. Préparer l'affichage accessible sous le pied de page, mais **ne pas présenter ce brouillon comme une politique finalisée**.
 
 ## Références réglementaires
