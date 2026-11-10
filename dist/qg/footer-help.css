@@ -5,6 +5,7 @@
 .qg-layout .mj-footer-brand{min-width:0}
 .qg-layout .mj-footer-brand-link{display:inline-flex;align-items:center;gap:13px;max-width:100%;padding:2px 0}
 .qg-layout .mj-footer-brand-link img{width:48px;height:48px;object-fit:contain;flex:0 0 auto}
+.qg-layout .mj-footer-brand-link .mj-brand-logo{display:block;flex:0 0 auto;line-height:0}
 .qg-layout .mj-footer-brand-title{display:grid;gap:4px;min-width:0}
 .qg-layout .mj-footer-brand-title strong{font:800 26px/1 var(--display),Impact,sans-serif;letter-spacing:.7px;color:#f7efe8}
 .qg-layout .mj-footer-brand-title small{font-size:9px;font-weight:800;letter-spacing:1.3px;color:#dcb77b}

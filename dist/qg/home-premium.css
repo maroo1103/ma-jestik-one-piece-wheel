@@ -13,6 +13,7 @@ body{background:#07111c}
 .site-header::after{content:"";position:absolute;height:1px;bottom:-1px;left:3%;right:3%;background:linear-gradient(90deg,transparent,#dbab67 25%,#704dca 71%,transparent);opacity:.58;pointer-events:none}
 .site-header .brand{display:flex;gap:12px;align-items:center;flex:0 0 auto;padding:0;min-width:190px}
 .site-header .brand-icon{display:block;width:43px;height:43px;object-fit:cover;border-radius:11px;box-shadow:0 1px 15px #eab56527}
+.site-header .mj-brand-logo{display:block;flex:0 0 auto;line-height:0}
 .site-header .brand-text{gap:5px}
 .site-header .brand-text strong{font:900 24px/1 var(--display);letter-spacing:1px}
 .site-header .brand-text small{font-size:8px;letter-spacing:1.25px}

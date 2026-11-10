@@ -25,6 +25,7 @@
 - **Page « À propos du QG » :** présentation personnelle, histoire du QG, valeurs et avenir. Version approuvée, à préserver.
 - **Affiches d'accueil :** Le Tribunal, Défis & Missions, Killathon et Classements sont validés. L'affiche **« La Roue »**, assortie à cette collection, a également été **validée, ajoutée dans `dist/og/premium/roue.png` et publiée**. Ne pas la refaire sans demande.
 - **La Roue :** outil générique, pas limité à Fortnite ; éviter un intitulé ou une description qui l'enfermerait dans un seul jeu.
+- **Nouveau logo MJ animé (10/11/2026) :** le monogramme noir et or choisi a été intégré à l'en-tête et au pied de page du QG dans `dist/qg/index.html` sous forme de WebP animé léger `dist/icons/mj-anime.webp` (issu de l'animation approuvée), sans changer les affiches du site. Pour les préférences `prefers-reduced-motion: reduce`, le site utilise le visuel fixe `dist/icons/mj-source.webp` (192 × 192). GitHub Pages régénère à partir de ce visuel les favicons et icônes installables ; vérifier l'exécution Actions pour confirmer la publication. La version originale HD MP4 reste une sauvegarde hors dépôt.
 
 ## 3. Fonctions en place
 
