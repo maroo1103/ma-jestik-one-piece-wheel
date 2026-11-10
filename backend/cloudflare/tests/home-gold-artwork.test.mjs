@@ -51,7 +51,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-activity-clean3/);
- assert.match(html,/home-premium\.css\?v=20261110-activity-clean3/);
+ assert.match(html,/home-premium\.css\?v=20261110-activity-slim4/);
 });
 
 test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
@@ -79,9 +79,9 @@ test("Accueil : trois cartes d'activité panoramiques, statuts fiables et versio
  }
  assert.match(css,/Activité QG : cartes panoramiques/);
  assert.match(css,/hq-activity-ribbon/);
- assert.match(css,/width:100%;min-width:0;min-height:52px/);
+ assert.match(css,/width:100%;min-width:0;min-height:42px/);
  assert.match(css,/width:100%;max-width:none/);
- assert.match(css,/align-items:center;justify-content:center;width:100%;min-width:0;min-height:52px/);
+ assert.match(css,/align-items:center;justify-content:center;width:100%;min-width:0;min-height:42px/);
  assert.match(css,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
  assert.match(css,/@media\(max-width:730px\)/);
  assert.match(strip,/const ACTIVITY_COPY/);
@@ -104,11 +104,30 @@ test("Accueil : enlever les grands titres mais conserver pastilles et états dyn
  assert.match(strip,/function setState\(name,text,state='neutral'\)/);
  assert.match(strip,/const ACTIVITY_COPY/);
  assert.match(strip,/if\(copy&&detail\)detail.textContent=copy\[1\]/);
- assert.match(css,/display:flex;flex:1 1 auto;align-items:center;justify-content:center/);
+ assert.match(css,/display:flex;flex:0 1 auto;align-items:center;justify-content:center/);
  assert.match(css,/align-self:stretch;text-align:center/);
- assert.match(css,/font:600 clamp\(16px,1\.28vw,21px\)/);
+ assert.match(css,/font:600 clamp\(14px,1vw,17px\)/);
  assert.match(css,/display:inline-flex;align-self:center;align-items:center;justify-content:center/);
  assert.match(js,/Voir la chaîne/);
  assert.match(js,/Ouvrir le Tribunal/);
  assert.match(js,/Voir les défis/);
+});
+
+test("Accueil : cartes d'activité fines comme le cadrage validé, avec contenu conservé",()=>{
+ const js=src("dist/qg/qg.js");
+ const css=src("dist/qg/home-premium.css");
+ const statuses=src("dist/qg/activity-strip.js");
+ assert.match(css,/min-height:174px;min-width:0;box-sizing:border-box/);
+ assert.match(css,/padding:clamp\(10px,\.8vw,15px\)/);
+ assert.match(css,/min-height:42px/);
+ assert.match(css,/max-width:49ch;min-height:0/);
+ assert.match(css,/margin:0 auto 8px/);
+ assert.match(css,/min-height:34px/);
+ assert.match(css,/\.hq-activity-showcase \.hq-activity-card\{min-height:188px\}/);
+ for(const name of ["twitch","tribunal","defis"]){
+  assert.ok(js.includes('data-activity-status="'+name+'"'));
+  assert.ok(js.includes('data-activity-detail="'+name+'"'));
+  assert.ok(!js.includes('data-activity-title="'+name+'"'));
+ }
+ assert.match(statuses,/function setState/);
 });
