@@ -1,0 +1,55 @@
+
+/* Ma_JesTik — page publique confidentialité, thème graphite / champagne. */
+.mj-privacy{max-width:1120px;margin:0 auto;color:#eee8e0;padding-bottom:38px}
+.mj-privacy *{box-sizing:border-box}
+.mj-privacy-hero{position:relative;isolation:isolate;overflow:hidden;border:1px solid #57432d;border-radius:15px;padding:clamp(27px,5vw,59px);background:radial-gradient(circle at 91% 10%,#cda46222,transparent 38%),linear-gradient(120deg,#222023,#111215 74%)}
+.mj-privacy-hero:before{content:"✦";position:absolute;right:7%;top:6%;font:90px var(--display),Impact,sans-serif;color:#e4b66d;opacity:.58;z-index:-1}
+.mj-privacy-eyebrow,.mj-privacy-n{display:block;color:#dfb477;font-size:10px;font-weight:850;letter-spacing:1.65px}
+.mj-privacy-eyebrow span{margin:0 7px}
+.mj-privacy-hero h1{font:900 clamp(43px,6.2vw,77px)/.99 var(--display),Impact,sans-serif;letter-spacing:.3px;margin:16px 0 20px;max-width:750px;color:#fffaf2}
+.mj-privacy-hero h1 em{font-style:normal;color:#e8be82}
+.mj-privacy-hero>p{max-width:640px;color:#d2c8bd;font-size:14px;line-height:1.85;margin:0}
+.mj-privacy-hero-meta{display:flex;flex-wrap:wrap;gap:13px 25px;border-top:1px solid #8a6a4638;padding-top:18px;margin-top:33px;font-size:10px;color:#baafa3;letter-spacing:.6px}
+.mj-privacy-hero-meta span:first-child{color:#edc48b;font-weight:800}
+.mj-privacy-intro{display:flex;gap:17px;align-items:flex-start;border:1px solid #755d3e;background:linear-gradient(110deg,#26211c,#171719);border-radius:12px;padding:21px 24px;margin:19px 0 31px}
+.mj-privacy-intro-symbol{flex:0 0 auto;color:#e2b879;font-size:30px;line-height:1}
+.mj-privacy-intro strong{font-size:14px;color:#f6e0bf}
+.mj-privacy-intro p{font-size:12px;color:#c3b9ad;line-height:1.8;margin:7px 0 0}
+.mj-privacy-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(23px,4vw,50px);align-items:start}
+.mj-privacy-nav{position:sticky;top:98px;display:flex;flex-direction:column;gap:4px;border:1px solid #46392c;border-radius:12px;padding:19px 12px;background:linear-gradient(160deg,#1c1b1e,#111114)}
+.mj-privacy-nav>strong{font-size:10px;letter-spacing:1.25px;color:#d7ad74;padding:0 10px 12px}
+.mj-privacy-nav button{text-align:left;color:#c5bcb4;background:transparent;border:0;border-radius:7px;padding:10px 11px;font:700 11px/1.45 var(--font),sans-serif;cursor:pointer;transition:background .18s,color .18s}
+.mj-privacy-nav button:hover,.mj-privacy-nav button:focus-visible{color:#f4d4a5;background:#383027}
+.mj-privacy-sections{min-width:0}
+.mj-privacy-section{scroll-margin-top:105px;padding:7px 0 31px;margin-bottom:27px;border-bottom:1px solid #4e413633}
+.mj-privacy-section:last-child{border-bottom:0}
+.mj-privacy-section h2{font:850 clamp(25px,3vw,35px)/1.12 var(--display),Impact,sans-serif;letter-spacing:.35px;margin:10px 0 19px;color:#fff6ec}
+.mj-privacy-section h3{font:850 15px/1.3 var(--font),sans-serif;color:#edc388;letter-spacing:.1px;margin:0 0 9px}
+.mj-privacy-section p,.mj-privacy-section li{font-size:13px;line-height:1.85;color:#c8c2bc}
+.mj-privacy-section p{margin:0 0 15px}
+.mj-privacy-section strong{color:#f1dfc9}
+.mj-privacy-section a{color:#e7bb80;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#d2a4698c;overflow-wrap:anywhere}
+.mj-privacy-section a:hover{color:#ffe1ae}
+.mj-privacy-detail{background:#242125;border-left:3px solid #ba8f57;padding:12px 16px;border-radius:0 7px 7px 0;color:#cdbcb0!important;margin-top:19px!important}
+.mj-privacy-data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:22px 0}
+.mj-privacy-data-grid>div{background:linear-gradient(145deg,#252326,#18191c);border:1px solid #574332;border-radius:10px;padding:19px;min-width:0}
+.mj-privacy-data-grid p{font-size:12px;margin:0}
+.mj-privacy-points{margin:20px 0;padding:0;list-style:none;display:grid;gap:13px}
+.mj-privacy-points li{position:relative;padding:12px 15px 12px 26px;background:#1f1e21;border:1px solid #3c342b;border-radius:8px}
+.mj-privacy-points li:before{content:"✦";position:absolute;left:10px;top:13px;color:#d9ab71;font-size:9px}
+.mj-privacy-table-wrap{overflow-x:auto;border:1px solid #594636;border-radius:11px;margin:18px 0 18px}
+.mj-privacy-table{width:100%;border-collapse:collapse;min-width:450px;text-align:left}
+.mj-privacy-table th{padding:14px 17px;color:#efd0a1;background:#292320;text-transform:uppercase;font-size:10px;letter-spacing:.9px}
+.mj-privacy-table td{vertical-align:top;padding:14px 17px;font-size:12px;line-height:1.7;color:#cfc6bc;border-top:1px solid #41372f}
+.mj-privacy-table td:first-child{color:#eee2d1;font-weight:750;width:38%}
+.mj-privacy-table tbody tr:nth-child(even){background:#ffffff05}
+.mj-privacy-contact{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin:22px 0;border:1px solid #8b6842;border-radius:11px;padding:21px;background:linear-gradient(110deg,#302920,#171819)}
+.mj-privacy-contact>div{display:grid;gap:6px}
+.mj-privacy-contact strong{font-size:11px;letter-spacing:1px;color:#f4d6aa}
+.mj-privacy-contact span{font-size:12px;color:#bdb3aa}
+.mj-privacy-contact .mj-privacy-contact-btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 15px;border-radius:7px;background:#e1b679;color:#181717;font-size:12px;font-weight:850;text-decoration:none;white-space:nowrap}
+.mj-privacy-contact .mj-privacy-contact-btn:hover{background:#f2d09c;color:#111}
+.mj-privacy-bottom{text-align:center;font-size:10px;letter-spacing:1.3px;color:#a99989;margin:20px 0 0}
+.mj-privacy-bottom span{color:#e4b777;margin-right:8px}
+@media(max-width:900px){.mj-privacy-layout{grid-template-columns:minmax(0,1fr)}.mj-privacy-nav{position:static;display:flex;flex-direction:row;flex-wrap:wrap;gap:5px}.mj-privacy-nav>strong{width:100%;padding:0 9px 6px}.mj-privacy-nav button{flex:0 1 auto;font-size:10px}.mj-privacy-section{scroll-margin-top:86px}}
+@media(max-width:620px){.mj-privacy-hero{padding:29px 21px}.mj-privacy-hero h1{font-size:clamp(39px,11vw,54px)}.mj-privacy-hero:before{font-size:55px;right:3%;top:3%}.mj-privacy-hero>p{font-size:12px}.mj-privacy-intro{padding:16px;gap:10px}.mj-privacy-intro-symbol{font-size:24px}.mj-privacy-data-grid{grid-template-columns:1fr}.mj-privacy-section h2{font-size:27px}.mj-privacy-section p,.mj-privacy-section li{font-size:12px}.mj-privacy-nav{padding:12px}.mj-privacy-nav button{flex:1 1 135px;padding:8px;font-size:10px}.mj-privacy-contact .mj-privacy-contact-btn{white-space:normal;width:100%}.mj-privacy-bottom{line-height:1.75}}
