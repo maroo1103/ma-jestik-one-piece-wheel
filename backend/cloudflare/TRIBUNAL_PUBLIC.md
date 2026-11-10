@@ -81,3 +81,19 @@ Dans Workers & Pages, créer un Worker indépendant :
 - Proposition : `{"question":"...","answers":["Oui","Non"]}`
 - Vote : `{"choice_index":0}` (index de 0 à 3)
 - Validation d'une proposition : même format qu'un sondage, avec éventuelles corrections du texte / des réponses avant publication.
+
+
+## Complément RGPD — suppression des participations sans profil QG (10/11/2026)
+
+**État : implémenté et testé dans le dépôt GitHub, PAS ENCORE déployé dans le Worker Tribunal Cloudflare.**
+Aucune donnée réelle n'a été supprimée pour ces essais.
+
+Nouvelles routes du Worker Tribunal :
+- `GET /v1/tribunal/me/data` : nécessite un jeton Twitch valide ; renvoie uniquement les compteurs de votes, propositions et sondages attribués à ce compte, sans donner accès aux données des autres.
+- `DELETE /v1/tribunal/me/data` : nécessite un jeton Twitch valide ; supprime les votes et propositions liés à cette identité, retire l'attribution publique des sondages proposés et anonymise l'identifiant du créateur de sondages lorsqu'il correspond à cette identité. L'opération est atomique via `D1.batch`. Les sondages publiés et les votes des autres personnes sont préservés.
+
+Cette suppression fonctionne même si la personne n'a jamais créé de profil dans la table `members`. Elle ne touche ni son compte Twitch externe, ni les données du profil QG, ni le Killathon, ni les scores des défis.
+
+**Déploiement ultérieur :** copier le fichier à jour `backend/cloudflare/tribunal-worker.js` dans le Worker Cloudflare **`ma-jestik-qg-tribunal` uniquement**, vérifier `/v1/health`, puis vérifier l'interface habituelle ; ne pas appeler DELETE sur de vraies données pour un simple test. Les tests GitHub utilisent une base fictive. Un parcours utilisateur guidé/une interface de suppression pourra être ajouté après le déploiement du Worker et une revue de sécurité.
+
+**Limites du traitement :** les textes libres pouvant contenir des noms, les copies de secours, les journaux techniques et les demandes plus larges restent à traiter au cas par cas depuis `contact@ma-jestik.fr`. Tant que cette version n'est pas déployée, les demandes des personnes sans profil passent par ce canal.
