@@ -1080,3 +1080,19 @@ body{background:#07090c;color:#f3f1ed}
     font-size:clamp(58px,6.15vw,72px);
   }
 }
+
+/* Citation QG : hauteur compacte, sans modifier la citation ni sa typographie.
+   Diminuer seulement les espaces verticaux qui allongeaient l'accueil. */
+.hq-intro{
+  padding-top:clamp(54px,5vw,80px);
+  padding-bottom:clamp(54px,5vw,80px);
+}
+@media(max-width:850px){
+  .hq-intro{padding-top:54px;padding-bottom:60px}
+}
+@media(max-width:680px){
+  .hq-intro{padding:46px 22px 54px}
+}
+@media(max-width:390px){
+  .hq-intro{padding-top:40px;padding-bottom:48px}
+}

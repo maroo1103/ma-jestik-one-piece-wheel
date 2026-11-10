@@ -51,5 +51,16 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-setup-banner1/);
- assert.match(html,/home-premium\.css\?v=20261110-setup-balance1/);
+ assert.match(html,/home-premium\.css\?v=20261110-quote-compact1/);
+});
+
+test("Accueil : citation conservee et espaces verticaux reduits sur desktop et mobile",()=>{
+ const js=src("dist/qg/qg.js");
+ assert.match(js,/LES VICTOIRES PASSENT\. LES VALEURS RESTENT\./);
+ assert.match(js,/PLUS QU’UN SIMPLE SITE GAMING/);
+ const css=src("dist/qg/home-premium.css");
+ assert.match(css,/Citation QG : hauteur compacte/);
+ assert.match(css,/padding-top:clamp\(54px,5vw,80px\)/);
+ assert.match(css,/padding-bottom:clamp\(54px,5vw,80px\)/);
+ assert.match(css,/\.hq-intro\{padding:46px 22px 54px\}/);
 });
