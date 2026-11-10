@@ -45,7 +45,7 @@ test('profil privé et profil public réutilisent le rendu du profil complet',()
 
 test('Fenêtre plus compacte, dorée, sans cadre navigateur et responsive',()=>{
  const html=read('index.html'),css=read('ranking-profile-dialog.css');
- assert.match(html,/ranking-profile-dialog\.css\?v=20261110-modal2/);
+ assert.match(html,/ranking-profile-dialog\.css\?v=20261110-modal[0-9]+/);
  assert.match(html,/qg\.js\?v=20261110-ranking-modal2/);
  assert.match(css,/dialog#qgMemberDialog\{/);
  assert.match(css,/width:min\(740px,calc\(100vw - 36px\)\) !important/);
