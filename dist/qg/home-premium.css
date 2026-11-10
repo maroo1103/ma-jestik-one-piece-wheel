@@ -99,12 +99,16 @@ body{background:#07111c}
 .hq-portal-art{display:block;position:relative;width:100%;aspect-ratio:1200/630;overflow:hidden;background:#14263f}
 .hq-portal-art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#0c1932a0 0%,transparent 40%)}
 .hq-portal-art img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;filter:saturate(1.1)}
+/* L'affiche La Roue comporte plus de marge noire en bas : compenser uniquement son rendu dans la carte. */
+.hq-portal-roue .hq-portal-art img{height:108%;object-fit:fill;object-position:center top}
 .hq-portal:hover .hq-portal-art img{transform:scale(1.04)}
 .hq-portal-content{display:flex;flex-direction:column;flex:1;padding:clamp(19px,1.9vw,30px);gap:10px}
 .hq-portal-overline{font-size:9px;letter-spacing:2.5px;color:#d9b47b;font-weight:900}
 .hq-portal-title{font:900 clamp(26px,2.3vw,42px)/1 var(--display);color:#f8f5ef}
+/* Le nom est deja inscrit sur l'affiche : conserver celui du DOM pour les lecteurs d'ecran. */
+.hq-portal-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .hq-portal-summary{font-size:13px;color:#b6c7d8;line-height:1.6;flex:1}
-.hq-portal-cta{align-self:flex-start;display:flex;align-items:center;gap:22px;margin-top:14px;color:#f0c78a;font-weight:900;letter-spacing:.65px;font-size:11px}
+.hq-portal-cta{align-self:flex-start;display:flex;align-items:center;gap:22px;margin-top:12px;color:#f0c78a;font-weight:900;letter-spacing:.35px;font-size:13px;line-height:1.45}
 .hq-portal-cta>span{font-size:16px;transition:transform .2s}
 .hq-portal:hover .hq-portal-cta>span{transform:translate(3px,-3px)}
 .hq-community-showcase{position:relative;display:grid;grid-template-columns:minmax(280px,0.9fr) minmax(360px,1.1fr);align-items:center;min-height:510px;gap:clamp(25px,7vw,130px);padding:clamp(64px,7vw,115px) clamp(27px,8vw,155px);background:radial-gradient(circle at 22% 49%,#4b2e77aa,transparent 38%),linear-gradient(120deg,#111932,#09172a 70%,#0b1e32);border-top:1px solid #554273;border-bottom:1px solid #3c315b}
