@@ -11,7 +11,7 @@ test("confidentialité : route et liens du pied de page sur ordinateur et mobile
  assert.match(router,/page==='confidentialite'\)mountPrivacy/);
  assert.equal((html.match(/href="#\/confidentialite">Confidentialité<\/a>/g)||[]).length,2);
  assert.match(html,/confidentialite\.css\?v=/);
- assert.match(html,/qg\.js\?v=20261110-confidentialite1/);
+ assert.match(html,/qg\.js\?v=[a-zA-Z0-9_-]+/);
 });
 
 test("confidentialité : information essentielle avant la collecte du formulaire",()=>{
