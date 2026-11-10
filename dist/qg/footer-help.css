@@ -272,3 +272,64 @@
  .qg-layout .mj-about-story-steps li{gap:14px}
  .qg-layout .mj-about-email{white-space:normal;overflow-wrap:anywhere}
 }
+
+
+/* Footer réseaux 2026-11-10 : logos authentiques monochromes, sans encadrement. 
+   Les 4 réseaux remplacent la colonne texte et les icônes colorées de l'en-tête. */
+.qg-layout .mj-footer-grid{
+  grid-template-columns:minmax(235px,1.65fr) repeat(3,minmax(0,1fr));
+  gap:clamp(26px,3.4vw,58px);
+}
+.qg-layout .mj-footer-brand-networks{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:clamp(14px,1.25vw,20px);
+  margin-top:19px;
+}
+.qg-layout .mj-footer-brand-networks a{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  flex:0 0 34px;
+  width:34px;
+  min-height:38px;
+  padding:3px;
+  border:0;
+  border-radius:0;
+  background:none;
+  box-shadow:none;
+  color:#959ca7;
+  text-decoration:none;
+  transition:color .18s ease,transform .18s ease;
+}
+.qg-layout .mj-footer-brand-networks a:hover{
+  color:#e8be82;
+  transform:translateY(-2px);
+}
+.qg-layout .mj-footer-brand-networks a:focus-visible{
+  color:#e8be82;
+  outline:2px solid #e8be82;
+  outline-offset:3px;
+  border-radius:4px;
+}
+.qg-layout .mj-footer-brand-networks svg{
+  display:block;
+  width:27px;
+  height:27px;
+  fill:currentColor;
+  flex-shrink:0;
+}
+@media(min-width:761px) and (max-width:1100px){
+  .qg-layout .mj-footer-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 26px}
+  .qg-layout .mj-footer-brand{grid-column:1/-1}
+}
+@media(max-width:760px){
+  .qg-layout .mj-footer-brand-networks{gap:17px;margin-top:20px}
+  .qg-layout .mj-footer-brand-networks a{flex-basis:38px;width:38px;min-height:44px}
+  .qg-layout .mj-footer-brand-networks svg{width:28px;height:28px}
+}
+@media(prefers-reduced-motion:reduce){
+  .qg-layout .mj-footer-brand-networks a{transition:none}
+  .qg-layout .mj-footer-brand-networks a:hover{transform:none}
+}
