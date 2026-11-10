@@ -1,0 +1,68 @@
+/* Ma_JesTik — fenêtre profil compact du classement.
+   Styles explicites sur l'identifiant du <dialog> natif pour neutraliser
+   la bordure, les dimensions et l'en-tête par défaut du navigateur. */
+dialog#qgMemberDialog{
+ box-sizing:border-box !important;position:fixed !important;inset:0;
+ display:none;width:min(740px,calc(100vw - 36px)) !important;
+ min-width:0 !important;max-width:740px !important;height:auto !important;
+ max-height:min(82dvh,720px) !important;margin:auto !important;
+ padding:0 !important;overflow-x:hidden !important;overflow-y:auto !important;
+ border:1px solid #b18b57 !important;border-radius:16px !important;
+ color:#f4e6d4 !important;background:linear-gradient(145deg,#1b1b1d,#101113) !important;
+ box-shadow:0 30px 90px #000d,0 0 0 1px #b18b571f !important;
+}
+dialog#qgMemberDialog[open]{display:block}
+dialog#qgMemberDialog::backdrop{background:#030405d9;backdrop-filter:blur(5px)}
+#qgMemberDialog .mj-member-dialog-top{
+ position:sticky;top:0;z-index:5;display:flex;align-items:center;
+ justify-content:space-between;gap:12px;min-height:57px;padding:13px 19px;
+ border-bottom:1px solid #59432c;background:#19191bf9;
+}
+#qgMemberDialog #qgMemberDialogTitle{
+ display:block;font-size:11px;font-weight:900;letter-spacing:1.1px;
+ line-height:1.4;color:#dfb879;text-transform:uppercase;
+}
+#qgMemberDialog #qgMemberDialogClose{
+ appearance:none;display:grid;place-items:center;flex:0 0 34px;
+ width:34px;height:34px;padding:0;border:1px solid #8f7148;
+ border-radius:7px;background:#2b241d;color:#f2d09e;font-size:19px;cursor:pointer;
+}
+#qgMemberDialog #qgMemberDialogClose:hover,
+#qgMemberDialog #qgMemberDialogClose:focus-visible{
+ background:#473222;border-color:#f1cb86;outline-offset:2px;
+}
+#qgMemberDialog .mj-member-dialog-content.mp-page{
+ box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;
+ margin:0;padding:18px 20px 22px;
+}
+#qgMemberDialog .mp-banner{
+ box-sizing:border-box;min-height:130px;align-items:center;margin:0 0 12px;
+ padding:18px 20px;border-radius:12px;
+}
+#qgMemberDialog .mp-banner-identity{gap:15px}
+#qgMemberDialog .mp-avatar{width:64px;height:64px;flex-basis:64px;font-size:23px}
+#qgMemberDialog .mp-banner h2{font-size:clamp(28px,4vw,38px);margin:5px 0 9px}
+#qgMemberDialog .mp-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#qgMemberDialog .mp-panel{padding:18px;min-width:0;border-radius:12px}
+#qgMemberDialog .mp-panel h3{font-size:22px;margin-bottom:12px}
+#qgMemberDialog .mp-panel .mp-bio{font-size:12px;min-height:45px}
+#qgMemberDialog .mp-game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#qgMemberDialog .mp-game-card{max-width:170px}
+#qgMemberDialog .mp-empty{padding:26px 18px;text-align:center}
+#qgMemberDialog .mp-empty h2{color:#eac58e;font-size:clamp(24px,3vw,31px)}
+#qgMemberDialog .mp-empty p{margin-inline:auto}
+@media(max-width:630px){
+ dialog#qgMemberDialog{
+  width:calc(100vw - 18px) !important;max-width:calc(100vw - 18px) !important;
+  max-height:88dvh !important;border-radius:12px !important;
+ }
+ #qgMemberDialog .mj-member-dialog-top{padding:10px 13px}
+ #qgMemberDialog .mj-member-dialog-content.mp-page{padding:14px}
+ #qgMemberDialog .mp-banner{min-height:110px;padding:15px}
+ #qgMemberDialog .mp-avatar{width:55px;height:55px;flex-basis:55px}
+ #qgMemberDialog .mp-banner h2{font-size:clamp(24px,6vw,33px)}
+ #qgMemberDialog .mp-grid{grid-template-columns:1fr;gap:10px}
+ #qgMemberDialog .mp-panel{padding:15px}
+ #qgMemberDialog .mp-game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){dialog#qgMemberDialog::backdrop{backdrop-filter:none}}
