@@ -91,12 +91,12 @@
   <link rel="stylesheet" href="mobile-polish.css?v=20261108-killathon-actions1">
   <link rel="stylesheet" href="creator.css?v=20261108-creator1">
   <link rel="stylesheet" href="profil.css?v=20261110-ranking-modal2">
-   <link rel="stylesheet" href="footer-help.css?v=20261110-footer-networks1">
+   <link rel="stylesheet" href="footer-help.css?v=20261110-visual-fideles1">
   <link rel="stylesheet" href="contact.css?v=20261109-cleanup3">
   <link rel="stylesheet" href="confidentialite.css?v=20261110-privacy1">
   <link rel="stylesheet" href="setup-original/fiche-modale.css?v=20261109-modal2">
   <link rel="stylesheet" href="ranking-profile-dialog.css?v=20261110-modal3">
-  <script type="module" src="qg.js?v=20261110-no-url-cards1"></script>
+  <script type="module" src="qg.js?v=20261110-footer-unified1"></script>
 </head>
 <body>
   <a class="skip" href="#main">Aller au contenu</a>
@@ -153,6 +153,15 @@
         <div class="page-enter" id="page" aria-live="polite"></div>
       </main>
       <footer class="footer mj-footer" aria-label="Pied de page Ma_JesTik">
+        <svg class="mj-footer-arc mj-footer-arc-top" viewBox="0 0 380 180" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M-24 176 C64 58 175 12 372 -8" fill="none" stroke="#e7b367" stroke-width="1.8"/></svg>
+        <svg class="mj-footer-arc mj-footer-arc-bottom" viewBox="0 0 380 180" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M-24 176 C64 58 175 12 372 -8" fill="none" stroke="#e7b367" stroke-width="1.8"/></svg>
+        <div class="mj-footer-signoff" aria-label="À très vite dans le QG">
+          <span class="mj-footer-signoff-line" aria-hidden="true"></span>
+          <span class="mj-footer-signoff-star" aria-hidden="true">✦</span>
+          <strong>À TRÈS VITE DANS LE QG.</strong>
+          <span class="mj-footer-signoff-star" aria-hidden="true">✦</span>
+          <span class="mj-footer-signoff-line" aria-hidden="true"></span>
+        </div>
         <div class="mj-footer-grid">
           <div class="mj-footer-brand">
             <a class="mj-footer-brand-link" href="#/accueil" aria-label="Ma_JesTik — retour à l'accueil">
@@ -168,7 +177,7 @@
             </nav>
           </div>
           <nav class="mj-footer-column" aria-label="Navigation du QG">
-            <h2>LE QG</h2>
+            <div class="mj-footer-column-heading"><span class="mj-footer-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><h2>LE QG</h2></div>
             <a href="#/accueil">Accueil</a>
             <a href="#/roue">La roue</a>
             <a href="#/profil">Mon profil</a>
@@ -177,7 +186,7 @@
             
           </nav>
           <nav class="mj-footer-column" aria-label="Liens communautaires">
-            <h2>COMMUNAUTÉ</h2>
+            <div class="mj-footer-column-heading"><span class="mj-footer-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M2 20v-2a6 6 0 0 1 12 0v2M16 5.3a3 3 0 0 1 0 5.5M17 14a5 5 0 0 1 5 5v1"/></svg></span><h2>COMMUNAUTÉ</h2></div>
             <a href="#/defis">Défis &amp; missions</a>
             <a href="#/killathon">Killathon</a>
             <a href="#/tribunal">Le Tribunal</a>
@@ -185,7 +194,7 @@
             
           </nav>
           <nav class="mj-footer-column" aria-label="Aide et informations">
-            <h2>AIDE &amp; INFOS</h2>
+            <div class="mj-footer-column-heading"><span class="mj-footer-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span><h2>AIDE &amp; INFOS</h2></div>
             <a href="#/aide">Centre d'aide &amp; FAQ</a>
             <a href="#/apropos">À propos du QG</a>
             <a href="#/contact">Nous contacter</a>

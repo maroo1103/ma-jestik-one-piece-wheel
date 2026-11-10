@@ -181,3 +181,27 @@ test("Accueil : les cinq fichiers WebP sans URL existent et sont réellement uti
  assert.equal((js.match(/featured:true/g)||[]).length,2);
  assert.match(src("dist/qg/index.html"),/og:image/);
 });
+
+test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégré",()=>{
+ const html=src("dist/qg/index.html");
+ const js=src("dist/qg/qg.js");
+ const css=src("dist/qg/footer-help.css");
+ assert.match(html,/mj-footer-arc-top/);
+ assert.match(html,/mj-footer-arc-bottom/);
+ assert.match(html,/mj-footer-signoff/);
+ assert.match(html,/À TRÈS VITE DANS LE QG\./);
+ assert.doesNotMatch(js,/class="hq-endnote"/);
+ assert.match(html,/mj-footer-column-heading/);
+ for(const part of ["LE QG","COMMUNAUTÉ","AIDE &amp; INFOS"]){
+  assert.ok(html.includes(part));
+ }
+ for(const path of ["#/accueil","#/roue","#/profil","#/setup","#/createur","#/defis","#/killathon","#/tribunal","#/classement","#/aide","#/apropos","#/contact","#/confidentialite"]){
+  assert.ok(html.includes('href="'+path+'"'),"Lien de footer perdu : "+path);
+ }
+ assert.match(html,/Mentions légales · à compléter/);
+ assert.match(html,/mj-footer-disclosure/);
+ assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
+ assert.match(css,/\.mj-footer-column-heading/);
+ assert.match(html,/footer-help\.css\?v=20261110-visual-fideles1/);
+ assert.match(html,/qg\.js\?v=20261110-footer-unified1/);
+});

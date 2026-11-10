@@ -100,7 +100,7 @@ function home(){
     '<a class="hq-setup-cta" href="#/setup">EXPLORER MON SETUP </a>'+
    '</div>'+
   '</section>'+
-  '<section class="hq-endnote"><span class="hq-endnote-line"></span><span>MA_JESTIK</span><strong>À TRÈS VITE DANS LE QG.</strong><span class="hq-endnote-line"></span></section>'+
+
  '</div>';
 }
 function wheel(){
