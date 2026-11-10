@@ -36,6 +36,8 @@ test("Setup : fond panoramique WebP noir et or, sans rectangle et avec version m
  assert.match(css,/\.hq-setup-showcase\.hq-setup-banner/);
  assert.match(css,/background-size:cover,auto 100%/);
  assert.match(css,/background-position:center,right center/);
+ assert.match(css,/font-size:clamp\(67px,6\.15vw,116px\)/);
+ assert.match(css,/background-position:center,center,right var\(--setup-image-shift\) center/);
  assert.match(css,/@media\(max-width:850px\)/);
  assert.match(css, /background-size:cover,auto 405px/);
  assert.match(css, /background-size:cover,auto 320px/);
@@ -49,5 +51,5 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
  }
  const html=src("dist/qg/index.html");
  assert.match(html,/qg\.js\?v=20261110-setup-banner1/);
- assert.match(html,/home-premium\.css\?v=20261110-setup-banner-fit2/);
+ assert.match(html,/home-premium\.css\?v=20261110-setup-balance1/);
 });
