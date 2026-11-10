@@ -250,6 +250,65 @@ async function purgeInactiveMembers(env){
   console.log("Purge QG : "+deleted+" compte(s) supprimé(s), lot plafonné à 25.");
 }
 
+// Conservation Tribunal approuvée le 10/11/2026.
+// Ne modifie ni les scores des défis, ni les profils membres.
+// ATTENTION : l'option "sans limite" n'est plus autorisée pour les NOUVEAUX
+// sondages, mais des anciens sondages sans échéance peuvent subsister.
+const TRIBUNAL_RETENTION_QUERIES=[
+  {
+    label:"propositions_en_attente",
+    count:"SELECT COUNT(*) AS n FROM tribunal_proposals WHERE status='pending' AND created_at<=unixepoch('now','-3 months')",
+    remove:"DELETE FROM tribunal_proposals WHERE status='pending' AND created_at<=unixepoch('now','-3 months')"
+  },
+  {
+    label:"propositions_refusees",
+    count:"SELECT COUNT(*) AS n FROM tribunal_proposals WHERE status='rejected' AND resolved_at IS NOT NULL AND resolved_at<=unixepoch('now','-30 days')",
+    remove:"DELETE FROM tribunal_proposals WHERE status='rejected' AND resolved_at IS NOT NULL AND resolved_at<=unixepoch('now','-30 days')"
+  },
+  {
+    label:"propositions_acceptees",
+    count:"SELECT COUNT(*) AS n FROM tribunal_proposals WHERE status='accepted' AND resolved_at IS NOT NULL AND resolved_at<=unixepoch('now','-6 months')",
+    remove:"DELETE FROM tribunal_proposals WHERE status='accepted' AND resolved_at IS NOT NULL AND resolved_at<=unixepoch('now','-6 months')"
+  },
+  {
+    label:"sondages_termines",
+    count:"SELECT COUNT(*) AS n FROM tribunal_polls WHERE (closed_at IS NOT NULL AND closed_at<=unixepoch('now','-12 months')) OR (closed_at IS NULL AND ends_at IS NOT NULL AND ends_at<=unixepoch('now','-12 months'))",
+    remove:"DELETE FROM tribunal_polls WHERE (closed_at IS NOT NULL AND closed_at<=unixepoch('now','-12 months')) OR (closed_at IS NULL AND ends_at IS NOT NULL AND ends_at<=unixepoch('now','-12 months'))"
+  }
+];
+async function purgeTribunalRetention(env){
+  // Double garde-fou indépendant des paramètres de purge des membres.
+  if(!env.DB || env.TRIBUNAL_RETENTION_ENABLED!=="true"){
+    console.log("Conservation Tribunal : non activée.");
+    return;
+  }
+  if(env.TRIBUNAL_RETENTION_DRY_RUN!=="false"){
+    const counts=[];
+    for(const rule of TRIBUNAL_RETENTION_QUERIES){
+      const row=await env.DB.prepare(rule.count).first();
+      counts.push(rule.label+"="+Number(row?.n||0));
+    }
+    console.log("Conservation Tribunal en simulation : "+counts.join(", ")+". Aucune suppression.");
+    return;
+  }
+  // Le nom d'auteur est public dans le sondage même si la proposition liée
+  // a été effacée. Le retirer après 6 mois, avant de supprimer la proposition.
+  const anonymize=env.DB.prepare(
+    "UPDATE tribunal_polls SET proposed_by_name=NULL WHERE proposed_by_name IS NOT NULL AND id IN ("+
+    "SELECT published_poll_id FROM tribunal_proposals WHERE status='accepted' "+
+    "AND resolved_at IS NOT NULL AND resolved_at<=unixepoch('now','-6 months') "+
+    "AND published_poll_id IS NOT NULL)"
+  );
+  // D1.batch effectue une transaction atomique. Les votes disparaissent
+  // en cascade lorsque les sondages clôturés dépassent 12 mois.
+  const results=await env.DB.batch([
+    anonymize,
+    ...TRIBUNAL_RETENTION_QUERIES.map(rule=>env.DB.prepare(rule.remove))
+  ]);
+  console.log("Conservation Tribunal : nettoyage appliqué, nombres de lignes par opération : "+
+    results.map(r=>Number(r?.meta?.changes||0)).join(",")+".");
+}
+
 // Suivi QG : date serveur, sans création de compte ni effacement automatique.
 async function touchMemberActivity(db,twitchId){
   await db.prepare("INSERT INTO member_activity(twitch_id,last_active_at) SELECT twitch_id,unixepoch() FROM members WHERE twitch_id=? ON CONFLICT(twitch_id) DO UPDATE SET last_active_at=excluded.last_active_at WHERE member_activity.last_active_at<=excluded.last_active_at-1800").bind(twitchId).run();
@@ -324,5 +383,6 @@ export default {
   },
   async scheduled(_controller,env){
     await purgeInactiveMembers(env);
+    await purgeTribunalRetention(env);
   }
 };
