@@ -140,12 +140,14 @@ function rankCard(entry,place){
  const roles=['En tête du classement','Deuxième place','Troisième place'];
  const icons=['👑','🥈','🥉'];
  const id=String(entry.twitch_id||''),clickable=/^[0-9]{1,30}$/.test(id);
- const card=document.createElement(clickable?'button':'article');card.className='qg-rank-card qg-rank-card-'+place+(clickable?' qg-rank-open':'');
- if(clickable){card.type='button';card.dataset.memberId=id;card.setAttribute('aria-label','Consulter le profil de '+entry.display_name+' dans une fenêtre');}
- else card.setAttribute('aria-label','Place '+place+' : '+entry.display_name+', '+rankScore(entry.score)+' points');
+ const card=document.createElement('article');card.className='qg-rank-card qg-rank-card-'+place;
+ card.setAttribute('aria-label','Place '+place+' : '+entry.display_name+', '+rankScore(entry.score)+' points');
  const icon=document.createElement('span');icon.className='qg-rank-medal';icon.setAttribute('aria-hidden','true');icon.textContent=icons[place-1];
  const number=document.createElement('span');number.className='qg-rank-number';number.textContent='#'+place;
- const name=document.createElement('strong');name.className='qg-rank-name';name.textContent=entry.display_name.slice(0,64);
+ const name=document.createElement(clickable?'button':'strong');
+ name.className='qg-rank-name'+(clickable?' qg-rank-name-link qg-rank-open':'');
+ name.textContent=entry.display_name.slice(0,64);
+ if(clickable){name.type='button';name.dataset.memberId=id;name.setAttribute('aria-label','Voir le profil de '+entry.display_name);}
  const score=document.createElement('span');score.className='qg-rank-score';const points=rankScore(entry.score);
  score.textContent=String(points)+' '+(points===1?'point':'points');
  const role=document.createElement('span');role.className='qg-rank-role';role.textContent=roles[place-1];
@@ -170,9 +172,11 @@ function renderRankings(entries,podium,tbody){
   const row=document.createElement('tr');row.className='qg-rank-row';
   const rank=document.createElement('td');const badge=document.createElement('span');badge.className='qg-rank-position';badge.textContent=String(i+4);rank.append(badge);
   const who=document.createElement('td'),id=String(entry.twitch_id||''),clickable=/^[0-9]{1,30}$/.test(id);
-  const person=document.createElement(clickable?'button':'span');person.className='ranking-person'+(clickable?' qg-rank-open':'');
-  if(clickable){person.type='button';person.dataset.memberId=id;person.setAttribute('aria-label','Consulter le profil de '+entry.display_name+' dans une fenêtre');}
-  const name=document.createElement('span');name.textContent=entry.display_name.slice(0,64);
+  const person=document.createElement('span');person.className='ranking-person';
+  const name=document.createElement(clickable?'button':'span');
+  name.className=clickable?'qg-rank-name-link qg-rank-open':'';
+  name.textContent=entry.display_name.slice(0,64);
+  if(clickable){name.type='button';name.dataset.memberId=id;name.setAttribute('aria-label','Voir le profil de '+entry.display_name);}
   person.append(rankAvatar(entry),name);who.append(person);
   const score=document.createElement('td');score.className='qg-rank-points';score.textContent=String(rankScore(entry.score));
   row.append(rank,who,score);tbody.append(row);
@@ -248,7 +252,7 @@ if(memberPreviewDialog){
  root.addEventListener('click',e=>{
   const target=e.target.closest('.qg-rank-open[data-member-id]');
   if(!target||!root.contains(target))return;
-  void openMemberPreview(target.dataset.memberId,target.querySelector('.qg-rank-name')?.textContent||target.querySelector('.ranking-person>span:last-child')?.textContent,target);
+  void openMemberPreview(target.dataset.memberId,target.textContent?.trim()||'Membre Twitch',target);
  });
 }
 function setup(){
