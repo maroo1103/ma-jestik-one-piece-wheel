@@ -97,17 +97,18 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{},getGame=()=> 
  }
  function add(parent,tag,cls,txt){const n=el(tag,cls,txt);parent.append(n);return n;}
  function startCandidate(){
-  if(getGame()!=='fortnite')return null; // Schéma D1 des votes : Fortnite uniquement, ne jamais étiqueter Warzone Fortnite.
+  const game=getGame(),supported=game==='fortnite'||['warzone-hajin','warzone-zodiac','warzone-rebirth'].includes(game);
+  if(!supported)return null;
   const d=getActive();
   if(!d||typeof d!=='object')return null;
   const id=Number(d.id);
-  if(d.source!=='viewer'&&(!Number.isInteger(id)||id<1||id>118))return null;
+  if(d.source!=='viewer'&&(!Number.isInteger(id)||id<1||id>(game==='fortnite'?118:100)))return null;
   const title=String(d.title||'').trim();
   if(title.length<3||title.length>100)return null;
   const team=['solo','duo','trio','quatuor'].includes(d.team)?d.team:'solo';
   if(round && ['open','locked'].includes(round.status))return null;
   if(round && Number(d.started||0)<=Number(round.created_at||0)*1000)return null;
-  return {game:'fortnite',challenge_id:d.source==='viewer'?0:id,title,team};
+  return {game,challenge_id:d.source==='viewer'?0:id,title,team};
  }
  function rankingVisibility(node){
   if(!session()?.token||info?.registered!==true||!memberProfile)return;
@@ -170,15 +171,6 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{},getGame=()=> 
  function render(){
   const host=slot();if(!host)return;
   host.replaceChildren();
-  if(getGame()!=='fortnite'){
-    const section=el('section','qg-vote-panel');
-    section.setAttribute('aria-label','Pronostic des viewers');
-    add(section,'span','qg-vote-kicker','🎯 PRONOSTIC DES VIEWERS');
-    add(section,'h3','qg-vote-title','Le verdict de la mission');
-    add(section,'p','qg-vote-hint','Les pronostics officiels sont disponibles pour Fortnite. Les défis Warzone restent jouables et enregistrés localement, sans modifier les points des viewers.');
-    host.append(section);
-    return;
-  }
   const section=el('section','qg-vote-panel');
   section.setAttribute('aria-label','Pronostic des viewers');
   const top=el('div','qg-vote-top');
@@ -211,7 +203,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{},getGame=()=> 
   host.querySelectorAll('[data-vote-action]').forEach(b=>b.addEventListener('click',()=>{void act(b.dataset.voteAction);}));
  }
  async function publishCurrent(){
-  if(getGame()!=='fortnite'||!ownerUI()||busy)return false;
+  if(!ownerUI()||busy)return false;
   const candidate=startCandidate();
   if(!candidate)return false;
   busy=true;error='';render();
