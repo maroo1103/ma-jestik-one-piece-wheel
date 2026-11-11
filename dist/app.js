@@ -327,7 +327,7 @@ $('restoreImage').addEventListener('click',async()=>{
   const poi=editorPoi;setEditorBusy(true);$('imageError').textContent="Restauration de l'illustration…";
   try {
     await deleteImage(imageKey(currentWheelId,poi.id));imageBlobs.delete(imageKey(currentWheelId,poi.id));updatePoiImage(poi,null);
-    if(currentWheelId==='warzone-hajin')updateHajinNotice();
+    if(currentWheelId==='warzone-hajin'||currentWheelId==='warzone-zodiac')updateWarzoneNotice();
     $('imageNotice').textContent=`Illustration d'origine rétablie pour ${poi.name}.`;
     setEditorBusy(false);$('imageDialog').close();
   } catch(error) {$('imageError').textContent=storageError(error);setEditorBusy(false);}
