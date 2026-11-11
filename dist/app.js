@@ -1,7 +1,9 @@
 import { TAU, normalise, indexAtPointer, targetAngle, randomIndex } from './engine.mjs';
 import { readImages, saveImage, deleteImage, prepareImage } from './image-storage.mjs';
 import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport } from './wheel-library.mjs';
-import { HAJIN_GUIDE_URL } from './warzone-hajin.mjs';
+const WARZONE_PREFIX='assets/warzone/';
+let warzoneAssetsReady=false;
+window.warzoneAssetsReady=false;
 let POIS = [
   ['01', 'Littoral de la liberté', ['Littoral de', 'la liberté']],
   ['02', 'Le coffre', ['Le coffre']],
@@ -209,6 +211,7 @@ function showWheelDialog(dialog){
           :Math.max(0,Math.min(parent.innerHeight,rect.top+parent.innerHeight/2));
         dialog.style.setProperty('--wheel-modal-center',Math.round(centerOnParent-rect.top)+'px');
         dialog.style.setProperty('--wheel-modal-maxheight',Math.max(180,parent.innerHeight-32)+'px');
+        dialog.style.setProperty('--wheel-modal-map-height',Math.max(180,parent.innerHeight-200)+'px');
       };
       dialog.classList.add('wheel-iframe-dialog');
       place();
@@ -220,6 +223,7 @@ function showWheelDialog(dialog){
         dialog.classList.remove('wheel-iframe-dialog');
         dialog.style.removeProperty('--wheel-modal-center');
         dialog.style.removeProperty('--wheel-modal-maxheight');
+        dialog.style.removeProperty('--wheel-modal-map-height');
       },{once:true});
     }
   }catch{
@@ -227,6 +231,7 @@ function showWheelDialog(dialog){
   }
   dialog.showModal();
 }
+window.showWheelDialog=showWheelDialog;
 $('sourcesButton').addEventListener('click',()=>showWheelDialog($('sourcesDialog')));$('closeDialog').addEventListener('click',()=>$('sourcesDialog').close());$('sourcesDialog').addEventListener('click',e=>{if(e.target===$('sourcesDialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
 renderCards();drawWheel();renderHistory();
 setImage(POIS.find(p=>p.id==='06'));
@@ -238,7 +243,7 @@ async function initialiseImages() {
     imageBlobs=new Map(images.filter(x=>x.blob instanceof Blob&&x.blob.type.startsWith('image/')).map(x=>[String(x.id),x.blob]));
     imageStoreReady=true;
     applyWheelImages();
-    if(currentWheelId==='warzone-hajin')updateHajinNotice();
+    if(currentWheelId.startsWith('warzone-'))updateWarzoneNotice();
     document.querySelectorAll('.edit-image').forEach(e=>e.disabled=spinning);
   } catch {
     $('imageNotice').textContent="La personnalisation est indisponible : ce navigateur bloque l'enregistrement des images. Autorise les données du site puis recharge la page.";
@@ -247,7 +252,8 @@ async function initialiseImages() {
 function updatePoiImage(poi,blob) {
   const previous=customImages.get(poi.id);
   if(blob){const url=URL.createObjectURL(blob);customImages.set(poi.id,url);poi.image=url;}
-  else {customImages.delete(poi.id);poi.image=poi.originalImage;}
+  else {customImages.delete(poi.id);poi.image=!warzoneAssetsReady&&poi.originalImage.startsWith(WARZONE_PREFIX)
+    ?FALLBACK_IMAGE:poi.originalImage;}
   for(const image of document.querySelectorAll('img[data-poi-id], image[data-poi-id]')) {
     if(image.dataset.poiId===poi.id) image.setAttribute(image.tagName.toLowerCase()==='image'?'href':'src',poi.image);
   }
@@ -273,7 +279,7 @@ function openImageEditor(poi) {
   $('imagePoiName').textContent=poi.name;
   $('imagePreview').src=poi.image;$('imagePreview').alt=`Aperçu de l'image de ${poi.name}`;
   $('imagePreviewBadge').textContent=customImages.has(poi.id)?'IMAGE PERSONNALISÉE':
-    currentWheelId==='warzone-hajin'&&poi.originalImage===FALLBACK_IMAGE?'PHOTO NON AJOUTÉE':'ILLUSTRATION D’ORIGINE';
+    !warzoneAssetsReady&&poi.originalImage.startsWith(WARZONE_PREFIX)?'PACK D’IMAGES À PUBLIER':'ILLUSTRATION D’ORIGINE';
   $('imageError').textContent='';$('imageFile').value='';setEditorBusy(false);
   showWheelDialog($('imageDialog'));
 }
@@ -311,7 +317,7 @@ $('applyImage').addEventListener('click',async()=>{
   const poi=editorPoi,blob=pendingImage;setEditorBusy(true);$('imageError').textContent='Enregistrement…';
   try {
     await saveImage(imageKey(currentWheelId,poi.id),blob);imageBlobs.set(imageKey(currentWheelId,poi.id),blob);updatePoiImage(poi,blob);
-    if(currentWheelId==='warzone-hajin')updateHajinNotice();
+    if(currentWheelId.startsWith('warzone-'))updateWarzoneNotice();
     $('imageNotice').textContent=`Image de ${poi.name} enregistrée dans ce navigateur.`;
     setEditorBusy(false);$('imageDialog').close();
   } catch(error) {$('imageError').textContent=storageError(error);setEditorBusy(false);}
@@ -332,13 +338,11 @@ function statusMessage(text) {
   const node=$('wheelLibraryStatus');
   if(node)node.textContent=String(text||'');
 }
-function updateHajinNotice(){
-  if(currentWheelId!=='warzone-hajin')return;
-  const total=POIS.length;
-  const missing=POIS.filter(p=>p.originalImage===FALLBACK_IMAGE&&!imageBlobs.has(imageKey(currentWheelId,p.id))).length;
-  statusMessage(missing
-    ?`Hajin : ${total} lieux officiels prêts. ${missing} photos restent à intégrer. Les logos MJ sont provisoires, pas des captures du jeu. Carte officielle accessible en haut à gauche.`
-    :`Hajin : ${total} lieux et leurs images sont disponibles sur cet appareil.`);
+function updateWarzoneNotice(){
+  if(currentWheelId!=='warzone-hajin'&&currentWheelId!=='warzone-zodiac')return;
+  statusMessage(!warzoneAssetsReady
+    ?'Les 23 images officielles et les quatre cartes sont préparées, mais le pack Warzone doit encore être publié sur GitHub pour les afficher à tous.'
+    :'');
 }
 function applyWheelImages(){
   for(const poi of POIS){
@@ -371,11 +375,21 @@ function syncWheelButtons(){
   if($('wheelChapterFoot'))$('wheelChapterFoot').textContent=classic?'MODÈLE FORTNITE · 05.11.2026':'MODIFIABLE PAR TOUS · STOCKAGE LOCAL';
   const map=document.querySelector('.map-launch');
   if(map)map.hidden=!classic;
-  const hajinMap=$('hajinMapLaunch');
-  if(hajinMap){
-    const link=hajinMap.querySelector('a');
-    if(link)link.href=HAJIN_GUIDE_URL;
-    hajinMap.hidden=currentWheelId!=='warzone-hajin';
+  const warzoneMap=$('warzoneMapLaunch');
+  const warzoneModel=currentWheelId==='warzone-hajin'?'hajin':
+    currentWheelId==='warzone-zodiac'?'zodiac':null;
+  if(warzoneMap){
+    warzoneMap.hidden=!warzoneModel;
+    if(warzoneModel){
+      $('warzoneMapName').textContent='CARTE · '+warzoneModel.toUpperCase();
+      $('warzoneMapPreview').src=warzoneAssetsReady
+        ?WARZONE_PREFIX+warzoneModel+'/map-preview.webp':FALLBACK_IMAGE;
+      $('warzoneMapPreview').alt='Carte '+warzoneModel+' sans noms de lieux';
+      $('warzoneMapOpen').dataset.mapGame=currentWheelId;
+      $('warzoneMapOpen').disabled=!warzoneAssetsReady;
+      $('warzoneMapOpen').setAttribute('aria-label','Agrandir la carte '+warzoneModel+' avec les lieux');
+      $('warzoneMapAction').textContent=warzoneAssetsReady?'AGRANDIR LA CARTE':'CARTE À PUBLIER';
+    }
   }
   if($('sourcesButton'))$('sourcesButton').hidden=!classic;
 }
@@ -389,6 +403,9 @@ function activateWheel(id,savePrevious=true){
   customImages.clear();
   currentWheelId=cfg.id;library.active=id;
   POIS=wheelToPois(cfg);
+  if(!warzoneAssetsReady)for(const poi of POIS){
+    if(poi.originalImage.startsWith(WARZONE_PREFIX))poi.image=FALLBACK_IMAGE;
+  }
   if(cfg.id==='fortnite')for(const choice of POIS){
     const original=FORTNITE_ORIGINAL.find(p=>p.id===choice.id&&p.name===choice.name);
     if(original)choice.lines=[...original.lines];
@@ -401,11 +418,24 @@ function activateWheel(id,savePrevious=true){
   renderCards();drawWheel();renderHistory();resetResult();
   if(imageStoreReady)applyWheelImages();
   syncWheelButtons();
-  if(currentWheelId==='warzone-hajin')updateHajinNotice();
+  if(currentWheelId==='warzone-hajin'||currentWheelId==='warzone-zodiac')updateWarzoneNotice();
   else statusMessage('');
   saveWheelLibrary(library);
 }
 async function initialiseLibrary(){
+  // Le manifeste n'est publié que si le ZIP image complet a été vérifié par
+  // GitHub Actions. Sans ce fichier, l'outil continue avec les logos MJ.
+  try{
+    const response=await fetch(WARZONE_PREFIX+'manifest.json',{cache:'no-cache'});
+    if(response.ok){
+      const manifest=await response.json();
+      warzoneAssetsReady=manifest?.format==='ma-jestik-warzone-assets'
+        &&manifest?.version===1
+        &&manifest?.games?.hajin?.length===13
+        &&manifest?.games?.zodiac?.length===10;
+    }
+  }catch{}
+  window.warzoneAssetsReady=warzoneAssetsReady;
   library=loadWheelLibrary(FORTNITE_ORIGINAL,saved);
   activateWheel(library.active,false);
   await initialiseImages();
@@ -510,7 +540,7 @@ $('wheelDelete')?.addEventListener('click',async()=>{
   if(spinning||library.wheels.length<=1)return;
   const old=library.wheels.find(w=>w.id===currentWheelId);
   if(!old||!confirm('Supprimer définitivement la roue « '+old.name+' » de ce navigateur ?'))return;
-  if(old.id==='warzone-hajin'){
+  if(old.id==='warzone-hajin'||old.id==='warzone-zodiac'){
     library.dismissedPresets=Array.isArray(library.dismissedPresets)?library.dismissedPresets:[];
     if(!library.dismissedPresets.includes(old.id))library.dismissedPresets.push(old.id);
   }
