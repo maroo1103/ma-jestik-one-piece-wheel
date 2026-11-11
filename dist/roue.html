@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Un tirage, une décision ! Lance la roue Ma_JesTik et laisse le hasard décider.">
   <meta name="twitter:image" content="https://ma-jestik.fr/og/roue.png?v=20261109-roue2">
   <!-- Fin aperçu partage -->
-  <meta name="description" content="Laisse le hasard décider avec la roue Ma_JesTik. Premier jeu proposé : Fortnite One Piece.">
+  <meta name="description" content="Laisse le hasard décider avec la roue Ma_JesTik. Jeux et défis personnalisables par tous, sans inscription.">
   <title>La roue · Ma_JesTik</title>
   <!-- Identite visuelle de l application Ma_JesTik (Windows, Android, iOS, navigateur) -->
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png?v=20261108-mj1">
@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="map.css?v=20261105-zoom2">
   <link rel="stylesheet" href="theme-wheel-graphite.css?v=20261108-mobile-polish1">
+  <link rel="stylesheet" href="wheel-multijeux.css?v=20261111-multijeux1">
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -50,7 +51,24 @@
     </button>
   </aside>
   <main>
-    <section class="intro"><div><p class="eyebrow"><span></span> LA ROUE <i> / </i> JEU ACTUEL : FORTNITE × ONE PIECE</p><h1>LA <em>ROUE</em></h1><p class="intro-copy">Laisse le hasard décider. Un tirage, une décision !</p></div><div class="chapter"><span>ÎLE AUX OS MÊLÉS</span><strong>12 <small>destinations</small></strong><span class="tiny">CARTE VÉRIFIÉE · 05.11.2026</span></div></section>
+    <section class="intro"><div><p class="eyebrow"><span></span> LA ROUE <i> / </i> <span id="wheelGameLabel">FORTNITE × ONE PIECE</span></p><h1>LA <em>ROUE</em></h1><p class="intro-copy">Laisse le hasard décider. Un tirage, une décision !</p></div><div class="chapter"><span id="wheelChapterTitle">FORTNITE · ONE PIECE</span><strong><span id="wheelChapterCount">12</span> <small>choix</small></strong><span class="tiny" id="wheelChapterFoot">CARTE VÉRIFIÉE · 05.11.2026</span></div></section>
+    <section class="wheel-library-panel" aria-label="Mes roues personnalisées">
+      <div class="wheel-library-heading"><div><p class="eyebrow">UNE ROUE POUR CHAQUE JEU</p><h2>TA ROUE, TES RÈGLES.</h2>
+        <p>Garde le modèle Fortnite, crée une roue Warzone ou invente tes propres choix et images.</p></div></div>
+      <div class="wheel-library-controls">
+        <label for="wheelPreset" class="sr-only">Choisir une roue enregistrée</label>
+        <select id="wheelPreset" aria-label="Choisir une roue enregistrée"><option>Fortnite · One Piece</option></select>
+        <button id="wheelNew" class="wheel-gold-button" type="button">+ Nouvelle roue</button>
+        <button id="wheelClone" type="button">Dupliquer</button>
+        <button id="wheelRename" type="button">Renommer</button>
+        <button id="wheelDelete" type="button">Supprimer</button>
+        <button id="wheelExport" type="button">Exporter avec images</button>
+        <button id="wheelImport" type="button">Importer</button>
+        <input id="wheelImportFile" class="sr-only" type="file" accept=".json,application/json" aria-label="Importer une roue Ma_JesTik">
+      </div>
+      <p class="wheel-local-note">100 % local : choix, images et tirages restent sur cet appareil. Aucune inscription ni envoi vers un serveur. Exporte ta roue pour la retrouver sur un autre navigateur ou après un nettoyage.</p>
+      <p id="wheelLibraryStatus" class="wheel-status" role="status" aria-live="polite"></p>
+    </section>
     <section class="arena" aria-label="Roue de tirage">
       <div class="wheel-column">
         <div class="wheel-caption"><span class="small-label">LE DESTIN DÉCIDE</span><span id="odds">12 lieux · chances égales</span></div>
@@ -68,12 +86,20 @@
       </aside>
     </section>
     <section class="recent-section" aria-label="Derniers tirages"><span class="small-label">DERNIERS TIRAGES</span><div id="history"><span class="empty-history">Les derniers tirages apparaîtront ici.</span></div></section>
-    <section class="destinations" aria-labelledby="destTitle"><div class="section-heading"><div><p class="eyebrow">PERSONNALISE TON TIRAGE</p><h2 id="destTitle">Les choix<span id="selectedCount">12 / 12</span></h2><p>Sélectionne les lieux de ce jeu et personnalise leurs images.</p></div><button id="selectAll" class="secondary">Tout sélectionner</button></div><p class="image-help">Tes images restent dans ce navigateur, sur cet appareil. Tu pourras retrouver les illustrations d'origine à tout moment.</p><div id="poiGrid" class="poi-grid"></div><p id="selectionMessage" class="selection-message" role="status"></p><p id="imageNotice" class="image-notice" role="status"></p></section>
+    <section class="destinations" aria-labelledby="destTitle"><div class="section-heading"><div><p class="eyebrow">PERSONNALISE TON TIRAGE</p><h2 id="destTitle">Les choix<span id="selectedCount">12 / 12</span></h2><p>Ajoute, renomme ou supprime les choix ; change leurs images sans toucher à GitHub.</p></div><button id="selectAll" class="secondary">Tout sélectionner</button></div><div class="wheel-custom-editor">
+        <label for="wheelNewChoice">AJOUTER UN CHOIX<input id="wheelNewChoice" type="text" maxlength="70" placeholder="Ex. Nouveau lieu, défi Warzone…" autocomplete="off"></label>
+        <button id="wheelAdd" type="button">+ Ajouter à la roue</button></div>
+      <details class="wheel-bulk-editor"><summary>Remplacer tous les choix d'un coup (nouvelle saison)</summary>
+        <p>Un nom par ligne, jusqu'à 60 choix. Les noms identiques conservent leurs images. Exporte d'abord ta sauvegarde.</p>
+        <label for="wheelBulkNames" class="sr-only">Liste de choix, un par ligne</label>
+        <textarea id="wheelBulkNames" rows="6" placeholder="Nouveau lieu 1&#10;Nouveau lieu 2&#10;Nouveau lieu 3"></textarea>
+        <button id="wheelBulkReplace" type="button">Remplacer la liste</button></details>
+      <p class="image-help">Tes images restent sur cet appareil. Pour préserver tes réglages, exporte une copie avant de remplacer des choix.</p><div id="poiGrid" class="poi-grid"></div><p id="selectionMessage" class="selection-message" role="status"></p><p id="imageNotice" class="image-notice" role="status"></p></section>
     <footer><p>UN OUTIL DE <strong>MA_JESTIK</strong><span>✦</span> LAISSE LE HASARD DÉCIDER.</p><button id="sourcesButton">Lieux & illustrations </button></footer>
   </main>
   <div class="sr-only" id="announcement" aria-live="polite" aria-atomic="true"></div>
   <dialog id="imageDialog" aria-labelledby="imageDialogTitle" aria-describedby="imageDialogHelp">
-    <div class="dialog-head"><p class="eyebrow">PERSONNALISE TON ESCALE</p><button id="closeImageDialog" class="icon-button" aria-label="Fermer la modification d'image">×</button></div>
+    <div class="dialog-head"><p class="eyebrow">PERSONNALISE TON CHOIX</p><button id="closeImageDialog" class="icon-button" aria-label="Fermer la modification d'image">×</button></div>
     <h2 id="imageDialogTitle">Changer l'image</h2>
     <p id="imagePoiName" class="image-poi-name"></p>
     <div class="image-editor-preview"><img id="imagePreview" alt="Aperçu de l'image du lieu"><span id="imagePreviewBadge">IMAGE ACTUELLE</span></div>
@@ -82,6 +108,11 @@
     <p id="imageError" class="image-error" role="status" aria-live="polite"></p>
     <div class="image-editor-actions"><button id="restoreImage" class="secondary" disabled>Image d'origine</button><div><button id="cancelImage" class="secondary">Annuler</button><button id="applyImage" class="save-image" disabled>Enregistrer</button></div></div>
   </dialog>
+  <dialog id="wheelNameDialog" class="wheel-name-dialog" aria-labelledby="wheelNameTitle">
+    <form id="wheelNameForm"><h2 id="wheelNameTitle">Nom de la roue</h2>
+      <label for="wheelNameInput">Nouveau nom<input id="wheelNameInput" type="text" maxlength="70" required autocomplete="off"></label>
+      <div class="wheel-name-actions"><button id="wheelNameCancel" type="button">Annuler</button><button type="submit">Enregistrer</button></div>
+    </form></dialog>
   <dialog id="sourcesDialog"><div class="dialog-head"><p class="eyebrow">À PROPOS DE LA CARTE</p><button id="closeDialog" class="icon-button" aria-label="Fermer">×</button></div><h2>Des lieux vérifiés.<br>Des captures du jeu.</h2><p>Les 12 noms correspondent aux lieux-dits relevés dans les données françaises de la carte, vérifiées le 5 novembre 2026. « Fort de Fortune's » remplace le nom précédemment utilisé « Forteresse de Lil Uzi », absent de cette liste. L'orthographe de « Le $.$. Rocky » a aussi été corrigée.</p><p>Les 12 images des destinations sont des captures de Fortnite utilisées pour cette roue communautaire, et non des illustrations créées par IA.</p><a href="https://fortnite-api.com/v1/map?language=fr" target="_blank" rel="noopener noreferrer">Consulter les noms de la carte · Fortnite-API</a><a href="https://www.fortnite.com/news/fortnite-treasure-hunters-the-greatest-adventure-of-all-time?lang=fr" target="_blank" rel="noopener noreferrer">Découvrir la saison · Epic Games</a><p class="tiny">Outil personnel non officiel. Fortnite et One Piece appartiennent à leurs ayants droit. Les choix et l'historique sont conservés uniquement dans ce navigateur. Le site est public et partageable. Chaque visiteur effectue ses tirages indépendamment.</p></dialog>
   <dialog id="mapDialog" class="map-dialog" aria-labelledby="mapDialogTitle">
     <div class="map-dialog-panel">
@@ -95,7 +126,7 @@
       <p class="map-dialog-tip">Appuie sur Échap ou clique en dehors de la carte pour fermer. <a href="assets/carte-lieux.webp" target="_blank" rel="noopener">Voir la carte complète en taille réelle</a></p>
     </div>
   </dialog>
-  <script type="module" src="app.js?v=20261109-roue2"></script>
+  <script type="module" src="app.js?v=20261111-multijeux1"></script>
   <script type="module" src="map.js"></script>
 </body>
 </html>
