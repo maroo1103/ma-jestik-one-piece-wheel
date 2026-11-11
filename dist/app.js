@@ -310,7 +310,7 @@ function syncWheelButtons(){
   if($('wheelChapterCount'))$('wheelChapterCount').textContent=String(POIS.length);
   const classic=currentWheelId==='fortnite'&&POIS.length===FORTNITE_ORIGINAL.length&&
     POIS.every((p,i)=>p.name===FORTNITE_ORIGINAL[i].name);
-  if($('wheelChapterFoot'))$('wheelChapterFoot').textContent=classic?'CARTE VÉRIFIÉE · 05.11.2026':'MODIFIABLE PAR TOUS · STOCKAGE LOCAL';
+  if($('wheelChapterFoot'))$('wheelChapterFoot').textContent=classic?'MODÈLE FORTNITE · 05.11.2026':'MODIFIABLE PAR TOUS · STOCKAGE LOCAL';
   const map=document.querySelector('.map-launch');
   if(map)map.hidden=!classic;
   if($('sourcesButton'))$('sourcesButton').hidden=!classic;
