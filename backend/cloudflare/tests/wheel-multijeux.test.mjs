@@ -72,6 +72,14 @@ test('interfaces et scripts uniquement statiques, sans Worker mensuel',()=>{
   assert.match(css,/body\.stream \.wheel-library-panel/);
 });
 
+test('panneau nettoye : pas de note redondante ni trait au-dessus de Ajouter un choix',()=>{
+  const html=source('dist/roue.html'),css=source('dist/wheel-multijeux.css');
+  assert.doesNotMatch(html,/class="wheel-local-note"/);
+  assert.match(html,/id="wheelLibraryStatus"/);
+  assert.match(css,/\.wheel-custom-editor\{[^}]*border:0\}/);
+  assert.doesNotMatch(css,/\.wheel-custom-editor\{[^}]*border-top/);
+});
+
 test('modales iframe visibles, texte du jeu sans style de pastille, tout sélectionner cliquable',()=>{
   const app=source('dist/app.js'),css=source('dist/wheel-multijeux.css'),html=source('dist/roue.html');
   assert.match(app,/function showWheelDialog\(dialog\)/);
