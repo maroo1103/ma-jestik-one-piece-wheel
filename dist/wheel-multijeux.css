@@ -65,3 +65,16 @@ body.stream .wheel-library-panel,body.stream .wheel-custom-editor,body.stream .w
   }
   .wheel-iframe-dialog{max-width:calc(100% - 24px);box-sizing:border-box}
 }
+
+/* Lien vers la carte officielle Hajin tant que son aperçu local HD est indisponible. */
+.hajin-map-link{text-decoration:none!important}
+.hajin-map-preview{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;min-height:135px;aspect-ratio:1.15;
+  border:1px solid #5b4730;border-radius:6px;
+  background:radial-gradient(circle at 50% 35%,#4b4030 0%,#1a1c1d 65%,#0b0e10 100%);
+  color:#e8bd7c;text-align:center;
+}
+.hajin-map-preview>span{font:800 clamp(27px,3vw,35px)/1 var(--heading,system-ui);letter-spacing:2px}
+.hajin-map-preview small{font:600 9px/1.3 system-ui;letter-spacing:1.2px;color:#d2be9e}
+.hajin-map-launch[hidden]{display:none!important}
