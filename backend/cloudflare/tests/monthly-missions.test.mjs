@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {monthParis,monthBounds} from '../monthly-missions-worker.js';
 
 test('Mois mensuels Europe/Paris : novembre 2026 inclut la transition UTC+1',()=>{
@@ -16,7 +17,7 @@ test('Mois mensuels Europe/Paris : avril 2027 utilise UTC+2',()=>{
 });
 test('Contrats de protection API : consultation publique limitée et validation côté serveur',()=>{
  // Statiques complémentaires à compléter par des tests avec D1 émulé avant lancement réel.
- const source=await import('node:fs').then(x=>x.readFileSync(new URL('../monthly-missions-worker.js',import.meta.url),'utf8'));
+ const source=readFileSync(new URL('../monthly-missions-worker.js',import.meta.url),'utf8');
  for(const phrase of [
   "if(!identity.owner)return respond({error:'Réservé au propriétaire du QG'},403)",
   "SELECT COUNT(*) AS n FROM vote_ballots",
