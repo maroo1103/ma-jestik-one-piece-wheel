@@ -23,9 +23,11 @@ test('migration des 12 lieux et historique Fortnite existants',()=>{
   store.clear();
   const lib=loadWheelLibrary(baseline,{selected:['01','03'],history:['03'],duration:'5'});
   assert.equal(lib.active,'fortnite');
-  assert.equal(lib.wheels.length,2);
+  assert.equal(lib.wheels.length,3);
   assert.equal(lib.wheels[1].id,'warzone-hajin');
   assert.equal(lib.wheels[1].choices.length,13);
+  assert.equal(lib.wheels[2].id,'warzone-zodiac');
+  assert.equal(lib.wheels[2].choices.length,10);
   assert.equal(lib.wheels[0].choices.length,12);
   assert.deepEqual(lib.wheels[0].selected,['01','03']);
   assert.deepEqual(lib.wheels[0].history,['03']);
@@ -121,16 +123,57 @@ test('migration additive Hajin : preserve la bibliotheque et un modele efface vo
   const afterDelete=loadWheelLibrary(baseline,{});
   assert.ok(!afterDelete.wheels.some(w=>w.id==='warzone-hajin'));
 });
-test('Hajin : noms du guide officiels et photos provisoires identifiees',()=>{
-  const preset=source('dist/warzone-hajin.mjs');
+test('Hajin/Zodiac : modeles officiels et mini cartes locales adaptatives',()=>{
+  const hajin=source('dist/warzone-hajin.mjs');
+  const zodiac=source('dist/warzone-zodiac.mjs');
   const html=source('dist/roue.html');
   const app=source('dist/app.js');
+  const map=source('dist/map.js');
+  const css=source('dist/wheel-multijeux.css');
   for(const name of ['14th Political Prison','Chang-san Air Base','Deadtown','Imjin Farmland',
     'Cheongun Village','Haneul Nuclear Reactor','Mirae General Hospital','NuriGo Mall',
     'Cheonwang Peak Array','The Grid','Songdo Wharf','Wolves Stadium','Hajin River Heights'])
-    assert.ok(preset.includes(name),'POI Hajin manquant : '+name);
-  assert.match(html,/id="hajinMapLaunch"/);
-  assert.match(html,/https:\/\/www\.callofduty\.com\/guides\/warzone\/hajin/);
-  assert.match(app,/photos restent à intégrer/);
-  assert.match(app,/Les logos MJ sont provisoires, pas des captures du jeu/);
+    assert.ok(hajin.includes(name),'POI Hajin manquant : '+name);
+  for(const name of ['Admin','Trackline','Furnace','Solar','Old Mines','Dispatch',
+    'Depot','Sentinel','Cooling','R&D'])
+    assert.ok(zodiac.includes("'"+name+"'"),'POI Zodiac manquant : '+name);
+  assert.match(hajin,/assets\/warzone\/hajin\/poi-/);
+  assert.match(zodiac,/assets\/warzone\/zodiac\/poi-/);
+  assert.match(html,/id="warzoneMapLaunch"/);
+  assert.match(html,/id="warzoneMapOpen"/);
+  assert.match(html,/id="warzoneMapPreview"/);
+  assert.match(map,/hajin\/map-full\.png/);
+  assert.match(map,/zodiac\/map-full\.png/);
+  assert.match(map,/showWheelDialog\(dialog\)/);
+  assert.match(css,/map-dialog\[data-warzone="true"\]/);
+  assert.match(app,/warzoneAssetsReady/);
+  assert.match(app,/assets\/warzone\//);
+  assert.match(app,/manifest\.json/);
+  assert.doesNotMatch(app,/updateHajinNotice/);
+});
+test('Migration de Hajin : remplacer les logos originaux sans toucher aux images locales ou aux sélections',()=>{
+  store.clear();
+  const original=loadWheelLibrary(baseline,{});
+  const hajin=original.wheels.find(w=>w.id==='warzone-hajin');
+  hajin.name='Warzone · Hajin (images à compléter)';
+  hajin.choices.forEach(c=>c.originalImage='/icons/mj-source.webp');
+  hajin.selected=['hj03'];
+  hajin.history=['hj03'];
+  hajin.choices[2].name='Mon défi personnalisé';
+  saveWheelLibrary(original);
+  const upgraded=loadWheelLibrary(baseline,{});
+  const result=upgraded.wheels.find(w=>w.id==='warzone-hajin');
+  assert.equal(result.name,'Warzone · Hajin · Battle Royale');
+  assert.deepEqual(result.selected,['hj03']);
+  assert.deepEqual(result.history,['hj03']);
+  assert.match(result.choices[0].originalImage,/hajin\/poi-01\.webp$/);
+  assert.equal(result.choices[2].originalImage,'/icons/mj-source.webp');
+  assert.ok(upgraded.wheels.some(w=>w.id==='warzone-zodiac'));
+});
+test('Déploiement des images : une archive unique et complète est contrôlée',()=>{
+  const flow=source('.github/workflows/publier-roue.yml');
+  assert.match(flow,/warzone-pack\.zip/);
+  assert.match(flow,/13 captures Hajin, 10 Zodiac/);
+  assert.match(flow,/hashlib\.sha256/);
+  assert.match(flow,/manifest\.json/);
 });
