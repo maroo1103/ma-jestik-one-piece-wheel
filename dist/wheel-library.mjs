@@ -8,7 +8,8 @@ const STANDARD_WARZONE_MODELS=[HAJIN_MODEL,ZODIAC_MODEL];
 const WAITING_WARZONE_MODELS=[REBIRTH_MODEL,VERDANSK_MODEL];
 const availablePresets=(ready={})=>[
   ...STANDARD_WARZONE_MODELS,
-  ...WAITING_WARZONE_MODELS.filter(model=>ready[model.id.replace('warzone-','')]===true)
+  ...WAITING_WARZONE_MODELS.filter(model=>ready[model.id.replace('warzone-','')]===true
+    &&(model.id!=='warzone-verdansk'||ready.rebirth===true))
 ];
 // Les modèles fournis avec le site sont des références : duplique-les pour les éditer.
 export const OFFICIAL_WHEEL_IDS=Object.freeze(['fortnite','warzone-hajin','warzone-zodiac','warzone-rebirth','warzone-verdansk']);
