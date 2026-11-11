@@ -1,6 +1,7 @@
-/* Sources officielles : https://www.callofduty.com/guides/warzone/hajin
-   Roue Hajin, version intermédiaire : 13 noms confirmés, photos non intégrées.
-   NE PAS prétendre que les logos MJ de secours sont des captures du jeu. */
+/* Call of Duty Warzone, carte Hajin (Battle Royale).
+   Les images réelles sont publiées depuis le lot fourni par le propriétaire
+   par le workflow GitHub Pages (dist/assets/warzone-pack.zip).
+   Source des noms : https://www.callofduty.com/guides/warzone/hajin */
 export const HAJIN_GUIDE_URL = 'https://www.callofduty.com/guides/warzone/hajin';
 export const HAJIN_POIS = Object.freeze([
   '14th Political Prison',
@@ -19,12 +20,9 @@ export const HAJIN_POIS = Object.freeze([
 ]);
 export const HAJIN_MODEL = Object.freeze({
   id:'warzone-hajin',
-  name:'Warzone · Hajin (images à compléter)',
-  choices:HAJIN_POIS.map((name,index)=>({id:'hj'+String(index+1).padStart(2,'0'),name,originalImage:'/icons/mj-source.webp'})),
+  name:'Warzone · Hajin · Battle Royale',
+  choices:HAJIN_POIS.map((name,index)=>({id:'hj'+String(index+1).padStart(2,'0'),name,originalImage:'assets/warzone/hajin/poi-'+String(index+1).padStart(2,'0')+'.webp'})),
   selected:HAJIN_POIS.map((_,index)=>'hj'+String(index+1).padStart(2,'0')),
   history:[],
   duration:'8'
 });
-export function hajinImageCount(wheel) {
-  return (wheel?.choices || []).filter(choice=>choice.originalImage!=='/icons/mj-source.webp').length;
-}
