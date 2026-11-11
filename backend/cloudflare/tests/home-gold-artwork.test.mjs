@@ -351,7 +351,8 @@ test("Classement QG : primes mensuelles visibles uniquement comme projet, sans f
  assert.match(rewards,/versés manuellement/);
  assert.match(rewards,/Aucune conversion libre des points QG en pièces/);
  assert.match(rewards,/href="#\/boutique"/);
- assert.doesNotMatch(rewards,/fetch\(|localStorage|sessionStorage|\\/adminargent|data-member-id/);
+ assert.doesNotMatch(rewards,/fetch\(|localStorage|sessionStorage|data-member-id/);
+ assert.ok(!rewards.includes('/adminargent'));
  assert.match(html,/ranking-rewards\.css\?v=20261111-monthly-rewards1/);
  assert.match(html,/qg\.js\?v=20261111-monthly-rewards1/);
  assert.match(style,/\.mj-monthly-rewards-grid\{display:grid/);
