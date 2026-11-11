@@ -1,9 +1,17 @@
 /* Ma_JesTik — gestion 100 % locale des roues : aucun Worker, aucune D1. */
 import { HAJIN_MODEL } from './warzone-hajin.mjs';
 import { ZODIAC_MODEL } from './warzone-zodiac.mjs';
-const OFFICIAL_WARZONE_MODELS=[HAJIN_MODEL,ZODIAC_MODEL];
+import { REBIRTH_MODEL } from './warzone-rebirth.mjs';
+import { VERDANSK_MODEL } from './warzone-verdansk.mjs';
+// Modèles visibles uniquement quand chaque lot d'images et les deux cartes existent.
+const STANDARD_WARZONE_MODELS=[HAJIN_MODEL,ZODIAC_MODEL];
+const WAITING_WARZONE_MODELS=[REBIRTH_MODEL,VERDANSK_MODEL];
+const availablePresets=(ready={})=>[
+  ...STANDARD_WARZONE_MODELS,
+  ...WAITING_WARZONE_MODELS.filter(model=>ready[model.id.replace('warzone-','')]===true)
+];
 // Les modèles fournis avec le site sont des références : duplique-les pour les éditer.
-export const OFFICIAL_WHEEL_IDS=Object.freeze(['fortnite','warzone-hajin','warzone-zodiac']);
+export const OFFICIAL_WHEEL_IDS=Object.freeze(['fortnite','warzone-hajin','warzone-zodiac','warzone-rebirth','warzone-verdansk']);
 export const isOfficialWheel=id=>OFFICIAL_WHEEL_IDS.includes(id);
 export const MAX_CHOICES = 60;
 export const MAX_WHEELS = 24;
@@ -12,7 +20,7 @@ const KEY = 'ma-jestik-wheel-library-v2';
 const imagePath = value => {
   const name=String(value||'');
   return (/^assets\/(?:0[1-9]|1[0-2])\.webp$/.test(name)
-      || /^assets\/warzone\/(?:hajin|zodiac)\/poi-(?:0[1-9]|1[0-3])\.webp$/.test(name))
+      || /^assets\/warzone\/(?:hajin|zodiac|rebirth|verdansk)\/poi-(?:0[1-9]|1[0-9]|2[01])\.webp$/.test(name))
     ?name:FALLBACK_IMAGE;
 };
 const safeName = value => String(value || '').trim().replace(/\s+/g, ' ').slice(0, 70);
@@ -42,7 +50,8 @@ function validateWheel(raw) {
   return { id, name, choices, selected: selected.length ? selected : choices.map(x => x.id),
     history, duration: ['5', '8', '12'].includes(String(raw.duration)) ? String(raw.duration) : '8' };
 }
-export function loadWheelLibrary(baseChoices, legacy = {}) {
+export function loadWheelLibrary(baseChoices, legacy = {}, readiness = {}) {
+  const OFFICIAL_WARZONE_MODELS=availablePresets(readiness);
   const fallback = { id: 'fortnite', name: 'Fortnite · One Piece · Modèle', choices: baseChoices.map(x => ({
     id: x.id, name: x.name, originalImage: x.originalImage
   })), selected: Array.isArray(legacy.selected) && legacy.selected.length ?
@@ -59,7 +68,7 @@ export function loadWheelLibrary(baseChoices, legacy = {}) {
         // Migration strictement additive : conserver les roues déjà créées,
         // l'historique, les images personnelles, la sélection et les préférences.
         const dismissedPresets=Array.isArray(raw.dismissedPresets)
-          ?raw.dismissedPresets.filter(id=>OFFICIAL_WARZONE_MODELS.some(p=>p.id===id)):[];
+          ?raw.dismissedPresets.filter(id=>[...STANDARD_WARZONE_MODELS,...WAITING_WARZONE_MODELS].some(p=>p.id===id)):[];
         for(const official of OFFICIAL_WARZONE_MODELS){
           const existing=wheels.find(w=>w.id===official.id);
           if(existing){
