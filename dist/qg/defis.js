@@ -1,6 +1,7 @@
-import {mountVotePanel} from './votes.js?v=20261108-viewers-labels1';
+import {mountVotePanel} from './votes.js?v=20261111-warzone-challenges1';
+import {WARZONE_CHALLENGES,WARZONE_CHALLENGE_GAMES} from './warzone-challenges.mjs';
 import {isQGOwnerSession} from './twitch-auth.js';
-import {mountChallengeProposals} from './challenge-proposals.js?v=20261108-copyrefresh1';
+import {mountChallengeProposals} from './challenge-proposals.js?v=20261111-warzone-challenges1';
 /* Catalogue validé par Ma_JesTik : 88 défis précédents + 30 nouveaux défis exclusifs Trio/Quatuor. */
 export const FORTNITE_CHALLENGES = [[1,"Le survivant","Terminer dans le TOP 10 sans utiliser de véhicule.","Facile","Survie","both"],[2,"Le chasseur","Réaliser au moins 5 éliminations dans une partie.","Moyen","Combat","both"],[3,"Le pistolero","Réaliser 2 éliminations avec un pistolet dans une seule partie.","Moyen","Combat","both"],[4,"Le discret","Terminer dans le TOP 5 avec un maximum de 2 éliminations.","Moyen","Survie","both"],[5,"Le sans-coffre","Atteindre le TOP 10 sans ouvrir de coffre.","Moyen","Stratégie","both"],[6,"Le téméraire","Terminer dans le TOP 10 sans utiliser de consommable de bouclier.","Difficile","Survie","both"],[7,"L'as du combat","Gagner une partie avec au moins 8 éliminations.","Difficile","Combat","both"],[8,"La dernière chance","Réaliser une élimination avec une arme de rareté commune (grise).","Facile","Combat","both"],[9,"Premier sang","Réaliser une élimination dans les 3 premières minutes après l'atterrissage.","Moyen","Combat","both"],[10,"L'arme du destin","Réaliser une élimination avec la toute première arme ramassée.","Moyen","Combat","both"],[11,"Double menace","Réaliser une élimination avec chacun de deux types d'armes différents.","Moyen","Combat","both"],[12,"La gâchette facile","Réaliser 3 éliminations avec la même arme.","Moyen","Combat","both"],[13,"L'arsenal","Réaliser 3 éliminations avec 3 types d'armes différents.","Difficile","Combat","both"],[14,"Récupération","Éliminer un adversaire avec une arme récupérée sur un autre joueur éliminé.","Difficile","Combat","both"],[15,"Le minimaliste","Atteindre le TOP 10 en conservant une seule arme à la fois dans l'inventaire.","Moyen","Survie","both"],[16,"Sans médicament","Atteindre le TOP 10 sans utiliser d'objet restaurant les points de vie.","Moyen","Survie","both"],[17,"Le fantôme","Atteindre le TOP 3 sans réaliser d'élimination.","Difficile","Survie","both"],[18,"Sur le fil","Atteindre le TOP 5 sans avoir utilisé d'objet de soin ou de bouclier.","Difficile","Survie","both"],[19,"Le marcheur","Atteindre le TOP 10 sans utiliser le sprint tactique.","Moyen","Survie","both"],[20,"Le butin du sol","Atteindre le TOP 10 en utilisant uniquement des armes ramassées au sol.","Moyen","Stratégie","both"],[21,"L'économe","Terminer dans le TOP 5 en ayant utilisé au maximum deux objets de soin ou de bouclier.","Moyen","Stratégie","both"],[22,"Le collectionneur","Atteindre le TOP 10 avec au moins 3 armes de raretés différentes dans l'inventaire.","Facile","Stratégie","both"],[23,"L'échange obligatoire","Après chaque élimination, remplacer l'arme utilisée par une arme de l'adversaire. Réaliser 3 éliminations.","Difficile","Stratégie","both"],[24,"Le grand nettoyage","Ouvrir 10 coffres dans une même partie.","Facile","Stratégie","both"],[25,"Le garde du corps","Réanimer un coéquipier au moins une fois et terminer dans le TOP 10.","Moyen","Duo","duo"],[26,"Les inséparables","Atteindre le TOP 5 avec les deux membres du duo encore en vie.","Moyen","Duo","duo"],[27,"Sauvetage héroïque","Réinitialiser un coéquipier éliminé grâce à son reboot, puis atteindre le TOP 10.","Difficile","Duo","duo"],[28,"Le duo infernal","Réaliser au moins 8 éliminations cumulées avec ton coéquipier dans une partie.","Difficile","Duo","duo"],[29,"Double impact","Réaliser 2 éliminations avant la fermeture de la première zone.","Moyen","Combat","both"],[30,"Le tireur économe","Éliminer un adversaire en utilisant au maximum 10 balles pendant le combat.","Difficile","Combat","both"],[31,"Sans viser !","Réaliser une élimination sans utiliser la visée à l'épaule pendant l'affrontement.","Moyen","Combat","both"],[32,"Le finisseur","Réaliser la dernière élimination d'une partie et obtenir le Top 1.","Difficile","Combat","both"],[33,"Enchaînement mortel","Réaliser 2 éliminations à moins de 60 secondes d'intervalle.","Moyen","Combat","both"],[34,"L'arme secondaire","Réaliser 2 éliminations avec l'arme la moins rare de ton inventaire.","Moyen","Combat","both"],[35,"Chargeur unique","Réaliser une élimination sans recharger ton arme pendant l'affrontement.","Facile","Combat","both"],[36,"Le fidèle","Réaliser 2 éliminations avec une arme ramassée dans les 2 premières minutes.","Moyen","Combat","both"],[37,"Chasseur de zones","Réaliser au moins une élimination dans chacune des 3 premières phases de tempête.","Difficile","Combat","both"],[38,"Dernière cartouche","Réaliser une élimination avec la dernière balle du chargeur.","Difficile","Combat","both"],[39,"Intouchable","Atteindre le Top 25 sans subir aucun dégât.","Moyen","Survie","both"],[40,"L'ennemi de la tempête","Atteindre le Top 10 sans subir de dégâts de tempête.","Facile","Survie","both"],[41,"Le survivant immobile","Atteindre le Top 15 sans utiliser d'objet de mobilité.","Moyen","Survie","both"],[42,"Sans provisions","Atteindre le Top 10 sans ramasser d'objet de soin ou de bouclier.","Difficile","Survie","both"],[43,"Le miraculé","Descendre sous 25 PV, survivre et atteindre le Top 5.","Difficile","Survie","both"],[44,"Plus de bouclier !","Après la fermeture de la première zone, ne plus utiliser d'objet de bouclier et atteindre le Top 10.","Moyen","Survie","both"],[45,"Le marcheur prudent","Atteindre le Top 10 sans utiliser la glissade.","Facile","Survie","both"],[46,"Silence radio","Ne tirer aucune balle avant qu'il ne reste que 25 joueurs, puis atteindre le Top 10.","Moyen","Survie","both"],[47,"Aucun raccourci","Atteindre le Top 10 sans véhicule ni objet de déplacement.","Moyen","Survie","both"],[48,"Une vie précieuse","Atteindre le Top 3 sans jamais avoir été mis KO pendant la partie.","Difficile","Survie","both"],[49,"Trois et pas un de plus","Ouvrir exactement 3 coffres et atteindre le Top 10.","Moyen","Stratégie","both"],[50,"Arsenal réduit","Atteindre le Top 5 avec au maximum 2 emplacements d'armes utilisés à tout moment.","Moyen","Stratégie","both"],[51,"La place du vide","Garder au moins un emplacement d'inventaire vide pendant toute la partie et atteindre le Top 10.","Facile","Stratégie","both"],[52,"Le collectionneur prudent","Atteindre le Top 10 avec uniquement des armes de rareté verte ou inférieure.","Difficile","Stratégie","both"],[53,"Changement de tactique","Changer d'arme principale après chaque nouvelle phase de tempête et atteindre le Top 10.","Difficile","Stratégie","both"],[54,"Aucun doublon","Atteindre le Top 5 sans jamais transporter deux armes de la même catégorie simultanément.","Moyen","Stratégie","both"],[55,"La trousse de secours","Réserver un emplacement aux soins pendant toute la partie et atteindre le Top 10.","Facile","Stratégie","both"],[56,"Code couleur","Atteindre le Top 10 avec uniquement des armes de même rareté dans l'inventaire.","Moyen","Stratégie","both"],[57,"L'arme de départ","Conserver la première arme ramassée jusqu'au Top 10 sans la remplacer.","Moyen","Stratégie","both"],[58,"L'inventaire parfait","Atteindre le Top 5 avec exactement 3 armes et 2 emplacements d'objets utilitaires ou de soins.","Moyen","Stratégie","both"],[59,"Deux chasseurs","Chaque joueur réalise au moins 2 éliminations dans une même partie.","Moyen","Duo","duo"],[60,"Duo invincible","Atteindre le Top 5 sans qu'aucun des deux joueurs ait été mis KO.","Difficile","Duo","duo"],[61,"Chacun son arme","Chaque joueur utilise une catégorie d'arme différente pour réaliser une élimination.","Moyen","Duo","duo"],[62,"Duo pacifique","Atteindre le Top 5 avec un maximum de 2 éliminations cumulées.","Difficile","Duo","duo"],[63,"Fidèles jusqu'au bout","Chaque joueur conserve sa première arme ramassée jusqu'au Top 10.","Moyen","Duo","duo"],[64,"Chef et lieutenant","Un joueur réalise 4 éliminations et l'autre au moins une, dans la même partie.","Difficile","Duo","duo"],[65,"Pillage en duo","Chaque joueur ouvre au moins 5 coffres dans une partie.","Facile","Duo","duo"],[66,"Sauvetage mutuel","Chaque joueur doit réanimer son coéquipier au moins une fois dans la même partie.","Difficile","Duo","duo"],[67,"Double précision","Chaque joueur réalise une élimination avec une arme de rareté verte ou inférieure.","Moyen","Duo","duo"],[68,"Les deux héros","Chaque joueur réalise au moins une élimination et les deux terminent vivants dans le Top 5.","Difficile","Duo","duo"],[69,"Le trio infernal","Chaque joueur réalise au moins une élimination dans la même partie.","Facile","Trio","trio"],[70,"Les trois mousquetaires","Réaliser 9 éliminations cumulées et atteindre le Top 10.","Difficile","Trio","trio"],[71,"Trio immortel","Atteindre le Top 3 avec les 3 joueurs encore en vie.","Difficile","Trio","trio"],[72,"Les fantômes","Atteindre le Top 5 sans réaliser aucune élimination en équipe.","Difficile","Trio","trio"],[73,"Trois pillards","Chaque joueur ouvre au moins 3 coffres avant le Top 10.","Facile","Trio","trio"],[74,"Le VIP","Désigner un joueur qui ne doit réaliser aucune élimination. Les deux autres doivent en réaliser au moins une chacun et atteindre le Top 10.","Moyen","Trio","trio"],[75,"Les spécialistes","Chaque joueur réalise une élimination avec une catégorie d'arme différente de celles de ses coéquipiers.","Moyen","Trio","trio"],[76,"Les secouristes","Réussir au moins 2 réanimations effectuées par deux membres différents du trio, puis atteindre le Top 10.","Difficile","Trio","trio"],[77,"L'équipement modeste","Chaque joueur conserve au moins une arme commune (grise) jusqu'au Top 10.","Moyen","Trio","trio"],[78,"Les maîtres de la zone","Atteindre le Top 10 avec les 3 joueurs encore en vie, sans qu'aucun ait subi de dégâts de tempête.","Difficile","Trio","trio"],[79,"Tous au combat","Chaque joueur réalise au moins une élimination dans la même partie.","Moyen","Quatuor","quatuor"],[80,"Escouade intacte","Atteindre le Top 5 avec les 4 joueurs encore en vie.","Difficile","Quatuor","quatuor"],[81,"Zéro sauvetage","Atteindre le Top 10 sans qu'aucun joueur ait été mis KO ni réinitialisé.","Difficile","Quatuor","quatuor"],[82,"Protégez le capitaine !","Désigner un VIP qui ne doit éliminer personne. Les 3 autres doivent réaliser au moins une élimination chacun et le VIP doit survivre jusqu'au Top 10.","Difficile","Quatuor","quatuor"],[83,"Les quatre pillards","Chaque joueur ouvre au moins 2 coffres dans une même partie.","Facile","Quatuor","quatuor"],[84,"Deux duos, une équipe","Former deux binômes. Chaque binôme doit totaliser au moins 2 éliminations et l'escouade atteint le Top 10.","Moyen","Quatuor","quatuor"],[85,"L'armée Ma_JesTik","Réaliser au moins 10 éliminations cumulées et atteindre le Top 5.","Difficile","Quatuor","quatuor"],[86,"Marche forcée","Atteindre le Top 5 sans qu'aucun membre de l'équipe utilise de véhicule.","Moyen","Quatuor","quatuor"],[87,"Les quatre spécialités","Chaque joueur possède une catégorie d'arme principale différente et l'escouade atteint le Top 10.","Moyen","Quatuor","quatuor"],[88,"L'équipement de luxe","Atteindre le Top 10 avec chaque joueur possédant au moins une arme épique (violette) ou supérieure.","Difficile","Quatuor","quatuor"],[89,"Le relais mortel","Les 3 premières éliminations de l'équipe doivent être réalisées par 3 joueurs différents, dans un ordre décidé avant l'atterrissage.","Difficile","Trio","trio"],[90,"Le trio des couleurs","Atteindre le Top 10 avec 3 joueurs encore en vie, chacun portant une arme principale de rareté différente.","Moyen","Trio","trio"],[91,"Le médecin de bord","Un joueur désigné ne transporte aucune arme jusqu'au Top 10. Les deux autres assurent sa protection.","Difficile","Trio","trio"],[92,"Mission sans achat","Atteindre le Top 5 sans qu'aucun joueur achète d'arme ou d'objet pendant la partie.","Facile","Trio","trio"],[93,"Deux chacun !","Chaque membre du trio réalise au moins 2 éliminations dans la même partie.","Moyen","Trio","trio"],[94,"Échange de tirs","Chaque joueur reçoit une arme d'un coéquipier et réalise une élimination avec celle-ci.","Difficile","Trio","trio"],[95,"L'escorte royale","Un joueur désigné ne doit subir aucun dégât infligé par un adversaire jusqu'au Top 15.","Difficile","Trio","trio"],[96,"Les économes","Ouvrir au maximum 6 coffres pour toute l'équipe et atteindre le Top 10.","Moyen","Trio","trio"],[97,"Bouclier réservé","Un seul joueur désigné peut utiliser des consommables de bouclier pendant la partie. Atteindre le Top 10.","Moyen","Trio","trio"],[98,"Le cercle parfait","Atteindre le Top 5 sans qu'aucun des trois joueurs ait subi de dégâts de tempête.","Difficile","Trio","trio"],[99,"Une arme pour tous","Toute l'équipe utilise uniquement des fusils à pompe et réalise au moins 3 éliminations cumulées.","Difficile","Trio","trio"],[100,"Attaque éclair","Réaliser 5 éliminations cumulées avant la fermeture de la deuxième zone.","Difficile","Trio","trio"],[101,"Retour en force","Réinitialiser un coéquipier éliminé et atteindre le Top 10 avec les 3 joueurs encore en vie.","Difficile","Trio","trio"],[102,"La marche des pirates","Aucun joueur n'utilise le sprint tactique avant d'atteindre le Top 10.","Moyen","Trio","trio"],[103,"Les trois champions","Remporter un Top 1 avec les 3 membres de l'équipe encore en vie.","Difficile","Trio","trio"],[104,"Le relais des quatre","Les 4 premières éliminations de l'équipe sont réalisées par 4 joueurs différents, dans un ordre décidé avant l'atterrissage.","Difficile","Quatuor","quatuor"],[105,"Quatre armes, quatre rôles","Chaque joueur utilise une catégorie d'arme différente, et l'équipe réalise 6 éliminations cumulées.","Moyen","Quatuor","quatuor"],[106,"L'arsenal tournant","Les 4 joueurs échangent une arme en chaîne. Chacun doit réaliser une élimination avec l'arme reçue.","Difficile","Quatuor","quatuor"],[107,"Le pillage contrôlé","Ouvrir au maximum 8 coffres pour toute l'escouade et atteindre le Top 10.","Moyen","Quatuor","quatuor"],[108,"Survie sans soins","Atteindre le Top 10 avec les 4 joueurs encore en vie, sans utiliser d'objet restaurant les points de vie.","Difficile","Quatuor","quatuor"],[109,"Le capitaine sans bouclier","Désigner un joueur qui ne peut utiliser aucun consommable de bouclier. Il doit rester en vie jusqu'au Top 10.","Moyen","Quatuor","quatuor"],[110,"Deux binômes spécialisés","Former 2 binômes. Le premier utilise uniquement des armes vertes ou grises ; chaque binôme réalise 3 éliminations cumulées.","Difficile","Quatuor","quatuor"],[111,"Huit éliminations, quatre héros","Chaque joueur réalise au moins 2 éliminations dans la même partie.","Difficile","Quatuor","quatuor"],[112,"Échange obligatoire","Avant la fermeture de la première zone, chaque joueur échange sa première arme ramassée avec celle d'un coéquipier, puis la conserve jusqu'au Top 10.","Moyen","Quatuor","quatuor"],[113,"Butin interdit","N'utiliser que des armes trouvées au sol ou récupérées sur des adversaires éliminés. Atteindre le Top 5.","Difficile","Quatuor","quatuor"],[114,"La seconde chance","Réinitialiser au moins un coéquipier éliminé, puis atteindre le Top 5 avec les 4 joueurs en vie.","Difficile","Quatuor","quatuor"],[115,"L'arc-en-ciel","Au Top 10, les 4 joueurs doivent chacun posséder une arme principale d'une rareté différente.","Moyen","Quatuor","quatuor"],[116,"Escouade sans sprint","Atteindre le Top 10 sans qu'aucun joueur utilise le sprint tactique.","Moyen","Quatuor","quatuor"],[117,"Débarquement musclé","Les 4 joueurs atterrissent dans le même lieu notable. Deux joueurs différents doivent y réaliser une élimination avant que l'équipe quitte le lieu.","Moyen","Quatuor","quatuor"],[118,"L'équipage invincible","Remporter un Top 1 avec les 4 joueurs encore en vie.","Difficile","Quatuor","quatuor"]];
 
@@ -16,22 +17,27 @@ const teams = {solo:"Solo",duo:"Duo",trio:"Trio",quatuor:"Quatuor"};
 const levels = {Facile:0,Moyen:1,Difficile:2};
 const GAME_OPTIONS = [
  {id:"fortnite",label:"Fortnite Zero Build",available:true},
- {id:"warzone",label:"Call of Duty: Warzone",available:false},
+ ...Object.entries(WARZONE_CHALLENGE_GAMES).map(([id,c])=>({id,label:c.label,available:true})),
  {id:"apex",label:"Apex Legends",available:false},
  {id:"z1",label:"Z1 Battle Royale",available:false}
 ];
 // Choix temporaire : chaque arrivée sur la page commence sans thème de jeu.
 // Le catalogue et les résultats Fortnite restent conservés dans leur stockage habituel.
 let selectedGame="";
+const gameCatalogue=()=>selectedGame==='fortnite'?FORTNITE_CHALLENGES:(WARZONE_CHALLENGES[selectedGame]||FORTNITE_CHALLENGES);
+const gameLabel=()=>selectedGame==='fortnite'?'FORTNITE · ZERO BUILD':(WARZONE_CHALLENGE_GAMES[selectedGame]?.short||'FORTNITE · ZERO BUILD');
+const gameDescription=()=>selectedGame==='fortnite'?'118 missions pour faire vos preuves dans l’arène.':'100 missions pour relever le défi sur '+(WARZONE_CHALLENGE_GAMES[selectedGame]?.map||'Warzone')+'.';
+const gameStoreKey=game=>game==='fortnite'?STORE_KEY:'ma_jestik_qg_defis_'+game+'_v1';
+const isFortnite=()=>selectedGame==='fortnite';
 let officialRound=null,verifiedOwner=false;
-const publicActive=()=>officialRound&&["open","locked"].includes(officialRound.status);
+const publicActive=()=>officialRound?.game===selectedGame&&["open","locked"].includes(officialRound.status);
 const gameSelector=()=>'<div class="challenge-game-switcher"><div class="challenge-game-switcher-copy"><span class="challenge-game-kicker">SÉLECTION DU JEU</span><strong>Choisis ton univers</strong><small>Les défis disponibles s’affichent selon le jeu choisi.</small></div><label class="challenge-game-field" for="challengeGame"><span>JEU</span><select id="challengeGame"><option value="" '+(!selectedGame?'selected':'')+'>— Sélectionner un jeu —</option>'+GAME_OPTIONS.map(x=>'<option value="'+x.id+'" '+(selectedGame===x.id?'selected ':'')+(!x.available?'disabled ':'')+'>'+x.label+(x.available?'':' · À venir')+'</option>').join("")+'</select></label></div>';
 const neutralChallenge=()=>'<div class="challenge-neutral"><span class="challenge-neutral-icon" aria-hidden="true">⚔️</span><div><span class="challenge-game-kicker">TON PROCHAIN OBJECTIF</span><h2>LE DÉFI DES VIEWERS</h2><p>Sélectionne un jeu dans le menu ci-dessus pour découvrir ses missions.</p></div></div>';
-const initial = () => ({catalogVersion:CATALOG_VERSION,mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:FORTNITE_CHALLENGES.map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
+const initial = () => ({catalogVersion:isFortnite()?CATALOG_VERSION:1,mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:gameCatalogue().map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
 let data = initial();
 function load(){
  try{
-  const parsed = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+  const parsed = JSON.parse(localStorage.getItem(gameStoreKey(selectedGame||"fortnite")) || "null");
   if(!parsed || !Array.isArray(parsed.enabled) || !Array.isArray(parsed.history) || !Array.isArray(parsed.queue)) return initial();
   const clean = initial();
   clean.mode = parsed.mode==="viewer"?"viewer":"random";
@@ -39,12 +45,12 @@ function load(){
   clean.level = ["all","Facile","Moyen","Difficile"].includes(parsed.level)?parsed.level:"all";
   clean.category = ["all","Combat","Survie","Stratégie","Duo","Trio","Quatuor"].includes(parsed.category)?parsed.category:"all";
   clean.sort = ["default","easy","hard"].includes(parsed.sort)?parsed.sort:"default";
-  clean.enabled = [...new Set(parsed.enabled.filter(n=>Number.isInteger(n)&&n>=1&&n<=FORTNITE_CHALLENGES.length))];
+  clean.enabled = [...new Set(parsed.enabled.filter(n=>Number.isInteger(n)&&n>=1&&n<=gameCatalogue().length))];
   // Migration additive par lots, sans réactiver les défis désactivés par l'utilisateur.
   // Version 1 : 28 défis ; version 2 : 88 défis ; version 3 : 118 défis.
   const oldVersion = Number(parsed.catalogVersion) || 1;
-  if(oldVersion < 2) clean.enabled.push(...FORTNITE_CHALLENGES.slice(28,88).map(x=>x[0]));
-  if(oldVersion < 3) clean.enabled.push(...FORTNITE_CHALLENGES.slice(88,118).map(x=>x[0]));
+  if(isFortnite()&&oldVersion < 2) clean.enabled.push(...FORTNITE_CHALLENGES.slice(28,88).map(x=>x[0]));
+  if(isFortnite()&&oldVersion < 3) clean.enabled.push(...FORTNITE_CHALLENGES.slice(88,118).map(x=>x[0]));
   clean.enabled = [...new Set(clean.enabled)];
   clean.history = parsed.history.slice(0,MAX_HISTORY).filter(x=>x&&typeof x.title==="string");
   clean.queue = parsed.queue.slice(0,20).filter(x=>x&&typeof x.description==="string");
@@ -54,8 +60,8 @@ function load(){
   return clean;
  }catch{return initial();}
 }
-function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(data))}catch{}}
-const eligible = x => data.enabled.includes(x[0])&&(x[5]==="both"||x[5]===data.team)&&(data.level==="all"||x[3]===data.level);
+function save(){try{localStorage.setItem(gameStoreKey(selectedGame||"fortnite"),JSON.stringify(data))}catch{}}
+const eligible = x => data.enabled.includes(x[0])&&(x[5]==='all'||(x[5]==='both'&&['solo','duo'].includes(data.team))||x[5]===data.team)&&(data.level==="all"||x[3]===data.level);
 const getSorted = items => [...items].sort((a,b)=>data.sort==="default"?a[0]-b[0]:((levels[a[3]]-levels[b[3]])*(data.sort==="easy"?1:-1))||a[0]-b[0]);
 const teamSelect = () => '<label>Composition <select id="challengeTeam">'+Object.entries(teams).map(([id,label])=>'<option value="'+id+'" '+(data.team===id?"selected":"")+'>'+label+'</option>').join("")+'</select></label>';
 const score=()=>({success:data.history.filter(x=>x.result==="success").length,fail:data.history.filter(x=>x.result==="failure").length,skipped:data.history.filter(x=>x.result==="skipped").length});
@@ -67,8 +73,8 @@ function current(){
  return '<div class="challenge-active"><div class="challenge-overline"><span>● MISSION EN COURS</span><span>'+escapeHtml(a.source==="viewer"?"PROPOSÉ PAR "+a.by:"TIRAGE ALÉATOIRE")+'</span></div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.description)+'</p><div class="challenge-meta">'+badge(a.level)+ '<span>'+escapeHtml((teams[a.team] || (a.team==="both"?"Solo / Duo":"Solo")).toUpperCase())+'</span></div>'+(publicActive()?'':'<div class="challenge-result-actions"><button type="button" data-action="success" class="btn success">✓ Réussie</button><button type="button" data-action="failure" class="btn failure">✕ Ratée</button><button type="button" data-action="skipped" class="btn btn-ghost">Passer</button></div>')+'</div>';
 }
 function catalogue(){
- const matches=getSorted(FORTNITE_CHALLENGES.filter(x=>data.category==="all"||x[4]===data.category));
- return '<details id="challengeCatalogue" class="challenge-catalog" '+(data.catalogOpen?"open":"")+'><summary>📋 CONSULTER LES '+FORTNITE_CHALLENGES.length+' DÉFIS <span>'+data.enabled.length+' activés / '+FORTNITE_CHALLENGES.length+'</span></summary><div class="challenge-cat-tools"><label for="challengeCategory">Catégorie</label><select id="challengeCategory"><option value="all">Toutes</option>'+["Combat","Survie","Stratégie","Duo","Trio","Quatuor"].map(x=>'<option value="'+x+'" '+(data.category===x?"selected":"")+'>'+x+' ('+FORTNITE_CHALLENGES.filter(d=>d[4]===x).length+')</option>').join("")+'</select><label for="challengeSort">Trier par</label><select id="challengeSort"><option value="default" '+(data.sort==="default"?"selected":"")+'>Numéro</option><option value="easy" '+(data.sort==="easy"?"selected":"")+'>Facile → Difficile</option><option value="hard" '+(data.sort==="hard"?"selected":"")+'>Difficile → Facile</option></select><button type="button" class="btn btn-small" data-action="enable-all">Tout activer</button><button type="button" class="btn btn-small" data-action="disable-all">Tout désactiver</button></div><div class="challenge-catalog-list">'+matches.map(x=>'<label class="challenge-catalog-row"><input type="checkbox" data-enable="'+x[0]+'" '+(data.enabled.includes(x[0])?"checked":"")+'><span class="challenge-catalog-desc"><strong>'+x[0]+'. '+escapeHtml(x[1])+'</strong><small>'+escapeHtml(x[2])+'</small></span><span class="challenge-catalog-meta">'+badge(x[3])+'<small>'+escapeHtml(x[5]==="duo"?"Duo uniquement":x[4])+'</small></span></label>').join("")+'</div></details>';
+ const matches=getSorted(gameCatalogue().filter(x=>data.category==="all"||x[4]===data.category));
+ return '<details id="challengeCatalogue" class="challenge-catalog" '+(data.catalogOpen?"open":"")+'><summary>📋 CONSULTER LES '+gameCatalogue().length+' DÉFIS <span>'+data.enabled.length+' activés / '+gameCatalogue().length+'</span></summary><div class="challenge-cat-tools"><label for="challengeCategory">Catégorie</label><select id="challengeCategory"><option value="all">Toutes</option>'+["Combat","Survie","Stratégie","Duo","Trio","Quatuor"].map(x=>'<option value="'+x+'" '+(data.category===x?"selected":"")+'>'+x+' ('+gameCatalogue().filter(d=>d[4]===x).length+')</option>').join("")+'</select><label for="challengeSort">Trier par</label><select id="challengeSort"><option value="default" '+(data.sort==="default"?"selected":"")+'>Numéro</option><option value="easy" '+(data.sort==="easy"?"selected":"")+'>Facile → Difficile</option><option value="hard" '+(data.sort==="hard"?"selected":"")+'>Difficile → Facile</option></select><button type="button" class="btn btn-small" data-action="enable-all">Tout activer</button><button type="button" class="btn btn-small" data-action="disable-all">Tout désactiver</button></div><div class="challenge-catalog-list">'+matches.map(x=>'<label class="challenge-catalog-row"><input type="checkbox" data-enable="'+x[0]+'" '+(data.enabled.includes(x[0])?"checked":"")+'><span class="challenge-catalog-desc"><strong>'+x[0]+'. '+escapeHtml(x[1])+'</strong><small>'+escapeHtml(x[2])+'</small></span><span class="challenge-catalog-meta">'+badge(x[3])+'<small>'+escapeHtml(x[5]==="duo"?"Duo uniquement":x[4])+'</small></span></label>').join("")+'</div></details>';
 }
 function queue(){
  if(!data.queue.length)return '<p class="challenge-muted" data-challenge-queue-empty>Aucune proposition en attente.</p>';
@@ -81,12 +87,12 @@ function history(){
 function sharedMission(){
  const r=officialRound;
  if(!publicActive())return '<div class="challenge-empty shared-waiting"><div class="challenge-symbol" aria-hidden="true">⚔️</div><h3>Aucune mission officielle en cours</h3><p>La prochaine mission apparaîtra ici dès que Ma_JesTik la lancera.</p></div>';
- const original=FORTNITE_CHALLENGES.find(x=>x[0]===Number(r.challenge_id));
+ const original=gameCatalogue().find(x=>x[0]===Number(r.challenge_id));
  const desc=original&&original[1]===r.challenge_title?original[2]:"";
  const level=original?badge(original[3]):"";
  return '<div class="challenge-active shared-live"><div class="challenge-overline"><span>● MISSION COMMUNAUTAIRE</span><span>'+escapeHtml(r.status==="open"?"VOTES OUVERTS":"VOTES FERMÉS")+'</span></div><h3>'+escapeHtml(r.challenge_title)+'</h3>'+
  (desc?'<p>'+escapeHtml(desc)+'</p>':'')+
- '<div class="challenge-meta">'+level+'<span>'+escapeHtml(teams[r.team]||"Fortnite")+'</span></div></div>';
+ '<div class="challenge-meta">'+level+'<span>'+escapeHtml(teams[r.team]||gameLabel())+'</span></div></div>';
 }
 function visitorView(){
  const r=officialRound;
@@ -94,17 +100,17 @@ function visitorView(){
  '<div class="challenge-history-row"><span class="challenge-history-state '+(r.status==="resolved"?(r.result==="success"?"success":"failure"):"skipped")+'">'+(r.status==="resolved"?"✓":"—")+'</span><span><strong>'+escapeHtml(r.challenge_title)+'</strong><small>'+escapeHtml(r.status==="cancelled"?"Annulé":r.result==="success"?"Réussite":"Échec")+'</small></span></div>':
  '<p class="challenge-muted">Les résultats officiels apparaîtront ici.</p>';
  return '<section class="challenge-ui challenge-public" id="challengeUi">'+gameSelector()+
- '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DES VIEWERS</h2><p>La mission officielle en direct.</p></div>'+
+ '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">'+escapeHtml(gameLabel())+'</span><h2>LE DÉFI DES VIEWERS</h2><p>La mission officielle en direct.</p></div>'+
  sharedMission()+'</section><aside class="challenge-sidebar"><section class="panel"><h3>JOURNAL DES MISSIONS</h3>'+last+'</section><div id="challengeVoteSlot" class="challenge-vote-slot"></div></aside></div></section>';
 }
 function view(message=""){
  const s=score();
- const count=FORTNITE_CHALLENGES.filter(eligible).length;
+ const count=gameCatalogue().filter(eligible).length;
  if(!selectedGame) return '<section class="challenge-ui" id="challengeUi">'+gameSelector()+neutralChallenge()+'</section>';
  if(!verifiedOwner)return visitorView();
  return '<section class="challenge-ui" id="challengeUi">'+gameSelector()+
  '<div class="challenge-stats"><div><span>DÉFIS DISPONIBLES</span><strong>'+count+'</strong></div><div><span>RÉUSSITES</span><strong>'+s.success+'</strong></div><div><span>ÉCHECS</span><strong>'+s.fail+'</strong></div><div><span>PASSÉES</span><strong>'+s.skipped+'</strong></div></div>'+
- '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">FORTNITE · ZERO BUILD</span><h2>LE DÉFI DES VIEWERS</h2><p>118 missions pour faire vos preuves dans l’arène.</p></div>'+
+ '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">'+escapeHtml(gameLabel())+'</span><h2>LE DÉFI DES VIEWERS</h2><p>'+escapeHtml(gameDescription())+'</p></div>'+
  '<div class="challenge-tabs" role="group" aria-label="Mode de création du défi"><button type="button" class="'+(data.mode==="random"?"selected":"")+'" data-action="mode" data-value="random" aria-pressed="'+(data.mode==="random")+'">🎲 Aléatoire</button><button type="button" class="'+(data.mode==="viewer"?"selected":"")+'" data-action="mode" data-value="viewer" aria-pressed="'+(data.mode==="viewer")+'">👥 Proposition viewer</button></div>'+
  (data.mode==="random"?'<div class="challenge-filters">'+teamSelect()+'<label>Filtrer par difficulté <select id="challengeLevel"><option value="all">Toutes</option>'+["Facile","Moyen","Difficile"].map(x=>'<option value="'+x+'" '+(data.level===x?"selected":"")+'>'+x+'</option>').join("")+'</select></label></div><p class="challenge-muted">'+count+' défi(s) compatible(s) avec ce mode et cette difficulté.</p><button type="button" class="btn btn-gold challenge-draw" data-action="draw" '+(data.active?"disabled":"")+'>🎲 TIRER UNE MISSION</button>':
  '<form id="challengeViewerForm" class="challenge-viewer-form">'+teamSelect()+'<label>Pseudo du viewer <input name="viewer" type="text" maxlength="36" placeholder="Ex. ViewerAlpha" required></label><label>Titre du défi <input name="title" type="text" maxlength="80" placeholder="Ex. Le défi du pirate" required></label><label>Règles de la mission <textarea name="description" rows="3" maxlength="350" placeholder="Explique précisément comment réussir le défi…" required></textarea></label><button type="submit" class="btn btn-gold">Ajouter à la file de validation</button><p class="challenge-muted">Cette proposition reste sur cet appareil : elle n’est pas envoyée à Ma_JesTik ni à Twitch/Rumble.</p></form>')+
@@ -130,13 +136,14 @@ export function mountChallenges(){
  render();
  proposalPanel=mountChallengeProposals({
   root,
+  getGame:()=>selectedGame||"fortnite",
   isOwner:()=>verifiedOwner,
-  canAccept:()=>votePanel?.hasOpenRound()?'Termine d’abord la manche de vote officielle.':
+  canAccept:()=>isFortnite()&&votePanel?.hasOpenRound()?'Termine d’abord la manche de vote officielle.':
    data.active?'Termine ou passe le défi actuel avant d’en accepter un autre.':'',
   onAccept:async challenge=>{
    data.active={...challenge,source:'viewer',level:'Personnalisé',started:Date.now()};
    save();render();
-   const ok=await votePanel?.publishCurrent();
+   const ok=isFortnite()?await votePanel?.publishCurrent():true;
    if(!root.isConnected)return;
    const info=root.querySelector('#challengeStatus');
    if(info&&!ok)info.textContent='Défi accepté. Publication du vote indisponible : réessaie avec « Ouvrir les votes ».';
@@ -147,7 +154,7 @@ export function mountChallenges(){
   officialRound=state.round||null;verifiedOwner=!!state.owner||isQGOwnerSession();
   // Une validation officielle achève également le défi local du streamer :
   // aucun second clic sur « Réussie » ou « Ratée » n'est nécessaire.
-  const r=officialRound,a=data.active;
+  const r=officialRound?.game===selectedGame?officialRound:null,a=data.active;
   if(verifiedOwner&&a&&r?.status==='resolved'&&
      Number.isFinite(Number(r.created_at))&&Number(r.created_at)*1000>=Number(a.started||0)-15000&&
      String(a.title)===String(r.challenge_title)&&
@@ -157,10 +164,10 @@ export function mountChallenges(){
     data.history=data.history.slice(0,MAX_HISTORY);
     data.active=null;save();
   }
-  if(publicActive()&&!selectedGame)selectedGame="fortnite";
+  if(officialRound&&["open","locked"].includes(officialRound.status)&&!selectedGame&&GAME_OPTIONS.some(g=>g.id===officialRound.game&&g.available)){selectedGame=officialRound.game;data=load();}
   const after=JSON.stringify([officialRound?.id,officialRound?.status,verifiedOwner,selectedGame]);
   if(before!==after){render();if(verifiedOwner)void proposalPanel?.refresh();}
- });
+ },()=>selectedGame||'fortnite');
  root.addEventListener("click", event=>{
   const btn=event.target.closest("[data-action]");
   if(!btn||btn.disabled)return;
@@ -168,9 +175,9 @@ export function mountChallenges(){
   if(!verifiedOwner)return;
   if(action==="mode"){data.mode=btn.dataset.value==="viewer"?"viewer":"random";save();render();return;}
   if(action==="draw"){
-   if(votePanel?.hasOpenRound()){render("Une mission officielle est déjà en cours. Termine le vote avant de tirer une autre mission.");return;}
+   if(isFortnite()&&votePanel?.hasOpenRound()){render("Une mission officielle est déjà en cours. Termine le vote avant de tirer une autre mission.");return;}
    if(data.active){render("Termine ou passe le défi actuel avant d'en tirer un autre.");return;}
-   const available=FORTNITE_CHALLENGES.filter(eligible);
+   const available=gameCatalogue().filter(eligible);
    if(!available.length){render("Aucun défi ne correspond aux filtres. Active des défis ou change de difficulté.");return;}
    const alternatives=available.filter(x=>x[0]!==data.lastPreset);
    const pool=alternatives.length?alternatives:available;
@@ -178,7 +185,7 @@ export function mountChallenges(){
    data.active={id:x[0],source:"random",title:x[1],description:x[2],level:x[3],team:data.team,by:"Tirage aléatoire",started:Date.now()};
    data.lastPreset=x[0];save();render();
    void (async()=>{
-    const ok=await votePanel?.publishCurrent();
+    const ok=isFortnite()?await votePanel?.publishCurrent():true;
     if(!root.isConnected)return;
     const message=root.querySelector("#challengeStatus");
     if(message)message.textContent=ok?"":"Le défi est local, mais pas encore publié. Réessaie depuis le panneau de vote.";
@@ -186,7 +193,7 @@ export function mountChallenges(){
    return;
   }
   if(["success","failure","skipped"].includes(action)){
-   if(votePanel?.hasOpenRound()){render("Un vote officiel est en cours : termine-le d’abord dans le panneau à droite.");return;}
+   if(isFortnite()&&votePanel?.hasOpenRound()){render("Un vote officiel est en cours : termine-le d’abord dans le panneau à droite.");return;}
    if(!data.active)return;
    const a=data.active;
    data.history.unshift({...a,result:action,when:Date.now()});
@@ -195,7 +202,7 @@ export function mountChallenges(){
   }
   if(action==="accept"||action==="reject"){
    const idx=data.queue.findIndex(q=>q.id===btn.dataset.id);if(idx<0)return;
-   if(action==="accept"&&votePanel?.hasOpenRound()){render("Termine le vote officiel avant d'accepter un autre défi.");return;}
+   if(action==="accept"&&isFortnite()&&votePanel?.hasOpenRound()){render("Termine le vote officiel avant d'accepter un autre défi.");return;}
    if(action==="accept"&&data.active){render("Termine le défi en cours avant d'en accepter un autre.");return;}
    const [item]=data.queue.splice(idx,1);
    if(action==="accept")data.active={...item,source:"viewer",level:"Personnalisé",started:Date.now()};
@@ -203,7 +210,7 @@ export function mountChallenges(){
    if(action==="accept"){
     render();
     void (async()=>{
-      const ok=await votePanel?.publishCurrent();
+      const ok=isFortnite()?await votePanel?.publishCurrent():true;
       if(!root.isConnected)return;
       const status=root.querySelector("#challengeStatus");
       if(status)status.textContent=ok?"":"Proposition acceptée localement, mais pas publiée. Réessaie dans le panneau.";
@@ -212,7 +219,7 @@ export function mountChallenges(){
    return;
   }
   if(action==="enable-all"||action==="disable-all"){
-   data.enabled=action==="enable-all"?FORTNITE_CHALLENGES.map(x=>x[0]):[];
+   data.enabled=action==="enable-all"?gameCatalogue().map(x=>x[0]):[];
    data.catalogOpen=true;save();render();return;
   }
   if(action==="clear-history"){
@@ -223,7 +230,7 @@ export function mountChallenges(){
  root.addEventListener("change",event=>{
   const el=event.target;
   if(el.id!=="challengeGame"&&!verifiedOwner)return;
-  if(el.id==="challengeGame") { selectedGame=el.value==="fortnite"?"fortnite":"";render(); }
+  if(el.id==="challengeGame") { selectedGame=GAME_OPTIONS.some(g=>g.available&&g.id===el.value)?el.value:"";data=load();render(); }
   else if(el.id==="challengeTeam"){data.team=Object.hasOwn(teams,el.value)?el.value:"solo";save();render();}
   else if(el.id==="challengeLevel"){data.level=["Facile","Moyen","Difficile"].includes(el.value)?el.value:"all";save();render();}
   else if(el.id==="challengeSort"){data.sort=["default","easy","hard"].includes(el.value)?el.value:"default";data.catalogOpen=true;save();render();}
