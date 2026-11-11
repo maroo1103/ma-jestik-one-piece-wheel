@@ -21,12 +21,22 @@ const maps={
     src:'assets/warzone/zodiac/map-full.png',
     title:'Zodiac · 10 lieux',eyebrow:'WARZONE · RÉSURGENCE',
     alt:'Carte officielle Zodiac avec les dix lieux nommés'
+  },
+  'warzone-rebirth':{
+    src:'assets/warzone/rebirth/map-full.png',
+    title:'Rebirth Island · 13 lieux',eyebrow:'WARZONE · RÉSURGENCE',
+    alt:'Carte Rebirth Island avec les treize lieux du modèle préparé'
+  },
+  'warzone-verdansk':{
+    src:'assets/warzone/verdansk/map-full.png',
+    title:'Verdansk · 21 lieux',eyebrow:'WARZONE · BATTLE ROYALE',
+    alt:'Carte Verdansk avec les vingt-et-un lieux du modèle préparé'
   }
 };
 function openMap(model='fortnite'){
   if(dialog.open)return;
   const selected=maps[model]||original;
-  if(model!=='fortnite'&&!window.warzoneAssetsReady)return;
+  if(model!=='fortnite'&&window.warzoneAssetGames?.[model.slice(8)]!==true)return;
   dialog.dataset.warzone=model==='fortnite'?'false':'true';
   $('mapDialogImage').src=selected.src;
   $('mapDialogImage').alt=selected.alt;
