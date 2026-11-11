@@ -59,10 +59,13 @@ test('écran Défis préserve les 118 Fortnite et copie les mêmes composants po
  assert.match(html,/qg\.js\?v=20261111-warzone-challenges1/);
 });
 
-test('aucun défi Warzone déclaré Fortnite dans le backend existant',()=>{
+test('votes Warzone et Fortnite correctement séparés avec la même interface',()=>{
  const ui=source('dist/qg/defis.js'),votes=source('dist/qg/votes.js');
- assert.match(votes,/if\(getGame\(\)!=='fortnite'\)/);
- assert.match(ui,/isFortnite\(\)\?await votePanel\?\.publishCurrent\(\):true/);
+ const worker=source('backend/cloudflare/src/worker.js');
+ assert.match(votes,/return \{game,challenge_id:/);
+ assert.match(ui,/await votePanel\?\.publishCurrent\(\)/);
+ assert.match(worker,/vote_rounds_warzone/);
+ assert.match(worker,/WARZONE_VOTE_GAMES/);
  const proposals=source('dist/qg/challenge-proposals.js');
  assert.match(proposals,/getGame/);
  assert.match(proposals,/GAME_MARKERS/);
