@@ -1,3 +1,12 @@
+## Préparation des roues Rebirth et Verdansk — 11 novembre 2026
+- **Code préparé et versionné**, mais **aucun modèle Rebirth ou Verdansk publié** tant que les vraies images et les deux cartes de chaque jeu ne sont pas présentes et validées. Les modèles existants Fortnite, Hajin et Zodiac demeurent inchangés. Rebirth se fait en premier ; Verdansk **en dernier**, même si son pack arrivait en avance.
+- Modules `dist/warzone-rebirth.mjs` (13 destinations actualisées de 2026, y compris **Turbine** et **Outpost non marqué**) et `dist/warzone-verdansk.mjs` (21 destinations de l'atlas actuel, préparatoires, en attente de recoupement avec **Signal Station / Grazna-7 / Overlook** Saison 1 de novembre 2026). IDs `rb01`–`rb13`, `vd01`–`vd21`.
+- `dist/wheel-library.mjs` : import conditionnel des deux modules officiels ; ils ne sont proposés aux visiteurs que si le manifeste des ressources atteste leur nombre exact de photos et de cartes ; modèle Verdansk derrière la disponibilité de Rebirth. Les roues enregistrées dans localStorage/IndexedDB ne sont pas écrasées.
+- `dist/app.js` + `dist/map.js` : activation/garde par jeu, vraie miniature sans POI en haut à gauche, vue agrandie avec POI, protections des modèles, possibilité de dupliquer pour personnaliser, mêmes moteurs de tirage.
+- `scripts/deploy-future-warzone-assets.py` exécuté **après** le script existant dans GitHub Actions, contrôle les ZIP `dist/assets/rebirth-pack.zip` et `dist/assets/verdansk-pack.zip`, 13/21 images, tailles, WebP, cartes PNG, empreintes SHA256 et fusion du manifeste. **Sans ZIP, aucune nouvelle roue visible.** Aucun Cloudflare Worker/D1 impliqué.
+- Les fichiers sont dans le dépôt, tests de non-régression ajoutés. Voir **`docs/WARZONE_REBIRTH_VERDANSK_PREPARATION.md`** pour la liste des POI, sources officielles et la procédure exacte de livraison des images. **Avant publication finale**, recontrôler les noms de lieux saisonniers de Verdansk et les versions de captures Rebirth, puis procéder dans l'ordre demandé.
+- Aucun son spécifique supplémentaire pour cette phase. Rendu utilisateur non encore validé pour les futures roues car aucun visuel fourni.
+
 # Ma_JesTik — Source de référence du projet
 
 **État au 10 novembre 2026** · Document de continuité pour les conversations du projet ChatGPT « Ma_JesTik — Site Web & GitHub ».
