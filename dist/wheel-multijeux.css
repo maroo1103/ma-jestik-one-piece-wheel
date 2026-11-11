@@ -14,7 +14,7 @@
 .wheel-library-panel .wheel-gold-button:hover:enabled{color:#18140e;background:#ffdfad}
 .wheel-local-note{font-size:13px;color:#aba69c;margin:13px 0 0;line-height:1.5}
 .wheel-status{min-height:1.3em;color:#edd4a8;font-size:14px;line-height:1.5;margin:9px 0 0}
-.wheel-custom-editor{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:16px 0 12px;padding:14px 0 0;border-top:1px solid #604c37}
+.wheel-custom-editor{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:10px 0 12px;padding:0;border:0}
 .wheel-custom-editor label{flex:1 1 245px;display:grid;gap:6px;color:#e5dccf;font-weight:600;font-size:13px}
 .wheel-custom-editor input,.wheel-bulk-editor textarea,.wheel-name-dialog input{background:#0d1114;color:#f6eee2;border:1px solid #78654d;border-radius:9px;padding:11px 12px;font:inherit;width:100%;box-sizing:border-box}
 .wheel-custom-editor input{min-height:43px}
