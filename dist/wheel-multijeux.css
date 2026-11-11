@@ -1,0 +1,36 @@
+/* Roue multijeux Ma_JesTik — complément isolé, charte graphite/champagne. */
+.wheel-library-panel{background:linear-gradient(155deg,#1a1c1e 0%,#101213 100%);border:1px solid #705c40;border-radius:18px;padding:clamp(18px,2.5vw,30px);margin:10px 0 34px;box-shadow:0 13px 42px #0005}
+.wheel-library-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+.wheel-library-heading .eyebrow{margin:0 0 8px;color:#d7b67c;letter-spacing:.14em}
+.wheel-library-heading h2{margin:0;color:#f4e4c7;font-size:clamp(23px,2.3vw,34px);line-height:1.15}
+.wheel-library-heading p{color:#bcb6ac;font-size:14px;line-height:1.55;margin:7px 0 0}
+.wheel-library-controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.wheel-library-controls select{flex:1 1 220px;min-width:180px;max-width:440px;height:44px;border:1px solid #a38256;border-radius:9px;background:#0b0d0e;color:#fff3e2;padding:0 12px;font:inherit}
+.wheel-library-panel button,.wheel-edit-actions button,.wheel-bulk-editor button{border:1px solid #77654b;background:#242321;color:#f1e6d4;min-height:42px;border-radius:9px;padding:9px 13px;font:600 13px/1.2 system-ui,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
+.wheel-library-panel button:hover:enabled,.wheel-edit-actions button:hover:enabled{background:#4a3925;border-color:#e7b970}
+.wheel-library-panel button:focus-visible,.wheel-edit-actions button:focus-visible,.wheel-library-panel input:focus-visible,.wheel-library-panel select:focus-visible,.wheel-library-panel textarea:focus-visible{outline:2px solid #f2ca8b;outline-offset:3px}
+.wheel-library-panel button:disabled,.wheel-edit-actions button:disabled{opacity:.42;cursor:not-allowed}
+.wheel-library-panel .wheel-gold-button{color:#18140e;background:#e5c087;border-color:#e5c087}
+.wheel-library-panel .wheel-gold-button:hover:enabled{color:#18140e;background:#ffdfad}
+.wheel-local-note{font-size:13px;color:#aba69c;margin:13px 0 0;line-height:1.5}
+.wheel-status{min-height:1.3em;color:#edd4a8;font-size:14px;line-height:1.5;margin:9px 0 0}
+.wheel-custom-editor{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:16px 0 12px;padding:14px 0 0;border-top:1px solid #604c37}
+.wheel-custom-editor label{flex:1 1 245px;display:grid;gap:6px;color:#e5dccf;font-weight:600;font-size:13px}
+.wheel-custom-editor input,.wheel-bulk-editor textarea,.wheel-name-dialog input{background:#0d1114;color:#f6eee2;border:1px solid #78654d;border-radius:9px;padding:11px 12px;font:inherit;width:100%;box-sizing:border-box}
+.wheel-custom-editor input{min-height:43px}
+.wheel-bulk-editor{margin-top:10px;padding:10px 0 0;border-top:1px solid #44382c}
+.wheel-bulk-editor summary{cursor:pointer;color:#dcc293;font-weight:600;padding:7px 0;outline-offset:3px}
+.wheel-bulk-editor p{color:#bfb5a7;font-size:13px;margin:5px 0 10px}
+.wheel-bulk-editor textarea{display:block;min-height:125px;resize:vertical;margin:8px 0 10px;line-height:1.5}
+.wheel-edit-actions{display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap;margin-top:8px}
+.poi-card .wheel-edit-actions button{font-size:12px;min-height:32px;padding:7px 9px}
+.wheel-name-dialog{max-width:440px;width:min(92vw,440px);background:#151719;color:#f7eedb;border:1px solid #a78958;border-radius:16px;padding:24px}
+.wheel-name-dialog::backdrop{background:#000a;backdrop-filter:blur(4px)}
+.wheel-name-dialog h2{color:#f3dbad;margin:0 0 10px}
+.wheel-name-dialog label{display:grid;gap:8px;margin:15px 0;color:#e9dec8}
+.wheel-name-dialog .wheel-name-actions{display:flex;justify-content:flex-end;gap:10px}
+.wheel-name-dialog button{min-height:40px;padding:8px 14px;border:1px solid #a08154;border-radius:9px;background:#2e2922;color:#f5e5c7;font:600 14px system-ui;cursor:pointer}
+.wheel-name-dialog button[type=submit]{background:#e5c087;color:#1b130b}
+body.stream .wheel-library-panel,body.stream .wheel-custom-editor,body.stream .wheel-bulk-editor{display:none!important}
+.map-launch[hidden],#sourcesButton[hidden]{display:none!important}
+@media(max-width:760px){.wheel-library-heading{display:block}.wheel-library-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.wheel-library-controls select{grid-column:1/-1;max-width:none;width:100%;min-width:0}.wheel-library-controls button{padding:8px;font-size:12px}.wheel-custom-editor{display:grid}.wheel-custom-editor button{width:100%}.wheel-library-panel{margin:12px 0 25px}.wheel-library-heading h2{font-size:25px}}
