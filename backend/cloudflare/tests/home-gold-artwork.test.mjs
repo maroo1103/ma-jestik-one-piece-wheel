@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
 });
 
 
@@ -233,7 +233,7 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const shop=src("dist/qg/boutique.js");
  const css=src("dist/qg/boutique.css");
  assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
  assert.match(html,/href="#\/boutique" data-page="boutique"/);
  assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
  assert.match(js,/import \{boutiqueMarkup,mountBoutique,unmountBoutique\} from '.\/boutique\.js/);
@@ -354,8 +354,8 @@ test("Classement QG : primes mensuelles visibles uniquement comme projet, sans f
  assert.match(rewards,/href="#\/boutique"/);
  assert.doesNotMatch(rewards,/fetch\(|localStorage|sessionStorage|data-member-id/);
  assert.ok(!rewards.includes('/adminargent'));
- assert.match(html,/ranking-rewards\.css\?v=20261111-monthly-mission1/);
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(html,/ranking-rewards\.css\?v=20261111-hourly-nobutton1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
  assert.match(style,/\.mj-monthly-rewards-grid\{display:grid/);
  assert.match(style,/@media\(max-width:600px\)/);
 });
@@ -378,8 +378,8 @@ test("Récompenses mensuelles : page indépendante dans Communauté, classement 
  assert.match(auth,/'recompenses-mensuelles'/);
  assert.match(rewards,/<h1 id="mjMonthlyRewardsTitle">/);
  assert.match(css,/\.mj-monthly-rewards-hero h1\{/);
- assert.match(html,/ranking-rewards\.css\?v=20261111-monthly-mission1/);
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(html,/ranking-rewards\.css\?v=20261111-hourly-nobutton1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
 });
 
 
@@ -408,8 +408,8 @@ test("Récompenses mensuelles : top 10 motivant, budget plafonné et sections sa
  assert.match(style,/\.mj-monthly-rewards-challenge\{/);
  assert.match(style,/\.mj-monthly-rewards-rules-list\{/);
  assert.match(style,/@media\(max-width:600px\)/);
- assert.match(html,/ranking-rewards\.css\?v=20261111-monthly-mission1/);
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(html,/ranking-rewards\.css\?v=20261111-hourly-nobutton1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
 });
 
 test("Nettoyage demandé : aucun doublon dans les cinq fiches et accroche défis multijeux",()=>{
@@ -455,8 +455,21 @@ test("Missions : cadence horaire sans spam à chaque retour d’onglet",()=>{
  assert.match(client,/Date\.now\(\)-lastRefresh>=REFRESH_INTERVAL_MS/);
  assert.match(client,/timer=setInterval\(wake,REFRESH_INTERVAL_MS\)/);
  assert.match(client,/Mise à jour automatique toutes les heures/);
- assert.match(client,/if\(a==='refresh'\)\{void refresh\(\);return;\}/);
+ assert.doesNotMatch(client,/data-mission-action="refresh"|ACTUALISER|if\(a==='refresh'\)/);
  assert.doesNotMatch(client,/setInterval\(wake,30000\)|Mise à jour automatique toutes les 30 secondes/);
- assert.match(main,/monthly-missions\.js\?v=20261111-hourly1/);
- assert.match(html,/qg\.js\?v=20261111-hourly1/);
+ assert.match(main,/monthly-missions\.js\?v=20261111-hourly-nobutton1/);
+ assert.match(html,/qg\.js\?v=20261111-hourly-nobutton1/);
+});
+
+test("Missions : retrait du bouton de rafraîchissement manuel en conservant le suivi horaire",()=>{
+ const client=src("dist/qg/monthly-missions.js");
+ const style=src("dist/qg/ranking-rewards.css");
+ const qg=src("dist/qg/qg.js");
+ assert.doesNotMatch(client,/data-mission-action="refresh"|>ACTUALISER<\/button>|if\(a==='refresh'\)/);
+ assert.match(client,/class="mj-mission-cadence"/);
+ assert.match(client,/Mise à jour automatique toutes les heures/);
+ assert.match(client,/REFRESH_INTERVAL_MS=60\*60\*1000/);
+ assert.match(client,/void refresh\(\);\s*\n\}/);
+ assert.match(style,/\.mj-mission-cadence\{/);
+ assert.match(qg,/monthly-missions\.js\?v=20261111-hourly-nobutton1/);
 });

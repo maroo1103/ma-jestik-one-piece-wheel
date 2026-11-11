@@ -16,7 +16,7 @@ export function mountMonthlyMissions(){
  const REFRESH_INTERVAL_MS=60*60*1000;
  root.innerHTML='<section class="mj-mission-live" aria-label="Mission mensuelle">'+
   '<div id="mjMissionPlayer" aria-live="polite">Vérification de la mission…</div>'+
-  '<div class="mj-mission-actions"><button type="button" data-mission-action="refresh">ACTUALISER</button><span>Mise à jour automatique toutes les heures</span></div>'+
+  '<p class="mj-mission-cadence">Mise à jour automatique toutes les heures</p>'+
   '<p id="mjMissionFeedback" role="status"></p><div id="mjMissionAdmin"></div></section>';
  const player=root.querySelector('#mjMissionPlayer'),owner=root.querySelector('#mjMissionAdmin'),feedback=root.querySelector('#mjMissionFeedback');
  const message=(s,error=false)=>{feedback.textContent=s;feedback.classList.toggle('error',error);};
@@ -116,7 +116,6 @@ export function mountMonthlyMissions(){
  const click=e=>{
   const el=e.target.closest('[data-mission-action]');if(!el||!root.contains(el))return;
   const a=el.dataset.missionAction;
-  if(a==='refresh'){void refresh();return;}
   if(!me?.owner)return;
   if(a==='open'&&confirm('Ouvrir la mission de '+month+' ? Les règles seront figées.'))void change('open',{month});
   if(a==='close'&&confirm('Clôturer la mission de '+month+' ?'))void change('close',{month});

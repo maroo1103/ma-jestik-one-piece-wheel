@@ -102,8 +102,7 @@
 .qg-layout .mj-mission-result{background:#2a241c;border-left:3px solid #d3a56a;border-radius:0 7px 7px 0;padding:13px;color:#ead2a9;font-size:12px;font-weight:800}
 .qg-layout .mj-mission-result.done{background:#292a20;color:#f4dfaf}
 .qg-layout .mj-mission-live small{font-size:10px;color:#baa994;line-height:1.7}
-.qg-layout .mj-mission-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
-.qg-layout .mj-mission-actions span{font-size:10px;color:#b1a38e}
+.qg-layout .mj-mission-cadence{margin:14px 0 0;font-size:10px;color:#b1a38e;line-height:1.6}
 .qg-layout .mj-mission-live button{border:1px solid #a98755;border-radius:7px;min-height:36px;padding:9px 12px;background:#34281d;color:#f3cf96;font-size:10px;font-weight:900;cursor:pointer}
 .qg-layout .mj-mission-live button:hover{background:#503a22}
 .qg-layout #mjMissionFeedback{min-height:17px;font-size:11px;color:#ddbe89}
