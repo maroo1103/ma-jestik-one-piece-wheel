@@ -237,6 +237,8 @@ test('Rebirth et Verdansk en préparation : invisibles tant que leurs images ne 
     ['fortnite','warzone-hajin','warzone-zodiac']);
   assert.equal(isOfficialWheel('warzone-rebirth'),true);
   assert.equal(isOfficialWheel('warzone-verdansk'),true);
+  const verdanskEarly=loadWheelLibrary(baseline,{},{verdansk:true});
+  assert.equal(verdanskEarly.wheels.length,3,'Verdansk doit attendre Rebirth');
   const prepared=loadWheelLibrary(baseline,{}, {rebirth:true,verdansk:true});
   const rebirth=prepared.wheels.find(w=>w.id==='warzone-rebirth');
   const verdansk=prepared.wheels.find(w=>w.id==='warzone-verdansk');
