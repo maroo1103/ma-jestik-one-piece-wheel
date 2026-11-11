@@ -1,4 +1,5 @@
 /* Ma_JesTik — gestion 100 % locale des roues : aucun Worker, aucune D1. */
+import { HAJIN_MODEL } from './warzone-hajin.mjs';
 export const MAX_CHOICES = 60;
 export const MAX_WHEELS = 24;
 export const FALLBACK_IMAGE = '/icons/mj-source.webp';
@@ -44,10 +45,18 @@ export function loadWheelLibrary(baseChoices, legacy = {}) {
         if (!w || found.has(w.id)) return false;
         found.add(w.id); return true;
       });
-      if (wheels.length) return { active: found.has(raw.active) ? raw.active : wheels[0].id, wheels };
+      if (wheels.length) {
+        // Migration additive : ajouter le nouveau modèle sans écraser les roues
+        // existantes, ni ressusciter un modèle supprimé volontairement.
+        const dismissedPresets=Array.isArray(raw.dismissedPresets)
+          ?raw.dismissedPresets.filter(id=>id==='warzone-hajin'):[];
+        if(!found.has(HAJIN_MODEL.id)&&!dismissedPresets.includes(HAJIN_MODEL.id)&&wheels.length<MAX_WHEELS)
+          wheels.push(validateWheel(HAJIN_MODEL));
+        return { active:found.has(raw.active)?raw.active:wheels[0].id, wheels, dismissedPresets };
+      }
     }
   } catch {}
-  return { active: 'fortnite', wheels: [validateWheel(fallback)] };
+  return { active: 'fortnite', wheels: [validateWheel(fallback), validateWheel(HAJIN_MODEL)], dismissedPresets:[] };
 }
 export function saveWheelLibrary(library) {
   try {
