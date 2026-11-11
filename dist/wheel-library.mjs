@@ -2,6 +2,9 @@
 import { HAJIN_MODEL } from './warzone-hajin.mjs';
 import { ZODIAC_MODEL } from './warzone-zodiac.mjs';
 const OFFICIAL_WARZONE_MODELS=[HAJIN_MODEL,ZODIAC_MODEL];
+// Les modèles fournis avec le site sont des références : duplique-les pour les éditer.
+export const OFFICIAL_WHEEL_IDS=Object.freeze(['fortnite','warzone-hajin','warzone-zodiac']);
+export const isOfficialWheel=id=>OFFICIAL_WHEEL_IDS.includes(id);
 export const MAX_CHOICES = 60;
 export const MAX_WHEELS = 24;
 export const FALLBACK_IMAGE = '/icons/mj-source.webp';
