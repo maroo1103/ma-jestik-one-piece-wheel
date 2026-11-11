@@ -3,7 +3,12 @@ import { readImages, saveImage, deleteImage, prepareImage } from './image-storag
 import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport, isOfficialWheel } from './wheel-library.mjs?v=20261111-wheel-lock1';
 const WARZONE_PREFIX='assets/warzone/';
 let warzoneAssetsReady=false;
+const warzoneAssetGames={hajin:false,zodiac:false,rebirth:false,verdansk:false};
 window.warzoneAssetsReady=false;
+window.warzoneAssetGames=warzoneAssetGames;
+const warzoneGameId=wheelId=>String(wheelId).startsWith('warzone-')
+  ?String(wheelId).slice('warzone-'.length):null;
+const warzoneModelHasAssets=id=>warzoneAssetGames[warzoneGameId(id)]===true;
 let POIS = [
   ['01', 'Littoral de la liberté', ['Littoral de', 'la liberté']],
   ['02', 'Le coffre', ['Le coffre']],
@@ -369,8 +374,8 @@ function statusMessage(text) {
   if(node)node.textContent=String(text||'');
 }
 function updateWarzoneNotice(){
-  if(currentWheelId!=='warzone-hajin'&&currentWheelId!=='warzone-zodiac')return;
-  statusMessage(!warzoneAssetsReady
+  if(!warzoneGameId(currentWheelId))return;
+  statusMessage(!warzoneModelHasAssets(currentWheelId)
     ?'Images Warzone momentanément indisponibles. Le modèle reste protégé.'
     :'Modèle officiel protégé : utilise « Dupliquer » pour personnaliser les lieux et images.');
 }
@@ -414,19 +419,19 @@ function syncWheelButtons(){
   const map=document.querySelector('.map-launch');
   if(map)map.hidden=!classic;
   const warzoneMap=$('warzoneMapLaunch');
-  const warzoneModel=currentWheelId==='warzone-hajin'?'hajin':
-    currentWheelId==='warzone-zodiac'?'zodiac':null;
+  const warzoneModel=warzoneGameId(currentWheelId);
+  const mapReady=warzoneModelHasAssets(currentWheelId);
   if(warzoneMap){
     warzoneMap.hidden=!warzoneModel;
     if(warzoneModel){
       $('warzoneMapName').textContent='CARTE · '+warzoneModel.toUpperCase();
-      $('warzoneMapPreview').src=warzoneAssetsReady
+      $('warzoneMapPreview').src=mapReady
         ?WARZONE_PREFIX+warzoneModel+'/map-preview.webp':FALLBACK_IMAGE;
       $('warzoneMapPreview').alt='Carte '+warzoneModel+' sans noms de lieux';
       $('warzoneMapOpen').dataset.mapGame=currentWheelId;
-      $('warzoneMapOpen').disabled=!warzoneAssetsReady;
+      $('warzoneMapOpen').disabled=!mapReady;
       $('warzoneMapOpen').setAttribute('aria-label','Agrandir la carte '+warzoneModel+' avec les lieux');
-      $('warzoneMapAction').textContent=warzoneAssetsReady?'AGRANDIR LA CARTE':'CARTE À PUBLIER';
+      $('warzoneMapAction').textContent=mapReady?'AGRANDIR LA CARTE':'CARTE À PUBLIER';
     }
   }
   if($('sourcesButton'))$('sourcesButton').hidden=!classic;
@@ -441,7 +446,7 @@ function activateWheel(id,savePrevious=true){
   customImages.clear();
   currentWheelId=cfg.id;library.active=id;
   POIS=wheelToPois(cfg);
-  if(!warzoneAssetsReady)for(const poi of POIS){
+  if(!warzoneModelHasAssets(cfg.id))for(const poi of POIS){
     if(poi.originalImage.startsWith(WARZONE_PREFIX))poi.image=FALLBACK_IMAGE;
   }
   if(cfg.id==='fortnite')for(const choice of POIS){
@@ -456,7 +461,7 @@ function activateWheel(id,savePrevious=true){
   renderCards();drawWheel();renderHistory();resetResult();
   if(imageStoreReady)applyWheelImages();
   syncWheelButtons();
-  if(currentWheelId==='warzone-hajin'||currentWheelId==='warzone-zodiac')updateWarzoneNotice();
+  if(warzoneGameId(currentWheelId))updateWarzoneNotice();
   else statusMessage(isOfficialWheel(currentWheelId)?'Modèle officiel protégé : utilise « Dupliquer » pour le personnaliser.':'');
   saveWheelLibrary(library);
 }
@@ -467,14 +472,21 @@ async function initialiseLibrary(){
     const response=await fetch(WARZONE_PREFIX+'manifest.json',{cache:'no-cache'});
     if(response.ok){
       const manifest=await response.json();
-      warzoneAssetsReady=manifest?.format==='ma-jestik-warzone-assets'
-        &&manifest?.version===1
-        &&manifest?.games?.hajin?.length===13
-        &&manifest?.games?.zodiac?.length===10;
+      const valid=manifest?.format==='ma-jestik-warzone-assets'&&manifest?.version===1;
+      for(const [game,length] of Object.entries({hajin:13,zodiac:10,rebirth:13,verdansk:21})){
+        const prefix=game+'/';
+        warzoneAssetGames[game]=Boolean(valid
+          &&manifest.games?.[game]?.length===length
+          &&Array.from({length},(_,index)=>prefix+'poi-'+String(index+1).padStart(2,'0')+'.webp')
+            .every(name=>Boolean(manifest.files?.[name]))
+          &&Boolean(manifest.files?.[prefix+'map-preview.webp'])
+          &&Boolean(manifest.files?.[prefix+'map-full.png']));
+      }
+      warzoneAssetsReady=warzoneAssetGames.hajin&&warzoneAssetGames.zodiac;
     }
   }catch{}
   window.warzoneAssetsReady=warzoneAssetsReady;
-  library=loadWheelLibrary(FORTNITE_ORIGINAL,saved);
+  library=loadWheelLibrary(FORTNITE_ORIGINAL,saved,warzoneAssetGames);
   activateWheel(library.active,false);
   await initialiseImages();
 }
