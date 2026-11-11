@@ -1,10 +1,17 @@
 /* Ma_JesTik — gestion 100 % locale des roues : aucun Worker, aucune D1. */
 import { HAJIN_MODEL } from './warzone-hajin.mjs';
+import { ZODIAC_MODEL } from './warzone-zodiac.mjs';
+const OFFICIAL_WARZONE_MODELS=[HAJIN_MODEL,ZODIAC_MODEL];
 export const MAX_CHOICES = 60;
 export const MAX_WHEELS = 24;
 export const FALLBACK_IMAGE = '/icons/mj-source.webp';
 const KEY = 'ma-jestik-wheel-library-v2';
-const imagePath = value => /^assets\/(?:0[1-9]|1[0-2])\.webp$/.test(String(value || '')) ? value : FALLBACK_IMAGE;
+const imagePath = value => {
+  const name=String(value||'');
+  return (/^assets\/(?:0[1-9]|1[0-2])\.webp$/.test(name)
+      || /^assets\/warzone\/(?:hajin|zodiac)\/poi-(?:0[1-9]|1[0-3])\.webp$/.test(name))
+    ?name:FALLBACK_IMAGE;
+};
 const safeName = value => String(value || '').trim().replace(/\s+/g, ' ').slice(0, 70);
 const safeId = value => /^[a-zA-Z0-9_-]{1,55}$/.test(String(value || '')) ? String(value) : null;
 export function makeId(prefix = 'c') {
@@ -46,17 +53,34 @@ export function loadWheelLibrary(baseChoices, legacy = {}) {
         found.add(w.id); return true;
       });
       if (wheels.length) {
-        // Migration additive : ajouter le nouveau modèle sans écraser les roues
-        // existantes, ni ressusciter un modèle supprimé volontairement.
+        // Migration strictement additive : conserver les roues déjà créées,
+        // l'historique, les images personnelles, la sélection et les préférences.
         const dismissedPresets=Array.isArray(raw.dismissedPresets)
-          ?raw.dismissedPresets.filter(id=>id==='warzone-hajin'):[];
-        if(!found.has(HAJIN_MODEL.id)&&!dismissedPresets.includes(HAJIN_MODEL.id)&&wheels.length<MAX_WHEELS)
-          wheels.push(validateWheel(HAJIN_MODEL));
+          ?raw.dismissedPresets.filter(id=>OFFICIAL_WARZONE_MODELS.some(p=>p.id===id)):[];
+        for(const official of OFFICIAL_WARZONE_MODELS){
+          const existing=wheels.find(w=>w.id===official.id);
+          if(existing){
+            // Hajin a initialement été publié avec un logo MJ provisoire.
+            // Remplacer l'image d'origine pour les lieux intacts, jamais une
+            // personnalisation locale IndexedDB ou un choix renommé/supprimé.
+            if(existing.id===HAJIN_MODEL.id && existing.name==='Warzone · Hajin (images à compléter)')
+              existing.name=HAJIN_MODEL.name;
+            for(const choice of existing.choices){
+              const original=official.choices.find(c=>c.id===choice.id && c.name===choice.name);
+              if(original && choice.originalImage===FALLBACK_IMAGE)
+                choice.originalImage=original.originalImage;
+            }
+          }else if(!dismissedPresets.includes(official.id)&&wheels.length<MAX_WHEELS)
+            wheels.push(validateWheel(official));
+        }
         return { active:found.has(raw.active)?raw.active:wheels[0].id, wheels, dismissedPresets };
       }
     }
   } catch {}
-  return { active: 'fortnite', wheels: [validateWheel(fallback), validateWheel(HAJIN_MODEL)], dismissedPresets:[] };
+  return { active: 'fortnite',
+    wheels:[validateWheel(fallback),...OFFICIAL_WARZONE_MODELS.map(validateWheel)],
+    dismissedPresets:[]
+  };
 }
 export function saveWheelLibrary(library) {
   try {
