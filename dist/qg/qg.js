@@ -365,8 +365,8 @@ function closeMobile(){
  $('menuMobile').setAttribute('aria-expanded','false');
 }
 function route(){
- unmountBoutique();
  closeMemberPreview();
+ unmountBoutique();
  unmountActivityStrip();
  unmountTribunal();
  unmountPublicTribunal();

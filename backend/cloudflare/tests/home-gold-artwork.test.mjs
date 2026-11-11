@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261111-shop3/);
+ assert.match(html,/qg\.js\?v=20261111-shop3fix1/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261111-shop3/);
+ assert.match(html,/qg\.js\?v=20261111-shop3fix1/);
 });
 
 
@@ -233,7 +233,7 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const shop=src("dist/qg/boutique.js");
  const css=src("dist/qg/boutique.css");
  assert.match(html,/boutique\.css\?v=20261111-shop3/);
- assert.match(html,/qg\.js\?v=20261111-shop3/);
+ assert.match(html,/qg\.js\?v=20261111-shop3fix1/);
  assert.match(html,/href="#\/boutique" data-page="boutique"/);
  assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
  assert.match(js,/import \{boutiqueMarkup,mountBoutique,unmountBoutique\} from '.\/boutique\.js/);
