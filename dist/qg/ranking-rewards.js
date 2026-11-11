@@ -62,7 +62,7 @@ export function monthlyRewardsMarkup(){
  '<div class="mj-monthly-rewards-section-title"><div><span class="mj-monthly-rewards-overline">À TOI DE JOUER</span><h2 id="mjMonthlyHowTitle">COMMENT <span>PARTICIPER ?</span></h2></div></div>'+
  '<div class="mj-monthly-rewards-steps">'+
  participationStep('01','REJOINS LE QG','Connecte-toi avec Twitch, crée ton profil et choisis d’apparaître dans le classement.','#/profil','VOIR MON PROFIL')+
- participationStep('02','FAIS TES PRONOSTICS','Prédit la réussite ou l’échec des défis : les bons pronostics rapportent des points QG.','#/defis','DÉCOUVRIR LES DÉFIS')+
+ participationStep('02','FAIS TES PRONOSTICS','Prédis la réussite ou l’échec des défis : les bons pronostics rapportent des points QG.','#/defis','DÉCOUVRIR LES DÉFIS')+
  participationStep('03','VISE LE TOP 10','Quand la saison mensuelle sera ouverte, seuls les points obtenus pendant ce mois compteront pour ses récompenses.','#/classement','VOIR LE CLASSEMENT GÉNÉRAL')+
  '</div></section>'+
  '<section class="mj-monthly-rewards-challenge" aria-labelledby="mjMonthlyChallengeTitle">'+
