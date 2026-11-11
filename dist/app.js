@@ -1,6 +1,6 @@
 import { TAU, normalise, indexAtPointer, targetAngle, randomIndex } from './engine.mjs';
 import { readImages, saveImage, deleteImage, prepareImage } from './image-storage.mjs';
-import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport } from './wheel-library.mjs';
+import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport, isOfficialWheel } from './wheel-library.mjs';
 const WARZONE_PREFIX='assets/warzone/';
 let warzoneAssetsReady=false;
 window.warzoneAssetsReady=false;
@@ -49,16 +49,29 @@ function persist() {
 }
 if (['5', '8', '12'].includes(saved.duration)) $('duration').value = saved.duration;
 function svgElement(tag, attrs = {}, text = '') { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k, v)); if(text) e.textContent = text; return e; }
+// A 10-20 secteurs, l'écriture longue ne doit jamais traverser le secteur voisin.
+function compactWheelLines(name,limit=11){
+  const words=String(name).trim().split(/\s+/).filter(Boolean),lines=[];
+  for(const word of words){
+    if(lines.length&&lines[lines.length-1].length+1+word.length<=limit)
+      lines[lines.length-1]+=' '+word;
+    else lines.push(word);
+  }
+  return lines.length?lines:[String(name)];
+}
 function drawWheel() {
   const items = active(), count = items.length, step = TAU / count;
   $('rotor').replaceChildren(); $('wheelDefs').replaceChildren(); $('rim').replaceChildren();
   const shades = ['#233e48', '#19313d', '#324740', '#213a44'];
+  // Les 12 lieux Fortnite conservent exactement leur disposition d'origine.
+  const compact=count>=10&&currentWheelId!=='fortnite';
   for (let i = 0; i < count; i++) {
     const start = -Math.PI/2 + i*step, end = start + step, mid = start+step/2;
     const point = a => `${360 + Math.cos(a)*332},${360+Math.sin(a)*332}`;
     const wedge = count === 1 ? svgElement('circle',{cx:360,cy:360,r:332,fill:shades[0]}) : svgElement('path', { d:`M360,360 L${point(start)} A332,332 0 ${step>Math.PI?1:0},1 ${point(end)} Z`,fill:shades[i%shades.length],stroke:'#acbb9c', 'stroke-opacity':'.25','stroke-width':1.3 });
     $('rotor').append(wedge);
-    const group = svgElement('g', { transform:`translate(${360+Math.cos(mid)*235},${360+Math.sin(mid)*235}) rotate(${mid*180/Math.PI+90})` });
+    const rotation=mid*180/Math.PI+90;
+    const group = svgElement('g', { transform:`translate(${360+Math.cos(mid)*235},${360+Math.sin(mid)*235}) rotate(${rotation})` });
     if(count>20){
       const number=svgElement('text',{'text-anchor':'middle',fill:'#f7dcaa',
         'font-family':'Arial,sans-serif','font-weight':'700','font-size':count>40?13:16,
@@ -67,9 +80,26 @@ function drawWheel() {
     }
     const clip=svgElement('clipPath',{id:`thumb-${i}`});clip.append(svgElement('circle',{cx:0,cy:-21,r:35}));$('wheelDefs').append(clip);
     group.append(svgElement('circle',{cx:0,cy:-21,r:37,fill:'#f6d99a'}));
-    group.append(svgElement('image',{href:items[i].image,'data-poi-id':items[i].id,x:-35,y:-56,width:70,height:70,preserveAspectRatio:'xMidYMid slice','clip-path':`url(#thumb-${i})`}));
-    const text=svgElement('text',{'text-anchor':'middle',fill:'#f6f0d9','font-family':'Barlow Condensed, Arial Narrow, Arial, sans-serif','font-weight':700,'font-size':count>14?12:count>9?18:22, 'paint-order':'stroke',stroke:'#102832','stroke-width':1});
-    items[i].lines.forEach((line,n)=>text.append(svgElement('tspan',{x:0,y:37+n*21},line)));
+    group.append(svgElement('image',{
+      href:items[i].image,'data-poi-id':items[i].id,
+      x:-35,y:-56,width:70,height:70,preserveAspectRatio:'xMidYMid slice',
+      'clip-path':`url(#thumb-${i})`,
+      ...(compact?{transform:`rotate(${-rotation} 0 -21)`}:{})
+    }));
+    const lines=compact?compactWheelLines(items[i].name):items[i].lines;
+    const lower=compact&&((rotation%360+360)%360>90)&&((rotation%360+360)%360<270);
+    const rowHeight=compact?17:21,startY=compact?38:37;
+    const centerY=startY+(lines.length-1)*rowHeight/2;
+    const text=svgElement('text',{
+      'text-anchor':'middle',fill:'#fff7e4',
+      'font-family':'Barlow Condensed, Arial Narrow, Arial, sans-serif',
+      'font-weight':800,'font-size':compact?15:count>14?12:count>9?18:22,
+      'paint-order':'stroke',stroke:'#10232b','stroke-width':compact?2.8:1,
+      'stroke-linejoin':'round',
+      ...(lower?{transform:`rotate(180 0 ${centerY})`}:{})
+    });
+    const visible=lower?[...lines].reverse():lines;
+    visible.forEach((line,n)=>text.append(svgElement('tspan',{x:0,y:startY+n*rowHeight},line)));
     group.append(text);$('rotor').append(group);
   }
   for(let i=0;i<48;i++){const a=i/48*TAU;const major=i%4===0; $('rim').append(svgElement('circle',{cx:360+Math.sin(a)*350,cy:360-Math.cos(a)*350,r:major?2.8:1.2,fill:major?'#efc978':'#718e91'}));}
@@ -91,13 +121,13 @@ function renderCards(){
     const thumb=document.createElement('span');thumb.className='thumb';const img=document.createElement('img');img.src=poi.image;img.dataset.poiId=poi.id;img.alt=`Image de ${poi.name}`;img.width=512;img.height=512;img.loading='lazy';thumb.append(img);
     const name=document.createElement('span');name.className='name';name.textContent=poi.name;
     const index=document.createElement('span');index.className='poi-index';index.textContent=`CHOIX ${String(position+1).padStart(2,'0')}`;
-    const edit=document.createElement('button');edit.type='button';edit.className='edit-image';edit.textContent="Changer l'image";edit.setAttribute('aria-label',`Changer l'image de ${poi.name}`);edit.disabled=spinning||!imageStoreReady;edit.addEventListener('click',()=>openImageEditor(poi));
+    const edit=document.createElement('button');edit.type='button';edit.className='edit-image';edit.textContent="Changer l'image";edit.setAttribute('aria-label',`Changer l'image de ${poi.name}`);edit.disabled=spinning||!imageStoreReady||isOfficialWheel(currentWheelId);edit.addEventListener('click',()=>openImageEditor(poi));
     const badge=document.createElement('span');badge.className='custom-image-badge';badge.textContent='IMAGE PERSO';badge.hidden=!customImages.has(poi.id);
     const actions=document.createElement('div');actions.className='wheel-edit-actions';
     const rename=document.createElement('button');rename.type='button';rename.textContent='Renommer';rename.setAttribute('aria-label','Renommer '+poi.name);
-    rename.disabled=spinning;rename.addEventListener('click',()=>openNaming('choice',poi));
+    rename.disabled=spinning||isOfficialWheel(currentWheelId);rename.addEventListener('click',()=>openNaming('choice',poi));
     const remove=document.createElement('button');remove.type='button';remove.textContent='Supprimer';remove.setAttribute('aria-label','Supprimer '+poi.name);
-    remove.disabled=spinning;remove.addEventListener('click',()=>removeWheelChoice(poi));
+    remove.disabled=spinning||isOfficialWheel(currentWheelId);remove.addEventListener('click',()=>removeWheelChoice(poi));
     actions.append(rename,remove);
     label.append(input,thumb,name,index);card.append(label,badge,edit,actions);$('poiGrid').append(card);
     input.addEventListener('change',()=>{ if(spinning){input.checked=selected.has(poi.id);return;} if(!input.checked&&selected.size===1){input.checked=true;$('selectionMessage').textContent='Garde au moins un choix dans le tirage.';return;} $('selectionMessage').textContent='';if(input.checked)selected.add(poi.id);else selected.delete(poi.id);drawWheel();resetResult();persist(); });
@@ -170,7 +200,7 @@ async function spin(){
     if(progress<1){requestAnimationFrame(frame);return;}
     angle=normalise(endAngle);applyRotation();spinning=false;document.body.classList.remove('spinning');setImage(winner);$('resultName').textContent=winner.name;$('resultLabel').textContent='RÉSULTAT DU TIRAGE';$('resultOverline').textContent="LE HASARD A CHOISI !";$('artBadge').textContent='CHOIX TIRÉ AU SORT';$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;$('resultDetail').textContent='Choix sélectionné : '+winner.name+'. Bonne partie !';$('resultCard').classList.add('winner','reveal');$('wheelStatus').textContent='Résultat : '+winner.name+' !';$('announcement').textContent='Choix tiré : '+winner.name;tick(true);void playDestinationSound(winner.id, session);
     history.unshift(winner.id);history=history.slice(0,6);renderHistory();persist();$('spin').disabled=false;$('spin').querySelector('span').textContent='RELANCER LA ROUE';$('duration').disabled=false;$('selectAll').disabled=false;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=false);
-    document.querySelectorAll('.edit-image').forEach(e=>e.disabled=!imageStoreReady);
+    document.querySelectorAll('.edit-image').forEach(e=>e.disabled=!imageStoreReady||isOfficialWheel(currentWheelId));
     document.querySelectorAll('.wheel-edit-actions button,.wheel-library-panel button').forEach(e=>e.disabled=false);
     syncWheelButtons();
   }
@@ -244,7 +274,7 @@ async function initialiseImages() {
     imageStoreReady=true;
     applyWheelImages();
     if(currentWheelId.startsWith('warzone-'))updateWarzoneNotice();
-    document.querySelectorAll('.edit-image').forEach(e=>e.disabled=spinning);
+    document.querySelectorAll('.edit-image').forEach(e=>e.disabled=spinning||isOfficialWheel(currentWheelId));
   } catch {
     $('imageNotice').textContent="La personnalisation est indisponible : ce navigateur bloque l'enregistrement des images. Autorise les données du site puis recharge la page.";
   }
@@ -274,7 +304,7 @@ function setEditorBusy(busy) {
   $('cancelImage').disabled=busy;$('closeImageDialog').disabled=busy;
 }
 function openImageEditor(poi) {
-  if(spinning||!imageStoreReady)return;
+  if(spinning||!imageStoreReady||isOfficialWheel(currentWheelId))return;
   clearPendingImage();editorPoi=poi;editorSession++;
   $('imagePoiName').textContent=poi.name;
   $('imagePreview').src=poi.image;$('imagePreview').alt=`Aperçu de l'image de ${poi.name}`;
@@ -313,7 +343,7 @@ function storageError(error) {
     : "L'image n'a pas pu être enregistrée. Vérifie que ce navigateur autorise les données du site, puis réessaie.";
 }
 $('applyImage').addEventListener('click',async()=>{
-  if(!pendingImage||editorBusy||!editorPoi)return;
+  if(!pendingImage||editorBusy||!editorPoi||isOfficialWheel(currentWheelId))return;
   const poi=editorPoi,blob=pendingImage;setEditorBusy(true);$('imageError').textContent='Enregistrement…';
   try {
     await saveImage(imageKey(currentWheelId,poi.id),blob);imageBlobs.set(imageKey(currentWheelId,poi.id),blob);updatePoiImage(poi,blob);
@@ -323,7 +353,7 @@ $('applyImage').addEventListener('click',async()=>{
   } catch(error) {$('imageError').textContent=storageError(error);setEditorBusy(false);}
 });
 $('restoreImage').addEventListener('click',async()=>{
-  if(editorBusy||!editorPoi||!customImages.has(editorPoi.id))return;
+  if(editorBusy||!editorPoi||!customImages.has(editorPoi.id)||isOfficialWheel(currentWheelId))return;
   const poi=editorPoi;setEditorBusy(true);$('imageError').textContent="Restauration de l'illustration…";
   try {
     await deleteImage(imageKey(currentWheelId,poi.id));imageBlobs.delete(imageKey(currentWheelId,poi.id));updatePoiImage(poi,null);
@@ -341,8 +371,8 @@ function statusMessage(text) {
 function updateWarzoneNotice(){
   if(currentWheelId!=='warzone-hajin'&&currentWheelId!=='warzone-zodiac')return;
   statusMessage(!warzoneAssetsReady
-    ?'Les 23 images officielles et les quatre cartes sont préparées, mais le pack Warzone doit encore être publié sur GitHub pour les afficher à tous.'
-    :'');
+    ?'Images Warzone momentanément indisponibles. Le modèle reste protégé.'
+    :'Modèle officiel protégé : utilise « Dupliquer » pour personnaliser les lieux et images.');
 }
 function applyWheelImages(){
   for(const poi of POIS){
@@ -360,11 +390,18 @@ function syncWheelButtons(){
     option.selected=wheel.id===currentWheelId;
     selector.append(option);
   }
-  $('wheelDelete').disabled=spinning||library.wheels.length===1;
+  const locked=isOfficialWheel(currentWheelId);
+  document.body.classList.toggle('wheel-official-locked',locked);
+  $('wheelRename').disabled=spinning||locked;
+  $('wheelRename').hidden=locked;
+  $('wheelDelete').disabled=spinning||locked||library.wheels.length===1;
+  $('wheelDelete').hidden=locked;
   $('wheelNew').disabled=spinning||library.wheels.length>=MAX_WHEELS;
   $('wheelClone').disabled=spinning||library.wheels.length>=MAX_WHEELS;
-  $('wheelAdd').disabled=spinning||POIS.length>=MAX_CHOICES;
-  $('wheelBulkReplace').disabled=spinning;
+  $('wheelAdd').disabled=spinning||locked||POIS.length>=MAX_CHOICES;
+  $('wheelNewChoice').disabled=spinning||locked;
+  $('wheelBulkNames').disabled=spinning||locked;
+  $('wheelBulkReplace').disabled=spinning||locked;
   const heading=$('wheelGameLabel'),chapter=$('wheelChapterTitle');
   const current=library.wheels.find(w=>w.id===currentWheelId);
   if(heading)heading.textContent=current?.name.toLocaleUpperCase('fr-FR')||'PERSONNALISÉE';
@@ -372,7 +409,8 @@ function syncWheelButtons(){
   if($('wheelChapterCount'))$('wheelChapterCount').textContent=String(POIS.length);
   const classic=currentWheelId==='fortnite'&&POIS.length===FORTNITE_ORIGINAL.length&&
     POIS.every((p,i)=>p.name===FORTNITE_ORIGINAL[i].name);
-  if($('wheelChapterFoot'))$('wheelChapterFoot').textContent=classic?'MODÈLE FORTNITE · 05.11.2026':'MODIFIABLE PAR TOUS · STOCKAGE LOCAL';
+  if($('wheelChapterFoot'))$('wheelChapterFoot').textContent=locked
+    ?'MODÈLE OFFICIEL · PROTÉGÉ': 'MODIFIABLE PAR TOUS · STOCKAGE LOCAL';
   const map=document.querySelector('.map-launch');
   if(map)map.hidden=!classic;
   const warzoneMap=$('warzoneMapLaunch');
@@ -419,7 +457,7 @@ function activateWheel(id,savePrevious=true){
   if(imageStoreReady)applyWheelImages();
   syncWheelButtons();
   if(currentWheelId==='warzone-hajin'||currentWheelId==='warzone-zodiac')updateWarzoneNotice();
-  else statusMessage('');
+  else statusMessage(isOfficialWheel(currentWheelId)?'Modèle officiel protégé : utilise « Dupliquer » pour le personnaliser.':'');
   saveWheelLibrary(library);
 }
 async function initialiseLibrary(){
@@ -442,6 +480,7 @@ async function initialiseLibrary(){
 }
 function openNaming(action,poi){
   if(spinning||$('imageDialog').open)return;
+  if(action!=='new'&&isOfficialWheel(currentWheelId))return;
   namingAction={action,id:poi?.id||null};
   const current=library.wheels.find(w=>w.id===currentWheelId);
   $('wheelNameTitle').textContent=action==='new'?'Créer une nouvelle roue':action==='wheel'?'Renommer la roue':'Renommer le choix';
@@ -454,6 +493,9 @@ $('wheelNameForm')?.addEventListener('submit',event=>{
   if(!name){statusMessage('Indique un nom pour continuer.');return;}
   const action=namingAction;
   if(!action)return;
+  if(action.action!=='new'&&isOfficialWheel(currentWheelId)){
+    $('wheelNameDialog').close();return;
+  }
   if(action.action==='new'){
     if(library.wheels.length>=MAX_WHEELS){statusMessage('Limite de '+MAX_WHEELS+' roues atteinte.');return;}
     persist();
@@ -476,7 +518,7 @@ $('wheelNameForm')?.addEventListener('submit',event=>{
 });
 $('wheelNameCancel')?.addEventListener('click',()=>$('wheelNameDialog').close());
 function removeWheelChoice(poi){
-  if(spinning||$('imageDialog').open)return;
+  if(spinning||$('imageDialog').open||isOfficialWheel(currentWheelId))return;
   if(POIS.length<=1){statusMessage('La roue doit conserver au moins un choix.');return;}
   if(!confirm('Supprimer « '+poi.name+' » de cette roue ?'))return;
   const idx=POIS.findIndex(x=>x.id===poi.id);
@@ -489,7 +531,7 @@ function removeWheelChoice(poi){
   statusMessage('Choix supprimé. Pense à exporter ta roue pour la sauvegarder.');
 }
 $('wheelAdd')?.addEventListener('click',()=>{
-  if(spinning||POIS.length>=MAX_CHOICES)return;
+  if(spinning||isOfficialWheel(currentWheelId)||POIS.length>=MAX_CHOICES)return;
   const name=$('wheelNewChoice').value.trim().replace(/\s+/g,' ').slice(0,70);
   if(!name){statusMessage('Écris le nom du nouveau choix.');return;}
   if(POIS.some(x=>x.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr'))){statusMessage('Ce nom existe déjà.');return;}
@@ -501,7 +543,7 @@ $('wheelAdd')?.addEventListener('click',()=>{
 });
 $('wheelNewChoice')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('wheelAdd').click();}});
 $('wheelBulkReplace')?.addEventListener('click',()=>{
-  if(spinning)return;
+  if(spinning||isOfficialWheel(currentWheelId))return;
   let names;try{names=cleanNames($('wheelBulkNames').value);}catch(error){statusMessage(error.message);return;}
   if(!confirm('Remplacer la liste actuelle par '+names.length+' choix ? Les noms identiques conserveront leurs images. Exporte ta roue avant si nécessaire.'))return;
   const old=new Map(POIS.map(p=>[p.name.toLocaleLowerCase('fr'),p]));
@@ -537,7 +579,7 @@ $('wheelClone')?.addEventListener('click',async()=>{
   statusMessage('Roue dupliquée. Tu peux la modifier sans toucher à l’originale.');
 });
 $('wheelDelete')?.addEventListener('click',async()=>{
-  if(spinning||library.wheels.length<=1)return;
+  if(spinning||isOfficialWheel(currentWheelId)||library.wheels.length<=1)return;
   const old=library.wheels.find(w=>w.id===currentWheelId);
   if(!old||!confirm('Supprimer définitivement la roue « '+old.name+' » de ce navigateur ?'))return;
   if(old.id==='warzone-hajin'||old.id==='warzone-zodiac'){
