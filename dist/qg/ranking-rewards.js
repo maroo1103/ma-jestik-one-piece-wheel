@@ -66,12 +66,12 @@ export function monthlyRewardsMarkup(){
  participationStep('03','VISE LE TOP 10','Quand la saison mensuelle sera ouverte, seuls les points obtenus pendant ce mois compteront pour ses récompenses.','#/classement','VOIR LE CLASSEMENT GÉNÉRAL')+
  '</div></section>'+
  '<section class="mj-monthly-rewards-challenge" aria-labelledby="mjMonthlyChallengeTitle">'+
- '<div class="mj-monthly-rewards-challenge-art" aria-hidden="true"><span>TOP</span><strong>10</strong><span>DU QG</span></div>'+
- '<div class="mj-monthly-rewards-challenge-copy"><span class="mj-monthly-rewards-overline">UN NOUVEAU DÉPART CHAQUE MOIS</span>'+
- '<h2 id="mjMonthlyChallengeTitle">LE DÉFI <span>DU MOIS</span></h2>'+
- '<p>Un objectif simple : gagner ta place parmi les dix meilleurs pronostiqueurs du mois. Ton classement général continuera d’exister à côté, sans remise à zéro.</p>'+
- '<p class="mj-monthly-rewards-challenge-note"><span aria-hidden="true">✦</span> Le premier mois de compétition sera annoncé avant son ouverture. Le classement mensuel et les résultats apparaîtront ici une fois le système activé.</p>'+
- '</div></section>'+
+ '<div class="mj-monthly-mission-heading"><div class="mj-monthly-rewards-challenge-art" aria-hidden="true"><span>MISSION</span><strong>+50</strong><span>PIÈCES</span></div>'+
+ '<div class="mj-monthly-rewards-challenge-copy"><span class="mj-monthly-rewards-overline">DE NOUVEAUX OBJECTIFS CHAQUE MOIS</span>'+
+ '<h2 id="mjMonthlyChallengeTitle">LA MISSION <span>DU MOIS</span></h2>'+
+ '<p>Les récompenses du classement sont réservées au Top 10. Ici, <strong>chaque membre qui termine la mission</strong> peut obtenir des pièces, quelle que soit sa position.</p>'+
+ '<p class="mj-monthly-rewards-challenge-note">Les pronostics et les votes sont vérifiés automatiquement avec ton compte Twitch. Les pièces sont remises manuellement sur Discord.</p></div></div>'+
+ '<div id="mjMonthlyMission" aria-label="Progression de la mission mensuelle"><p>Chargement de la mission…</p></div></section>'+
  '<section class="mj-monthly-rewards-rules" aria-labelledby="mjMonthlyRulesTitle">'+
  '<div class="mj-monthly-rewards-section-title"><div><span class="mj-monthly-rewards-overline">L’ESSENTIEL À SAVOIR</span><h2 id="mjMonthlyRulesTitle">RÈGLES <span>&amp; CONDITIONS</span></h2></div></div>'+
  '<ul class="mj-monthly-rewards-rules-list">'+

@@ -5,7 +5,8 @@ import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
 import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
 import {boutiqueMarkup,mountBoutique,unmountBoutique} from './boutique.js?v=20261111-clean-rewards1';
-import {monthlyRewardsMarkup} from './ranking-rewards.js?v=20261111-clean-rewards1';
+import {monthlyRewardsMarkup} from './ranking-rewards.js?v=20261111-monthly-mission1';
+import {mountMonthlyMissions,unmountMonthlyMissions} from './monthly-missions.js?v=20261111-monthly-mission1';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile,renderPublicMember,renderPrivateMember} from './profil.js?v=20261110-ranking-profiles1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
@@ -367,6 +368,7 @@ function closeMobile(){
 }
 function route(){
  closeMemberPreview();
+ unmountMonthlyMissions();
  unmountBoutique();
  unmountActivityStrip();
  unmountTribunal();
@@ -388,6 +390,7 @@ function route(){
  });
  if(page==='accueil')mountActivityStrip();
  if(page==='boutique')mountBoutique();
+ if(page==='recompenses-mensuelles')mountMonthlyMissions();
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
   if(page==='profil')void mountProfile();
