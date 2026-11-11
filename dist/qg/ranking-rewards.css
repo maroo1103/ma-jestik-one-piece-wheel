@@ -1,0 +1,29 @@
+/* Récompenses mensuelles du classement QG — pré-lancement uniquement. */
+.qg-layout .mj-monthly-rewards{max-width:1350px;margin:34px auto 10px;padding:clamp(20px,3.4vw,42px);background:radial-gradient(ellipse 60% 50% at 50% 0%,#614a2724,transparent 74%),linear-gradient(145deg,#18181b,#0b0d11);border:1px solid #9c7950;border-radius:19px;color:#f1eae0;box-shadow:inset 0 1px #ecd1a31a,0 14px 35px #0003;font-style:normal}
+.qg-layout .mj-monthly-rewards *{font-style:normal}
+.qg-layout .mj-monthly-rewards-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:9px 20px;margin-bottom:14px}
+.qg-layout .mj-monthly-rewards-kicker{font-size:10px;font-weight:850;letter-spacing:1.7px;color:#d8b47c}
+.qg-layout .mj-monthly-rewards-status{display:inline-flex;align-items:center;padding:6px 11px;border:1px solid #806645;border-radius:99px;background:#30271b;color:#efd2a3;font-size:10px;font-weight:850;letter-spacing:.75px}
+.qg-layout .mj-monthly-rewards-header h2{font:900 clamp(26px,3vw,43px)/1.1 var(--display),Impact,sans-serif;letter-spacing:.2px;margin:0 0 13px;color:#faf6ed}
+.qg-layout .mj-monthly-rewards-header h2 span{color:#e7be7d}
+.qg-layout .mj-monthly-rewards-header p{font-size:clamp(12px,1vw,15px);line-height:1.72;margin:0 0 23px;color:#cfc4b7;max-width:875px}
+.qg-layout .mj-monthly-rewards-header strong{color:#ead3b1;font-weight:850}
+.qg-layout .mj-monthly-rewards-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.4vw,18px)}
+.qg-layout .mj-monthly-rewards-card{min-width:0;min-height:178px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:20px 13px;border:1px solid #827055;border-radius:13px;background:linear-gradient(165deg,#29241e,#16171a 85%)}
+.qg-layout .mj-monthly-rewards-gold{border-color:#d4a757;box-shadow:inset 0 1px #fbd99930}
+.qg-layout .mj-monthly-rewards-silver{border-color:#83929d;background:linear-gradient(165deg,#262930,#151719)}
+.qg-layout .mj-monthly-rewards-bronze{border-color:#98725b;background:linear-gradient(165deg,#2c251f,#161719)}
+.qg-layout .mj-monthly-rewards-medal{font-size:29px;line-height:1}
+.qg-layout .mj-monthly-rewards-place{font-size:10px;font-weight:850;letter-spacing:1.1px;color:#d8cab8}
+.qg-layout .mj-monthly-rewards-coins{font:900 clamp(28px,3.5vw,43px)/1 var(--display),Impact,sans-serif;color:#f4cf8e;font-variant-numeric:tabular-nums}
+.qg-layout .mj-monthly-rewards-silver .mj-monthly-rewards-coins{color:#d7e2e8}
+.qg-layout .mj-monthly-rewards-bronze .mj-monthly-rewards-coins{color:#e2b99d}
+.qg-layout .mj-monthly-rewards-unit{font-size:12px;color:#cbbca5;font-weight:750}
+.qg-layout .mj-monthly-rewards-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px 30px;padding-top:23px;margin-top:23px;border-top:1px solid #5a4b37}
+.qg-layout .mj-monthly-rewards-bottom>div{flex:1;min-width:0}
+.qg-layout .mj-monthly-rewards-bottom strong{display:block;font-size:14px;color:#f2d39e;margin-bottom:8px}
+.qg-layout .mj-monthly-rewards-bottom p{max-width:900px;font-size:12px;line-height:1.75;color:#bdb1a3;margin:5px 0}
+.qg-layout .mj-monthly-rewards-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:208px;flex:none;padding:11px 14px;border:1px solid #c49a60;border-radius:9px;background:#33281c;color:#f5d59c;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.4px;text-align:center}
+.qg-layout .mj-monthly-rewards-link:hover,.qg-layout .mj-monthly-rewards-link:focus-visible{background:#574026;color:#fff0d9;border-color:#eac180}
+@media(max-width:790px){.qg-layout .mj-monthly-rewards-bottom{flex-direction:column;align-items:stretch}.qg-layout .mj-monthly-rewards-link{width:100%}}
+@media(max-width:600px){.qg-layout .mj-monthly-rewards{margin:24px auto 8px;padding:19px 16px}.qg-layout .mj-monthly-rewards-grid{grid-template-columns:1fr;gap:10px}.qg-layout .mj-monthly-rewards-card{min-height:120px;display:grid;grid-template-columns:42px 1fr auto;grid-template-rows:repeat(2,auto);align-items:center;justify-items:start;text-align:left;gap:4px 12px;padding:15px}.qg-layout .mj-monthly-rewards-medal{grid-row:1/3;font-size:28px}.qg-layout .mj-monthly-rewards-place{grid-column:2;grid-row:1;font-size:9px}.qg-layout .mj-monthly-rewards-coins{grid-column:2;grid-row:2;font-size:31px}.qg-layout .mj-monthly-rewards-unit{grid-column:3;grid-row:2;font-size:10px;text-align:right}.qg-layout .mj-monthly-rewards-header p{margin-bottom:19px}}
