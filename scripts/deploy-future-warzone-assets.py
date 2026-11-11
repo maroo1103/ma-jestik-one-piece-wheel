@@ -73,8 +73,20 @@ def validated_file(file, path):
     return {"bytes": len(file), "sha256": hashlib.sha256(file).hexdigest()}
 
 
+def archive_path(game):
+    """Le propriétaire a conservé le nom « Rebirth island.zip » au dépôt.
+    Reconnaître aussi ce nom sans renommer le ZIP ni modifier les anciens lots.
+    """
+    canonical = ROOT / f"{game}-pack.zip"
+    if canonical.exists():
+        return canonical
+    if game == "rebirth":
+        return ROOT / "Rebirth island.zip"
+    return canonical
+
+
 def import_pack(game, count, names, prefix, manifest):
-    archive = ROOT / f"{game}-pack.zip"
+    archive = archive_path(game)
     if not archive.exists():
         return False
     expected_names = expected(game, count)
@@ -107,7 +119,7 @@ def import_pack(game, count, names, prefix, manifest):
 
 
 def main():
-    available = [game for game in SOURCES if (ROOT / f"{game}-pack.zip").exists()]
+    available = [game for game in SOURCES if archive_path(game).exists()]
     if not available:
         print("Rebirth et Verdansk non fournis : modèles masqués et QG inchangé.")
         return
