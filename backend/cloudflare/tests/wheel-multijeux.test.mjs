@@ -215,7 +215,7 @@ test('Les noms longs Hajin tiennent dans des lignes courtes et restent lisibles'
     assert.ok(lines.every(line=>line.length<=11),'libellé trop long : '+name);
   }
   assert.deepEqual(wrap('14th Political Prison'),['14th','Political','Prison']);
-  assert.match(app,/const compact=count>=10&&currentWheelId!=='fortnite'/);
+  assert.match(app,/const compact=currentWheelId!=='fortnite'&&\(count>=10\|\|items\.some/);
   assert.match(app,/rotation=mid\*180\/Math\.PI\+90/);
   assert.match(app,/rotate\(180 0/); // ne pas afficher les libellés à l'envers
   assert.match(app,/rotate\(\$\{-rotation\} 0 -21\)/); // photos non renversées
