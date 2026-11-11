@@ -61,7 +61,7 @@ function load(){
  }catch{return initial();}
 }
 function save(){try{localStorage.setItem(gameStoreKey(selectedGame||"fortnite"),JSON.stringify(data))}catch{}}
-const eligible = x => data.enabled.includes(x[0])&&(x[5]==='all'||(x[5]==='both'&&['solo','duo'].includes(data.team))||x[5]===data.team)&&(data.level==="all"||x[3]===data.level);
+const eligible = x => data.enabled.includes(x[0])&&(x[5]==='all'||x[5]==='both'||x[5]===data.team)&&(data.level==="all"||x[3]===data.level);
 const getSorted = items => [...items].sort((a,b)=>data.sort==="default"?a[0]-b[0]:((levels[a[3]]-levels[b[3]])*(data.sort==="easy"?1:-1))||a[0]-b[0]);
 const teamSelect = () => '<label>Composition <select id="challengeTeam">'+Object.entries(teams).map(([id,label])=>'<option value="'+id+'" '+(data.team===id?"selected":"")+'>'+label+'</option>').join("")+'</select></label>';
 const score=()=>({success:data.history.filter(x=>x.result==="success").length,fail:data.history.filter(x=>x.result==="failure").length,skipped:data.history.filter(x=>x.result==="skipped").length});
