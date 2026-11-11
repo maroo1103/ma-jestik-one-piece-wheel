@@ -106,7 +106,7 @@ export function mountMonthlyMissions(){
     else owner.innerHTML='';
     message('');
    }
-  }catch(e){if(active){if(!me)player.innerHTML='<div class="mj-mission-empty"><strong>La prochaine mission du QG se prépare.</strong><p>Les objectifs et la progression personnelle seront affichés ici dès l’ouverture du service. Aucune participation n’est comptée pour le moment.</p></div>';message('Suivi automatique indisponible pour le moment : aucun résultat n’est simulé.',true);}}
+  }catch(e){if(active){if(!me)player.innerHTML='<div class="mj-mission-empty"><strong>La prochaine mission du QG se prépare.</strong><p>Les objectifs et la progression personnelle seront affichés ici dès l’ouverture du service. Aucune participation n’est comptée pour le moment.</p></div>';message(e?.message?.startsWith('Trop de requêtes')?e.message:'Suivi automatique indisponible pour le moment : aucun résultat n’est simulé.',true);}}
   finally{loading=false;}
  }
  async function change(action,body){

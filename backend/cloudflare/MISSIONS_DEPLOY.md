@@ -11,7 +11,7 @@ La future API possède désormais **deux barrières côté Worker** :
 
 **Option facultative pour renforcer la protection sans abonnement :** si Cloudflare permet gratuitement l'ajout d'un binding natif de limitation, le nommer `MISSION_RATE_LIMITER`, avec un namespace numérique dédié (p. ex. `112026`) et une limite de **30 appels / 60 secondes**. Le code fonctionne également sans ce binding grâce au coupe-circuit local. La limite native est elle-même approximative et propre à chaque centre de données. **Ne souscrire aucune option payante** pour ce projet ; vérifier les modalités du compte avant toute activation supplémentaire.
 
-**Limite technique :** chaque F5 qui arrive au Worker reste une invocation Cloudflare, même si elle est refusée avec 429 ou servie depuis le cache. Cette protection économise surtout les vérifications Twitch et les lectures D1 et amortit les rafales, mais ne peut pas garantir « zéro requête » ni bloquer une attaque distribuée. Le site rafraîchit déjà sa progression automatiquement **une fois par heure**, sans bouton manuel.
+**Limite technique :** chaque F5 qui arrive au Worker reste une invocation Cloudflare, même si elle est refusée avec 429 ou servie depuis le cache. Cette protection économise les lectures D1 et bloque les vérifications Twitch uniquement au-delà du seuil anti-rafale. Les accès privés qui ne dépassent pas le seuil continuent à être validés auprès de Twitch à chaque requête, même si les résultats D1 sont en cache. Elle amortit les rafales, mais ne peut pas garantir « zéro requête » ni bloquer une attaque distribuée. Le site rafraîchit déjà sa progression automatiquement **une fois par heure**, sans bouton manuel.
 
 ## Ce qui manque pour rendre les compteurs actifs
 
