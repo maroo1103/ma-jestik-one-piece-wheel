@@ -74,7 +74,7 @@ function drawWheel() {
   $('wheel').setAttribute('aria-label',`Roue de ${count} choix sélectionnés : ${items.map(p=>p.name).join(', ')}`);
   $('selectedCount').textContent=`${count} / ${POIS.length}`;
   $('odds').textContent=`${count} choix · chances égales`;
-  $('selectAll').disabled=spinning || count===POIS.length;
+  $('selectAll').disabled=spinning;
   $('resultNumber').textContent=`? / ${count}`;
   $('spin').disabled=spinning;
 }
@@ -166,7 +166,7 @@ async function spin(){
     if(!reducedMotion.matches)showPassing(indexAtPointer(angle,items.length),items);
     if(progress<1){requestAnimationFrame(frame);return;}
     angle=normalise(endAngle);applyRotation();spinning=false;document.body.classList.remove('spinning');setImage(winner);$('resultName').textContent=winner.name;$('resultLabel').textContent='RÉSULTAT DU TIRAGE';$('resultOverline').textContent="LE HASARD A CHOISI !";$('artBadge').textContent='CHOIX TIRÉ AU SORT';$('resultNumber').textContent=`${String(index+1).padStart(2,'0')} / ${items.length}`;$('resultDetail').textContent='Choix sélectionné : '+winner.name+'. Bonne partie !';$('resultCard').classList.add('winner','reveal');$('wheelStatus').textContent='Résultat : '+winner.name+' !';$('announcement').textContent='Choix tiré : '+winner.name;tick(true);void playDestinationSound(winner.id, session);
-    history.unshift(winner.id);history=history.slice(0,6);renderHistory();persist();$('spin').disabled=false;$('spin').querySelector('span').textContent='RELANCER LA ROUE';$('duration').disabled=false;$('selectAll').disabled=selected.size===POIS.length;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=false);
+    history.unshift(winner.id);history=history.slice(0,6);renderHistory();persist();$('spin').disabled=false;$('spin').querySelector('span').textContent='RELANCER LA ROUE';$('duration').disabled=false;$('selectAll').disabled=false;document.querySelectorAll('.poi-card input').forEach(e=>e.disabled=false);
     document.querySelectorAll('.edit-image').forEach(e=>e.disabled=!imageStoreReady);
     document.querySelectorAll('.wheel-edit-actions button,.wheel-library-panel button').forEach(e=>e.disabled=false);
     syncWheelButtons();
@@ -174,14 +174,59 @@ async function spin(){
   requestAnimationFrame(frame);
 }
 $('spin').addEventListener('click',spin);
-document.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.repeat&&!['INPUT','SELECT','BUTTON','TEXTAREA','A'].includes(document.activeElement.tagName)&&!$('sourcesDialog').open&&!$('imageDialog').open){e.preventDefault();spin();}});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.repeat&&!['INPUT','SELECT','BUTTON','TEXTAREA','A'].includes(document.activeElement.tagName)&&!$('sourcesDialog').open&&!$('imageDialog').open&&!$('wheelNameDialog').open){e.preventDefault();spin();}});
 $('duration').addEventListener('change',persist);
-$('selectAll').addEventListener('click',()=>{if(spinning)return;selected=new Set(POIS.map(p=>p.id));renderCards();drawWheel();resetResult();persist();$('selectionMessage').textContent=`${POIS.length} choix sont dans le tirage.`;});
+$('selectAll').addEventListener('click',()=>{
+  if(spinning)return;
+  if(selected.size===POIS.length){
+    $('selectionMessage').textContent='Tous les choix de cette roue sont déjà sélectionnés.';
+    return;
+  }
+  selected=new Set(POIS.map(p=>p.id));
+  renderCards();drawWheel();resetResult();persist();
+  $('selectionMessage').textContent=`${POIS.length} choix sont dans le tirage.`;
+});
 $('sound').addEventListener('click',()=>{soundOn=!soundOn;$('sound').setAttribute('aria-pressed',String(soundOn));$('sound').querySelector('span').textContent=soundOn?'Son activé':'Son désactivé';if(!soundOn)stopDestinationSound();if(soundOn){try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();tick();}catch{soundOn=false;$('sound').setAttribute('aria-pressed','false');$('sound').querySelector('span').textContent='Son indisponible';}}});
 $('streamMode').addEventListener('click',()=>{const enabled=document.body.classList.toggle('stream');$('streamMode').setAttribute('aria-pressed',String(enabled));$('streamMode').querySelector('span').textContent=enabled?'Quitter le mode stream':'Mode stream';});
 $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{$('wheelStatus').textContent='Plein écran indisponible ici. Utilise F11 dans ton navigateur.';}});
 document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Passer en plein écran');});
-$('sourcesButton').addEventListener('click',()=>$('sourcesDialog').showModal());$('closeDialog').addEventListener('click',()=>$('sourcesDialog').close());$('sourcesDialog').addEventListener('click',e=>{if(e.target===$('sourcesDialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
+/* Le QG affiche la roue dans une iframe de hauteur dynamique.
+   Les boites de dialogue doivent se centrer dans la portion visible de cette
+   iframe, et non au milieu de ses milliers de pixels de hauteur. */
+function showWheelDialog(dialog){
+  if(!dialog||dialog.open)return;
+  try{
+    const host=window.frameElement;
+    if(window.parent!==window&&host){
+      const parent=window.parent;
+      const place=()=>{
+        const rect=host.getBoundingClientRect();
+        const visibleTop=Math.max(0,rect.top);
+        const visibleBottom=Math.min(parent.innerHeight,rect.bottom);
+        const centerOnParent=visibleBottom>visibleTop
+          ?(visibleTop+visibleBottom)/2
+          :Math.max(0,Math.min(parent.innerHeight,rect.top+parent.innerHeight/2));
+        dialog.style.setProperty('--wheel-modal-center',Math.round(centerOnParent-rect.top)+'px');
+        dialog.style.setProperty('--wheel-modal-maxheight',Math.max(180,parent.innerHeight-32)+'px');
+      };
+      dialog.classList.add('wheel-iframe-dialog');
+      place();
+      parent.addEventListener('scroll',place,{passive:true});
+      parent.addEventListener('resize',place);
+      dialog.addEventListener('close',()=>{
+        parent.removeEventListener('scroll',place);
+        parent.removeEventListener('resize',place);
+        dialog.classList.remove('wheel-iframe-dialog');
+        dialog.style.removeProperty('--wheel-modal-center');
+        dialog.style.removeProperty('--wheel-modal-maxheight');
+      },{once:true});
+    }
+  }catch{
+    // Ouverture standard si le navigateur refuse l'acces a la fenetre parente.
+  }
+  dialog.showModal();
+}
+$('sourcesButton').addEventListener('click',()=>showWheelDialog($('sourcesDialog')));$('closeDialog').addEventListener('click',()=>$('sourcesDialog').close());$('sourcesDialog').addEventListener('click',e=>{if(e.target===$('sourcesDialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
 renderCards();drawWheel();renderHistory();
 setImage(POIS.find(p=>p.id==='06'));
 void initialiseLibrary();
@@ -227,7 +272,7 @@ function openImageEditor(poi) {
   $('imagePreview').src=poi.image;$('imagePreview').alt=`Aperçu de l'image de ${poi.name}`;
   $('imagePreviewBadge').textContent=customImages.has(poi.id)?'IMAGE PERSONNALISÉE':'ILLUSTRATION D’ORIGINE';
   $('imageError').textContent='';$('imageFile').value='';setEditorBusy(false);
-  $('imageDialog').showModal();
+  showWheelDialog($('imageDialog'));
 }
 function closeImageEditor() {if(!editorBusy)$('imageDialog').close();}
 $('closeImageDialog').addEventListener('click',closeImageEditor);
@@ -350,7 +395,7 @@ function openNaming(action,poi){
   const current=library.wheels.find(w=>w.id===currentWheelId);
   $('wheelNameTitle').textContent=action==='new'?'Créer une nouvelle roue':action==='wheel'?'Renommer la roue':'Renommer le choix';
   $('wheelNameInput').value=action==='wheel'?(current?.name||''):action==='choice'?(poi?.name||''):'';
-  $('wheelNameDialog').showModal();$('wheelNameInput').focus();
+  showWheelDialog($('wheelNameDialog'));$('wheelNameInput').focus();
 }
 $('wheelNameForm')?.addEventListener('submit',event=>{
   event.preventDefault();
