@@ -9,7 +9,7 @@ const rewards=[
 export function monthlyRewardsMarkup(){
  return '<section class="mj-monthly-rewards" aria-labelledby="mjMonthlyRewardsTitle">'+
  '<div class="mj-monthly-rewards-top"><span class="mj-monthly-rewards-kicker">✦ LE QG RÉCOMPENSE SES MEMBRES</span><span class="mj-monthly-rewards-status">EN PRÉPARATION</span></div>'+
- '<header class="mj-monthly-rewards-header"><h2 id="mjMonthlyRewardsTitle">RÉCOMPENSES <span>MENSUELLES</span></h2>'+
+ '<header class="mj-monthly-rewards-header"><h1 id="mjMonthlyRewardsTitle">RÉCOMPENSES <span>MENSUELLES</span></h1>'+
  '<p>À terme, les trois premières places d’un classement <strong>mensuel distinct</strong> du classement général donneront accès à des bonus de pièces DraftBot.</p></header>'+
  '<div class="mj-monthly-rewards-grid">'+rewards.map(item=>
   '<article class="mj-monthly-rewards-card mj-monthly-rewards-'+item.tone+'">'+

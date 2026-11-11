@@ -5,7 +5,7 @@ import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
 import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
 import {boutiqueMarkup,mountBoutique,unmountBoutique} from './boutique.js?v=20261111-reward-images1';
-import {monthlyRewardsMarkup} from './ranking-rewards.js?v=20261111-monthly-rewards1';
+import {monthlyRewardsMarkup} from './ranking-rewards.js?v=20261111-monthly-page1';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile,renderPublicMember,renderPrivateMember} from './profil.js?v=20261110-ranking-profiles1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
@@ -14,7 +14,7 @@ const $ = (id) => document.getElementById(id);
 const root = $('page');
 const votesEnabled=document.querySelector('meta[name="majestik-votes-enabled"]')?.content==='true';
 const voteApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/$/,'');
-const names = {accueil:'Accueil',roue:'La roue',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements',boutique:'Boutique & Récompenses',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide',contact:'Nous contacter',confidentialite:'Politique de confidentialité'};
+const names = {accueil:'Accueil',roue:'La roue',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements','recompenses-mensuelles':'Récompenses mensuelles',boutique:'Boutique & Récompenses',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide',contact:'Nous contacter',confidentialite:'Politique de confidentialité'};
 const modules = [
 {path:'roue',icon:'🎡',title:'La roue',desc:'Un outil interactif pour laisser le hasard choisir. De nouvelles utilisations pourront être ajoutées progressivement.',ready:true},
 {path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
@@ -22,7 +22,7 @@ const modules = [
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Propose des questions, vote avec Twitch et découvre les résultats partagés.',ready:tribunalPublicEnabled},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
 ];
-const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'outils',classement:'communaute',boutique:'communaute',setup:'univers',partenaires:'univers',apropos:'univers',createur:'univers',profil:null,membre:null,aide:null,contact:null,confidentialite:null};
+const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'outils',classement:'communaute','recompenses-mensuelles':'communaute',boutique:'communaute',setup:'univers',partenaires:'univers',apropos:'univers',createur:'univers',profil:null,membre:null,aide:null,contact:null,confidentialite:null};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
 const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1>'+(description?'<p>'+description+'</p>':'')+(tags.length?'<div class="page-tags">'+tags.join('')+'</div>':'')+'</div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
@@ -116,7 +116,7 @@ function ranking(){
  '<section class="qg-rankings"><div class="qg-podium-title"><span aria-hidden="true">🏆</span><h2>TOP 3 DE LA COMMUNAUTÉ</h2></div>'+
  '<div class="qg-podium" id="rankingPodium" aria-live="polite"><p class="qg-podium-empty">Chargement du podium…</p></div>'+
  '<section class="panel qg-ranking-panel" aria-labelledby="rankTableTitle"><div class="qg-rank-table-title"><h2 id="rankTableTitle">CLASSEMENT GÉNÉRAL</h2><p>À partir de la 4ᵉ place</p></div>'+
- '<div class="qg-ranking-scroll"><table class="ranking-table qg-rank-table"><thead><tr><th scope="col">RANG</th><th scope="col">PSEUDO TWITCH</th><th scope="col">POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement…</td></tr></tbody></table></div></section></section>'+monthlyRewardsMarkup();
+ '<div class="qg-ranking-scroll"><table class="ranking-table qg-rank-table"><thead><tr><th scope="col">RANG</th><th scope="col">PSEUDO TWITCH</th><th scope="col">POINTS</th></tr></thead><tbody id="rankingRows"><tr><td colspan="3" class="empty-rank">Chargement…</td></tr></tbody></table></div></section></section>';
  return head('COMMUNAUTÉ','LES CLASSEMENTS','Des records et points partagés entre visiteurs. Les scores devront être contrôlés côté serveur pour que chacun joue à armes égales.',[tag('Comptes à construire','gold'),tag('Scores protégés à venir')])+
  '<section class="panel"><h3>CLASSEMENT GÉNÉRAL</h3><p>La vraie base de données n’est pas encore connectée. Aucun faux profil ni faux score n’est affiché.</p><table class="ranking-table"><thead><tr><th>RANG</th><th>PSEUDO</th><th>POINTS</th></tr></thead><tbody><tr><td colspan="3" class="empty-rank">Pas encore de classement — lancement après validation des règles et du système de comptes.</td></tr></tbody></table></section>'+
  '<div class="note">Architecture prévue : authentification sécurisée, stockage partagé et règles de calcul côté serveur sur un service à quota gratuit. Pas d’abonnement mensuel activé.</div>';
@@ -303,7 +303,7 @@ function creator(){
   '</div>'+
  '</section>';
 }
-const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,boutique:boutiqueMarkup,setup:setup,partenaires:about,apropos:about,createur:creator,profil:profileMarkup,membre:publicProfileMarkup,aide:helpMarkup,contact:contactMarkup,confidentialite:privacyMarkup};
+const pages={accueil:home,roue:wheel,defis:challenges,killathon:killathonMarkup,tribunal:tribunalPublicEnabled?publicTribunalMarkup:court,classement:ranking,'recompenses-mensuelles':monthlyRewardsMarkup,boutique:boutiqueMarkup,setup:setup,partenaires:about,apropos:about,createur:creator,profil:profileMarkup,membre:publicProfileMarkup,aide:helpMarkup,contact:contactMarkup,confidentialite:privacyMarkup};
 let wheelObserver=null;
 let setupObserver=null;
 // Mesure la fin du contenu REEL (et non scrollHeight, qui peut inclure
