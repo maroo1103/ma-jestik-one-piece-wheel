@@ -93,3 +93,14 @@ body.stream .wheel-library-panel,body.stream .wheel-custom-editor,body.stream .w
   display:block;width:100%;height:100%;max-width:100%;max-height:100%;
   transform:none;object-fit:contain;background:#111519
 }
+
+/* Modeles officiels : choix de tirage libres, mais structure et images protegees.
+   La duplication cree une roue editable sans toucher a l'originale. */
+body.wheel-official-locked .wheel-custom-editor,
+body.wheel-official-locked .wheel-bulk-editor,
+body.wheel-official-locked .poi-card .edit-image,
+body.wheel-official-locked .poi-card .wheel-edit-actions,
+body.wheel-official-locked #wheelRename,
+body.wheel-official-locked #wheelDelete{display:none!important}
+body.wheel-official-locked .wheel-library-panel button[hidden]{display:none!important}
+body.wheel-official-locked .wheel-library-panel .wheel-status{color:#e6c48d}
