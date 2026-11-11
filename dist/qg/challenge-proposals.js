@@ -3,6 +3,8 @@
    un préfixe ; aucun sondage Tribunal n'est créé par cet outil. */
 import {getQGTwitchSession} from './twitch-auth.js';
 const PREFIX='🎯 DÉFI · ';
+const GAME_MARKERS=Object.freeze({'warzone-hajin':'⊛H⊛','warzone-zodiac':'⊛Z⊛','warzone-rebirth':'⊛R⊛'});
+const GAME_LABELS=Object.freeze({fortnite:'Fortnite','warzone-hajin':'Hajin','warzone-zodiac':'Zodiac','warzone-rebirth':'Rebirth Island'});
 const API=(document.querySelector('meta[name="majestik-tribunal-api"]')?.content||'').replace(/\/+$/,'');
 const TEAMS={solo:'Solo',duo:'Duo',trio:'Trio',quatuor:'Quatuor'};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -13,9 +15,12 @@ function decode(p){
  if(!m||!Array.isArray(p.answers)||p.answers.length!==4)return null;
  const chunks=p.answers.map((v,i)=>typeof v==='string'&&v.startsWith((i+1)+':')&&v.endsWith('#')?v.slice(2,-1):null);
  if(chunks.some(c=>c===null))return null;
- const description=chunks.join('');
+ let description=chunks.join(''),game='fortnite';
+ for(const [id,mark] of Object.entries(GAME_MARKERS)){
+  if(description.startsWith(mark)){game=id;description=description.slice(mark.length);break;}
+ }
  if(description.length<10||description.length>180)return null;
- return {id:String(p.id),title:m[2],description,team:m[1],by:String(p.author_name||'Viewer').slice(0,64),source:'viewer'};
+ return {id:String(p.id),game,title:m[2],description,team:m[1],by:String(p.author_name||'Viewer').slice(0,64),source:'viewer'};
 }
 async function request(path,method='GET',body){
  const token=getQGTwitchSession()?.token;
@@ -33,13 +38,13 @@ async function request(path,method='GET',body){
   return data;
  }finally{clearTimeout(time)}
 }
-function memberHtml(){
+function memberHtml(game='fortnite'){
  const logged=!!getQGTwitchSession()?.token;
  const fields=Object.entries(TEAMS).map(([k,v])=>'<option value="'+k+'">'+v+'</option>').join('');
  return '<section class="panel challenge-community-panel" data-challenge-proposals-slot="member">'+
  '<div class="challenge-game-kicker">LA PAROLE AUX VIEWERS</div><h3>PROPOSER UN DÉFI</h3>'+
  (logged
- ? '<p>Une idée de mission Fortnite ? Envoie-la directement à Ma_JesTik pour validation.</p>'+
+ ? '<p>Une idée de mission '+esc(GAME_LABELS[game]||'Fortnite')+' ? Envoie-la directement à Ma_JesTik pour validation.</p>'+
    '<form id="challengeCommunityProposalForm" class="challenge-community-form">'+
    '<label>Composition<select name="team" required>'+fields+'</select></label>'+
    '<label>Nom du défi<input name="title" type="text" required minlength="3" maxlength="80" placeholder="Ex. Une partie sans bouclier"></label>'+
@@ -64,7 +69,7 @@ function ownerHtml(queue,notice,busy){
  (notice?'<p class="challenge-proposal-feedback" role="status">'+esc(notice)+'</p>':'')+
  '</div>';
 }
-export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
+export function mountChallengeProposals({root,isOwner,canAccept,onAccept,getGame=()=> 'fortnite'}){
  let queue=[],message='',busy=false,fetching=false;
  const active=()=>root.isConnected&&root.querySelector('.challenge-ui');
  function render(){
@@ -76,15 +81,16 @@ export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
   if(owner){
    const host=root.querySelector('.challenge-queue');
    if(!host)return;
-   if(queue.length)host.querySelector('[data-challenge-queue-empty]')?.remove();
-   const markup=ownerHtml(queue,message,busy);
+   const visible=queue.filter(item=>item.game===getGame());
+   if(visible.length)host.querySelector('[data-challenge-queue-empty]')?.remove();
+   const markup=ownerHtml(visible,message,busy);
    if(markup)host.insertAdjacentHTML('beforeend',markup);
   }else{
    const voteSlot=root.querySelector('#challengeVoteSlot');
    if(voteSlot){
-    voteSlot.insertAdjacentHTML('beforebegin',memberHtml());
+    voteSlot.insertAdjacentHTML('beforebegin',memberHtml(getGame()));
    }else{
-    root.querySelector('.challenge-ui')?.insertAdjacentHTML('beforeend',memberHtml());
+    root.querySelector('.challenge-ui')?.insertAdjacentHTML('beforeend',memberHtml(getGame()));
    }
   }
  }
@@ -108,7 +114,8 @@ export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
   const data=new FormData(form);
   const team=String(data.get('team')||''),title=String(data.get('title')||'').trim();
   const description=String(data.get('description')||'').trim();
-  if(!Object.hasOwn(TEAMS,team)||title.length<3||title.length>80||description.length<10||description.length>180){
+  const marker=GAME_MARKERS[getGame()]||'';
+  if(!Object.hasOwn(TEAMS,team)||title.length<3||title.length>80||description.length<10||description.length>180-marker.length){
    if(feedback)feedback.textContent='Vérifie la composition, le titre et les règles (180 caractères maximum).';
    return;
   }
@@ -117,7 +124,7 @@ export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
   void (async()=>{
    try{
     const result=await request('/v1/tribunal/proposals','POST',{
-     question:PREFIX+team+' · '+title,answers:encodeAnswers(description)
+     question:PREFIX+team+' · '+title,answers:encodeAnswers(marker+description)
     });
     if(!result.accepted)throw Error('La proposition n’a pas été confirmée.');
     if(feedback)feedback.textContent='✓ Proposition transmise à Ma_JesTik pour validation !';
@@ -130,7 +137,7 @@ export function mountChallengeProposals({root,isOwner,canAccept,onAccept}){
   const btn=e.target.closest('[data-shared-proposal]');
   if(!btn||!root.contains(btn)||!isOwner()||busy)return;
   const item=queue.find(x=>x.id===btn.dataset.proposalId),action=btn.dataset.sharedProposal;
-  if(!item||!['accept','reject'].includes(action))return;
+  if(!item||item.game!==getGame()||!['accept','reject'].includes(action))return;
   if(action==='accept'){
    const problem=canAccept();
    if(problem){message=problem;render();return;}
