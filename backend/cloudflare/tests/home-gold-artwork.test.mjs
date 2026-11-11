@@ -339,7 +339,7 @@ test("Classement QG : primes mensuelles visibles uniquement comme projet, sans f
  const main=src("dist/qg/qg.js");
  const rewards=src("dist/qg/ranking-rewards.js");
  const style=src("dist/qg/ranking-rewards.css");
- assert.match(main,/import \{monthlyRewardsMarkup\} from '\.\/ranking-rewards\.js\?v=20261111-monthly-mission1'/);
+ assert.match(main,/import \{monthlyRewardsMarkup\} from '\.\/ranking-rewards\.js\?v=20261111-mission-art1'/);
  assert.match(main,/'recompenses-mensuelles':monthlyRewardsMarkup/);
  assert.doesNotMatch(main,/<\/section><\/section>'\+monthlyRewardsMarkup\(\)/);
  assert.match(main,/fetch\(voteApi\+'\/v1\/ranking'/); // classement général inchangé
