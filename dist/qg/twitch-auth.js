@@ -7,7 +7,7 @@ const activityEnabled=document.querySelector('meta[name="majestik-activity-enabl
 const memberApi=(document.querySelector('meta[name="majestik-members-api"]')?.content||'').replace(/\/+$/,'');
 const ACTIVITY_SUCCESS_GAP=30*60*1000,ACTIVITY_FAILURE_GAP=5*60*1000;
 let nextActivityPing=0,activityPending=false;
-const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','setup','partenaires','apropos','createur','profil','membre','aide','contact','confidentialite']);
+const routes=new Set(['accueil','roue','defis','killathon','tribunal','classement','boutique','setup','partenaires','apropos','createur','profil','membre','aide','contact','confidentialite']);
 const goodRoute=s=>typeof s==='string'&&s.startsWith('#/')&&routes.has(s.slice(2))?s:'#/accueil';
 const get=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
 const put=(k,v)=>{try{sessionStorage.setItem(k,v);return true}catch{return false}};

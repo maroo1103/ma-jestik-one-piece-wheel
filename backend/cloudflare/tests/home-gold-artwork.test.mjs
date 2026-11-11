@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261110-footer-unified1/);
+ assert.match(html,/qg\.js\?v=20261111-shop1/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261110-footer-unified1/);
+ assert.match(html,/qg\.js\?v=20261111-shop1/);
 });
 
 
@@ -223,4 +223,38 @@ test("Identité MJ : logo animé léger avec repli fixe accessible",()=>{
  }
  assert.match(home,/\.site-header \.mj-brand-logo/);
  assert.match(footer,/\.mj-footer-brand-link \.mj-brand-logo/);
+});
+
+
+test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
+ const html=src("dist/qg/index.html");
+ const js=src("dist/qg/qg.js");
+ const auth=src("dist/qg/twitch-auth.js");
+ const shop=src("dist/qg/boutique.js");
+ const css=src("dist/qg/boutique.css");
+ assert.match(html,/boutique\.css\?v=20261111-shop1/);
+ assert.match(html,/qg\.js\?v=20261111-shop1/);
+ assert.match(html,/href="#\/boutique" data-page="boutique"/);
+ assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
+ assert.match(js,/import \{boutiqueMarkup\} from '.\/boutique\.js/);
+ assert.match(js,/boutique:boutiqueMarkup/);
+ assert.match(js,/boutique:'communaute'/);
+ assert.match(js,/qg-shop-active/);
+ assert.match(auth,/'boutique'/);
+ assert.match(shop,/const discordInvite='https:\/\/discord\.gg\/nyuC5YE467'/);
+ assert.match(shop,/catalogUrl=discordInvite/);
+ assert.match(shop,/orderUrl=discordInvite/);
+ for(const label of ["1 000 XP","VIP Twitch & Discord","Choisis mon prochain jeu","1 000 V-Bucks Fortnite","Passe de combat Fortnite","3 000","8 000","20 000","30 000","32 200"]){
+  assert.ok(shop.includes(label),"Catalogue incomplet : "+label);
+ }
+ assert.match(shop,/\/argent/);
+ assert.match(shop,/\/boutique/);
+ assert.match(shop,/EXCLUSIF/);
+ assert.match(shop,/STOCK LIMITÉ/);
+ assert.match(shop,/RÉCOMPENSE SPÉCIALE/);
+ assert.doesNotMatch(shop,/↗|external-link|<em|<i>|etc\./i);
+ assert.match(css,/\.mj-shop \*\{font-style:normal\}/);
+ assert.match(css,/\.mj-shop \.mj-shop-command\{font-style:italic\}/);
+ assert.match(css,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
+ assert.match(css,/@media\(max-width:600px\)/);
 });
