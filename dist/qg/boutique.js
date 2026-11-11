@@ -11,14 +11,15 @@ const rewards=[
  {id:'pass',icon:'medal',title:'Passe de combat Fortnite',badge:'RÉCOMPENSE SPÉCIALE',price:'32 200',description:'Reçois le Passe de combat de la saison Fortnite en cours selon les conditions de cadeau d’Epic Games.',condition:'Compte éligible, A2F activée, amitié Epic depuis 48 h minimum, niveau 2 minimum et passe non possédé.'}
 ];
 function rewardCard(reward){
- return '<article class="mj-shop-card mj-shop-card-'+reward.id+'" aria-label="'+reward.title+'">'+
+ return '<article class="mj-shop-card mj-shop-card-'+reward.id+'" data-shop-reward="'+reward.id+'" aria-label="'+reward.title+'">'+
  (reward.badge?'<div class="mj-shop-card-badge">'+reward.badge+'</div>':'')+
  '<div class="mj-shop-card-icon" aria-hidden="true">'+icons[reward.icon]+'</div>'+
  '<h3>'+reward.title+'</h3>'+
  (reward.tag?'<span class="mj-shop-card-tag">'+reward.tag+'</span>':'')+
  '<p class="mj-shop-card-description">'+reward.description+'</p>'+
  (reward.condition?'<p class="mj-shop-card-condition">'+reward.condition+'</p>':'')+
- '<div class="mj-shop-card-price"><span class="mj-shop-price-symbol" aria-hidden="true">◉</span>'+reward.price+' <span>pièces</span></div></article>';
+ '<div class="mj-shop-card-price"><span class="mj-shop-price-symbol" aria-hidden="true">◉</span>'+reward.price+' <span>pièces</span></div>'+
+ '<button class="mj-shop-card-open" type="button" aria-haspopup="dialog" aria-label="Voir les détails de '+reward.title+'">VOIR LA RÉCOMPENSE</button></article>';
 }
 export function boutiqueMarkup(){
  return '<div class="mj-shop">'+
@@ -41,5 +42,84 @@ export function boutiqueMarkup(){
  '<header class="mj-shop-catalog-header"><span class="mj-shop-rule" aria-hidden="true"></span><h2 id="mjShopCatalogTitle">LE CATALOGUE DES RÉCOMPENSES</h2><span class="mj-shop-rule" aria-hidden="true"></span></header>'+
  '<div class="mj-shop-cards">'+rewards.map(rewardCard).join('')+'</div></section>'+
  '<aside class="mj-shop-notice" aria-label="Information sur les achats"><span class="mj-shop-notice-icon" aria-hidden="true">ⓘ</span><strong>À NOTER :</strong><p>Les achats et la gestion des stocks sont effectués sur Discord. Certaines récompenses sont soumises à disponibilité et à validation selon les conditions applicables.</p></aside>'+
+ '<dialog id="mjShopDialog" class="mj-shop-dialog" aria-labelledby="mjShopDialogTitle" aria-describedby="mjShopDialogDesc"></dialog>'+
  '</div>';
+}
+
+
+/* Fenêtres natives dans le même esprit que le setup interactif.
+   Pas de paiement ou de solde simulé : la commande reste sur Discord. */
+const rewardDetails={
+ xp:{category:'PROGRESSION DISCORD',type:'Boost d’expérience',delivery:'Crédit de 1 000 XP sur Discord',availability:'Selon les règles de la boutique',note:'Les XP augmentent la progression sur le serveur, pas le niveau dans Fortnite.'},
+ vip:{category:'AVANTAGES COMMUNAUTAIRES',type:'Statut VIP',delivery:'Attribution manuelle après vérification',availability:'30 jours',note:'Le rôle VIP Discord et le badge VIP Twitch sont attribués après vérification du pseudo et de la disponibilité.'},
+ jeu:{category:'RÉCOMPENSE EXCLUSIVE',type:'Choix d’un jeu en stream',delivery:'Validation puis contact sur Discord',availability:'Quantité limitée selon la boutique',note:'Jeu disponible sur Instant Gaming, dans la limite de 10 €. Le choix doit être accepté avant achat.'},
+ vbucks:{category:'RÉCOMPENSE FORTNITE',type:'Carte cadeau Fortnite compatible',delivery:'Remise manuelle via Discord',availability:'Sous réserve de disponibilité',note:'Vérification de la plateforme, de la région et du budget avant remise. Aucun V-Buck n’est envoyé directement par le site.'},
+ pass:{category:'RÉCOMPENSE FORTNITE',type:'Cadeau en jeu selon les règles Epic',delivery:'Remise organisée sur Discord',availability:'Selon les conditions et périodes de cadeau',note:'Conditions indiquées dans la boutique : A2F activée, amitié Epic depuis au moins 48 h, compte niveau 2 minimum, passe non déjà possédé, solde V-Bucks non négatif et période de cadeau autorisée.'}
+};
+function visualMarkup(reward){
+ if(reward.id==='vbucks')return '<svg class="mj-shop-vbucks-art" viewBox="0 0 460 460" role="img" aria-label="Illustration stylisée de jetons V-Bucks Fortnite" xmlns="http://www.w3.org/2000/svg">'+
+ '<defs><radialGradient id="mjCoinBg"><stop stop-color="#27516b" stop-opacity=".78"/><stop offset="1" stop-color="#10141a" stop-opacity="0"/></radialGradient><linearGradient id="mjCoinMetal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a8e7fb"/><stop offset=".43" stop-color="#4e9cbd"/><stop offset="1" stop-color="#1e3e60"/></linearGradient><linearGradient id="mjCoinEdge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e1f4f8"/><stop offset=".48" stop-color="#6aafcb"/><stop offset="1" stop-color="#254668"/></linearGradient></defs>'+
+ '<ellipse cx="230" cy="225" rx="192" ry="177" fill="url(#mjCoinBg)"/>'+
+ '<g opacity=".9"><ellipse cx="120" cy="334" rx="79" ry="19" fill="#163a52" stroke="#6599b5" stroke-width="6"/><path d="M41 305v27c0 25 158 25 158 0v-27" fill="#214f6c" stroke="#7fb9d1" stroke-width="5"/><ellipse cx="120" cy="304" rx="79" ry="21" fill="url(#mjCoinMetal)" stroke="#bde8f8" stroke-width="6"/><ellipse cx="341" cy="339" rx="76" ry="18" fill="#183e58" stroke="#6fa6c2" stroke-width="6"/><path d="M265 305v34c0 25 152 25 152 0v-34" fill="#1e4e6c" stroke="#74aac4" stroke-width="5"/><ellipse cx="341" cy="304" rx="76" ry="22" fill="url(#mjCoinMetal)" stroke="#b4dff0" stroke-width="6"/></g>'+
+ '<g transform="translate(234 206) rotate(-14)"><circle r="126" fill="#244f70" stroke="#88c3db" stroke-width="12"/><circle r="107" fill="url(#mjCoinMetal)" stroke="url(#mjCoinEdge)" stroke-width="12"/><circle r="83" fill="#173f5c" stroke="#a0daf1" stroke-width="5"/><path d="M-60-45-15 67H15L60-45H26L0 24-27-45Z" fill="#cceaf4" stroke="#f4fdff" stroke-width="3" stroke-linejoin="round"/><path d="M-12-70H14" stroke="#bbdbe8" stroke-width="5" stroke-linecap="round"/></g>'+
+ '</svg>';
+ return '<div class="mj-shop-modal-emblem mj-shop-modal-emblem-'+reward.id+'" aria-hidden="true">'+icons[reward.icon]+'</div>'+
+ '<span class="mj-shop-modal-visual-caption">'+reward.title+'</span>';
+}
+function modalMarkup(reward){
+ const details=rewardDetails[reward.id];
+ return '<div class="mj-shop-modal-window">'+
+ '<button type="button" class="mj-shop-modal-close" aria-label="Fermer la fiche de récompense">×</button>'+
+ '<div class="mj-shop-modal-grid">'+
+ '<div class="mj-shop-modal-figure"><div class="mj-shop-modal-art mj-shop-modal-art-'+reward.id+'">'+visualMarkup(reward)+'</div><p class="mj-shop-modal-art-note">Visuel illustratif · Récompense à commander sur Discord</p></div>'+
+ '<div class="mj-shop-modal-content">'+
+ '<span class="mj-shop-modal-eyebrow">'+details.category+'</span>'+
+ '<h2 id="mjShopDialogTitle">'+reward.title+'</h2>'+
+ '<p id="mjShopDialogDesc">'+reward.description+'</p>'+
+ '<dl class="mj-shop-modal-facts">'+
+ '<div><dt>Prix</dt><dd>'+reward.price+' pièces</dd></div>'+
+ '<div><dt>Type</dt><dd>'+details.type+'</dd></div>'+
+ '<div><dt>Remise</dt><dd>'+details.delivery+'</dd></div>'+
+ '<div><dt>Disponibilité</dt><dd>'+details.availability+'</dd></div>'+
+ '</dl>'+
+ (reward.condition?'<p class="mj-shop-modal-condition">'+reward.condition+'</p>':'')+
+ '<p class="mj-shop-modal-notice">'+details.note+'</p>'+
+ '<a class="mj-shop-modal-order" href="'+orderUrl+'" target="_blank" rel="noopener noreferrer">COMMANDER SUR DISCORD</a>'+
+ '<p class="mj-shop-modal-disclaimer">Achats, pièces et stocks gérés exclusivement par DraftBot dans le salon #commande-boutique. Ce bouton n’effectue aucun achat automatique.</p>'+
+ '</div></div></div>';
+}
+let boutiqueCleanup=null;
+export function unmountBoutique(){
+ if(boutiqueCleanup){boutiqueCleanup();boutiqueCleanup=null;}
+}
+export function mountBoutique(){
+ unmountBoutique();
+ const root=document.querySelector('.mj-shop');
+ const dialog=document.getElementById('mjShopDialog');
+ if(!root||!dialog||typeof dialog.showModal!=='function')return;
+ let trigger=null;
+ const close=()=>{if(dialog.open)dialog.close();};
+ const onClick=e=>{
+  const card=e.target.closest('.mj-shop-card[data-shop-reward]');
+  if(!card||!root.contains(card)||dialog.open)return;
+  const reward=rewards.find(r=>r.id===card.dataset.shopReward);
+  if(!reward)return;
+  trigger=card.querySelector('.mj-shop-card-open');
+  dialog.innerHTML=modalMarkup(reward);
+  dialog.querySelector('.mj-shop-modal-close')?.addEventListener('click',close);
+  dialog.showModal();
+  dialog.querySelector('.mj-shop-modal-close')?.focus();
+ };
+ const onBackdrop=e=>{if(e.target===dialog)close();};
+ const onClose=()=>{if(trigger?.isConnected)trigger.focus();};
+ root.addEventListener('click',onClick);
+ dialog.addEventListener('click',onBackdrop);
+ dialog.addEventListener('close',onClose);
+ boutiqueCleanup=()=>{
+  close();
+  root.removeEventListener('click',onClick);
+  dialog.removeEventListener('click',onBackdrop);
+  dialog.removeEventListener('close',onClose);
+  dialog.replaceChildren();
+ };
 }

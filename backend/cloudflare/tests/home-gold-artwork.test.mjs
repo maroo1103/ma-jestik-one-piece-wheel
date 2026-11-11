@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261111-shop2/);
+ assert.match(html,/qg\.js\?v=20261111-shop3/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261111-shop2/);
+ assert.match(html,/qg\.js\?v=20261111-shop3/);
 });
 
 
@@ -232,11 +232,11 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const auth=src("dist/qg/twitch-auth.js");
  const shop=src("dist/qg/boutique.js");
  const css=src("dist/qg/boutique.css");
- assert.match(html,/boutique\.css\?v=20261111-shop2/);
- assert.match(html,/qg\.js\?v=20261111-shop2/);
+ assert.match(html,/boutique\.css\?v=20261111-shop3/);
+ assert.match(html,/qg\.js\?v=20261111-shop3/);
  assert.match(html,/href="#\/boutique" data-page="boutique"/);
  assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
- assert.match(js,/import \{boutiqueMarkup\} from '.\/boutique\.js/);
+ assert.match(js,/import \{boutiqueMarkup,mountBoutique,unmountBoutique\} from '.\/boutique\.js/);
  assert.match(js,/boutique:boutiqueMarkup/);
  assert.match(js,/boutique:'communaute'/);
  assert.match(js,/tribunal:'outils'/);
@@ -272,4 +272,35 @@ test("Navigation : Tribunal dans Outils gaming et mise en évidence du salon dis
  assert.match(js,/tribunal:'outils'/);
  assert.match(css,/\.mj-shop-step p strong\{color:#dbc6a9;background:#24211d/);
  assert.doesNotMatch(css,/background:#3a3048/);
+});
+
+test("Boutique QG : cinq récompenses ouvrent des fiches natives accessibles",()=>{
+ const shop=src("dist/qg/boutique.js");
+ const css=src("dist/qg/boutique.css");
+ const qg=src("dist/qg/qg.js");
+ const html=src("dist/qg/index.html");
+ assert.match(shop,/data-shop-reward/);
+ assert.match(shop,/mj-shop-card-open/);
+ assert.match(shop,/aria-haspopup="dialog"/);
+ assert.match(shop,/<dialog id="mjShopDialog"/);
+ assert.match(shop,/export function mountBoutique\(\)/);
+ assert.match(shop,/export function unmountBoutique\(\)/);
+ assert.match(shop,/dialog\.showModal\(\)/);
+ assert.match(shop,/dialog\.close\(\)/);
+ assert.match(shop,/aria-labelledby="mjShopDialogTitle"/);
+ assert.match(shop,/aria-describedby="mjShopDialogDesc"/);
+ assert.match(shop,/mj-shop-modal-close/);
+ assert.match(shop,/if\(e\.target===dialog\)close\(\)/);
+ assert.match(shop,/if\(trigger\?\.isConnected\)trigger\.focus\(\)/);
+ assert.match(shop,/mj-shop-vbucks-art/);
+ assert.match(shop,/Illustration stylisée de jetons V-Bucks Fortnite/);
+ assert.match(shop,/const rewardDetails=\{/);
+ assert.match(shop,/const orderUrl='https:\/\/discord\.com\/channels\/1296502783423414382\/1566447195673198703'/);
+ assert.match(shop,/Achats, pièces et stocks gérés exclusivement par DraftBot/);
+ assert.match(qg,/unmountBoutique\(\)/);
+ assert.match(qg,/if\(page==='boutique'\)mountBoutique\(\)/);
+ assert.match(qg,/boutique\.js\?v=20261111-shop3/);
+ assert.match(html,/boutique\.css\?v=20261111-shop3/);
+ assert.match(css,/\.mj-shop-dialog::backdrop/);
+ assert.match(css,/@media\(max-width:740px\)/);
 });

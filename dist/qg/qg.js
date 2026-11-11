@@ -4,7 +4,7 @@ import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
 import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
-import {boutiqueMarkup} from './boutique.js?v=20261111-shop2';
+import {boutiqueMarkup,mountBoutique,unmountBoutique} from './boutique.js?v=20261111-shop3';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile,renderPublicMember,renderPrivateMember} from './profil.js?v=20261110-ranking-profiles1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
@@ -365,6 +365,7 @@ function closeMobile(){
  $('menuMobile').setAttribute('aria-expanded','false');
 }
 function route(){
+ unmountBoutique();
  closeMemberPreview();
  unmountActivityStrip();
  unmountTribunal();
@@ -385,6 +386,7 @@ function route(){
   button.setAttribute('aria-expanded','false');
  });
  if(page==='accueil')mountActivityStrip();
+ if(page==='boutique')mountBoutique();
  if(page==='roue')mountWheel();
  if(page==='setup')mountSetup();
   if(page==='profil')void mountProfile();
