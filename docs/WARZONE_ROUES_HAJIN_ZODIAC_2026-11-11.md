@@ -1,6 +1,6 @@
 # Préparation des roues Warzone — Hajin et Zodiac
 **Date :** 11 novembre 2026  
-**État :** lieux vérifiés ; illustrations **non encore sélectionnées** ; modèles **non encore publiés** dans La Roue.  
+**État :** modèle **Hajin installé sur GitHub**, 13 noms vérifiés, **aucune photo officielle de POI encore intégrée** et carte officielle accessible par **lien** (aperçu cartographique local manquant). La roue est une **version intermédiaire clairement signalée**, pas un rendu final équivalent à Fortnite. Modèle Zodiac pas encore publié.  
 **Travail demandé :** intégration de Hajin et Zodiac, puis Rebirth Island ; Verdansk en dernier. Les jingles audio seront traités ultérieurement.
 
 ## Exigences immuables
@@ -47,7 +47,7 @@ Guide officiel **Warzone / Zodiac** : https://www.callofduty.com/guides/warzone/
 
 ## Développement : consignes
 - Modèle Fortnite One Piece inchangé ; ne pas supprimer les images et réglages locaux des anciens visiteurs.
-- Ajouter les deux modèles à la liste initiale seulement lorsque leurs images statiques sont prêtes et documentées. Attention : `dist/wheel-library.mjs` conserve aujourd'hui le modèle Fortnite initial ; une migration **additive** doit compléter les bibliothèques préexistantes **sans réactiver les choix décochés ni écraser les roues personnalisées**.
+- L'amorce du modèle Hajin est désormais visible avec **logos MJ explicitement provisoires**, faute d'accès aux fichiers image de la carte interactive officielle. Ne jamais les présenter comme des photos du jeu. Remplacer ces logos par les **13 vrais POI** après récupération des fichiers. L'ajout se fait par une migration **additive** dans `dist/wheel-library.mjs` pour les bibliothèques préexistantes **sans réactiver les choix décochés ni écraser les roues personnalisées**. Zodiac attendra ses véritables images avant publication si possible.
 - `dist/app.js`, `dist/roue.html`, `dist/wheel-multijeux.css`, `dist/image-storage.mjs` et les tests de non-régression doivent être inspectés avant publication.
 - Éviter les mises à jour répétées : regrouper les ajouts d'images et de données en un commit cohérent, puis valider les tests et le rendu du QG.
 - Pour la lisibilité de 13 secteurs, vérifier les textes et les images sur desktop, mobile et mode stream.
@@ -56,9 +56,20 @@ Guide officiel **Warzone / Zodiac** : https://www.callofduty.com/guides/warzone/
 ## Checklist de publication
 - [x] Noms des 13 POI Hajin confirmés par le guide officiel.
 - [x] Noms des 10 POI Zodiac confirmés par le guide officiel.
-- [ ] 13 images réelles de Hajin appariées et vérifiées.
+- [ ] 13 images réelles de Hajin appariées et vérifiées (**0/13 pour l'instant**).
 - [ ] 10 images réelles de Zodiac appariées et vérifiées.
-- [ ] Intégration des modèles dans la bibliothèque locale avec migration des utilisateurs existants.
-- [ ] Tests automatisés et contrôle visuel réel.
+- [x] Modèle Hajin avec 13 noms installé dans la bibliothèque locale (migration additive, fermeture/suppression respectée).
+- [ ] Présentation graphique Hajin finalisée : miniature et grande carte réelles, 13 photos réelles sans substituts.
+- [ ] Modèle Zodiac intégré.
+- [x] Tests statiques et contrôles logiques d'import/migration mis à jour.
+- [ ] Contrôle visuel réel Hajin PC/mobile et tests navigateur en production.
 - [ ] Publication GitHub Pages vérifiée.
 - [ ] Validation finale par le propriétaire.
+
+## Travail GitHub du 11 novembre : première étape concrète Hajin
+- Module `dist/warzone-hajin.mjs` : les 13 POI officiels et leurs IDs stables `hj01` à `hj13` ; les images restent, sans tromperie, le logo MJ générique tant que les fichiers authentiques ne sont pas récupérés.
+- `dist/wheel-library.mjs` : installation automatique du modèle Hajin dans les anciennes bibliothèques, sans remplacer leurs données ; si un visiteur supprime explicitement ce modèle, il ne réapparaît pas.
+- `dist/app.js` : sélection des 13 lieux, tirage et mode stream existants, avis explicite sur les images manquantes, bouton vers le guide Hajin, et suivi du nombre d'images personnalisées.
+- `dist/roue.html` + `dist/wheel-multijeux.css` : accès au guide officiel dans le bloc du haut, **non une fausse reproduction de la carte**. La grande carte locale identique à Fortnite et les photos finales nécessitent encore les fichiers sources exacts.
+- Tests : `backend/cloudflare/tests/wheel-multijeux.test.mjs`, scripts de déploiement et cache QG mis à jour.
+- **Obstacle matériel :** le guide officiel affiche bien les 13 photos de POI, comme le prouve la capture utilisateur du POI `14th Political Prison`, mais l'outil de consultation n'a pas permis d'extraire leurs URL/bits. Ne pas extrapoler les adresses CDN ; ne pas utiliser de visuels IA. Une extraction via navigateur connecté ou un lot d'images enregistré localement depuis le guide sera nécessaire. **Ne pas annoncer la roue comme finalisée tant que 13 photos et carte complète n'ont pas été vérifiées et publiées.**
