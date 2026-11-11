@@ -104,3 +104,14 @@ body.wheel-official-locked #wheelRename,
 body.wheel-official-locked #wheelDelete{display:none!important}
 body.wheel-official-locked .wheel-library-panel button[hidden]{display:none!important}
 body.wheel-official-locked .wheel-library-panel .wheel-status{color:#e6c48d}
+
+/* Identité visuelle : MJ authentique, fixe et transparent, sans carré noir. */
+.topbar .brand-logo-static{
+  display:block;flex:0 0 auto;width:52px;height:52px;
+  object-fit:contain;background:transparent;border:0;border-radius:0;
+  filter:drop-shadow(0 0 3px rgba(231,177,81,.24));
+  transform:none;animation:none;
+}
+@media(max-width:760px){
+  .topbar .brand-logo-static{width:43px;height:43px}
+}
