@@ -220,3 +220,11 @@ test('Les noms longs Hajin tiennent dans des lignes courtes et restent lisibles'
   assert.match(app,/rotate\(180 0/); // ne pas afficher les libellés à l'envers
   assert.match(app,/rotate\(\$\{-rotation\} 0 -21\)/); // photos non renversées
 });
+
+test('Logo de La Roue : retour au QG sans charger le site dans iframe',()=>{
+  const html=source('dist/roue.html');
+  const qg=source('dist/qg/qg.js');
+  assert.match(html,/<a class="brand" href="\/qg\/#\/accueil" target="_top" aria-label="Retour à l’accueil du QG Ma_JesTik">/);
+  assert.doesNotMatch(html,/<a class="brand" href="\.\/" /);
+  assert.match(qg,/class="wheel-embed"/);
+});
