@@ -81,13 +81,13 @@ function drawWheel() {
 function applyRotation() { $('rotor').setAttribute('transform',`rotate(${angle*180/Math.PI} 360 360)`); }
 function renderCards(){
   $('poiGrid').replaceChildren();
-  for(const [index,poi] of POIS.entries()){
+  for(const [position,poi] of POIS.entries()){
     const card=document.createElement('article');card.className='poi-card';card.dataset.poiId=poi.id;
     const label=document.createElement('label');label.className='poi-choice';
     const input=document.createElement('input');input.type='checkbox';input.checked=selected.has(poi.id);input.dataset.id=poi.id;input.setAttribute('aria-label',`Inclure ${poi.name}`);
     const thumb=document.createElement('span');thumb.className='thumb';const img=document.createElement('img');img.src=poi.image;img.dataset.poiId=poi.id;img.alt=`Image de ${poi.name}`;img.width=512;img.height=512;img.loading='lazy';thumb.append(img);
     const name=document.createElement('span');name.className='name';name.textContent=poi.name;
-    const index=document.createElement('span');index.className='poi-index';index.textContent=`CHOIX ${String(index+1).padStart(2,'0')}`;
+    const index=document.createElement('span');index.className='poi-index';index.textContent=`CHOIX ${String(position+1).padStart(2,'0')}`;
     const edit=document.createElement('button');edit.type='button';edit.className='edit-image';edit.textContent="Changer l'image";edit.setAttribute('aria-label',`Changer l'image de ${poi.name}`);edit.disabled=spinning||!imageStoreReady;edit.addEventListener('click',()=>openImageEditor(poi));
     const badge=document.createElement('span');badge.className='custom-image-badge';badge.textContent='IMAGE PERSO';badge.hidden=!customImages.has(poi.id);
     const actions=document.createElement('div');actions.className='wheel-edit-actions';
