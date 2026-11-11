@@ -1,6 +1,6 @@
 import { TAU, normalise, indexAtPointer, targetAngle, randomIndex } from './engine.mjs';
 import { readImages, saveImage, deleteImage, prepareImage } from './image-storage.mjs';
-import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport, isOfficialWheel } from './wheel-library.mjs';
+import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport, isOfficialWheel } from './wheel-library.mjs?v=20261111-wheel-lock1';
 const WARZONE_PREFIX='assets/warzone/';
 let warzoneAssetsReady=false;
 window.warzoneAssetsReady=false;
