@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname,resolve} from 'node:path';
-import {MAX_CHOICES,makeChoice,loadWheelLibrary,saveWheelLibrary,imageKey,wheelToPois,cleanNames,parseWheelImport} from '../../../dist/wheel-library.mjs';
+import {MAX_CHOICES,makeChoice,loadWheelLibrary,saveWheelLibrary,imageKey,wheelToPois,cleanNames,parseWheelImport,isOfficialWheel} from '../../../dist/wheel-library.mjs';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const root=resolve(here,'../../..');
@@ -180,4 +180,43 @@ test('Déploiement des images : ZIP optimisé ou ZIP original validé',()=>{
   assert.match(script,/manifest\.json/);
   assert.match(script,/HAJIN/);
   assert.match(script,/ZODIAC/);
+});
+
+test('Les trois modeles officiels sont proteges ; les copies restent editables',()=>{
+  assert.equal(isOfficialWheel('fortnite'),true);
+  assert.equal(isOfficialWheel('warzone-hajin'),true);
+  assert.equal(isOfficialWheel('warzone-zodiac'),true);
+  assert.equal(isOfficialWheel('wabc123'),false);
+  const app=source('dist/app.js'),css=source('dist/wheel-multijeux.css');
+  assert.match(app,/wheel-official-locked/);
+  assert.match(app,/wheelRename'\)\.disabled=spinning\|\|locked/);
+  assert.match(app,/wheelDelete'\)\.disabled=spinning\|\|locked/);
+  assert.match(app,/wheelBulkReplace'\)\.disabled=spinning\|\|locked/);
+  assert.match(app,/if\(spinning\|\|isOfficialWheel\(currentWheelId\)\|\|POIS\.length>=MAX_CHOICES\)return/);
+  assert.match(app,/if\(spinning\|\|\$\('imageDialog'\)\.open\|\|isOfficialWheel\(currentWheelId\)\)return/);
+  assert.match(app,/if\(spinning\|\|!imageStoreReady\|\|isOfficialWheel\(currentWheelId\)\)return/);
+  assert.match(app,/if\(spinning\|\|isOfficialWheel\(currentWheelId\)\|\|library\.wheels\.length<=1\)return/);
+  assert.match(css,/body\.wheel-official-locked \.wheel-custom-editor/);
+  assert.match(css,/body\.wheel-official-locked \.poi-card \.wheel-edit-actions/);
+  assert.match(app,/statusMessage\('Roue dupliquée\. Tu peux la modifier sans toucher à l’originale\.'/);
+  assert.match(app,/const choices=src\.choices\.map\(c=>\(\{\.\.\.c,id:makeId\('c'\)\}\)\)/);
+});
+test('Les noms longs Hajin tiennent dans des lignes courtes et restent lisibles',()=>{
+  const app=source('dist/app.js'),hajin=source('dist/warzone-hajin.mjs');
+  const block=app.match(/function compactWheelLines\([\s\S]*?(?=function drawWheel\(\))/)?.[0];
+  assert.ok(block,'repartition des libelles sur la roue manquante');
+  const wrap=new Function(block+'\nreturn compactWheelLines;')();
+  for(const name of ['14th Political Prison','Haneul Nuclear Reactor','Mirae General Hospital',
+    'Cheonwang Peak Array','Hajin River Heights','Chang-san Air Base','Wolves Stadium']){
+    assert.ok(hajin.includes(name));
+    const lines=wrap(name);
+    assert.equal(lines.join(' '),name);
+    assert.ok(lines.length<=3,'plus de trois lignes pour '+name);
+    assert.ok(lines.every(line=>line.length<=11),'libellé trop long : '+name);
+  }
+  assert.deepEqual(wrap('14th Political Prison'),['14th','Political','Prison']);
+  assert.match(app,/const compact=count>=10&&currentWheelId!=='fortnite'/);
+  assert.match(app,/rotation=mid\*180\/Math\.PI\+90/);
+  assert.match(app,/rotate\(180 0/); // ne pas afficher les libellés à l'envers
+  assert.match(app,/rotate\(\$\{-rotation\} 0 -21\)/); // photos non renversées
 });
