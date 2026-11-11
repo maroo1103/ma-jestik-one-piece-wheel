@@ -91,10 +91,10 @@ function drawWheel() {
     const rowHeight=compact?17:21,startY=compact?38:37;
     const centerY=startY+(lines.length-1)*rowHeight/2;
     const text=svgElement('text',{
-      'text-anchor':'middle',fill:'#fff7e4',
+      'text-anchor':'middle',fill:compact?'#fff7e4':'#f6f0d9',
       'font-family':'Barlow Condensed, Arial Narrow, Arial, sans-serif',
-      'font-weight':800,'font-size':compact?15:count>14?12:count>9?18:22,
-      'paint-order':'stroke',stroke:'#10232b','stroke-width':compact?2.8:1,
+      'font-weight':compact?800:700,'font-size':compact?15:count>14?12:count>9?18:22,
+      'paint-order':'stroke',stroke:compact?'#10232b':'#102832','stroke-width':compact?2.8:1,
       'stroke-linejoin':'round',
       ...(lower?{transform:`rotate(180 0 ${centerY})`}:{})
     });
