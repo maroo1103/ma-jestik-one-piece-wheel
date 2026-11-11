@@ -131,6 +131,6 @@ test('Hajin : noms du guide officiels et photos provisoires identifiees',()=>{
     assert.ok(preset.includes(name),'POI Hajin manquant : '+name);
   assert.match(html,/id="hajinMapLaunch"/);
   assert.match(html,/https:\/\/www\.callofduty\.com\/guides\/warzone\/hajin/);
-  assert.match(app,/photos sont encore à intégrer/);
-  assert.match(app,/Les logos MJ ne sont pas des captures du jeu/);
+  assert.match(app,/photos restent à intégrer/);
+  assert.match(app,/Les logos MJ sont provisoires, pas des captures du jeu/);
 });
