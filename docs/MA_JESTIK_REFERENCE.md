@@ -53,6 +53,15 @@
 - **Vérifications** : syntaxe JavaScript et présence des références de cache vérifiées. Un test de fenêtre sur une **iframe locale simulant le QG**, en Chromium (ordinateur et mobile, fenêtre en haut et en bas), a constaté que les 4 fenêtres s'affichaient intégralement dans la zone visible. Ce test isolé ne prouve pas encore le rendu du site déployé : faire valider les captures PC/mobile par l'utilisateur et contrôler GitHub Pages.
 - **Aucune modification** de Cloudflare, D1, des données locales des visiteurs, des catalogues de défis Fortnite, des profils ou des récompenses mensuelles. Cap de **0 € de coût supplémentaire** conservé.
 
+## Hajin — première intégration Warzone (11/11/2026)
+- Nouveau modèle `Warzone · Hajin (images à compléter)` avec **13 lieux officiels** via `dist/warzone-hajin.mjs`, visible dans La Roue après actualisation et sélection du modèle. L'ancienne roue Fortnite et toutes les roues personnelles des visiteurs restent intactes ; migration additive de `dist/wheel-library.mjs`. Le modèle supprimé par un visiteur ne réapparaît pas automatiquement.
+- Le **lien vers la vraie carte interactive** de Call of Duty est affiché dans un bloc en haut à gauche lorsque Hajin est sélectionné. Une miniature/cartographie locale identique à celle de Fortnite **n'est pas encore disponible**.
+- Les photos associées aux **13 POI sont toujours absentes** (0/13) faute de récupération directe des fichiers du guide interactif ; le logo MJ de secours est explicitement signalé comme provisoire. **Ne pas annoncer que la roue Hajin est terminée**, ni inventer de photo. La capture utilisateur du 14th Political Prison prouve l'existence des photos sur le guide et l'utilisateur souhaite ces images authentiques pour chaque lieu.
+- Aucun son spécifique Warzone ajouté ; le moteur de tirage conserve ses sons génériques.
+- Nouveau script vérifié dans les workflows de test et déploiement ; références de cache mises à jour. Aucun Worker Cloudflare ni D1 concerné.
+- Voir `docs/WARZONE_ROUES_HAJIN_ZODIAC_2026-11-11.md` pour le détail, les 13 noms et les étapes restantes.
+- Ordre de travail : compléter **Hajin**, puis **Zodiac**, puis **Rebirth Island**, **Verdansk en dernier**. Ne pas avancer les autres roues avant d'avoir stabilisé les images de Hajin.
+
 ## Mise à jour du 11 novembre 2026 — La Roue désormais multijeux et éditable localement
 
 - **Objectif prioritaire : aucun coût opérationnel supplémentaire pour chaque tirage, modification ou import d'image.** Les actions des utilisateurs sont effectuées dans le navigateur et ne sollicitent **aucun Worker, aucune D1, aucun service d'upload, aucun compte Twitch**. Les fichiers statiques sont servis par GitHub Pages ; leurs visites restent des requêtes HTTP normales. Les publications du site nécessitent toujours une GitHub Action. Les coûts/quota d'hébergement habituels ne peuvent pas être garantis illimités.
