@@ -228,3 +228,81 @@ test('Logo de La Roue : retour au QG sans charger le site dans iframe',()=>{
   assert.doesNotMatch(html,/<a class="brand" href="\.\/" /);
   assert.match(qg,/class="wheel-embed"/);
 });
+
+
+test('Rebirth et Verdansk en préparation : invisibles tant que leurs images ne sont pas présentes',()=>{
+  store.clear();
+  const basic=loadWheelLibrary(baseline,{});
+  assert.deepEqual(basic.wheels.map(w=>w.id),
+    ['fortnite','warzone-hajin','warzone-zodiac']);
+  assert.equal(isOfficialWheel('warzone-rebirth'),true);
+  assert.equal(isOfficialWheel('warzone-verdansk'),true);
+  const prepared=loadWheelLibrary(baseline,{}, {rebirth:true,verdansk:true});
+  const rebirth=prepared.wheels.find(w=>w.id==='warzone-rebirth');
+  const verdansk=prepared.wheels.find(w=>w.id==='warzone-verdansk');
+  assert.ok(rebirth&&verdansk,'Modèles préparatoires disponibles après contrôle des visuels');
+  assert.equal(rebirth.choices.length,13);
+  assert.equal(verdansk.choices.length,21);
+  assert.equal(rebirth.choices[0].name,'Bioweapons');
+  assert.equal(rebirth.choices[4].name,'Turbine');
+  assert.equal(rebirth.choices[11].name,'Outpost');
+  assert.equal(verdansk.choices.at(-1).name,'Drone Labs');
+  assert.deepEqual(prepared.wheels.map(w=>w.id),
+    ['fortnite','warzone-hajin','warzone-zodiac','warzone-rebirth','warzone-verdansk']);
+  assert.equal(rebirth.choices.at(-1).originalImage,'assets/warzone/rebirth/poi-13.webp');
+  assert.equal(verdansk.choices.at(-1).originalImage,'assets/warzone/verdansk/poi-21.webp');
+});
+
+test('La migration danciens utilisateurs n ajoute aucun modèle avant la validation du lot',()=>{
+  store.clear();
+  const savedLibrary=loadWheelLibrary(baseline,{});
+  savedLibrary.wheels[0].selected=['02'];
+  savedLibrary.wheels[0].history=['02'];
+  savedLibrary.active='warzone-zodiac';
+  assert.equal(saveWheelLibrary(savedLibrary),true);
+  const noPack=loadWheelLibrary(baseline,{});
+  assert.equal(noPack.wheels.length,3);
+  assert.equal(noPack.active,'warzone-zodiac');
+  assert.deepEqual(noPack.wheels[0].selected,['02']);
+  assert.deepEqual(noPack.wheels[0].history,['02']);
+  const rebirthOnly=loadWheelLibrary(baseline,{},{rebirth:true});
+  assert.equal(rebirthOnly.wheels.length,4);
+  assert.equal(rebirthOnly.wheels.at(-1).id,'warzone-rebirth');
+  assert.ok(!rebirthOnly.wheels.some(w=>w.id==='warzone-verdansk'));
+  saveWheelLibrary(rebirthOnly);
+  const reloaded=loadWheelLibrary(baseline,{},{rebirth:true});
+  assert.equal(reloaded.wheels.length,4,'aucun doublon après actualisation');
+  const another=loadWheelLibrary(baseline,{},{rebirth:true,verdansk:true});
+  assert.equal(another.wheels.length,5);
+  assert.equal(another.active,'warzone-zodiac');
+});
+
+test('Rebirth et Verdansk : noms vérifiés, cartes, activation par manifeste et ZIP sécurisé',()=>{
+  const rb=source('dist/warzone-rebirth.mjs');
+  const vd=source('dist/warzone-verdansk.mjs');
+  const lib=source('dist/wheel-library.mjs');
+  const app=source('dist/app.js');
+  const map=source('dist/map.js');
+  const importer=source('scripts/deploy-future-warzone-assets.py');
+  const build=source('.github/workflows/publier-roue.yml');
+  assert.match(rb,/New Point|POI|Turbine/);
+  for(const poi of ['Bioweapons','Industries','Chemical Engineering','Turbine','Outpost','Stronghold'])
+    assert.ok(rb.includes(poi), 'Rebirth manque '+poi);
+  for(const poi of ['Dam','Military Base','Promenade East','Drone Labs'])
+    assert.ok(vd.includes(poi),'Verdansk manque '+poi);
+  assert.match(lib,/availablePresets\(readiness\)/);
+  assert.match(lib,/WAITING_WARZONE_MODELS\.filter/);
+  assert.match(app,/warzoneAssetGames/);
+  assert.match(app,/warzoneModelHasAssets/);
+  assert.match(map,/warzone-rebirth/);
+  assert.match(map,/warzone-verdansk/);
+  assert.match(map,/window\.warzoneAssetGames/);
+  assert.match(importer,/rebirth-pack\.zip|f\"\{game\}-pack\.zip\"/);
+  assert.match(importer,/map-preview\.webp/);
+  assert.match(importer,/map-full\.png/);
+  assert.match(importer,/sha256/);
+  assert.match(importer,/if not available:/);
+  assert.match(build,/python scripts\/deploy-future-warzone-assets\.py/);
+  assert.match(build,/node --check dist\/warzone-rebirth\.mjs/);
+  assert.match(build,/node --check dist\/warzone-verdansk\.mjs/);
+});
