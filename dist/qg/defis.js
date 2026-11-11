@@ -28,7 +28,7 @@ const gameCatalogue=()=>selectedGame==='fortnite'?FORTNITE_CHALLENGES:(WARZONE_C
 const gameLabel=()=>selectedGame==='fortnite'?'FORTNITE · ZERO BUILD':(WARZONE_CHALLENGE_GAMES[selectedGame]?.short||'FORTNITE · ZERO BUILD');
 const gameDescription=()=>selectedGame==='fortnite'?'118 missions pour faire vos preuves dans l’arène.':'100 missions pour relever le défi sur '+(WARZONE_CHALLENGE_GAMES[selectedGame]?.map||'Warzone')+'.';
 const gameStoreKey=game=>game==='fortnite'?STORE_KEY:'ma_jestik_qg_defis_'+game+'_v1';
-const isFortnite=()=>selectedGame==='fortnite';
+const isFortnite=()=>!selectedGame||selectedGame==='fortnite';
 let officialRound=null,verifiedOwner=false;
 const publicActive=()=>officialRound?.game===selectedGame&&["open","locked"].includes(officialRound.status);
 const gameSelector=()=>'<div class="challenge-game-switcher"><div class="challenge-game-switcher-copy"><span class="challenge-game-kicker">SÉLECTION DU JEU</span><strong>Choisis ton univers</strong><small>Les défis disponibles s’affichent selon le jeu choisi.</small></div><label class="challenge-game-field" for="challengeGame"><span>JEU</span><select id="challengeGame"><option value="" '+(!selectedGame?'selected':'')+'>— Sélectionner un jeu —</option>'+GAME_OPTIONS.map(x=>'<option value="'+x.id+'" '+(selectedGame===x.id?'selected ':'')+(!x.available?'disabled ':'')+'>'+x.label+(x.available?'':' · À venir')+'</option>').join("")+'</select></label></div>';
