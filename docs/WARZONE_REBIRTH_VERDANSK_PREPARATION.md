@@ -1,6 +1,6 @@
 # Roues Warzone — Rebirth Island et Verdansk (préparation du 11/11/2026)
 
-**État : préparation technique enregistrée sur GitHub, PAS DE PUBLICATION DES DEUX MODÈLES.** Les roues existantes (Fortnite, Hajin, Zodiac) sont inchangées ; aucune image réelle des nouveaux lieux n'a encore été intégrée.
+**État au 11/11/2026 : Rebirth Island déployée avec 13 images et 2 cartes ; Verdansk encore en préparation et non publié.** Les roues existantes (Fortnite, Hajin, Zodiac) n'ont pas été modifiées. Vérification visuelle par l'utilisateur à confirmer.
 
 ## Décision du propriétaire
 
@@ -72,13 +72,20 @@ Fichiers prévus : `verdansk/poi-01.webp` à `verdansk/poi-21.webp`, `verdansk/m
 - `dist/wheel-library.mjs` : modèles ajoutés **uniquement** lorsque le manifeste validé indique la disponibilité de leurs 13/21 images et deux cartes ; **Verdansk reste masqué tant que Rebirth ne l'est pas**. Migration additive pour les anciens navigateurs, sans supprimer ni modifier les roues personnalisées.
 - `dist/app.js` : garde par carte des fichiers disponibles, miniature sans POI, statistiques, sélections, images et jeu de roue conservés, lien « Dupliquer » toujours utilisable.
 - `dist/map.js` : fenêtre agrandie native pour les cartes Rebirth et Verdansk, mêmes commandes que les autres roues.
-- `scripts/deploy-future-warzone-assets.py` : contrôle complet des archives, WebP/PNG, tailles/empreintes SHA256, puis fusion du manifeste existant `dist/assets/warzone/manifest.json`. **Ne touche à rien en l'absence des deux ZIP.** Rebirth et Verdansk peuvent être livrées séparément.
+- `scripts/deploy-future-warzone-assets.py` : contrôle complet des archives, WebP/PNG, tailles/empreintes SHA256, puis fusion du manifeste existant `dist/assets/warzone/manifest.json`. **Ne touche à rien en l'absence d'un ZIP complet pour chaque jeu.** Rebirth et Verdansk peuvent être livrées séparément.
 - `.github/workflows/publier-roue.yml` et `.github/workflows/qg-privacy-tests.yml` : script d'import et contrôles syntaxiques intégrés ; aucun coût d'hébergement supplémentaire promis, les quotas GitHub Pages continuent de s'appliquer.
+
+## Incident résolu lors de la publication Rebirth (11/11/2026)
+- Le pack ZIP authentique de l'utilisateur avait le **nom `Rebirth island.zip`** dans `dist/assets/`, alors que le script de publication n'acceptait que `rebirth-pack.zip`. Le contenu a été identifié comme **identique octet pour octet** au ZIP de livraison préparé : SHA du blob Git `e11df16944cbf3e6674ac86b22cfdf4f69a55711`.
+- Le workflow initial `43085245207` avait été déclaré « succès », mais ses journaux indiquaient **`Rebirth et Verdansk non fournis : modèles masqués et QG inchangé`**. Le ZIP était correctement commité, seul le nom empêchait le traitement.
+- Correction dans `scripts/deploy-future-warzone-assets.py` : fonction `archive_path(game)` acceptant les deux noms pour Rebirth et conservant le contrôle strict des **15 fichiers**. Un commit sous `dist/warzone-rebirth.mjs` a déclenché un nouveau déploiement.
+- Workflow de publication `43086293175` **terminé avec succès** : ligne `Pack rebirth vérifié : 13 photos authentiques + 2 cartes.`, présence dans l'artefact des `poi-01.webp` à `poi-13.webp`, `map-preview.webp`, `map-full.png` et manifeste mis à jour. Tests Node `43086259558` (avec nouveau test de nom) **réussis**.
+- Site cible : `https://ma-jestik.fr/qg/#/roue`. Les tests n'ont pas ouvert un vrai navigateur en production ; le propriétaire confirmera l'apparition sur écran après actualisation Ctrl+F5. Verdansk reste non publié.
 
 ## Comment finaliser avec les images authentiques
 
 Pour éviter toute erreur POI/image, l'utilisateur peut envoyer son ZIP original avec les images aux noms des lieux, plus les quatre cartes sans/avec POI, comme pour Hajin/Zodiac. L'assistant vérifie la correspondance et prépare alors les paquets normalisés :
-- `dist/assets/rebirth-pack.zip` contient **exactement** `rebirth/poi-01.webp` ... `rebirth/poi-13.webp`, `rebirth/map-preview.webp`, `rebirth/map-full.png`, sans fichiers supplémentaires.
+- `dist/assets/rebirth-pack.zip` (ou **`dist/assets/Rebirth island.zip`**, nom réellement fourni et pris en charge depuis le correctif) contient **exactement** `rebirth/poi-01.webp` ... `rebirth/poi-13.webp`, `rebirth/map-preview.webp`, `rebirth/map-full.png`, sans fichiers supplémentaires.
 - `dist/assets/verdansk-pack.zip` contient **exactement** `verdansk/poi-01.webp` ... `verdansk/poi-21.webp`, `verdansk/map-preview.webp`, `verdansk/map-full.png`, sans fichiers supplémentaires ; ajuster les 21 noms avant envoi si la nouvelle carte a changé.
 - Une fois **le pack Rebirth** enregistré sur `main`, GitHub Pages exécute l'import, le manifeste contient les 13 lieux et le modèle apparaît automatiquement chez les utilisateurs existants, sans casser leur sélection.
 - **Verdansk après Rebirth** selon l'ordre demandé.
@@ -90,8 +97,9 @@ Pour éviter toute erreur POI/image, l'utilisateur peut envoyer son ZIP original
 - [x] Activation conditionnée à la disponibilité des véritables captures et cartes.
 - [x] Garde d'ordre : Rebirth avant Verdansk.
 - [x] Pipeline statique prêt pour les deux ZIP.
-- [ ] 13 vraies photos de Rebirth approuvées, carte sans/avec POI correspondante.
-- [ ] Déploiement et contrôle visuel réel Rebirth (PC et mobile).
+- [x] 13 vraies photos de Rebirth et deux cartes reçues (12 captures de l'atlas + capture Outpost), validées et ajoutées au manifeste.
+- [x] Déploiement Rebirth réussi : GitHub Actions `43086293175`, **13 captures et 2 cartes** présents dans l'artefact GitHub Pages.
+- [ ] Contrôle visuel réel Rebirth par l'utilisateur (PC et mobile) à confirmer.
 - [ ] Nouveaux lieux saisonniers Verdansk recoupés avec la bonne carte.
 - [ ] Vraies images de tous les lieux Verdansk approuvées, deux cartes correspondantes.
 - [ ] Déploiement et contrôle visuel réel Verdansk (PC et mobile).
