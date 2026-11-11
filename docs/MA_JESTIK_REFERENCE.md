@@ -35,6 +35,15 @@
 - **Formulaire de contact :** fonctionnement de bout en bout vérifié.
 - **Politique de confidentialité :** page publiée, mais elle peut nécessiter des ajustements lorsque les traitements et procédures évoluent.
 
+## Correctifs ergonomiques de la Roue multijeux — 11 novembre 2026
+
+- **Fenêtres modales dans l'iframe du QG** : la nouvelle roue, le renommage et les images utilisent désormais `showWheelDialog()` dans `dist/app.js`, qui positionne les fenêtres au centre de la **portion réellement visible** de l'iframe et suit le défilement/redimensionnement parent. Sur la page autonome, les dialogues natifs restent inchangés. La correction évite de devoir descendre au milieu de la longue page pour trouver la fenêtre.
+- **En-tête mobile** : `span#wheelGameLabel` héritait accidentellement de la règle décorative `.eyebrow>span` (pastille de 6px), provoquant un chevauchement du nom du jeu avec « LA ROUE ». Une règle CSS spécifique restaure la taille normale, empêche les débordements et tronque élégamment les noms longs sur petits écrans.
+- **Bouton « Tout sélectionner »** : précédemment désactivé à tort dès que 100 % des choix étaient cochés (notamment la première roue personnalisée à choix unique). Il reste maintenant cliquable hors animation, et indique que tous les choix sont déjà sélectionnés sans toucher au stockage.
+- **Fichiers concernés** : `dist/app.js`, `dist/wheel-multijeux.css`, références cache dans `dist/roue.html`, `dist/qg/qg.js`, `dist/qg/index.html`, tests `backend/cloudflare/tests/wheel-multijeux.test.mjs` et `home-gold-artwork.test.mjs`.
+- **Vérifications** : syntaxe JavaScript et présence des références de cache vérifiées. Un test de fenêtre sur une **iframe locale simulant le QG**, en Chromium (ordinateur et mobile, fenêtre en haut et en bas), a constaté que les 4 fenêtres s'affichaient intégralement dans la zone visible. Ce test isolé ne prouve pas encore le rendu du site déployé : faire valider les captures PC/mobile par l'utilisateur et contrôler GitHub Pages.
+- **Aucune modification** de Cloudflare, D1, des données locales des visiteurs, des catalogues de défis Fortnite, des profils ou des récompenses mensuelles. Cap de **0 € de coût supplémentaire** conservé.
+
 ## Mise à jour du 11 novembre 2026 — La Roue désormais multijeux et éditable localement
 
 - **Objectif prioritaire : aucun coût opérationnel supplémentaire pour chaque tirage, modification ou import d'image.** Les actions des utilisateurs sont effectuées dans le navigateur et ne sollicitent **aucun Worker, aucune D1, aucun service d'upload, aucun compte Twitch**. Les fichiers statiques sont servis par GitHub Pages ; leurs visites restent des requêtes HTTP normales. Les publications du site nécessitent toujours une GitHub Action. Les coûts/quota d'hébergement habituels ne peuvent pas être garantis illimités.
