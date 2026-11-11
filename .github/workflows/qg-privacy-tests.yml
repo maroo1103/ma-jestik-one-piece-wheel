@@ -13,6 +13,9 @@ on:
       - 'dist/app.js'
       - 'dist/wheel-library.mjs'
       - 'dist/warzone-hajin.mjs'
+      - 'dist/warzone-zodiac.mjs'
+      - 'dist/map.js'
+      - 'dist/map.css'
       - 'dist/image-storage.mjs'
       - 'dist/roue.html'
       - 'dist/wheel-multijeux.css'
@@ -59,6 +62,8 @@ jobs:
           node --check dist/app.js
           node --check dist/wheel-library.mjs
           node --check dist/warzone-hajin.mjs
+          node --check dist/warzone-zodiac.mjs
+          node --check dist/map.js
           node --check dist/image-storage.mjs
           node --check dist/qg/monthly-missions.js
           node --check dist/qg/confidentialite.js
