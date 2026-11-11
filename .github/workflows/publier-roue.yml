@@ -42,6 +42,7 @@ jobs:
           test -f dist/wheel-multijeux.css
           node --check dist/app.js
           node --check dist/wheel-library.mjs
+          node --check dist/warzone-hajin.mjs
           for n in $(seq -w 1 12); do
             test -f "dist/assets/${n}.webp"
           done
