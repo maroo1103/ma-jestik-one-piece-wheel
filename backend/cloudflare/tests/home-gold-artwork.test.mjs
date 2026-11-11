@@ -207,24 +207,26 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
 });
 
 
-test("Identité MJ : logo animé léger avec repli fixe accessible",()=>{
+test("Identité MJ : logo fixe transparent sur le QG et la roue",()=>{
  const html=src("dist/qg/index.html");
+ const wheel=src("dist/roue.html");
  const home=src("dist/qg/home-premium.css");
+ const wheelCss=src("dist/wheel-multijeux.css");
  const footer=src("dist/qg/footer-help.css");
- assert.equal((html.match(/<picture class="mj-brand-logo">/g)||[]).length,2);
- assert.equal((html.match(/mj-anime\.webp\?v=20261110-logo-anime1/g)||[]).length,2);
- assert.equal((html.match(/mj-source\.webp\?v=20261110-logo-anime1/g)||[]).length,2);
- assert.equal((html.match(/media="\(prefers-reduced-motion: no-preference\)"/g)||[]).length,2);
- for(const path of ["dist/icons/mj-anime.webp","dist/icons/mj-source.webp"]){
-  const webp=bytes(path);
-  assert.equal(webp.toString("ascii",0,4),"RIFF");
-  assert.equal(webp.toString("ascii",8,12),"WEBP");
-  assert.ok(webp.length<50000,"Logo non optimise : "+path);
- }
- assert.match(home,/\.site-header \.mj-brand-logo/);
+ const logo=bytes("dist/icons/mj-logo-static.avif");
+ assert.equal((html.match(/<span class="mj-brand-logo">/g)||[]).length,2);
+ assert.equal((html.match(/mj-logo-static\.avif\?v=20261111-logo-static1/g)||[]).length,2);
+ assert.equal((wheel.match(/mj-logo-static\.avif\?v=20261111-logo-static1/g)||[]).length,1);
+ assert.doesNotMatch(html,/mj-anime\.webp/);
+ assert.doesNotMatch(wheel,/<span class="brand-mark">M<span>J<\/span>/);
+ assert.equal(logo.toString("ascii",4,12),"ftypavif");
+ assert.match(logo.toString("ascii"),/Alpha/);
+ assert.ok(logo.length<15000,"Logo transparent non optimise");
+ assert.match(home,/\.site-header \.mj-brand-logo \.brand-icon/);
+ assert.match(home,/box-shadow:none!important/);
+ assert.match(wheelCss,/\.topbar \.brand-logo-static/);
  assert.match(footer,/\.mj-footer-brand-link \.mj-brand-logo/);
 });
-
 
 test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const html=src("dist/qg/index.html");
