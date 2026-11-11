@@ -29,50 +29,8 @@ jobs:
       - name: Préparer les vraies cartes et captures Warzone
         shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          from zipfile import ZipFile
-          import json,hashlib
-          package=Path('dist/assets/warzone-pack.zip')
-          destination=Path('dist/assets/warzone')
-          if not package.is_file():
-              print('Pack Warzone non encore déposé : la roue reste disponible, avec ses logos de secours.')
-          else:
-              expected={f'hajin/poi-{i:02d}.webp' for i in range(1,14)}
-              expected|={f'zodiac/poi-{i:02d}.webp' for i in range(1,11)}
-              for game in ('hajin','zodiac'):
-                  expected|={f'{game}/map-preview.webp',f'{game}/map-full.png'}
-              with ZipFile(package) as archive:
-                  names=archive.namelist()
-                  if len(names)!=len(set(names)) or set(names)!=expected|{'manifest.json'}:
-                      raise SystemExit('Archive Warzone inattendue ou fichiers manquants.')
-                  manifest=json.loads(archive.read('manifest.json'))
-                  if manifest.get('format')!='ma-jestik-warzone-assets' or manifest.get('version')!=1:
-                      raise SystemExit('Format du pack Warzone invalide.')
-                  if set(manifest.get('files',{}))!=expected:
-                      raise SystemExit('Liste des images du manifeste incorrecte.')
-                  for game,number in [('hajin',13),('zodiac',10)]:
-                      if len(manifest['games'].get(game,[]))!=number:
-                          raise SystemExit(f'Nombre de POI invalide pour {game}.')
-                  for name in sorted(expected):
-                      info=archive.getinfo(name)
-                      if info.file_size>5*1024*1024:
-                          raise SystemExit(f'Image Warzone trop volumineuse : {name}')
-                      payload=archive.read(name)
-                      if len(payload)!=manifest['files'][name]['bytes'] or hashlib.sha256(payload).hexdigest()!=manifest['files'][name]['sha256']:
-                          raise SystemExit(f'Fichier Warzone corrompu : {name}')
-                      if name.endswith('.webp') and (payload[:4]!=b'RIFF' or payload[8:12]!=b'WEBP'):
-                          raise SystemExit(f'WebP non valide : {name}')
-                      if name.endswith('.png') and payload[:8]!=b'\x89PNG\r\n\x1a\n':
-                          raise SystemExit(f'PNG non valide : {name}')
-                      target=destination/name
-                      target.parent.mkdir(parents=True,exist_ok=True)
-                      target.write_bytes(payload)
-              (destination/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-              print(f'Pack Warzone installé : 13 captures Hajin, 10 Zodiac, quatre cartes.')
-              # Ne pas diffuser deux fois le ZIP brut via GitHub Pages.
-              package.unlink()
-          PY
+          python -m pip install --disable-pip-version-check "Pillow>=10,<13"
+          python scripts/deploy-warzone-assets.py
 
       - name: Verifier le site original
         shell: bash
