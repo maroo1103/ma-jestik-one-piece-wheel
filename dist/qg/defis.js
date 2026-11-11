@@ -95,7 +95,7 @@ function sharedMission(){
  '<div class="challenge-meta">'+level+'<span>'+escapeHtml(teams[r.team]||gameLabel())+'</span></div></div>';
 }
 function visitorView(){
- const r=officialRound;
+ const r=officialRound?.game===selectedGame?officialRound:null;
  const last=r&&["resolved","cancelled"].includes(r.status)?
  '<div class="challenge-history-row"><span class="challenge-history-state '+(r.status==="resolved"?(r.result==="success"?"success":"failure"):"skipped")+'">'+(r.status==="resolved"?"✓":"—")+'</span><span><strong>'+escapeHtml(r.challenge_title)+'</strong><small>'+escapeHtml(r.status==="cancelled"?"Annulé":r.result==="success"?"Réussite":"Échec")+'</small></span></div>':
  '<p class="challenge-muted">Les résultats officiels apparaîtront ici.</p>';
