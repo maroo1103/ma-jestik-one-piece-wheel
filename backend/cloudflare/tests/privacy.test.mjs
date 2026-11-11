@@ -22,6 +22,7 @@ function fixture() {
     '../migrations/0005_member_profiles.sql',
     '../migrations/0006_member_profile_palette.sql',
     '../migrations/0007_member_activity.sql',
+    '../migrations/0009_warzone_votes.sql',
   ]) sql.exec(readFileSync(new URL(path, import.meta.url), 'utf8'));
 
   const d1 = {
@@ -212,4 +213,52 @@ test('un profil privé reste inaccessible même si le joueur accepte le classeme
     assert.equal(accessible.status,200);
     assert.equal((await accessible.json()).profile.bio,'Biographie publique');
   } finally { sql.close(); }
+});
+
+test('Les pronostics Warzone sont séparés des votes Fortnite, attribuent les points et se suppriment en cascade',async()=>{
+ const {sql,env}=fixture();
+ env.OWNER_TWITCH_ID='111';
+ sql.exec("UPDATE vote_rounds SET status='cancelled' WHERE id='round1'");
+ const payload=(path,body,token='aaaabbbbccccdddd')=>new Request('https://example.test'+path,{
+  method:body?'POST':'GET',headers:{Authorization:'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},
+  ...(body?{body:JSON.stringify(body)}:{})
+ });
+ const call=async (path,body)=>{const res=await worker.fetch(payload(path,body),env);return {status:res.status,data:await res.json()};};
+ let restore=mockTwitchUser('111');
+ let round;
+ try{
+  const start=await call('/v1/votes/start',{game:'warzone-rebirth',challenge_id:12,title:'Survie à Bioweapons',team:'solo'});
+  assert.equal(start.status,201,JSON.stringify(start.data));
+  round=start.data.round;
+  assert.equal(round.game,'warzone-rebirth');
+  assert.equal(count(sql,'vote_rounds'),1,'Fortnite reste dans sa propre table');
+  assert.equal(count(sql,'vote_rounds_warzone'),1);
+  const forbidden=await call('/v1/votes/start',{game:'warzone-hajin',challenge_id:1,title:'Défi concurrent',team:'solo'});
+  assert.equal(forbidden.status,409,'une seule manche peut être ouverte');
+ }finally{restore();}
+ restore=mockTwitchUser('222');
+ try{
+  const cast=await call('/v1/votes/cast',{round_id:round.id,prediction:'success'});
+  assert.equal(cast.status,200,JSON.stringify(cast.data));
+  const second=await call('/v1/votes/cast',{round_id:round.id,prediction:'success'});
+  assert.equal(second.status,409,'vote unique');
+ }finally{restore();}
+ restore=mockTwitchUser('111');
+ try{
+  const close=await call('/v1/votes/close',{round_id:round.id});
+  assert.equal(close.status,200);
+  const resolve=await call('/v1/votes/resolve',{round_id:round.id,result:'success'});
+  assert.equal(resolve.status,200,JSON.stringify(resolve.data));
+  assert.equal(resolve.data.awarded,1);
+  assert.equal(count(sql,'vote_ballots_warzone'),1);
+  assert.equal(count(sql,'vote_points_warzone'),1);
+  assert.equal(count(sql,'vote_points'),2,'points Fortnite non modifiés');
+  assert.equal(sql.prepare("SELECT score FROM members WHERE twitch_id='222'").get().score,2);
+  const again=await call('/v1/votes/resolve',{round_id:round.id,result:'success'});
+  assert.equal(again.status,409,'pas de points en double');
+ }finally{restore();}
+ sql.prepare("DELETE FROM members WHERE twitch_id='222'").run();
+ assert.equal(count(sql,'vote_ballots_warzone'),0,'suppression des pronostics Warzone');
+ assert.equal(count(sql,'vote_points_warzone'),0,'suppression des points Warzone');
+ sql.close();
 });
