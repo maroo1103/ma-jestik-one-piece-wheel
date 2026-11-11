@@ -23,7 +23,9 @@ test('migration des 12 lieux et historique Fortnite existants',()=>{
   store.clear();
   const lib=loadWheelLibrary(baseline,{selected:['01','03'],history:['03'],duration:'5'});
   assert.equal(lib.active,'fortnite');
-  assert.equal(lib.wheels.length,1);
+  assert.equal(lib.wheels.length,2);
+  assert.equal(lib.wheels[1].id,'warzone-hajin');
+  assert.equal(lib.wheels[1].choices.length,13);
   assert.equal(lib.wheels[0].choices.length,12);
   assert.deepEqual(lib.wheels[0].selected,['01','03']);
   assert.deepEqual(lib.wheels[0].history,['03']);
@@ -41,9 +43,9 @@ test('roues independantes, noms et images persistants localement',()=>{
   assert.equal(saveWheelLibrary(lib),true);
   const loaded=loadWheelLibrary(baseline,{});
   assert.equal(loaded.active,'warzone');
-  assert.equal(loaded.wheels[1].choices[0].name,'Défi Warzone');
+  assert.equal(loaded.wheels.find(w=>w.id==='warzone').choices[0].name,'Défi Warzone');
   assert.equal(loaded.wheels[0].choices.length,12);
-  assert.equal(wheelToPois(loaded.wheels[1])[0].image,'/icons/mj-source.webp');
+  assert.equal(wheelToPois(loaded.wheels.find(w=>w.id==='warzone'))[0].image,'/icons/mj-source.webp');
 });
 test('remplacement en masse, sans doublons et maximum 60',()=>{
   assert.deepEqual(cleanNames('Contrat\nExfiltration\ncontrat\n'),['Contrat','Exfiltration']);
@@ -98,4 +100,37 @@ test('modales iframe visibles, texte du jeu sans style de pastille, tout sélect
   assert.doesNotMatch(app,/\$\('selectAll'\)\.disabled\s*=\s*spinning\s*\|\|\s*count===POIS\.length/);
   assert.doesNotMatch(app,/\$\('selectAll'\)\.disabled\s*=\s*selected\.size===POIS\.length/);
   assert.match(app,/Tous les choix de cette roue sont déjà sélectionnés/);
+});
+
+test('migration additive Hajin : preserve la bibliotheque et un modele efface volontairement',()=>{
+  store.clear();
+  const earlier={active:'fortnite',wheels:[{
+    id:'fortnite',name:'Roue Fortnite personnelle',choices:baseline,
+    selected:['02'],history:['02'],duration:'12'
+  }]};
+  localStorage.setItem('ma-jestik-wheel-library-v2',JSON.stringify(earlier));
+  const migrated=loadWheelLibrary(baseline,{});
+  assert.equal(migrated.active,'fortnite');
+  assert.equal(migrated.wheels[0].name,'Roue Fortnite personnelle');
+  assert.deepEqual(migrated.wheels[0].selected,['02']);
+  assert.deepEqual(migrated.wheels[0].history,['02']);
+  assert.equal(migrated.wheels.find(w=>w.id==='warzone-hajin').choices.length,13);
+  migrated.wheels=migrated.wheels.filter(w=>w.id!=='warzone-hajin');
+  migrated.dismissedPresets=['warzone-hajin'];
+  saveWheelLibrary(migrated);
+  const afterDelete=loadWheelLibrary(baseline,{});
+  assert.ok(!afterDelete.wheels.some(w=>w.id==='warzone-hajin'));
+});
+test('Hajin : noms du guide officiels et photos provisoires identifiees',()=>{
+  const preset=source('dist/warzone-hajin.mjs');
+  const html=source('dist/roue.html');
+  const app=source('dist/app.js');
+  for(const name of ['14th Political Prison','Chang-san Air Base','Deadtown','Imjin Farmland',
+    'Cheongun Village','Haneul Nuclear Reactor','Mirae General Hospital','NuriGo Mall',
+    'Cheonwang Peak Array','The Grid','Songdo Wharf','Wolves Stadium','Hajin River Heights'])
+    assert.ok(preset.includes(name),'POI Hajin manquant : '+name);
+  assert.match(html,/id="hajinMapLaunch"/);
+  assert.match(html,/https:\/\/www\.callofduty\.com\/guides\/warzone\/hajin/);
+  assert.match(app,/photos sont encore à intégrer/);
+  assert.match(app,/Les logos MJ ne sont pas des captures du jeu/);
 });
