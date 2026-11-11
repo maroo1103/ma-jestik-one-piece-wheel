@@ -10,6 +10,8 @@ on:
       - 'dist/qg/tribunal-public.js'
       - 'dist/qg/tribunal.js'
       - 'dist/qg/qg.js'
+      - 'dist/qg/monthly-missions.js'
+      - 'dist/qg/ranking-rewards.css'
       - 'dist/qg/index.html'
       - 'dist/qg/twitch-auth.js'
       - 'dist/qg/profil.js'
@@ -48,6 +50,7 @@ jobs:
           node --check dist/qg/twitch-auth.js
           node --check dist/qg/profil.js
           node --check dist/qg/qg.js
+          node --check dist/qg/monthly-missions.js
           node --check dist/qg/confidentialite.js
           node --check dist/qg/contact.js
       - name: Tester en SQLite isolé (aucun accès à D1 de production)
