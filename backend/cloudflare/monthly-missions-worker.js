@@ -3,9 +3,15 @@
    Pas de missions ouvertes automatiquement : le propriétaire configure et ouvre une saison. */
 const ORIGIN='https://ma-jestik.fr';
 const MAX_BONUS=50;
-function reply(value,status=200,origin=null){
+const BURST_WINDOW_MS=60*1000;
+const BURST_LIMIT=30;
+const publicTtl=60,memberTtl=300,adminTtl=60;
+// État volatil uniquement : pas de stockage persistant d'adresses IP.
+const bursts=new Map(),localResults=new Map();
+function reply(value,status=200,origin=null,extraHeaders=null){
  const headers=new Headers({'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Vary':'Origin'});
  if(origin){headers.set('Access-Control-Allow-Origin',origin);headers.set('Access-Control-Allow-Methods','GET,POST,OPTIONS');headers.set('Access-Control-Allow-Headers','Authorization,Content-Type');}
+ if(extraHeaders)for(const [key,val] of Object.entries(extraHeaders))headers.set(key,val);
  return new Response(JSON.stringify(value),{status,headers});
 }
 function validMonth(value){return /^20\d{2}-(0[1-9]|1[0-2])$/.test(String(value||''));}
@@ -82,8 +88,75 @@ async function adminProgress(db,m){
   paid:row.paid_at!=null,paid_at:row.paid_at||null
  }));
 }
+
+/* Coupe-circuit économique avant Twitch et D1 : la limite de secours est par
+   instance; le binding facultatif MISSION_RATE_LIMITER renforce le décompte
+   entre instances d'un même centre de données (jamais une limite mondiale stricte). */
+function localBurstAllowed(req){
+ const ip=req.headers.get('CF-Connecting-IP');
+ if(!ip||ip.length>64)return true;
+ const now=Date.now();let counter=bursts.get(ip);
+ if(!counter||now>=counter.until){counter={until:now+BURST_WINDOW_MS,count:0};bursts.set(ip,counter);}
+ counter.count++;
+ if(bursts.size>2048){
+  for(const [key,value] of bursts)if(value.until<=now)bursts.delete(key);
+  while(bursts.size>2048)bursts.delete(bursts.keys().next().value);
+ }
+ return counter.count<=BURST_LIMIT;
+}
+async function trafficAllowed(req,env){
+ if(!localBurstAllowed(req))return false;
+ const ip=req.headers.get('CF-Connecting-IP');
+ if(ip&&env.MISSION_RATE_LIMITER?.limit){
+  const decision=await env.MISSION_RATE_LIMITER.limit({key:'mj-monthly:'+ip});
+  return decision?.success===true;
+ }
+ return true;
+}
+/* Le cache interne utilise une URL inaccessible depuis l'API publique.
+   Aucune réponse privée n'est consultée avant validation Twitch du demandeur.
+   Le token OAuth n'apparaît jamais dans les clés ; le navigateur reste no-store. */
+function cacheRequest(req,key){return new Request(new URL(req.url).origin+'/__monthly_internal_cache/'+encodeURIComponent(key));}
+function storeLocal(key,value,ttl){
+ const now=Date.now();
+ localResults.set(key,{until:now+ttl*1000,value});
+ if(localResults.size>600){
+  for(const [k,v] of localResults)if(v.until<=now)localResults.delete(k);
+  while(localResults.size>600)localResults.delete(localResults.keys().next().value);
+ }
+}
+async function cachedRead(req,key,ttl,read,ctx){
+ const local=localResults.get(key);
+ if(local&&local.until>Date.now())return local.value;
+ if(local)localResults.delete(key);
+ const cache=globalThis.caches?.default;
+ if(cache){
+  try{
+   const hit=await cache.match(cacheRequest(req,key));
+   if(hit?.ok){const value=await hit.json();storeLocal(key,value,Math.min(ttl,20));return value;}
+  }catch{/* Le cache de centre de données peut être indisponible. */}
+ }
+ const value=await read();storeLocal(key,value,ttl);
+ if(cache){
+  try{
+   const response=new Response(JSON.stringify(value),{headers:{'Content-Type':'application/json','Cache-Control':'public, max-age='+ttl}});
+   const put=cache.put(cacheRequest(req,key),response).catch(()=>{});
+   if(ctx?.waitUntil)ctx.waitUntil(put);else await put;
+  }catch{/* Secours en mémoire, aucune dépendance payante. */}
+ }
+ return value;
+}
+async function invalidateCache(req,keys){
+ const cache=globalThis.caches?.default;
+ for(const key of keys){
+  localResults.delete(key);
+  if(cache)try{await cache.delete(cacheRequest(req,key));}catch{/* cache facultatif */}
+ }
+}
+function monthCacheKeys(month,id){return ['public:'+month,'member:'+month+':'+id,'admin:'+month+':'+id];}
+
 export default {
- async fetch(req,env){
+ async fetch(req,env,ctx){
   const requestOrigin=req.headers.get('Origin');
   if(requestOrigin&&requestOrigin!==ORIGIN)return reply({error:'Origine refusée'},403);
   if(req.method==='OPTIONS')return requestOrigin===ORIGIN?
@@ -94,6 +167,7 @@ export default {
   if(!env.DB||!env.TWITCH_CLIENT_ID||!env.OWNER_TWITCH_ID)return respond({error:'Configuration manquante'},503);
   const url=new URL(req.url),path=url.pathname.replace(/\/+$/,'')||'/';
   try{
+   if(!await trafficAllowed(req,env))return reply({error:'Trop de requêtes. Réessaie dans une minute.'},429,allowOrigin,{'Retry-After':'60'});
    if(path==='/v1/monthly/health'&&req.method==='GET'){
     const names=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('monthly_missions','monthly_awards')").all();
     const ready=(names.results||[]).length===2;
@@ -101,29 +175,38 @@ export default {
    }
    const thisMonth=monthParis();
    if(path==='/v1/monthly/current'&&req.method==='GET'){
-    const m=await missionFor(env.DB,thisMonth);
-    return respond({month:thisMonth,mission:missionPublic(m&&m.status!=='draft'?m:null)});
+    const result=await cachedRead(req,'public:'+thisMonth,publicTtl,async()=>{
+     const m=await missionFor(env.DB,thisMonth);
+     return {month:thisMonth,mission:missionPublic(m&&m.status!=='draft'?m:null)};
+    },ctx);
+    return respond(result);
    }
    const route=path.startsWith('/v1/monthly/admin')||path==='/v1/monthly/me';
    if(!route)return respond({error:'Route inconnue'},404);
    const identity=await twitchIdentity(req,env);
    if(!identity)return respond({error:'Connexion Twitch requise'},401);
    if(path==='/v1/monthly/me'&&req.method==='GET'){
-    const registered=await memberExists(env.DB,identity.id);
-    const m=await missionFor(env.DB,thisMonth);
-    const published=m&&m.status!=='draft'?m:null;
-    return respond({month:thisMonth,owner:identity.owner,registered,mission:missionPublic(published),
-     progress:registered&&published?await progress(env.DB,identity.id,published):null});
+    const result=await cachedRead(req,'member:'+thisMonth+':'+identity.id,memberTtl,async()=>{
+     const registered=await memberExists(env.DB,identity.id);
+     const m=await missionFor(env.DB,thisMonth);
+     const published=m&&m.status!=='draft'?m:null;
+     return {month:thisMonth,owner:identity.owner,registered,mission:missionPublic(published),
+      progress:registered&&published?await progress(env.DB,identity.id,published):null};
+    },ctx);
+    return respond(result);
    }
    if(!identity.owner)return respond({error:'Réservé au propriétaire du QG'},403);
    if(path==='/v1/monthly/admin'&&req.method==='GET'){
     const month=url.searchParams.get('month')||thisMonth;
     if(!validMonth(month))return respond({error:'Mois invalide'},400);
-    const m=await missionFor(env.DB,month);
-    const players=m?await adminProgress(env.DB,m):[];
-    return respond({month,mission:missionPublic(m),players,
+    const result=await cachedRead(req,'admin:'+month+':'+identity.id,adminTtl,async()=>{
+     const m=await missionFor(env.DB,month);
+     const players=m?await adminProgress(env.DB,m):[];
+     return {month,mission:missionPublic(m),players,
       totals:{participants:players.length,completed:players.filter(x=>x.complete).length,
-       awaiting:players.filter(x=>x.complete&&!x.paid).length,paid:players.filter(x=>x.paid).length}});
+       awaiting:players.filter(x=>x.complete&&!x.paid).length,paid:players.filter(x=>x.paid).length}};
+    },ctx);
+    return respond(result);
    }
    if(req.method!=='POST')return respond({error:'Méthode refusée'},405);
    const body=await parseBody(req);if(!body)return respond({error:'JSON invalide'},400);
@@ -141,6 +224,7 @@ export default {
       "ON CONFLICT(month) DO UPDATE SET title=excluded.title,prediction_target=excluded.prediction_target,poll_target=excluded.poll_target,bonus_coins=excluded.bonus_coins WHERE monthly_missions.status='draft'"
     ).bind(month,title,pred,polls,coins).run();
     if(Number(result.meta?.changes||0)!==1)return respond({error:'Mission déjà ouverte ou clôturée : règles figées'},409);
+    await invalidateCache(req,monthCacheKeys(month,identity.id));
     return respond({configured:true,mission:missionPublic(await missionFor(env.DB,month))});
    }
    if(path==='/v1/monthly/admin/open'||path==='/v1/monthly/admin/close'){
@@ -153,6 +237,7 @@ export default {
       "UPDATE monthly_missions SET status='closed',closed_at=unixepoch() WHERE month=? AND status='open'";
     const result=await env.DB.prepare(statement).bind(month).run();
     if(Number(result.meta?.changes||0)!==1)return respond({error:'Mission absente ou statut incompatible'},409);
+    await invalidateCache(req,monthCacheKeys(month,identity.id));
     return respond({updated:true,mission:missionPublic(await missionFor(env.DB,month))});
    }
    if(path==='/v1/monthly/admin/award'){
@@ -168,6 +253,7 @@ export default {
       'INSERT INTO monthly_awards(month,twitch_id,coins,paid_at) VALUES(?,?,?,unixepoch()) ON CONFLICT(month,twitch_id) DO NOTHING'
     ).bind(month,id,m.bonus_coins).run();
     if(Number(result.meta?.changes||0)!==1)return respond({error:'Remise déjà enregistrée'},409);
+    await invalidateCache(req,['member:'+month+':'+id,'admin:'+month+':'+identity.id]);
     return respond({recorded:true,month,twitch_id:id,coins:Number(m.bonus_coins)});
    }
    return respond({error:'Route inconnue'},404);
