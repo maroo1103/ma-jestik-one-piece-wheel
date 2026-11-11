@@ -1,6 +1,7 @@
 import { TAU, normalise, indexAtPointer, targetAngle, randomIndex } from './engine.mjs';
 import { readImages, saveImage, deleteImage, prepareImage } from './image-storage.mjs';
 import { MAX_CHOICES, MAX_WHEELS, FALLBACK_IMAGE, makeId, makeChoice, loadWheelLibrary, saveWheelLibrary, wheelToPois, imageKey, cleanNames, parseWheelImport } from './wheel-library.mjs';
+import { HAJIN_GUIDE_URL } from './warzone-hajin.mjs';
 let POIS = [
   ['01', 'Littoral de la liberté', ['Littoral de', 'la liberté']],
   ['02', 'Le coffre', ['Le coffre']],
@@ -270,7 +271,8 @@ function openImageEditor(poi) {
   clearPendingImage();editorPoi=poi;editorSession++;
   $('imagePoiName').textContent=poi.name;
   $('imagePreview').src=poi.image;$('imagePreview').alt=`Aperçu de l'image de ${poi.name}`;
-  $('imagePreviewBadge').textContent=customImages.has(poi.id)?'IMAGE PERSONNALISÉE':'ILLUSTRATION D’ORIGINE';
+  $('imagePreviewBadge').textContent=customImages.has(poi.id)?'IMAGE PERSONNALISÉE':
+    currentWheelId==='warzone-hajin'&&poi.originalImage===FALLBACK_IMAGE?'PHOTO NON AJOUTÉE':'ILLUSTRATION D’ORIGINE';
   $('imageError').textContent='';$('imageFile').value='';setEditorBusy(false);
   showWheelDialog($('imageDialog'));
 }
@@ -358,6 +360,8 @@ function syncWheelButtons(){
   if($('wheelChapterFoot'))$('wheelChapterFoot').textContent=classic?'MODÈLE FORTNITE · 05.11.2026':'MODIFIABLE PAR TOUS · STOCKAGE LOCAL';
   const map=document.querySelector('.map-launch');
   if(map)map.hidden=!classic;
+  const hajinMap=$('hajinMapLaunch');
+  if(hajinMap)hajinMap.hidden=currentWheelId!=='warzone-hajin';
   if($('sourcesButton'))$('sourcesButton').hidden=!classic;
 }
 function activateWheel(id,savePrevious=true){
@@ -382,6 +386,11 @@ function activateWheel(id,savePrevious=true){
   renderCards();drawWheel();renderHistory();resetResult();
   if(imageStoreReady)applyWheelImages();
   syncWheelButtons();
+  const missingPhotos=currentWheelId==='warzone-hajin'
+    ?POIS.filter(p=>p.originalImage===FALLBACK_IMAGE&&!imageBlobs.has(imageKey(currentWheelId,p.id))).length:0;
+  statusMessage(currentWheelId==='warzone-hajin'&&missingPhotos
+    ?`Hajin : 13 lieux officiels prêts. ${missingPhotos} véritables photos sont encore à intégrer. Les logos MJ ne sont pas des captures du jeu. Carte officielle accessible en haut à gauche.`
+    :'');
   saveWheelLibrary(library);
 }
 async function initialiseLibrary(){
@@ -489,6 +498,10 @@ $('wheelDelete')?.addEventListener('click',async()=>{
   if(spinning||library.wheels.length<=1)return;
   const old=library.wheels.find(w=>w.id===currentWheelId);
   if(!old||!confirm('Supprimer définitivement la roue « '+old.name+' » de ce navigateur ?'))return;
+  if(old.id==='warzone-hajin'){
+    library.dismissedPresets=Array.isArray(library.dismissedPresets)?library.dismissedPresets:[];
+    if(!library.dismissedPresets.includes(old.id))library.dismissedPresets.push(old.id);
+  }
   library.wheels=library.wheels.filter(w=>w.id!==old.id);
   const next=library.wheels[0].id;
   // Si l'utilisateur efface l'ancien modèle, les images historiques sont conservées par prudence.
