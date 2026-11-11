@@ -92,3 +92,15 @@ body.qg-shop-active #page{width:100%;max-width:none;margin:0}
 .qg-layout .mj-shop-modal-content .mj-shop-modal-disclaimer{margin:0;color:#9f9589;font-size:10px;line-height:1.65}
 @media(max-width:740px){.qg-layout .mj-shop-dialog{width:min(95vw,570px);max-height:89dvh;border-radius:14px}.qg-layout .mj-shop-modal-window{padding:15px 17px 22px}.qg-layout .mj-shop-modal-grid{grid-template-columns:1fr;gap:18px}.qg-layout .mj-shop-modal-art{min-height:0;height:clamp(185px,30dvh,270px);aspect-ratio:auto}.qg-layout .mj-shop-modal-emblem{width:115px;height:115px}.qg-layout .mj-shop-modal-content{padding:0}.qg-layout .mj-shop-modal-content h2{font-size:clamp(25px,7vw,31px);margin-bottom:10px}.qg-layout .mj-shop-modal-close{margin-bottom:4px}.qg-layout .mj-shop-modal-content>p:not(.mj-shop-modal-disclaimer){margin-bottom:12px}}
 @media(prefers-reduced-motion:reduce){.qg-layout .mj-shop-card{transition:none}}
+
+
+/* Illustrations exactes fournies par l'organisateur — image transparente au-dessus du fond graphite. */
+.qg-layout .mj-shop-modal-owned-image{display:block;position:relative;z-index:1;width:min(84%,340px);height:83%;max-height:340px;object-fit:contain;object-position:center;filter:drop-shadow(0 13px 24px #0008)}
+.qg-layout .mj-shop-modal-owned-image[hidden]{display:none}
+.qg-layout .mj-shop-modal-art-vip .mj-shop-modal-owned-image{width:60%;height:65%}
+.qg-layout .mj-shop-modal-art-pass .mj-shop-modal-owned-image{width:68%;height:75%}
+.qg-layout .mj-shop-modal-art-jeu .mj-shop-modal-owned-image{width:76%;height:78%}
+.qg-layout .mj-shop-modal-art-vbucks .mj-shop-modal-owned-image{width:82%;height:78%}
+.qg-layout .mj-shop-modal-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;position:absolute;inset:0}
+.qg-layout .mj-shop-modal-fallback[hidden]{display:none}
+@media(max-width:740px){.qg-layout .mj-shop-modal-owned-image{max-height:90%;width:min(78%,270px)}.qg-layout .mj-shop-modal-art-vip .mj-shop-modal-owned-image{width:55%}.qg-layout .mj-shop-modal-art-pass .mj-shop-modal-owned-image{width:62%}}

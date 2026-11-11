@@ -56,7 +56,7 @@ const rewardDetails={
  vbucks:{category:'RÉCOMPENSE FORTNITE',type:'Carte cadeau Fortnite compatible',delivery:'Remise manuelle via Discord',availability:'Sous réserve de disponibilité',note:'Vérification de la plateforme, de la région et du budget avant remise. Aucun V-Buck n’est envoyé directement par le site.'},
  pass:{category:'RÉCOMPENSE FORTNITE',type:'Cadeau en jeu selon les règles Epic',delivery:'Remise organisée sur Discord',availability:'Selon les conditions et périodes de cadeau',note:'Conditions indiquées dans la boutique : A2F activée, amitié Epic depuis au moins 48 h, compte niveau 2 minimum, passe non déjà possédé, solde V-Bucks non négatif et période de cadeau autorisée.'}
 };
-function visualMarkup(reward){
+function fallbackVisualMarkup(reward){
  if(reward.id==='vbucks')return '<svg class="mj-shop-vbucks-art" viewBox="0 0 460 460" role="img" aria-label="Illustration stylisée de jetons V-Bucks Fortnite" xmlns="http://www.w3.org/2000/svg">'+
  '<defs><radialGradient id="mjCoinBg"><stop stop-color="#27516b" stop-opacity=".78"/><stop offset="1" stop-color="#10141a" stop-opacity="0"/></radialGradient><linearGradient id="mjCoinMetal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a8e7fb"/><stop offset=".43" stop-color="#4e9cbd"/><stop offset="1" stop-color="#1e3e60"/></linearGradient><linearGradient id="mjCoinEdge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e1f4f8"/><stop offset=".48" stop-color="#6aafcb"/><stop offset="1" stop-color="#254668"/></linearGradient></defs>'+
  '<ellipse cx="230" cy="225" rx="192" ry="177" fill="url(#mjCoinBg)"/>'+
@@ -65,6 +65,20 @@ function visualMarkup(reward){
  '</svg>';
  return '<div class="mj-shop-modal-emblem mj-shop-modal-emblem-'+reward.id+'" aria-hidden="true">'+icons[reward.icon]+'</div>'+
  '<span class="mj-shop-modal-visual-caption">'+reward.title+'</span>';
+}
+/* Photos et logos fournis par l'organisateur le 11/11/2026.
+   Les PNG sont à déposer dans dist/qg/media/ ; une illustration existante sert de repli tant qu'ils sont absents. */
+const rewardImages={
+ xp:{src:'/qg/media/6178-xp-blue-large.png',alt:'Icône bleue du boost de 1 000 XP'},
+ vip:{src:'/qg/media/75527-twitch-vip.png',alt:'Logo violet du statut VIP Twitch'},
+ jeu:{src:'/qg/media/Instant-gaming.pnj.png',alt:'Logo orange Instant Gaming'},
+ vbucks:{src:'/qg/media/372757-vbucksstack.png',alt:'Pile de jetons V-Bucks Fortnite'},
+ pass:{src:'/qg/media/2673-battlepass.png',alt:'Écusson doré du Passe de combat Fortnite'}
+};
+function visualMarkup(reward){
+ const image=rewardImages[reward.id];
+ return '<img class="mj-shop-modal-owned-image" src="'+image.src+'" alt="'+image.alt+'" width="320" height="320" decoding="async">'+
+  '<div class="mj-shop-modal-fallback" hidden>'+fallbackVisualMarkup(reward)+'</div>';
 }
 function modalMarkup(reward){
  const details=rewardDetails[reward.id];
@@ -106,6 +120,13 @@ export function mountBoutique(){
   if(!reward)return;
   trigger=card.querySelector('.mj-shop-card-open');
   dialog.innerHTML=modalMarkup(reward);
+  const ownedImage=dialog.querySelector('.mj-shop-modal-owned-image');
+  const visualFallback=dialog.querySelector('.mj-shop-modal-fallback');
+  if(ownedImage&&visualFallback){
+   const showFallback=()=>{ownedImage.hidden=true;visualFallback.hidden=false;};
+   ownedImage.addEventListener('error',showFallback,{once:true});
+   if(ownedImage.complete&&!ownedImage.naturalWidth)showFallback();
+  }
   dialog.querySelector('.mj-shop-modal-close')?.addEventListener('click',close);
   dialog.showModal();
   dialog.querySelector('.mj-shop-modal-close')?.focus();

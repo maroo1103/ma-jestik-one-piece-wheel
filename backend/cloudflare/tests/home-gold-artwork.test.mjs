@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261111-shop3fix1/);
+ assert.match(html,/qg\.js\?v=20261111-reward-images1/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261111-shop3fix1/);
+ assert.match(html,/qg\.js\?v=20261111-reward-images1/);
 });
 
 
@@ -232,8 +232,8 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const auth=src("dist/qg/twitch-auth.js");
  const shop=src("dist/qg/boutique.js");
  const css=src("dist/qg/boutique.css");
- assert.match(html,/boutique\.css\?v=20261111-shop3/);
- assert.match(html,/qg\.js\?v=20261111-shop3fix1/);
+ assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
+ assert.match(html,/qg\.js\?v=20261111-reward-images1/);
  assert.match(html,/href="#\/boutique" data-page="boutique"/);
  assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
  assert.match(js,/import \{boutiqueMarkup,mountBoutique,unmountBoutique\} from '.\/boutique\.js/);
@@ -299,8 +299,36 @@ test("Boutique QG : cinq récompenses ouvrent des fiches natives accessibles",()
  assert.match(shop,/Achats, pièces et stocks gérés exclusivement par DraftBot/);
  assert.match(qg,/unmountBoutique\(\)/);
  assert.match(qg,/if\(page==='boutique'\)mountBoutique\(\)/);
- assert.match(qg,/boutique\.js\?v=20261111-shop3/);
- assert.match(html,/boutique\.css\?v=20261111-shop3/);
+ assert.match(qg,/boutique\.js\?v=20261111-reward-images1/);
+ assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
  assert.match(css,/\.mj-shop-dialog::backdrop/);
  assert.match(css,/@media\(max-width:740px\)/);
+});
+
+
+test("Boutique QG : images utilisateur des cinq récompenses, avec repli sûr",()=>{
+ const shop=src("dist/qg/boutique.js");
+ const css=src("dist/qg/boutique.css");
+ const html=src("dist/qg/index.html");
+ const qg=src("dist/qg/qg.js");
+ const assets={
+  xp:"6178-xp-blue-large.png",
+  vip:"75527-twitch-vip.png",
+  jeu:"Instant-gaming.pnj.png",
+  vbucks:"372757-vbucksstack.png",
+  pass:"2673-battlepass.png"
+ };
+ for(const [key,name] of Object.entries(assets)){
+  assert.match(shop,new RegExp(key+":\\{src:'/qg/media/"+name.replaceAll(".","\\.")+"'"));
+ }
+ assert.match(shop,/function fallbackVisualMarkup\(reward\)/);
+ assert.match(shop,/function visualMarkup\(reward\)/);
+ assert.match(shop,/mj-shop-modal-owned-image/);
+ assert.match(shop,/mj-shop-modal-fallback/);
+ assert.match(shop,/ownedImage\.addEventListener\('error',showFallback/);
+ assert.match(shop,/if\(ownedImage\.complete&&!ownedImage\.naturalWidth\)showFallback\(\)/);
+ assert.match(css,/\.mj-shop-modal-owned-image\{/);
+ assert.match(css,/\.mj-shop-modal-fallback\[hidden\]\{display:none\}/);
+ assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
+ assert.match(qg,/boutique\.js\?v=20261111-reward-images1/);
 });
