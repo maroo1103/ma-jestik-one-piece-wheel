@@ -2,6 +2,17 @@
 
 **État au 11/11/2026 :** le code et l'interface QG sont versionnés et les tests de simulation passent. La migration additive `0008_monthly_missions.sql` a déjà été appliquée à la D1 `ma-jestik-qg-members` : les tables `monthly_missions` et `monthly_awards` existent et sont **vides**. Aucune récompense n'a été distribuée.
 
+## Protection anti-spam du suivi mensuel
+
+La future API possède désormais **deux barrières côté Worker** :
+
+- Un coupe-circuit avant Twitch et D1, limité à environ **30 requêtes par minute par adresse IP**, avec code **HTTP 429** et en-tête `Retry-After: 60`. La limite de secours est tenue en mémoire volatile par instance Cloudflare, pas globalement ; aucune adresse IP n'est stockée en D1 ni inscrite dans les logs applicatifs.
+- Un cache interne de résultats déjà vérifiés : **5 minutes par membre Twitch connecté** (`/v1/monthly/me`), **1 minute pour la mission publique** et **1 minute pour le tableau propriétaire**. Le token Twitch est revalidé **avant** toute restitution privée et n'est jamais inclus dans la clé du cache. Le cache Cloudflare est local au centre de données, avec un cache mémoire de repli ; il ne garantit pas un plafond mondial. Les mises à jour administrateur invalident les entrées concernées. Les réponses envoyées au navigateur conservent `Cache-Control: no-store`.
+
+**Option facultative pour renforcer la protection sans abonnement :** si Cloudflare permet gratuitement l'ajout d'un binding natif de limitation, le nommer `MISSION_RATE_LIMITER`, avec un namespace numérique dédié (p. ex. `112026`) et une limite de **30 appels / 60 secondes**. Le code fonctionne également sans ce binding grâce au coupe-circuit local. La limite native est elle-même approximative et propre à chaque centre de données. **Ne souscrire aucune option payante** pour ce projet ; vérifier les modalités du compte avant toute activation supplémentaire.
+
+**Limite technique :** chaque F5 qui arrive au Worker reste une invocation Cloudflare, même si elle est refusée avec 429 ou servie depuis le cache. Cette protection économise surtout les vérifications Twitch et les lectures D1 et amortit les rafales, mais ne peut pas garantir « zéro requête » ni bloquer une attaque distribuée. Le site rafraîchit déjà sa progression automatiquement **une fois par heure**, sans bouton manuel.
+
 ## Ce qui manque pour rendre les compteurs actifs
 
 Le nouveau Worker `ma-jestik-qg-missions` **n'est pas encore publié**. La tentative d'envoi via le connecteur Cloudflare a été bloquée par les contrôles de sécurité de l'outil. Les autres Workers (profils, Tribunal, Killathon, contact, annonces) ont été laissés intacts.

@@ -6,6 +6,7 @@ on:
     paths:
       - 'backend/cloudflare/src/worker.js'
       - 'backend/cloudflare/tribunal-worker.js'
+      - 'backend/cloudflare/monthly-missions-worker.js'
       - 'dist/qg/tribunal-public.js'
       - 'dist/qg/tribunal.js'
       - 'dist/qg/qg.js'
@@ -41,6 +42,7 @@ jobs:
         run: |
           node --check backend/cloudflare/src/worker.js
           node --check backend/cloudflare/tribunal-worker.js
+          node --check backend/cloudflare/monthly-missions-worker.js
           node --check dist/qg/tribunal-public.js
           node --check dist/qg/tribunal.js
           node --check dist/qg/twitch-auth.js
