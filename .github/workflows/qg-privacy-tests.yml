@@ -31,6 +31,7 @@ on:
       - 'dist/qg/confidentialite.css'
       - 'backend/cloudflare/schema.sql'
       - 'backend/cloudflare/migrations/**'
+      - 'scripts/deploy-warzone-assets.py'
       - 'backend/cloudflare/tests/**'
       - '.github/workflows/qg-privacy-tests.yml'
   workflow_dispatch:
@@ -64,6 +65,7 @@ jobs:
           node --check dist/warzone-hajin.mjs
           node --check dist/warzone-zodiac.mjs
           node --check dist/map.js
+          python -m py_compile scripts/deploy-warzone-assets.py
           node --check dist/image-storage.mjs
           node --check dist/qg/monthly-missions.js
           node --check dist/qg/confidentialite.js
