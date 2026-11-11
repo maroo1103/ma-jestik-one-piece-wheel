@@ -38,6 +38,10 @@ jobs:
           test -f dist/app.js
           test -f dist/engine.mjs
           test -f dist/image-storage.mjs
+          test -f dist/wheel-library.mjs
+          test -f dist/wheel-multijeux.css
+          node --check dist/app.js
+          node --check dist/wheel-library.mjs
           for n in $(seq -w 1 12); do
             test -f "dist/assets/${n}.webp"
           done
