@@ -36,14 +36,20 @@ body.stream .wheel-library-panel,body.stream .wheel-custom-editor,body.stream .w
 @media(max-width:760px){.wheel-library-heading{display:block}.wheel-library-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.wheel-library-controls select{grid-column:1/-1;max-width:none;width:100%;min-width:0}.wheel-library-controls button{padding:8px;font-size:12px}.wheel-custom-editor{display:grid}.wheel-custom-editor button{width:100%}.wheel-library-panel{margin:12px 0 25px}.wheel-library-heading h2{font-size:25px}}
 
 /* Correctifs fenetres iframe et entete multijeux — 11/11/2026. */
-.intro .eyebrow{max-width:100%;min-width:0}
+/* Le titre de la roue peut comporter un nom de jeu librement choisi.
+   Ne jamais lui appliquer les 6 px du point decoratif ni le tronquer. */
+.intro .eyebrow{
+  display:flex;align-items:center;flex-wrap:wrap;
+  column-gap:8px;row-gap:3px;max-width:100%;min-width:0;
+  line-height:1.5;
+}
 .intro .eyebrow>span:first-child{flex:0 0 6px}
 .intro .eyebrow>#wheelGameLabel{
-  display:inline-block;flex:0 1 auto;min-width:0;width:auto;height:auto;
-  max-width:min(48vw,420px);margin:0;padding:0;
-  background:transparent;color:var(--gold);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  vertical-align:middle
+  display:inline-block;flex:0 1 auto;min-width:0;
+  width:auto;height:auto;max-width:100%;margin:0;padding:0;
+  background:none;color:var(--gold);border:0;border-radius:0;
+  font:inherit;font-weight:700;line-height:1.5;
+  white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;
 }
 .wheel-iframe-dialog{
   position:fixed!important;inset:auto!important;left:50%!important;
@@ -53,7 +59,9 @@ body.stream .wheel-library-panel,body.stream .wheel-custom-editor,body.stream .w
   overflow-y:auto;overscroll-behavior:contain;
 }
 @media(max-width:760px){
-  .intro .eyebrow{flex-wrap:nowrap;gap:6px}
-  .intro .eyebrow>#wheelGameLabel{max-width:clamp(120px,50vw,260px)}
+  .intro .eyebrow{column-gap:6px;row-gap:3px}
+  .intro .eyebrow>#wheelGameLabel{
+    flex:0 0 100%;max-width:100%;font-size:9px;letter-spacing:1px;
+  }
   .wheel-iframe-dialog{max-width:calc(100% - 24px);box-sizing:border-box}
 }
