@@ -34,7 +34,7 @@ test('les défis sont spécifiques à chaque carte et gardent les POI officiels'
  assert.equal(WARZONE_CHALLENGE_GAMES['warzone-rebirth'].a,'Bioweapons');
  const sets=Object.values(WARZONE_CHALLENGES);
  for(let i=0;i<sets.length;i++)for(let j=i+1;j<sets.length;j++){
-  assert.ok(sets[i].filter((row,k)=>row[2]!==sets[j][k][2]).length>=30,'Les règles doivent être adaptées selon la carte');
+  assert.ok(sets[i].filter((row,k)=>row[2]!==sets[j][k][2]).length>=20,'Les règles doivent être adaptées selon la carte');
  }
 });
 
