@@ -304,6 +304,9 @@ test('Rebirth et Verdansk : noms vérifiés, cartes, activation par manifeste et
   assert.match(importer,/map-full\.png/);
   assert.match(importer,/sha256/);
   assert.match(importer,/if not available:/);
+  assert.match(importer,/def archive_path\(game\):/);
+  assert.match(importer,/Rebirth island\.zip/);
+  assert.match(importer,/available = \[game for game in SOURCES if archive_path\(game\)\.exists\(\)\]/);
   assert.match(build,/python scripts\/deploy-future-warzone-assets\.py/);
   assert.match(build,/node --check dist\/warzone-rebirth\.mjs/);
   assert.match(build,/node --check dist\/warzone-verdansk\.mjs/);
