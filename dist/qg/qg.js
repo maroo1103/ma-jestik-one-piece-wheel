@@ -108,7 +108,7 @@ function home(){
 }
 function wheel(){
  return head('OUTILS GAMING','LA ROUE','Un tirage, une décision ! Lance la roue et laisse le hasard choisir.')+
- '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="La roue interactive Ma_JesTik" src="../roue.html?v=20261111-wheel-brand-link1" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
+ '<div class="wheel-area"><div class="loading" id="wheelLoading">Chargement de la roue…</div><iframe class="wheel-embed" id="wheelFrame" title="La roue interactive Ma_JesTik" src="../roue.html?v=20261111-warzone-prep1" loading="eager" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
 }
 function challenges(){return challengesMarkup();}
 function court(){return tribunalMarkup();}
