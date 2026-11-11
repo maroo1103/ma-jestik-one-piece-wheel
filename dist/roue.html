@@ -50,13 +50,14 @@
       <span class="map-launch-footer">AGRANDIR LA CARTE</span>
     </button>
   </aside>
-  <aside class="map-launch hajin-map-launch" id="hajinMapLaunch" aria-label="Carte officielle Hajin" hidden>
-    <a class="map-launch-button hajin-map-link" href="https://www.callofduty.com/guides/warzone/hajin" target="_blank" rel="noopener noreferrer"
-      aria-label="Ouvrir la carte interactive officielle de Hajin sur le site Call of Duty">
-      <span class="map-launch-title">CARTE · HAJIN</span>
-      <span class="hajin-map-preview" aria-hidden="true"><span>HAJIN</span><small>13 LIEUX OFFICIELS</small></span>
-      <span class="map-launch-footer">OUVRIR LA CARTE OFFICIELLE</span>
-    </a>
+  <aside class="map-launch warzone-map-launch" id="warzoneMapLaunch" aria-label="Carte Warzone" hidden>
+    <button id="warzoneMapOpen" class="map-launch-button" type="button" disabled
+      aria-haspopup="dialog" aria-controls="mapDialog" aria-label="Agrandir la carte Warzone">
+      <span class="map-launch-title" id="warzoneMapName">CARTE · WARZONE</span>
+      <img id="warzoneMapPreview" src="/icons/mj-source.webp"
+        alt="Aperçu cartographique de Warzone" width="1024" height="1024" loading="lazy">
+      <span class="map-launch-footer" id="warzoneMapAction">CARTE À PUBLIER</span>
+    </button>
   </aside>
   <main>
     <section class="intro"><div><p class="eyebrow"><span></span> LA ROUE <i> / </i> <strong id="wheelGameLabel">FORTNITE × ONE PIECE</strong></p><h1>LA <em>ROUE</em></h1><p class="intro-copy">Laisse le hasard décider. Un tirage, une décision !</p></div><div class="chapter"><span id="wheelChapterTitle">FORTNITE · ONE PIECE</span><strong><span id="wheelChapterCount">12</span> <small>choix</small></strong><span class="tiny" id="wheelChapterFoot">CARTE VÉRIFIÉE · 05.11.2026</span></div></section>
@@ -124,16 +125,16 @@
   <dialog id="mapDialog" class="map-dialog" aria-labelledby="mapDialogTitle">
     <div class="map-dialog-panel">
       <div class="map-dialog-heading">
-        <div><p class="map-dialog-eyebrow">FORTNITE × ONE PIECE</p><h2 id="mapDialogTitle">Carte de l'île · 12 lieux</h2></div>
+        <div><p class="map-dialog-eyebrow" id="mapDialogGame">FORTNITE × ONE PIECE</p><h2 id="mapDialogTitle">Carte de l'île · 12 lieux</h2></div>
         <button id="mapClose" type="button" class="map-dialog-close" aria-label="Fermer la carte">×</button>
       </div>
-      <div class="map-dialog-frame" aria-label="Carte agrandie des douze destinations">
-        <img src="assets/carte-lieux.webp" width="1272" height="1274" alt="Carte complète de Fortnite One Piece avec les douze lieux nommés en français" class="map-dialog-image">
+      <div class="map-dialog-frame" id="mapDialogFrame" aria-label="Carte agrandie des douze destinations">
+        <img id="mapDialogImage" src="assets/carte-lieux.webp" width="1272" height="1274" alt="Carte complète de Fortnite One Piece avec les douze lieux nommés en français" class="map-dialog-image">
       </div>
-      <p class="map-dialog-tip">Appuie sur Échap ou clique en dehors de la carte pour fermer. <a href="assets/carte-lieux.webp" target="_blank" rel="noopener">Voir la carte complète en taille réelle</a></p>
+      <p class="map-dialog-tip">Appuie sur Échap ou clique en dehors de la carte pour fermer. <a id="mapImageFullLink" href="assets/carte-lieux.webp" target="_blank" rel="noopener">Voir la carte complète en taille réelle</a></p>
     </div>
   </dialog>
   <script type="module" src="app.js?v=20261111-hajin2"></script>
-  <script type="module" src="map.js"></script>
+  <script type="module" src="map.js?v=20261111-warzone3"></script>
 </body>
 </html>
