@@ -12,6 +12,7 @@ on:
       - 'dist/qg/qg.js'
       - 'dist/app.js'
       - 'dist/wheel-library.mjs'
+      - 'dist/warzone-hajin.mjs'
       - 'dist/image-storage.mjs'
       - 'dist/roue.html'
       - 'dist/wheel-multijeux.css'
@@ -57,6 +58,7 @@ jobs:
           node --check dist/qg/qg.js
           node --check dist/app.js
           node --check dist/wheel-library.mjs
+          node --check dist/warzone-hajin.mjs
           node --check dist/image-storage.mjs
           node --check dist/qg/monthly-missions.js
           node --check dist/qg/confidentialite.js
