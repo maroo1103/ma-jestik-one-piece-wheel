@@ -1,4 +1,4 @@
-import {challengesMarkup,mountChallenges} from './defis.js?v=20261111-warzone-challenges1';
+import {challengesMarkup,mountChallenges} from './defis.js?v=20261111-warzone-challenges2';
 import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261111-multigame1';
 import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
