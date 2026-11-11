@@ -123,7 +123,7 @@ function stopDestinationSound() {
 }
 async function getDestinationSound(id) {
   // Les jingles locaux n'existent que pour les 12 destinations historiques Fortnite.
-  if (!audio || currentWheelId!=='fortnite' || !/^(0[1-9]|1[0-2])$/.test(id)) return null;
+  if (!audio || currentWheelId!=='fortnite' || !/^(0[1-9]|1[0-2])$/.test(id) || !FORTNITE_ORIGINAL.some(p=>p.id===id&&POIS.some(x=>x.id===id&&x.name===p.name))) return null;
   if (!destinationBuffers.has(id)) {
     const pending = fetch(`audio/${id}.mp3`)
       .then(response => { if (!response.ok) throw new Error(`Son ${id} indisponible (${response.status})`); return response.arrayBuffer(); })
@@ -325,6 +325,10 @@ function activateWheel(id,savePrevious=true){
   customImages.clear();
   currentWheelId=cfg.id;library.active=id;
   POIS=wheelToPois(cfg);
+  if(cfg.id==='fortnite')for(const choice of POIS){
+    const original=FORTNITE_ORIGINAL.find(p=>p.id===choice.id&&p.name===choice.name);
+    if(original)choice.lines=[...original.lines];
+  }
   const valid=new Set(POIS.map(p=>p.id));
   selected=new Set(cfg.selected.filter(k=>valid.has(k)));
   if(!selected.size)selected=new Set(valid);
@@ -481,7 +485,8 @@ $('wheelExport')?.addEventListener('click',async()=>{
       const blob=imageBlobs.get(imageKey(cfg.id,c.id));
       choices.push({name:c.name,originalImage:c.originalImage,...(blob?{image:await imageData(blob)}:{})});
     }
-    const blob=new Blob([JSON.stringify({format:'ma-jestik-wheel',version:2,name:cfg.name,choices},null,2)],{type:'application/json'});
+    const blob=new Blob([JSON.stringify({format:'ma-jestik-wheel',version:2,name:cfg.name,duration:cfg.duration,
+      selectedNames:cfg.choices.filter(c=>cfg.selected.includes(c.id)).map(c=>c.name),choices},null,2)],{type:'application/json'});
     if(blob.size>36_000_000)throw Error('Fichier trop volumineux. Réduis le nombre d’images.');
     const url=URL.createObjectURL(blob);
     const anchor=document.createElement('a');anchor.href=url;anchor.download='ma-jestik-roue-'+new Date().toISOString().slice(0,10)+'.json';
@@ -501,7 +506,9 @@ $('wheelImportFile')?.addEventListener('change',async event=>{
     const imported=parseWheelImport(await file.text());
     const id=makeId('w');
     const choices=imported.choices.map(c=>({...makeChoice(c.name,c.originalImage),image:c.image}));
-    const config={id,name:imported.name,choices:choices.map(({image,...c})=>c),selected:choices.map(c=>c.id),history:[],duration:'8'};
+    const selectedNames=new Set(imported.selectedNames);
+    const config={id,name:imported.name,choices:choices.map(({image,...c})=>c),
+      selected:choices.filter(c=>selectedNames.has(c.name)).map(c=>c.id),history:[],duration:imported.duration};
     if(choices.some(c=>c.image)&&!imageStoreReady)throw Error('Ce navigateur ne permet pas de sauvegarder les images.');
     const blobs=[];
     for(const choice of choices){
