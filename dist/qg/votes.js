@@ -17,7 +17,7 @@ function button(label,action,disabled=false){
  b.type='button';b.disabled=disabled;b.dataset.voteAction=action;
  return b;
 }
-export function mountVotePanel(root,getActive,onStateChange=()=>{}){
+export function mountVotePanel(root,getActive,onStateChange=()=>{},getGame=()=> 'fortnite'){
  if(!enabled||!fixedAPI)return {render(){}};
  let round=null,info=null,profileError='',loading=true,busy=false,error='',updateAt=0,inflight=false,retryRefresh=false;
  let memberProfile=null,memberProfileId=null,memberProfileUpdatedAt=0,lastSessionId=null;
@@ -97,6 +97,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
  }
  function add(parent,tag,cls,txt){const n=el(tag,cls,txt);parent.append(n);return n;}
  function startCandidate(){
+  if(getGame()!=='fortnite')return null; // Schéma D1 des votes : Fortnite uniquement, ne jamais étiqueter Warzone Fortnite.
   const d=getActive();
   if(!d||typeof d!=='object')return null;
   const id=Number(d.id);
@@ -169,6 +170,15 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
  function render(){
   const host=slot();if(!host)return;
   host.replaceChildren();
+  if(getGame()!=='fortnite'){
+    const section=el('section','qg-vote-panel');
+    section.setAttribute('aria-label','Pronostic des viewers');
+    add(section,'span','qg-vote-kicker','🎯 PRONOSTIC DES VIEWERS');
+    add(section,'h3','qg-vote-title','Le verdict de la mission');
+    add(section,'p','qg-vote-hint','Les pronostics officiels sont disponibles pour Fortnite. Les défis Warzone restent jouables et enregistrés localement, sans modifier les points des viewers.');
+    host.append(section);
+    return;
+  }
   const section=el('section','qg-vote-panel');
   section.setAttribute('aria-label','Pronostic des viewers');
   const top=el('div','qg-vote-top');
@@ -201,7 +211,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{}){
   host.querySelectorAll('[data-vote-action]').forEach(b=>b.addEventListener('click',()=>{void act(b.dataset.voteAction);}));
  }
  async function publishCurrent(){
-  if(!ownerUI()||busy)return false;
+  if(getGame()!=='fortnite'||!ownerUI()||busy)return false;
   const candidate=startCandidate();
   if(!candidate)return false;
   busy=true;error='';render();
