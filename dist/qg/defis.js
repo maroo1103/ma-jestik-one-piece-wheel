@@ -138,12 +138,12 @@ export function mountChallenges(){
   root,
   getGame:()=>selectedGame||"fortnite",
   isOwner:()=>verifiedOwner,
-  canAccept:()=>isFortnite()&&votePanel?.hasOpenRound()?'Termine d’abord la manche de vote officielle.':
+  canAccept:()=>votePanel?.hasOpenRound()?'Termine d’abord la manche de vote officielle.':
    data.active?'Termine ou passe le défi actuel avant d’en accepter un autre.':'',
   onAccept:async challenge=>{
    data.active={...challenge,source:'viewer',level:'Personnalisé',started:Date.now()};
    save();render();
-   const ok=isFortnite()?await votePanel?.publishCurrent():true;
+   const ok=await votePanel?.publishCurrent();
    if(!root.isConnected)return;
    const info=root.querySelector('#challengeStatus');
    if(info&&!ok)info.textContent='Défi accepté. Publication du vote indisponible : réessaie avec « Ouvrir les votes ».';
@@ -175,7 +175,7 @@ export function mountChallenges(){
   if(!verifiedOwner)return;
   if(action==="mode"){data.mode=btn.dataset.value==="viewer"?"viewer":"random";save();render();return;}
   if(action==="draw"){
-   if(isFortnite()&&votePanel?.hasOpenRound()){render("Une mission officielle est déjà en cours. Termine le vote avant de tirer une autre mission.");return;}
+   if(votePanel?.hasOpenRound()){render("Une mission officielle est déjà en cours. Termine le vote avant de tirer une autre mission.");return;}
    if(data.active){render("Termine ou passe le défi actuel avant d'en tirer un autre.");return;}
    const available=gameCatalogue().filter(eligible);
    if(!available.length){render("Aucun défi ne correspond aux filtres. Active des défis ou change de difficulté.");return;}
@@ -185,7 +185,7 @@ export function mountChallenges(){
    data.active={id:x[0],source:"random",title:x[1],description:x[2],level:x[3],team:data.team,by:"Tirage aléatoire",started:Date.now()};
    data.lastPreset=x[0];save();render();
    void (async()=>{
-    const ok=isFortnite()?await votePanel?.publishCurrent():true;
+    const ok=await votePanel?.publishCurrent();
     if(!root.isConnected)return;
     const message=root.querySelector("#challengeStatus");
     if(message)message.textContent=ok?"":"Le défi est local, mais pas encore publié. Réessaie depuis le panneau de vote.";
@@ -193,7 +193,7 @@ export function mountChallenges(){
    return;
   }
   if(["success","failure","skipped"].includes(action)){
-   if(isFortnite()&&votePanel?.hasOpenRound()){render("Un vote officiel est en cours : termine-le d’abord dans le panneau à droite.");return;}
+   if(votePanel?.hasOpenRound()){render("Un vote officiel est en cours : termine-le d’abord dans le panneau à droite.");return;}
    if(!data.active)return;
    const a=data.active;
    data.history.unshift({...a,result:action,when:Date.now()});
@@ -202,7 +202,7 @@ export function mountChallenges(){
   }
   if(action==="accept"||action==="reject"){
    const idx=data.queue.findIndex(q=>q.id===btn.dataset.id);if(idx<0)return;
-   if(action==="accept"&&isFortnite()&&votePanel?.hasOpenRound()){render("Termine le vote officiel avant d'accepter un autre défi.");return;}
+   if(action==="accept"&&votePanel?.hasOpenRound()){render("Termine le vote officiel avant d'accepter un autre défi.");return;}
    if(action==="accept"&&data.active){render("Termine le défi en cours avant d'en accepter un autre.");return;}
    const [item]=data.queue.splice(idx,1);
    if(action==="accept")data.active={...item,source:"viewer",level:"Personnalisé",started:Date.now()};
@@ -210,7 +210,7 @@ export function mountChallenges(){
    if(action==="accept"){
     render();
     void (async()=>{
-      const ok=isFortnite()?await votePanel?.publishCurrent():true;
+      const ok=await votePanel?.publishCurrent();
       if(!root.isConnected)return;
       const status=root.querySelector("#challengeStatus");
       if(status)status.textContent=ok?"":"Proposition acceptée localement, mais pas publiée. Réessaie dans le panneau.";
