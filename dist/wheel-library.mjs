@@ -32,7 +32,7 @@ function validateWheel(raw) {
     history, duration: ['5', '8', '12'].includes(String(raw.duration)) ? String(raw.duration) : '8' };
 }
 export function loadWheelLibrary(baseChoices, legacy = {}) {
-  const fallback = { id: 'fortnite', name: 'Fortnite · One Piece', choices: baseChoices.map(x => ({
+  const fallback = { id: 'fortnite', name: 'Fortnite · One Piece · Modèle', choices: baseChoices.map(x => ({
     id: x.id, name: x.name, originalImage: x.originalImage
   })), selected: Array.isArray(legacy.selected) && legacy.selected.length ?
     legacy.selected : baseChoices.map(x => x.id), history: legacy.history || [], duration: legacy.duration || '8' };
