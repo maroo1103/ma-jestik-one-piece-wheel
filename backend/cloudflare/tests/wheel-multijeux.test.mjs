@@ -170,10 +170,14 @@ test('Migration de Hajin : remplacer les logos originaux sans toucher aux images
   assert.equal(result.choices[2].originalImage,'/icons/mj-source.webp');
   assert.ok(upgraded.wheels.some(w=>w.id==='warzone-zodiac'));
 });
-test('Déploiement des images : une archive unique et complète est contrôlée',()=>{
+test('Déploiement des images : ZIP optimisé ou ZIP original validé',()=>{
   const flow=source('.github/workflows/publier-roue.yml');
-  assert.match(flow,/warzone-pack\.zip/);
-  assert.match(flow,/13 captures Hajin, 10 Zodiac/);
-  assert.match(flow,/hashlib\.sha256/);
-  assert.match(flow,/manifest\.json/);
+  const script=source('scripts/deploy-warzone-assets.py');
+  assert.match(flow,/scripts\/deploy-warzone-assets\.py/);
+  assert.match(script,/warzone-pack\.zip/);
+  assert.match(script,/lieux-et-map\.zip/);
+  assert.match(script,/hashlib\.sha256/);
+  assert.match(script,/manifest\.json/);
+  assert.match(script,/HAJIN/);
+  assert.match(script,/ZODIAC/);
 });
