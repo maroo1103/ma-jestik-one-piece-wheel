@@ -24,7 +24,7 @@ const ACTIVITY_COPY={
  },
  defis:{
   live:['Défi en cours','Un défi communautaire est actuellement proposé.'],
-  offline:['Aucun défi en cours','118 défis Zero Build à découvrir en solo ou en équipe.'],
+  offline:['Aucun défi en cours','Des défis à découvrir en solo ou en équipe.'],
   neutral:['Statut indisponible','Découvre les défis disponibles sur le QG.']
  }
 };

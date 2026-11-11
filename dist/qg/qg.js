@@ -1,5 +1,5 @@
 import {challengesMarkup,mountChallenges} from './defis.js?v=20261108-copyrefresh1';
-import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261110-activity-cards1';
+import {mountActivityStrip,unmountActivityStrip} from './activity-strip.js?v=20261111-multigame1';
 import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
