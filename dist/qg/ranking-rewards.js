@@ -66,7 +66,7 @@ export function monthlyRewardsMarkup(){
  participationStep('03','VISE LE TOP 10','Quand la saison mensuelle sera ouverte, seuls les points obtenus pendant ce mois compteront pour ses récompenses.','#/classement','VOIR LE CLASSEMENT GÉNÉRAL')+
  '</div></section>'+
  '<section class="mj-monthly-rewards-challenge" aria-labelledby="mjMonthlyChallengeTitle">'+
- '<div class="mj-monthly-mission-heading"><div class="mj-monthly-rewards-challenge-art" aria-hidden="true"><span>MISSION</span><strong>+50</strong><span>PIÈCES</span></div>'+
+ '<div class="mj-monthly-mission-heading"><div id="mjMonthlyMissionArt" class="mj-monthly-rewards-challenge-art is-upcoming" aria-hidden="true"><span>PROCHAINE</span><strong>MISSION</strong><span>À VENIR</span></div>'+
  '<div class="mj-monthly-rewards-challenge-copy"><span class="mj-monthly-rewards-overline">DE NOUVEAUX OBJECTIFS CHAQUE MOIS</span>'+
  '<h2 id="mjMonthlyChallengeTitle">LA MISSION <span>DU MOIS</span></h2>'+
  '<p>Les récompenses du classement sont réservées au Top 10. Ici, <strong>chaque membre qui termine la mission</strong> peut obtenir des pièces, quelle que soit sa position.</p>'+

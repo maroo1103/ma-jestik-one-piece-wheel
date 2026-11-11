@@ -51,6 +51,8 @@
 .qg-layout .mj-monthly-rewards-challenge-art{min-height:176px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:1px solid #9d7848;border-radius:14px;background:radial-gradient(circle at center,#74532b50,#1b1b1d 72%);color:#eac588}
 .qg-layout .mj-monthly-rewards-challenge-art span{font-size:11px;letter-spacing:3px;font-weight:900}
 .qg-layout .mj-monthly-rewards-challenge-art strong{font:900 clamp(67px,7vw,97px)/.95 var(--display),Impact,sans-serif;color:#f3c37d;text-shadow:0 5px 20px #e9a74825}
+.qg-layout .mj-monthly-rewards-challenge-art.is-upcoming strong,.qg-layout .mj-monthly-rewards-challenge-art.is-closed strong{font-size:clamp(29px,3vw,41px);line-height:1.12;letter-spacing:.6px;text-align:center;white-space:nowrap}
+.qg-layout .mj-monthly-rewards-challenge-art.is-upcoming span,.qg-layout .mj-monthly-rewards-challenge-art.is-closed span{font-size:11px;letter-spacing:2px;text-align:center}
 .qg-layout .mj-monthly-rewards-challenge-copy h2{font:900 clamp(27px,3vw,42px)/1.1 var(--display),Impact,sans-serif;color:#f7efe2;margin:10px 0 12px}
 .qg-layout .mj-monthly-rewards-challenge-copy h2 span{color:#f0c98a}
 .qg-layout .mj-monthly-rewards-challenge-copy p{font-size:13px;line-height:1.76;color:#c9bcae;max-width:790px;margin:0 0 12px}

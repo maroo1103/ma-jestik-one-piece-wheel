@@ -45,7 +45,24 @@ export function mountMonthlyMissions(){
   return '<div class="mj-mission-task"><div><strong>'+title+'</strong><a href="'+href+'">PARTICIPER</a></div>'+
    '<span>'+n(done)+' / '+n(target)+'</span><div class="mj-mission-track" role="progressbar" aria-valuemin="0" aria-valuemax="'+target+'" aria-valuenow="'+done+'"><i style="width:'+pct+'%"></i></div></div>';
  };
+ function updateMissionArtwork(m){
+  const art=document.getElementById('mjMonthlyMissionArt');
+  if(!art||!active)return;
+  const isOpen=m?.status==='open',isClosed=m?.status==='closed';
+  art.classList.toggle('is-upcoming',!isOpen&&!isClosed);
+  art.classList.toggle('is-closed',isClosed);
+  art.classList.toggle('is-active',isOpen);
+  if(isOpen){
+   const value=Number(m.bonus_coins);
+   art.innerHTML='<span>MISSION</span><strong>+'+(Number.isInteger(value)&&value>0?n(value):'?')+'</strong><span>PIÈCES</span>';
+  }else if(isClosed){
+   art.innerHTML='<span>MISSION</span><strong>TERMINÉE</strong><span>À BIENTÔT</span>';
+  }else{
+   art.innerHTML='<span>PROCHAINE</span><strong>MISSION</strong><span>À VENIR</span>';
+  }
+ }
  function view(data){
+  updateMissionArtwork(data?.mission);
   if(!data?.mission){
    player.innerHTML='<div class="mj-mission-empty"><strong>Aucune mission ouverte pour ce mois.</strong>'+
     '<p>Les objectifs seront annoncés avant le lancement. Les participations passées ne sont pas converties automatiquement en récompenses.</p></div>';
