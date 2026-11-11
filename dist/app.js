@@ -64,7 +64,7 @@ function drawWheel() {
   $('rotor').replaceChildren(); $('wheelDefs').replaceChildren(); $('rim').replaceChildren();
   const shades = ['#233e48', '#19313d', '#324740', '#213a44'];
   // Les 12 lieux Fortnite conservent exactement leur disposition d'origine.
-  const compact=count>=10&&currentWheelId!=='fortnite';
+  const compact=currentWheelId!=='fortnite'&&(count>=10||items.some(p=>p.name.length>15));
   for (let i = 0; i < count; i++) {
     const start = -Math.PI/2 + i*step, end = start + step, mid = start+step/2;
     const point = a => `${360 + Math.cos(a)*332},${360+Math.sin(a)*332}`;
@@ -98,8 +98,8 @@ function drawWheel() {
       'stroke-linejoin':'round',
       ...(lower?{transform:`rotate(180 0 ${centerY})`}:{})
     });
-    const visible=lower?[...lines].reverse():lines;
-    visible.forEach((line,n)=>text.append(svgElement('tspan',{x:0,y:startY+n*rowHeight},line)));
+    // La contre-rotation maintient déjà les lignes dans le bon ordre de lecture.
+    lines.forEach((line,n)=>text.append(svgElement('tspan',{x:0,y:startY+n*rowHeight},line)));
     group.append(text);$('rotor').append(group);
   }
   for(let i=0;i<48;i++){const a=i/48*TAU;const major=i%4===0; $('rim').append(svgElement('circle',{cx:360+Math.sin(a)*350,cy:360-Math.cos(a)*350,r:major?2.8:1.2,fill:major?'#efc978':'#718e91'}));}
