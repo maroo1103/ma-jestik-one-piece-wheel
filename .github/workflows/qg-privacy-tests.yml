@@ -10,6 +10,10 @@ on:
       - 'dist/qg/tribunal-public.js'
       - 'dist/qg/tribunal.js'
       - 'dist/qg/qg.js'
+      - 'dist/qg/defis.js'
+      - 'dist/qg/votes.js'
+      - 'dist/qg/challenge-proposals.js'
+      - 'dist/qg/warzone-challenges.mjs'
       - 'dist/app.js'
       - 'dist/wheel-library.mjs'
       - 'dist/warzone-hajin.mjs'
@@ -63,6 +67,10 @@ jobs:
           node --check dist/qg/twitch-auth.js
           node --check dist/qg/profil.js
           node --check dist/qg/qg.js
+          node --check dist/qg/defis.js
+          node --check dist/qg/votes.js
+          node --check dist/qg/challenge-proposals.js
+          node --check dist/qg/warzone-challenges.mjs
           node --check dist/app.js
           node --check dist/wheel-library.mjs
           node --check dist/warzone-hajin.mjs
