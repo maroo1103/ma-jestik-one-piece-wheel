@@ -1244,3 +1244,16 @@ body{background:#07090c;color:#f3f1ed}
  color:#ffe0a2;
  text-decoration-color:#ffe0a2;
 }
+
+/* Nouveau monogramme MJ d'origine : transparence réelle, aucune animation.
+   Remplace le cadre/ombre carrée de l'ancien GIF dans la barre de navigation. */
+.site-header .mj-brand-logo{background:transparent;border:0;border-radius:0;overflow:visible}
+.site-header .mj-brand-logo .brand-icon{
+  display:block;object-fit:contain;box-shadow:none!important;border-radius:0!important;
+  background:transparent!important;animation:none!important;transform:none;
+  filter:drop-shadow(0 0 3px rgba(218,163,74,.20));
+}
+.mj-footer-brand-link .mj-brand-logo img{
+  object-fit:contain;background:transparent;box-shadow:none;
+  border-radius:0;animation:none!important;
+}
