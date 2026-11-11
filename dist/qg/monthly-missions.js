@@ -12,10 +12,11 @@ export function unmountMonthlyMissions(){if(dispose){dispose();dispose=null;}}
 export function mountMonthlyMissions(){
  unmountMonthlyMissions();
  const root=document.getElementById('mjMonthlyMission');if(!root)return;
- let active=true,loading=false,month=currentMonth(),me=null,admin=null,timer=null;
+ let active=true,loading=false,month=currentMonth(),me=null,admin=null,timer=null,lastRefresh=0;
+ const REFRESH_INTERVAL_MS=60*60*1000;
  root.innerHTML='<section class="mj-mission-live" aria-label="Mission mensuelle">'+
   '<div id="mjMissionPlayer" aria-live="polite">Vérification de la mission…</div>'+
-  '<div class="mj-mission-actions"><button type="button" data-mission-action="refresh">ACTUALISER</button><span>Mise à jour automatique toutes les 30 secondes</span></div>'+
+  '<div class="mj-mission-actions"><button type="button" data-mission-action="refresh">ACTUALISER</button><span>Mise à jour automatique toutes les heures</span></div>'+
   '<p id="mjMissionFeedback" role="status"></p><div id="mjMissionAdmin"></div></section>';
  const player=root.querySelector('#mjMissionPlayer'),owner=root.querySelector('#mjMissionAdmin'),feedback=root.querySelector('#mjMissionFeedback');
  const message=(s,error=false)=>{feedback.textContent=s;feedback.classList.toggle('error',error);};
@@ -91,6 +92,7 @@ export function mountMonthlyMissions(){
  async function refresh(){
   if(!active||loading)return;
   loading=true;
+  lastRefresh=Date.now();
   try{
    const session=getQGTwitchSession();
    if(!session){
@@ -135,10 +137,10 @@ export function mountMonthlyMissions(){
   }
  };
  root.addEventListener('click',click);root.addEventListener('submit',submit);
- const wake=()=>{if(document.visibilityState!=='hidden')void refresh();};
+ const wake=()=>{if(document.visibilityState!=='hidden'&&Date.now()-lastRefresh>=REFRESH_INTERVAL_MS)void refresh();};
  const sessionChanged=()=>{me=null;void refresh();};
  document.addEventListener('visibilitychange',wake);window.addEventListener('qg:twitch-session',sessionChanged);
- timer=setInterval(wake,30000);
+ timer=setInterval(wake,REFRESH_INTERVAL_MS);
  dispose=()=>{active=false;clearInterval(timer);root.removeEventListener('click',click);root.removeEventListener('submit',submit);
   document.removeEventListener('visibilitychange',wake);window.removeEventListener('qg:twitch-session',sessionChanged);};
  void refresh();
