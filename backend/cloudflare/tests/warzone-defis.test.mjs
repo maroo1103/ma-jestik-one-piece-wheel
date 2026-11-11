@@ -55,8 +55,8 @@ test('écran Défis préserve les 118 Fortnite et copie les mêmes composants po
  for(const text of ['challenge-stats','challenge-columns','challenge-tabs','challenge-filters','challengeCurrent','challengeCatalogue','challengeVoteSlot'])
   assert.ok(ui.includes(text),'L\u0027interface manque '+text);
  const qg=source('dist/qg/qg.js'),html=source('dist/qg/index.html');
- assert.match(qg,/defis\.js\?v=20261111-warzone-challenges1/);
- assert.match(html,/qg\.js\?v=20261111-warzone-challenges1/);
+ assert.match(qg,/defis\.js\?v=20261111-warzone-challenges2/);
+ assert.match(html,/qg\.js\?v=20261111-warzone-challenges2/);
 });
 
 test('votes Warzone et Fortnite correctement séparés avec la même interface',()=>{
