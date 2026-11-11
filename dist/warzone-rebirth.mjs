@@ -1,3 +1,6 @@
+/* Livraison Rebirth Island : GitHub Pages contrôle le pack présent sous
+   dist/assets/Rebirth island.zip et n'active le modèle qu'après validation
+   de ses 13 images + 2 cartes par le script d'importation. */
 /* Ma_JesTik — roue en préparation, non publiée sans images/cartes contrôlées.
    Lieux de la carte 2026. Les anciens atlas de 11 POI omettent Turbine et l'Outpost non marqué. Références: annonce officielle Saison 02 et guide récent.
    Guide officiel : https://www.callofduty.com/guides/warzone/rebirth-island
