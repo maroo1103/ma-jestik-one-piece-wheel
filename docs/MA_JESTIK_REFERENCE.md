@@ -35,6 +35,10 @@
 - **Formulaire de contact :** fonctionnement de bout en bout vérifié.
 - **Politique de confidentialité :** page publiée, mais elle peut nécessiter des ajustements lorsque les traitements et procédures évoluent.
 
+### Correctif additionnel — libellé du jeu (capture du 11/11/2026 à 15h54)
+- Le libellé dynamique « Fortnite · One Piece · Modèle » au-dessus de « LA ROUE » était encore écrasé/tronqué. La balise `span#wheelGameLabel` a été remplacée par `strong#wheelGameLabel` pour **ne plus hériter du style réservé au point décoratif** `.eyebrow>span`. Le CSS `dist/wheel-multijeux.css` autorise les retours à la ligne et, sur mobile, place le nom complet sur sa propre ligne au-dessus du titre ; plus de troncature par `ellipsis`.
+- Rafraîchissement des références CSS, iframe et script QG ; test de non-régression ajouté dans `backend/cloudflare/tests/wheel-multijeux.test.mjs`. Aucune modification des roues, images personnelles, données D1 ou Workers. Validation visuelle en production à faire confirmer par l'utilisateur.
+
 ## Correctifs ergonomiques de la Roue multijeux — 11 novembre 2026
 
 - **Fenêtres modales dans l'iframe du QG** : la nouvelle roue, le renommage et les images utilisent désormais `showWheelDialog()` dans `dist/app.js`, qui positionne les fenêtres au centre de la **portion réellement visible** de l'iframe et suit le défilement/redimensionnement parent. Sur la page autonome, les dialogues natifs restent inchangés. La correction évite de devoir descendre au milieu de la longue page pour trouver la fenêtre.
