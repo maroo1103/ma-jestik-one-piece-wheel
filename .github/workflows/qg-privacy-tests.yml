@@ -10,6 +10,11 @@ on:
       - 'dist/qg/tribunal-public.js'
       - 'dist/qg/tribunal.js'
       - 'dist/qg/qg.js'
+      - 'dist/app.js'
+      - 'dist/wheel-library.mjs'
+      - 'dist/image-storage.mjs'
+      - 'dist/roue.html'
+      - 'dist/wheel-multijeux.css'
       - 'dist/qg/monthly-missions.js'
       - 'dist/qg/ranking-rewards.css'
       - 'dist/qg/index.html'
@@ -50,6 +55,9 @@ jobs:
           node --check dist/qg/twitch-auth.js
           node --check dist/qg/profil.js
           node --check dist/qg/qg.js
+          node --check dist/app.js
+          node --check dist/wheel-library.mjs
+          node --check dist/image-storage.mjs
           node --check dist/qg/monthly-missions.js
           node --check dist/qg/confidentialite.js
           node --check dist/qg/contact.js
