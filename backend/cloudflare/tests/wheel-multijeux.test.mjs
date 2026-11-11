@@ -82,7 +82,11 @@ test('modales iframe visibles, texte du jeu sans style de pastille, tout sélect
   assert.match(css,/\.wheel-iframe-dialog\{/);
   assert.match(css,/#wheelGameLabel\{/);
   assert.match(css,/background:transparent;color:var\(--gold\)/);
-  assert.match(html,/id="wheelGameLabel"/);
+  assert.match(html,/<strong id="wheelGameLabel">/);
+  assert.match(css,/\.intro \.eyebrow>#wheelGameLabel\{/);
+  assert.match(css,/white-space:normal;overflow:visible;text-overflow:clip/);
+  assert.match(css,/flex:0 0 100%;max-width:100%;font-size:9px/);
+  assert.doesNotMatch(css,/\.intro \.eyebrow>#wheelGameLabel\{[^}]*text-overflow:ellipsis/s);
   assert.doesNotMatch(app,/\$\('selectAll'\)\.disabled\s*=\s*spinning\s*\|\|\s*count===POIS\.length/);
   assert.doesNotMatch(app,/\$\('selectAll'\)\.disabled\s*=\s*selected\.size===POIS\.length/);
   assert.match(app,/Tous les choix de cette roue sont déjà sélectionnés/);
