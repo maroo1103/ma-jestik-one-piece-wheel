@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261111-shop1/);
+ assert.match(html,/qg\.js\?v=20261111-shop2/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261111-shop1/);
+ assert.match(html,/qg\.js\?v=20261111-shop2/);
 });
 
 
@@ -232,18 +232,19 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const auth=src("dist/qg/twitch-auth.js");
  const shop=src("dist/qg/boutique.js");
  const css=src("dist/qg/boutique.css");
- assert.match(html,/boutique\.css\?v=20261111-shop1/);
- assert.match(html,/qg\.js\?v=20261111-shop1/);
+ assert.match(html,/boutique\.css\?v=20261111-shop2/);
+ assert.match(html,/qg\.js\?v=20261111-shop2/);
  assert.match(html,/href="#\/boutique" data-page="boutique"/);
  assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
  assert.match(js,/import \{boutiqueMarkup\} from '.\/boutique\.js/);
  assert.match(js,/boutique:boutiqueMarkup/);
  assert.match(js,/boutique:'communaute'/);
+ assert.match(js,/tribunal:'outils'/);
  assert.match(js,/qg-shop-active/);
  assert.match(auth,/'boutique'/);
- assert.match(shop,/const discordInvite='https:\/\/discord\.gg\/nyuC5YE467'/);
- assert.match(shop,/catalogUrl=discordInvite/);
- assert.match(shop,/orderUrl=discordInvite/);
+ assert.match(shop,/const catalogUrl='https:\/\/discord\.com\/channels\/1296502783423414382\/1566446945189367818'/);
+ assert.match(shop,/const orderUrl='https:\/\/discord\.com\/channels\/1296502783423414382\/1566447195673198703'/);
+ assert.doesNotMatch(shop,/discordInvite/);
  for(const label of ["1 000 XP","VIP Twitch & Discord","Choisis mon prochain jeu","1 000 V-Bucks Fortnite","Passe de combat Fortnite","3 000","8 000","20 000","30 000","32 200"]){
   assert.ok(shop.includes(label),"Catalogue incomplet : "+label);
  }
@@ -257,4 +258,18 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  assert.match(css,/\.mj-shop \.mj-shop-command\{font-style:italic\}/);
  assert.match(css,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
  assert.match(css,/@media\(max-width:600px\)/);
+});
+
+test("Navigation : Tribunal dans Outils gaming et mise en évidence du salon discrète",()=>{
+ const html=src("dist/qg/index.html");
+ const css=src("dist/qg/boutique.css");
+ const js=src("dist/qg/qg.js");
+ const outils=html.match(/<div class="submenu" id="nav-outils">([\s\S]*?)<\/div>/)?.[1]||"";
+ const communaute=html.match(/<div class="submenu" id="nav-communaute">([\s\S]*?)<\/div>/)?.[1]||"";
+ assert.match(outils,/href="#\/tribunal" data-page="tribunal"/);
+ assert.doesNotMatch(communaute,/href="#\/tribunal" data-page="tribunal"/);
+ assert.match(communaute,/href="#\/boutique" data-page="boutique"/);
+ assert.match(js,/tribunal:'outils'/);
+ assert.match(css,/\.mj-shop-step p strong\{color:#dbc6a9;background:#24211d/);
+ assert.doesNotMatch(css,/background:#3a3048/);
 });

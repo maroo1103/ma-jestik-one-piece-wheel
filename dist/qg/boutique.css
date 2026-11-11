@@ -27,7 +27,7 @@ body.qg-shop-active #page{width:100%;max-width:none;margin:0}
 .qg-layout .mj-shop-step-icon svg{display:block;width:100%;height:auto}
 .qg-layout .mj-shop-step h2{font:850 clamp(13px,1.08vw,18px)/1.27 var(--font),system-ui,sans-serif;margin:0 0 6px;color:#f3ede6}
 .qg-layout .mj-shop-step p{margin:0;color:#cfc6bb;font-size:clamp(11px,.87vw,13px);line-height:1.5}
-.qg-layout .mj-shop-step p strong{color:#e3d4f1;background:#3a3048;border-radius:4px;padding:1px 5px;font-size:inherit}
+.qg-layout .mj-shop-step p strong{color:#dbc6a9;background:#24211d;border:1px solid #62503c;border-radius:4px;padding:1px 5px;font-size:inherit;font-weight:650}
 .qg-layout .mj-shop-step-arrow{text-align:center;color:#e6b571;font:500 38px/1 sans-serif}
 .qg-layout .mj-shop-command{display:inline-block;border:1px solid #a3773b;background:#151412;color:#f2c683;border-radius:6px;padding:2px 9px;font:italic 800 .88em/1.2 ui-monospace,Consolas,monospace!important;white-space:nowrap}
 .qg-layout .mj-shop-catalog{max-width:1600px;margin:31px auto 0}

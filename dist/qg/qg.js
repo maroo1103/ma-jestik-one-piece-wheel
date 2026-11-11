@@ -4,7 +4,7 @@ import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
 import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
-import {boutiqueMarkup} from './boutique.js?v=20261111-shop1';
+import {boutiqueMarkup} from './boutique.js?v=20261111-shop2';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile,renderPublicMember,renderPrivateMember} from './profil.js?v=20261110-ranking-profiles1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
@@ -21,7 +21,7 @@ const modules = [
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Propose des questions, vote avec Twitch et découvre les résultats partagés.',ready:tribunalPublicEnabled},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
 ];
-const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'communaute',classement:'communaute',boutique:'communaute',setup:'univers',partenaires:'univers',apropos:'univers',createur:'univers',profil:null,membre:null,aide:null,contact:null,confidentialite:null};
+const groups = {accueil:null,roue:'outils',defis:'outils',killathon:'outils',tribunal:'outils',classement:'communaute',boutique:'communaute',setup:'univers',partenaires:'univers',apropos:'univers',createur:'univers',profil:null,membre:null,aide:null,contact:null,confidentialite:null};
 const tag=(s,kind='')=>'<span class="tag '+kind+'">'+s+'</span>';
 const head=(eyebrow,title,description,tags=[])=>'<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><h1>'+title+'</h1>'+(description?'<p>'+description+'</p>':'')+(tags.length?'<div class="page-tags">'+tags.join('')+'</div>':'')+'</div>';
 const panel=(icon,title,body)=>'<article class="panel placeholder-card"><div><div class="big-symbol" aria-hidden="true">'+icon+'</div><h3>'+title+'</h3><p>'+body+'</p></div><div class="step-label">À DÉFINIR ENSEMBLE</div></article>';
