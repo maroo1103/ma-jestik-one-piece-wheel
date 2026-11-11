@@ -238,6 +238,7 @@ async function initialiseImages() {
     imageBlobs=new Map(images.filter(x=>x.blob instanceof Blob&&x.blob.type.startsWith('image/')).map(x=>[String(x.id),x.blob]));
     imageStoreReady=true;
     applyWheelImages();
+    if(currentWheelId==='warzone-hajin')updateHajinNotice();
     document.querySelectorAll('.edit-image').forEach(e=>e.disabled=spinning);
   } catch {
     $('imageNotice').textContent="La personnalisation est indisponible : ce navigateur bloque l'enregistrement des images. Autorise les données du site puis recharge la page.";
@@ -310,6 +311,7 @@ $('applyImage').addEventListener('click',async()=>{
   const poi=editorPoi,blob=pendingImage;setEditorBusy(true);$('imageError').textContent='Enregistrement…';
   try {
     await saveImage(imageKey(currentWheelId,poi.id),blob);imageBlobs.set(imageKey(currentWheelId,poi.id),blob);updatePoiImage(poi,blob);
+    if(currentWheelId==='warzone-hajin')updateHajinNotice();
     $('imageNotice').textContent=`Image de ${poi.name} enregistrée dans ce navigateur.`;
     setEditorBusy(false);$('imageDialog').close();
   } catch(error) {$('imageError').textContent=storageError(error);setEditorBusy(false);}
@@ -319,6 +321,7 @@ $('restoreImage').addEventListener('click',async()=>{
   const poi=editorPoi;setEditorBusy(true);$('imageError').textContent="Restauration de l'illustration…";
   try {
     await deleteImage(imageKey(currentWheelId,poi.id));imageBlobs.delete(imageKey(currentWheelId,poi.id));updatePoiImage(poi,null);
+    if(currentWheelId==='warzone-hajin')updateHajinNotice();
     $('imageNotice').textContent=`Illustration d'origine rétablie pour ${poi.name}.`;
     setEditorBusy(false);$('imageDialog').close();
   } catch(error) {$('imageError').textContent=storageError(error);setEditorBusy(false);}
@@ -328,6 +331,14 @@ $('restoreImage').addEventListener('click',async()=>{
 function statusMessage(text) {
   const node=$('wheelLibraryStatus');
   if(node)node.textContent=String(text||'');
+}
+function updateHajinNotice(){
+  if(currentWheelId!=='warzone-hajin')return;
+  const total=POIS.length;
+  const missing=POIS.filter(p=>p.originalImage===FALLBACK_IMAGE&&!imageBlobs.has(imageKey(currentWheelId,p.id))).length;
+  statusMessage(missing
+    ?`Hajin : ${total} lieux officiels prêts. ${missing} photos restent à intégrer. Les logos MJ sont provisoires, pas des captures du jeu. Carte officielle accessible en haut à gauche.`
+    :`Hajin : ${total} lieux et leurs images sont disponibles sur cet appareil.`);
 }
 function applyWheelImages(){
   for(const poi of POIS){
@@ -361,7 +372,11 @@ function syncWheelButtons(){
   const map=document.querySelector('.map-launch');
   if(map)map.hidden=!classic;
   const hajinMap=$('hajinMapLaunch');
-  if(hajinMap)hajinMap.hidden=currentWheelId!=='warzone-hajin';
+  if(hajinMap){
+    const link=hajinMap.querySelector('a');
+    if(link)link.href=HAJIN_GUIDE_URL;
+    hajinMap.hidden=currentWheelId!=='warzone-hajin';
+  }
   if($('sourcesButton'))$('sourcesButton').hidden=!classic;
 }
 function activateWheel(id,savePrevious=true){
@@ -386,11 +401,8 @@ function activateWheel(id,savePrevious=true){
   renderCards();drawWheel();renderHistory();resetResult();
   if(imageStoreReady)applyWheelImages();
   syncWheelButtons();
-  const missingPhotos=currentWheelId==='warzone-hajin'
-    ?POIS.filter(p=>p.originalImage===FALLBACK_IMAGE&&!imageBlobs.has(imageKey(currentWheelId,p.id))).length:0;
-  statusMessage(currentWheelId==='warzone-hajin'&&missingPhotos
-    ?`Hajin : 13 lieux officiels prêts. ${missingPhotos} véritables photos sont encore à intégrer. Les logos MJ ne sont pas des captures du jeu. Carte officielle accessible en haut à gauche.`
-    :'');
+  if(currentWheelId==='warzone-hajin')updateHajinNotice();
+  else statusMessage('');
   saveWheelLibrary(library);
 }
 async function initialiseLibrary(){
