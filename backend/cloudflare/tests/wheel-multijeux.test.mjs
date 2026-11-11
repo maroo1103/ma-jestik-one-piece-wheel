@@ -71,3 +71,19 @@ test('interfaces et scripts uniquement statiques, sans Worker mensuel',()=>{
   assert.doesNotMatch(app,/workers\.dev|\/v1\/monthly\//);
   assert.match(css,/body\.stream \.wheel-library-panel/);
 });
+
+test('modales iframe visibles, texte du jeu sans style de pastille, tout sélectionner cliquable',()=>{
+  const app=source('dist/app.js'),css=source('dist/wheel-multijeux.css'),html=source('dist/roue.html');
+  assert.match(app,/function showWheelDialog\(dialog\)/);
+  assert.match(app,/host\.getBoundingClientRect\(\)/);
+  assert.match(app,/parent\.innerHeight/);
+  assert.match(app,/showWheelDialog\(\$\('wheelNameDialog'\)\)/);
+  assert.match(app,/showWheelDialog\(\$\('imageDialog'\)\)/);
+  assert.match(css,/\.wheel-iframe-dialog\{/);
+  assert.match(css,/#wheelGameLabel\{/);
+  assert.match(css,/background:transparent;color:var\(--gold\)/);
+  assert.match(html,/id="wheelGameLabel"/);
+  assert.doesNotMatch(app,/\$\('selectAll'\)\.disabled\s*=\s*spinning\s*\|\|\s*count===POIS\.length/);
+  assert.doesNotMatch(app,/\$\('selectAll'\)\.disabled\s*=\s*selected\.size===POIS\.length/);
+  assert.match(app,/Tous les choix de cette roue sont déjà sélectionnés/);
+});
