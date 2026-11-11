@@ -81,7 +81,7 @@ test('modales iframe visibles, texte du jeu sans style de pastille, tout sélect
   assert.match(app,/showWheelDialog\(\$\('imageDialog'\)\)/);
   assert.match(css,/\.wheel-iframe-dialog\{/);
   assert.match(css,/#wheelGameLabel\{/);
-  assert.match(css,/background:transparent;color:var\(--gold\)/);
+  assert.match(css,/background:none;color:var\(--gold\)/);
   assert.match(html,/<strong id="wheelGameLabel">/);
   assert.match(css,/\.intro \.eyebrow>#wheelGameLabel\{/);
   assert.match(css,/white-space:normal;overflow:visible;text-overflow:clip/);
