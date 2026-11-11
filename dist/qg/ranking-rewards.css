@@ -1,29 +1,79 @@
-/* Récompenses mensuelles du classement QG — pré-lancement uniquement. */
-.qg-layout .mj-monthly-rewards{max-width:1350px;margin:34px auto 10px;padding:clamp(20px,3.4vw,42px);background:radial-gradient(ellipse 60% 50% at 50% 0%,#614a2724,transparent 74%),linear-gradient(145deg,#18181b,#0b0d11);border:1px solid #9c7950;border-radius:19px;color:#f1eae0;box-shadow:inset 0 1px #ecd1a31a,0 14px 35px #0003;font-style:normal}
-.qg-layout .mj-monthly-rewards *{font-style:normal}
-.qg-layout .mj-monthly-rewards-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:9px 20px;margin-bottom:14px}
-.qg-layout .mj-monthly-rewards-kicker{font-size:10px;font-weight:850;letter-spacing:1.7px;color:#d8b47c}
-.qg-layout .mj-monthly-rewards-status{display:inline-flex;align-items:center;padding:6px 11px;border:1px solid #806645;border-radius:99px;background:#30271b;color:#efd2a3;font-size:10px;font-weight:850;letter-spacing:.75px}
-.qg-layout .mj-monthly-rewards-header h1{font:900 clamp(26px,3vw,43px)/1.1 var(--display),Impact,sans-serif;letter-spacing:.2px;margin:0 0 13px;color:#faf6ed}
-.qg-layout .mj-monthly-rewards-header h1 span{color:#e7be7d}
-.qg-layout .mj-monthly-rewards-header p{font-size:clamp(12px,1vw,15px);line-height:1.72;margin:0 0 23px;color:#cfc4b7;max-width:875px}
-.qg-layout .mj-monthly-rewards-header strong{color:#ead3b1;font-weight:850}
-.qg-layout .mj-monthly-rewards-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.4vw,18px)}
-.qg-layout .mj-monthly-rewards-card{min-width:0;min-height:178px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:20px 13px;border:1px solid #827055;border-radius:13px;background:linear-gradient(165deg,#29241e,#16171a 85%)}
-.qg-layout .mj-monthly-rewards-gold{border-color:#d4a757;box-shadow:inset 0 1px #fbd99930}
-.qg-layout .mj-monthly-rewards-silver{border-color:#83929d;background:linear-gradient(165deg,#262930,#151719)}
-.qg-layout .mj-monthly-rewards-bronze{border-color:#98725b;background:linear-gradient(165deg,#2c251f,#161719)}
-.qg-layout .mj-monthly-rewards-medal{font-size:29px;line-height:1}
-.qg-layout .mj-monthly-rewards-place{font-size:10px;font-weight:850;letter-spacing:1.1px;color:#d8cab8}
-.qg-layout .mj-monthly-rewards-coins{font:900 clamp(28px,3.5vw,43px)/1 var(--display),Impact,sans-serif;color:#f4cf8e;font-variant-numeric:tabular-nums}
-.qg-layout .mj-monthly-rewards-silver .mj-monthly-rewards-coins{color:#d7e2e8}
-.qg-layout .mj-monthly-rewards-bronze .mj-monthly-rewards-coins{color:#e2b99d}
-.qg-layout .mj-monthly-rewards-unit{font-size:12px;color:#cbbca5;font-weight:750}
-.qg-layout .mj-monthly-rewards-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px 30px;padding-top:23px;margin-top:23px;border-top:1px solid #5a4b37}
-.qg-layout .mj-monthly-rewards-bottom>div{flex:1;min-width:0}
-.qg-layout .mj-monthly-rewards-bottom strong{display:block;font-size:14px;color:#f2d39e;margin-bottom:8px}
-.qg-layout .mj-monthly-rewards-bottom p{max-width:900px;font-size:12px;line-height:1.75;color:#bdb1a3;margin:5px 0}
-.qg-layout .mj-monthly-rewards-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:208px;flex:none;padding:11px 14px;border:1px solid #c49a60;border-radius:9px;background:#33281c;color:#f5d59c;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.4px;text-align:center}
-.qg-layout .mj-monthly-rewards-link:hover,.qg-layout .mj-monthly-rewards-link:focus-visible{background:#574026;color:#fff0d9;border-color:#eac180}
-@media(max-width:790px){.qg-layout .mj-monthly-rewards-bottom{flex-direction:column;align-items:stretch}.qg-layout .mj-monthly-rewards-link{width:100%}}
-@media(max-width:600px){.qg-layout .mj-monthly-rewards{margin:24px auto 8px;padding:19px 16px}.qg-layout .mj-monthly-rewards-grid{grid-template-columns:1fr;gap:10px}.qg-layout .mj-monthly-rewards-card{min-height:120px;display:grid;grid-template-columns:42px 1fr auto;grid-template-rows:repeat(2,auto);align-items:center;justify-items:start;text-align:left;gap:4px 12px;padding:15px}.qg-layout .mj-monthly-rewards-medal{grid-row:1/3;font-size:28px}.qg-layout .mj-monthly-rewards-place{grid-column:2;grid-row:1;font-size:9px}.qg-layout .mj-monthly-rewards-coins{grid-column:2;grid-row:2;font-size:31px}.qg-layout .mj-monthly-rewards-unit{grid-column:3;grid-row:2;font-size:10px;text-align:right}.qg-layout .mj-monthly-rewards-header p{margin-bottom:19px}}
+/* Ma_JesTik — récompenses mensuelles, vitrine du top 10 avant ouverture. */
+.qg-layout .mj-monthly-rewards{--monthly-gold:#e7bf83;--monthly-line:#816345;max-width:1350px;width:100%;margin:28px auto 36px;padding:0 0 35px;color:#eee6dd;font-style:normal}
+.qg-layout .mj-monthly-rewards *{box-sizing:border-box;font-style:normal}
+.qg-layout .mj-monthly-rewards-hero{position:relative;overflow:hidden;padding:clamp(25px,3.6vw,52px);border:1px solid #97734c;border-radius:19px;background:radial-gradient(ellipse 65% 85% at 100% 0%,#96703a1d,transparent 70%),linear-gradient(145deg,#19191c,#0b0c10 90%);box-shadow:inset 0 1px #edd4a413,0 15px 40px #0004}
+.qg-layout .mj-monthly-rewards-hero:before{content:"";position:absolute;right:-120px;top:-173px;width:375px;height:375px;border:1px solid #ba91494a;border-radius:50%;pointer-events:none}
+.qg-layout .mj-monthly-rewards-kicker,.qg-layout .mj-monthly-rewards-overline{font-size:10px;font-weight:900;letter-spacing:1.8px;color:#dabb8d;line-height:1.5}
+.qg-layout .mj-monthly-rewards-kicker{margin:0 0 17px}
+.qg-layout .mj-monthly-rewards-hero h1{font:900 clamp(35px,4.8vw,67px)/1.04 var(--display),Impact,sans-serif;color:#fcf5eb;letter-spacing:.3px;margin:0 0 17px;position:relative}
+.qg-layout .mj-monthly-rewards-hero h1 span{color:var(--monthly-gold)}
+.qg-layout .mj-monthly-rewards-lead{font-size:clamp(13px,1.12vw,16px);line-height:1.8;color:#cec4b8;max-width:850px;margin:0}
+.qg-layout .mj-monthly-rewards-lead strong{color:#efc992}
+.qg-layout .mj-monthly-rewards-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid #5c4b39}
+.qg-layout .mj-monthly-rewards-metrics>div{display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;min-width:0;padding:2px 7px}
+.qg-layout .mj-monthly-rewards-metrics strong{font:900 clamp(25px,2.75vw,39px)/1.05 var(--display),Impact,sans-serif;color:#f3cb88;font-variant-numeric:tabular-nums}
+.qg-layout .mj-monthly-rewards-metrics span{font-size:10px;font-weight:800;letter-spacing:1px;color:#c0b1a1;line-height:1.5}
+.qg-layout .mj-monthly-rewards-prizes,.qg-layout .mj-monthly-rewards-how,.qg-layout .mj-monthly-rewards-rules{margin-top:34px}
+.qg-layout .mj-monthly-rewards-section-title{display:flex;justify-content:space-between;align-items:end;gap:16px 25px;margin-bottom:18px}
+.qg-layout .mj-monthly-rewards-section-title h2{font:900 clamp(25px,2.8vw,38px)/1.14 var(--display),Impact,sans-serif;color:#f8f1e7;margin:7px 0 0}
+.qg-layout .mj-monthly-rewards-section-title h2 span{color:#e5bc7c}
+.qg-layout .mj-monthly-rewards-section-title>p{font-size:12px;color:#aea296;margin:0 0 3px}
+.qg-layout .mj-monthly-rewards-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.5vw,20px)}
+.qg-layout .mj-monthly-rewards-card{min-width:0;min-height:190px;padding:24px 12px;border:1px solid #8c7053;border-radius:15px;background:radial-gradient(circle at 50% -20%,#91744e2f,transparent 65%),linear-gradient(157deg,#22201d,#111316);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px;box-shadow:inset 0 1px #f4d29c10}
+.qg-layout .mj-monthly-rewards-gold{border-color:#d4a454;background:radial-gradient(circle at 50% -20%,#d3a35136,transparent 66%),linear-gradient(157deg,#28231e,#101115)}
+.qg-layout .mj-monthly-rewards-silver{border-color:#8796a3;background:radial-gradient(circle at 50% -20%,#9ba9bc21,transparent 66%),linear-gradient(157deg,#24272d,#101215)}
+.qg-layout .mj-monthly-rewards-bronze{border-color:#a87963;background:radial-gradient(circle at 50% -20%,#b8875b26,transparent 66%),linear-gradient(157deg,#28201e,#121315)}
+.qg-layout .mj-monthly-rewards-medal{font-size:32px;line-height:1}
+.qg-layout .mj-monthly-rewards-place{font-size:10px;font-weight:850;letter-spacing:1px;color:#d7c9b7;line-height:1.45}
+.qg-layout .mj-monthly-rewards-coins{font:900 clamp(31px,3.5vw,48px)/1.02 var(--display),Impact,sans-serif;color:#eec482;font-variant-numeric:tabular-nums}
+.qg-layout .mj-monthly-rewards-silver .mj-monthly-rewards-coins{color:#dce5ea}
+.qg-layout .mj-monthly-rewards-bronze .mj-monthly-rewards-coins{color:#deb49a}
+.qg-layout .mj-monthly-rewards-unit{font-size:12px;color:#cbbba9;font-weight:700}
+.qg-layout .mj-monthly-rewards-rankings{margin-top:21px;padding:24px 26px;border:1px solid #69543b;border-radius:15px;background:linear-gradient(155deg,#19191c,#101115)}
+.qg-layout .mj-monthly-rewards-rankings-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 15px;margin-bottom:17px}
+.qg-layout .mj-monthly-rewards-rankings-head h3{margin:0;color:#f3d1a0;font:900 clamp(20px,2vw,28px)/1.16 var(--display),Impact,sans-serif}
+.qg-layout .mj-monthly-rewards-rankings-head p{margin:0;color:#bcb0a1;font-size:12px}
+.qg-layout .mj-monthly-rewards-rank-list{list-style:none;display:flex;flex-direction:column;gap:7px;margin:0;padding:0}
+.qg-layout .mj-monthly-rewards-rank-row{min-height:52px;display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid #443d35;border-radius:9px;background:linear-gradient(90deg,#26221d,#18191c 88%);padding:7px 17px}
+.qg-layout .mj-monthly-rewards-rank-number{display:flex;align-items:center;justify-content:center;width:48px;min-height:32px;border:1px solid #796046;border-radius:7px;background:#32271c;color:#f0c98e;font-size:15px;font-weight:900}
+.qg-layout .mj-monthly-rewards-rank-copy{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#baaea1}
+.qg-layout .mj-monthly-rewards-rank-prize{white-space:nowrap;color:#d5b991;display:flex;align-items:baseline;gap:7px}
+.qg-layout .mj-monthly-rewards-rank-prize strong{font:900 23px/1 var(--display),Impact,sans-serif;color:#f1c884;font-variant-numeric:tabular-nums}
+.qg-layout .mj-monthly-rewards-rank-prize span{font-size:12px;font-weight:700}
+.qg-layout .mj-monthly-rewards-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.qg-layout .mj-monthly-rewards-step{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:213px;padding:24px 21px;border:1px solid #65513a;border-radius:13px;background:linear-gradient(145deg,#1b1c1e,#0f1013)}
+.qg-layout .mj-monthly-rewards-step-number{display:grid;place-items:center;min-width:43px;height:40px;margin-bottom:17px;border:1px solid #aa824d;border-radius:10px;background:#30261b;color:#f1cd90;font:900 17px/1 var(--display),Impact,sans-serif}
+.qg-layout .mj-monthly-rewards-step h3{font:900 clamp(16px,1.5vw,20px)/1.15 var(--display),Impact,sans-serif;color:#f7eee3;margin:0 0 10px}
+.qg-layout .mj-monthly-rewards-step p{font-size:12px;line-height:1.7;color:#c2b8ac;margin:0 0 16px}
+.qg-layout .mj-monthly-rewards-step a{margin-top:auto;font-size:10px;font-weight:900;color:#edc384;letter-spacing:.6px;text-decoration:none;border-bottom:1px solid #9e7948;padding-bottom:4px}
+.qg-layout .mj-monthly-rewards-step a:hover,.qg-layout .mj-monthly-rewards-step a:focus-visible{color:#fff0d7;border-bottom-color:#f3c786}
+.qg-layout .mj-monthly-rewards-challenge{display:grid;grid-template-columns:minmax(145px,.3fr) minmax(0,1fr);gap:clamp(24px,4vw,50px);align-items:center;margin-top:34px;padding:clamp(22px,3.4vw,36px);border:1px solid #b68a52;border-radius:17px;background:radial-gradient(ellipse at 0 50%,#91612b22,transparent 54%),linear-gradient(115deg,#262019,#121315 75%)}
+.qg-layout .mj-monthly-rewards-challenge-art{min-height:176px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:1px solid #9d7848;border-radius:14px;background:radial-gradient(circle at center,#74532b50,#1b1b1d 72%);color:#eac588}
+.qg-layout .mj-monthly-rewards-challenge-art span{font-size:11px;letter-spacing:3px;font-weight:900}
+.qg-layout .mj-monthly-rewards-challenge-art strong{font:900 clamp(67px,7vw,97px)/.95 var(--display),Impact,sans-serif;color:#f3c37d;text-shadow:0 5px 20px #e9a74825}
+.qg-layout .mj-monthly-rewards-challenge-copy h2{font:900 clamp(27px,3vw,42px)/1.1 var(--display),Impact,sans-serif;color:#f7efe2;margin:10px 0 12px}
+.qg-layout .mj-monthly-rewards-challenge-copy h2 span{color:#f0c98a}
+.qg-layout .mj-monthly-rewards-challenge-copy p{font-size:13px;line-height:1.76;color:#c9bcae;max-width:790px;margin:0 0 12px}
+.qg-layout .mj-monthly-rewards-challenge-copy .mj-monthly-rewards-challenge-note{font-size:11px;color:#dac6ab;border-top:1px solid #554431;margin:17px 0 0;padding-top:13px}
+.qg-layout .mj-monthly-rewards-challenge-note span{color:#edbd75}
+.qg-layout .mj-monthly-rewards-rules{padding:25px 29px;border:1px solid #5e5141;border-radius:15px;background:linear-gradient(145deg,#1b1b1d,#111216)}
+.qg-layout .mj-monthly-rewards-rules-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 22px;padding:0;margin:18px 0 0;list-style:none}
+.qg-layout .mj-monthly-rewards-rules-list li{display:flex;align-items:flex-start;gap:11px;min-width:0;padding:14px 0;border-top:1px solid #443b33}
+.qg-layout .mj-monthly-rewards-rule-symbol{display:grid;place-items:center;width:27px;height:27px;flex:0 0 27px;border:1px solid #926d3f;border-radius:8px;color:#e8c282;background:#29221a;font-size:14px;font-weight:900}
+.qg-layout .mj-monthly-rewards-rules-list li>span:last-child{display:flex;flex-direction:column;gap:4px}
+.qg-layout .mj-monthly-rewards-rules-list strong{font-size:13px;color:#f0d0a0}
+.qg-layout .mj-monthly-rewards-rules-list li>span:last-child>span{font-size:12px;color:#bdb2a8;line-height:1.65}
+.qg-layout .mj-monthly-rewards-footer{display:flex;justify-content:space-between;align-items:center;gap:22px;margin-top:30px;padding:25px 27px;border:1px solid #70573b;border-radius:14px;background:linear-gradient(105deg,#241d17,#121315)}
+.qg-layout .mj-monthly-rewards-footer>div:first-child{min-width:0;flex:1}
+.qg-layout .mj-monthly-rewards-footer-star{color:#e7bc75;margin-right:7px}
+.qg-layout .mj-monthly-rewards-footer strong{color:#f6d09b;font:900 clamp(17px,1.8vw,23px)/1.1 var(--display),Impact,sans-serif}
+.qg-layout .mj-monthly-rewards-footer p{color:#bfb2a3;font-size:12px;line-height:1.65;margin:8px 0 0;max-width:610px}
+.qg-layout .mj-monthly-rewards-footer-actions{display:flex;flex-wrap:wrap;gap:10px;flex:none}
+.qg-layout .mj-monthly-rewards-link{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:11px 16px;border:1px solid #d4a267;border-radius:9px;background:linear-gradient(145deg,#f3d393,#d0a15e);color:#21160d;font-size:11px;font-weight:900;letter-spacing:.3px;text-align:center;text-decoration:none;white-space:nowrap;transition:background .16s,border-color .16s}
+.qg-layout .mj-monthly-rewards-link:hover,.qg-layout .mj-monthly-rewards-link:focus-visible{background:#ffe0a7;color:#21160d}
+.qg-layout .mj-monthly-rewards-link-outline{background:#2e241a;color:#e8ca9b}
+.qg-layout .mj-monthly-rewards-link-outline:hover,.qg-layout .mj-monthly-rewards-link-outline:focus-visible{background:#503923;color:#fff0d6}
+@media(max-width:1000px){.qg-layout .mj-monthly-rewards-footer{flex-direction:column;align-items:stretch}.qg-layout .mj-monthly-rewards-footer-actions{width:100%}.qg-layout .mj-monthly-rewards-link{flex:1}}
+@media(max-width:790px){.qg-layout .mj-monthly-rewards-steps{grid-template-columns:1fr}.qg-layout .mj-monthly-rewards-step{min-height:0}.qg-layout .mj-monthly-rewards-challenge{grid-template-columns:1fr}.qg-layout .mj-monthly-rewards-challenge-art{min-height:145px;max-width:240px;width:100%;justify-self:center}.qg-layout .mj-monthly-rewards-rules-list{grid-template-columns:1fr}.qg-layout .mj-monthly-rewards-section-title{align-items:start;flex-direction:column}.qg-layout .mj-monthly-rewards-section-title>p{margin-top:-6px}}
+@media(max-width:600px){.qg-layout .mj-monthly-rewards{margin:20px auto 25px}.qg-layout .mj-monthly-rewards-hero{padding:23px 19px}.qg-layout .mj-monthly-rewards-kicker,.qg-layout .mj-monthly-rewards-overline{font-size:9px;letter-spacing:1.15px}.qg-layout .mj-monthly-rewards-hero h1{font-size:clamp(34px,8.3vw,49px)}.qg-layout .mj-monthly-rewards-metrics{gap:4px;margin-top:22px;padding-top:17px}.qg-layout .mj-monthly-rewards-metrics strong{font-size:25px}.qg-layout .mj-monthly-rewards-metrics span{font-size:8px;letter-spacing:.2px}.qg-layout .mj-monthly-rewards-grid{grid-template-columns:1fr;gap:11px}.qg-layout .mj-monthly-rewards-card{min-height:123px;display:grid;grid-template-columns:40px 1fr auto;grid-template-rows:auto auto;align-items:center;justify-items:start;text-align:left;gap:5px 12px;padding:16px}.qg-layout .mj-monthly-rewards-medal{grid-column:1;grid-row:1/3;font-size:30px}.qg-layout .mj-monthly-rewards-place{grid-column:2;grid-row:1;letter-spacing:.3px}.qg-layout .mj-monthly-rewards-coins{grid-column:2;grid-row:2;font-size:37px}.qg-layout .mj-monthly-rewards-unit{grid-column:3;grid-row:2;font-size:10px;white-space:nowrap}.qg-layout .mj-monthly-rewards-rankings{padding:18px 13px}.qg-layout .mj-monthly-rewards-rank-row{grid-template-columns:47px minmax(0,1fr) auto;gap:8px;padding:8px 10px}.qg-layout .mj-monthly-rewards-rank-number{width:42px;min-height:30px;font-size:13px}.qg-layout .mj-monthly-rewards-rank-copy{font-size:8px;letter-spacing:.2px}.qg-layout .mj-monthly-rewards-rank-prize{gap:3px}.qg-layout .mj-monthly-rewards-rank-prize strong{font-size:22px}.qg-layout .mj-monthly-rewards-rank-prize span{font-size:10px}.qg-layout .mj-monthly-rewards-rules{padding:20px 17px}.qg-layout .mj-monthly-rewards-footer{padding:21px 16px}.qg-layout .mj-monthly-rewards-footer-actions{flex-direction:column}.qg-layout .mj-monthly-rewards-link{width:100%}}
+@media(prefers-reduced-motion:reduce){.qg-layout .mj-monthly-rewards-link{transition:none}}
