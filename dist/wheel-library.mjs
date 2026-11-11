@@ -61,11 +61,17 @@ export function imageKey(wheelId, choiceId) {
     ? choiceId : wheelId + ':' + choiceId;
 }
 export function wheelToPois(wheel) {
-  return wheel.choices.map(choice => ({
-    ...choice,
-    lines: choice.name.length > 20 ? [choice.name.slice(0, 19).trim(), choice.name.slice(19, 38).trim()] : [choice.name],
-    image: choice.originalImage
-  }));
+  return wheel.choices.map(choice => {
+    const words=choice.name.split(/\s+/);
+    const lines=[];
+    for(const word of words){
+      if(!lines.length || (lines[lines.length-1].length + 1 + word.length > 21 && lines.length < 2))lines.push(word);
+      else lines[lines.length-1]+=' '+word;
+    }
+    if(lines[1]?.length>24)lines[1]=lines[1].slice(0,23)+'…';
+    if(lines[0]?.length>24)lines[0]=lines[0].slice(0,23)+'…';
+    return {...choice,lines:lines.length?lines:[choice.name],image:choice.originalImage};
+  });
 }
 export function cleanNames(text) {
   const raw = String(text || '').split(/\r?\n/).map(safeName).filter(Boolean);
@@ -93,9 +99,13 @@ export function parseWheelImport(text) {
     names.add(lower);
     const image = item?.image;
     if (image !== undefined && (typeof image !== 'string' ||
-      !/^data:image\/(?:webp|png|jpeg|avif);base64,[A-Za-z0-9+/=]+$/.test(image) || image.length > 1_000_000))
+      !/^data:image\/(?:webp|png|jpeg|avif);base64,[A-Za-z0-9+/=]+$/.test(image) || image.length > 3_000_000))
       throw new Error('Une image intégrée est invalide ou trop volumineuse.');
     return { name, originalImage: imagePath(item.originalImage), image };
   });
-  return { name: safeName(data.name) || 'Roue importée', choices };
+  const enabled=new Set(Array.isArray(data.selectedNames)?data.selectedNames.filter(v=>typeof v==='string'):[]);
+  return { name: safeName(data.name) || 'Roue importée', choices,
+    selectedNames:enabled.size?[...enabled]:choices.map(c=>c.name),
+    duration:['5','8','12'].includes(String(data.duration))?String(data.duration):'8'
+  };
 }
