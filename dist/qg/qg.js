@@ -4,8 +4,8 @@ import {mountTwitchAuth} from './twitch-auth.js';
 import {helpMarkup,mountHelp} from './aide.js?v=20261109-about1';
 import {contactMarkup,mountContact} from './contact.js?v=20261110-privacy1';
 import {privacyMarkup,mountPrivacy} from './confidentialite.js?v=20261110-privacy1';
-import {boutiqueMarkup,mountBoutique,unmountBoutique} from './boutique.js?v=20261111-reward-images1';
-import {monthlyRewardsMarkup} from './ranking-rewards.js?v=20261111-top10-rewards2';
+import {boutiqueMarkup,mountBoutique,unmountBoutique} from './boutique.js?v=20261111-clean-rewards1';
+import {monthlyRewardsMarkup} from './ranking-rewards.js?v=20261111-clean-rewards1';
 import {profileMarkup,mountProfile,publicProfileMarkup,mountPublicProfile,renderPublicMember,renderPrivateMember} from './profil.js?v=20261110-ranking-profiles1';
 import {killathonMarkup,mountKillathon} from './killathon.js?v=20261108-auth-sync1';
 import {tribunalMarkup,mountTribunal,unmountTribunal} from './tribunal.js?v=20261108-copyrefresh1';
@@ -17,7 +17,7 @@ const voteApi=(document.querySelector('meta[name="majestik-members-api"]')?.cont
 const names = {accueil:'Accueil',roue:'La roue',defis:'Défis & missions',killathon:'Killathon',tribunal:'Tribunal communautaire',classement:'Classements','recompenses-mensuelles':'Récompenses mensuelles',boutique:'Boutique & Récompenses',setup:'Mon setup interactif',partenaires:'À propos du QG',apropos:'À propos du QG',createur:'Code créateur',profil:'Mon profil',membre:'Profil membre',aide:'Centre d’aide',contact:'Nous contacter',confidentialite:'Politique de confidentialité'};
 const modules = [
 {path:'roue',icon:'🎡',title:'La roue',desc:'Un outil interactif pour laisser le hasard choisir. De nouvelles utilisations pourront être ajoutées progressivement.',ready:true},
-{path:'defis',icon:'⚔️',title:'Défis & missions',desc:'118 défis Fortnite Zero Build validés : Solo, Duo, Trio, Quatuor et filtres par difficulté.',ready:true},
+{path:'defis',icon:'⚔️',title:'Défis & missions',desc:'Des défis à découvrir en solo ou en équipe. D’autres jeux pourront rejoindre le QG.',ready:true},
 {path:'killathon',icon:'🎯',title:'Killathon Ma_JesTik',desc:'Compteur personnel, objectif et affichage OBS pour chaque streamer. Prêt à utiliser.',ready:true},
 {path:'tribunal',icon:'⚖️',title:'Tribunal communautaire',desc:'Propose des questions, vote avec Twitch et découvre les résultats partagés.',ready:tribunalPublicEnabled},
 {path:'classement',icon:'🏆',title:'Classements',desc:'Des tableaux partagés liés aux comptes et aux activités, sans faux résultats.',ready:votesEnabled}
@@ -30,7 +30,7 @@ function home(){
  const paths=[
   {path:'roue',overline:'01 / LE HASARD',title:'LA ROUE',summary:'Une décision à prendre ? Laisse le hasard trancher.',image:'roue',name:'Explorer la roue',featured:true},
   {path:'tribunal',overline:'02 / LA COMMUNAUTÉ',title:'LE TRIBUNAL',summary:'Propose tes idées, participe aux votes et découvre les résultats.',image:'tribunal',name:'Entrer au Tribunal',featured:true},
-  {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'118 défis Zero Build à relever en solo ou en équipe.',image:'defis',name:'Découvrir les défis'},
+  {path:'defis',overline:'03 / RELEVER LE DÉFI',title:'DÉFIS & MISSIONS',summary:'Des défis à relever en solo ou en équipe, sur différents jeux !',image:'defis',name:'Découvrir les défis'},
   {path:'killathon',overline:'04 / LE COMPTEUR',title:'KILLATHON',summary:'Fixe ton objectif et suis tes éliminations en direct.',image:'killathon',name:'Lancer le Killathon'},
   {path:'classement',overline:'05 / LES SCORES',title:'CLASSEMENTS',summary:'Découvre les scores et performances de la communauté.',image:'classement',name:'Voir les classements'}
  ];
@@ -47,7 +47,7 @@ function home(){
    '<div class="hq-hero-content">'+
 
     '<h1 id="hqHeroTitle">BIENVENUE<br><span>DANS LE QG</span><br><span>DE MA_JESTIK.</span></h1>'+
-    '<p class="hq-hero-lead">Fais tourner la roue, relève 118 défis Zero Build et participe aux votes du Tribunal.</p>'+
+    '<p class="hq-hero-lead">Fais tourner la roue, relève des défis et participe aux votes du Tribunal.</p>'+
     '<div class="hq-hero-buttons">'+
      '<button class="hq-hero-primary" type="button" data-scroll="hq-explorer">DÉCOUVRIR LE QG </button>'+
 

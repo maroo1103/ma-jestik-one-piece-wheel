@@ -85,7 +85,7 @@ function modalMarkup(reward){
  return '<div class="mj-shop-modal-window">'+
  '<button type="button" class="mj-shop-modal-close" aria-label="Fermer la fiche de récompense">×</button>'+
  '<div class="mj-shop-modal-grid">'+
- '<div class="mj-shop-modal-figure"><div class="mj-shop-modal-art mj-shop-modal-art-'+reward.id+'">'+visualMarkup(reward)+'</div><p class="mj-shop-modal-art-note">Visuel illustratif · Récompense à commander sur Discord</p></div>'+
+ '<div class="mj-shop-modal-figure"><div class="mj-shop-modal-art mj-shop-modal-art-'+reward.id+'">'+visualMarkup(reward)+'</div></div>'+
  '<div class="mj-shop-modal-content">'+
  '<span class="mj-shop-modal-eyebrow">'+details.category+'</span>'+
  '<h2 id="mjShopDialogTitle">'+reward.title+'</h2>'+
@@ -96,7 +96,7 @@ function modalMarkup(reward){
  '<div><dt>Remise</dt><dd>'+details.delivery+'</dd></div>'+
  '<div><dt>Disponibilité</dt><dd>'+details.availability+'</dd></div>'+
  '</dl>'+
- (reward.condition?'<p class="mj-shop-modal-condition">'+reward.condition+'</p>':'')+
+
  '<p class="mj-shop-modal-notice">'+details.note+'</p>'+
  '<a class="mj-shop-modal-order" href="'+orderUrl+'" target="_blank" rel="noopener noreferrer">COMMANDER SUR DISCORD</a>'+
  '<p class="mj-shop-modal-disclaimer">Achats, pièces et stocks gérés exclusivement par DraftBot dans le salon #commande-boutique. Ce bouton n’effectue aucun achat automatique.</p>'+

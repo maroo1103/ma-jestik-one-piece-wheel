@@ -50,7 +50,7 @@ test("Accueil : les cinq affiches validees sont conservees et les ressources son
   assert.ok(js.includes("image:'"+key+"'"));
  }
  const html=src("dist/qg/index.html");
- assert.match(html,/qg\.js\?v=20261111-top10-rewards2/);
+ assert.match(html,/qg\.js\?v=20261111-clean-rewards1/);
  assert.match(html,/home-premium\.css\?v=[a-zA-Z0-9-]+/);
 });
 
@@ -203,7 +203,7 @@ test("Footer : maquette fidèlement reprise avec arcs dorés et bandeau intégr�
  assert.match(css,/\.mj-footer-arc-bottom\{bottom:70px;right:-8px;transform:rotate\(180deg\)\}/);
  assert.match(css,/\.mj-footer-column-heading/);
  assert.match(html,/footer-help\.css\?v=[a-zA-Z0-9-]+/);
- assert.match(html,/qg\.js\?v=20261111-top10-rewards2/);
+ assert.match(html,/qg\.js\?v=20261111-clean-rewards1/);
 });
 
 
@@ -233,7 +233,7 @@ test("Boutique QG : catalogue Discord, route et interdictions visuelles",()=>{
  const shop=src("dist/qg/boutique.js");
  const css=src("dist/qg/boutique.css");
  assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
- assert.match(html,/qg\.js\?v=20261111-top10-rewards2/);
+ assert.match(html,/qg\.js\?v=20261111-clean-rewards1/);
  assert.match(html,/href="#\/boutique" data-page="boutique"/);
  assert.equal((html.match(/href="#\/boutique">Boutique &amp; récompenses/g)||[]).length,2);
  assert.match(js,/import \{boutiqueMarkup,mountBoutique,unmountBoutique\} from '.\/boutique\.js/);
@@ -299,7 +299,7 @@ test("Boutique QG : cinq récompenses ouvrent des fiches natives accessibles",()
  assert.match(shop,/Achats, pièces et stocks gérés exclusivement par DraftBot/);
  assert.match(qg,/unmountBoutique\(\)/);
  assert.match(qg,/if\(page==='boutique'\)mountBoutique\(\)/);
- assert.match(qg,/boutique\.js\?v=20261111-reward-images1/);
+ assert.match(qg,/boutique\.js\?v=20261111-clean-rewards1/);
  assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
  assert.match(css,/\.mj-shop-dialog::backdrop/);
  assert.match(css,/@media\(max-width:740px\)/);
@@ -330,7 +330,7 @@ test("Boutique QG : images utilisateur des cinq récompenses, avec repli sûr",(
  assert.match(css,/\.mj-shop-modal-owned-image\{/);
  assert.match(css,/\.mj-shop-modal-fallback\[hidden\]\{display:none\}/);
  assert.match(html,/boutique\.css\?v=20261111-reward-images1/);
- assert.match(qg,/boutique\.js\?v=20261111-reward-images1/);
+ assert.match(qg,/boutique\.js\?v=20261111-clean-rewards1/);
 });
 
 
@@ -339,13 +339,13 @@ test("Classement QG : primes mensuelles visibles uniquement comme projet, sans f
  const main=src("dist/qg/qg.js");
  const rewards=src("dist/qg/ranking-rewards.js");
  const style=src("dist/qg/ranking-rewards.css");
- assert.match(main,/import \{monthlyRewardsMarkup\} from '\.\/ranking-rewards\.js\?v=20261111-top10-rewards2'/);
+ assert.match(main,/import \{monthlyRewardsMarkup\} from '\.\/ranking-rewards\.js\?v=20261111-clean-rewards1'/);
  assert.match(main,/'recompenses-mensuelles':monthlyRewardsMarkup/);
  assert.doesNotMatch(main,/<\/section><\/section>'\+monthlyRewardsMarkup\(\)/);
  assert.match(main,/fetch\(voteApi\+'\/v1\/ranking'/); // classement général inchangé
  assert.match(rewards,/export function monthlyRewardsMarkup\(\)/);
  assert.doesNotMatch(rewards,/EN PRÉPARATION|DraftBot/);
- for(const value of ["500","300","200","100","80","70","60","50","40","30"]){
+ for(const value of ["300","200","100","75","60","50","40","30","20","10"]){
   assert.ok(rewards.includes(value),"Prime manquante : "+value);
  }
  assert.match(rewards,/premier mois de compétition sera annoncé/);
@@ -355,7 +355,7 @@ test("Classement QG : primes mensuelles visibles uniquement comme projet, sans f
  assert.doesNotMatch(rewards,/fetch\(|localStorage|sessionStorage|data-member-id/);
  assert.ok(!rewards.includes('/adminargent'));
  assert.match(html,/ranking-rewards\.css\?v=20261111-top10-rewards1/);
- assert.match(html,/qg\.js\?v=20261111-top10-rewards2/);
+ assert.match(html,/qg\.js\?v=20261111-clean-rewards1/);
  assert.match(style,/\.mj-monthly-rewards-grid\{display:grid/);
  assert.match(style,/@media\(max-width:600px\)/);
 });
@@ -379,7 +379,7 @@ test("Récompenses mensuelles : page indépendante dans Communauté, classement 
  assert.match(rewards,/<h1 id="mjMonthlyRewardsTitle">/);
  assert.match(css,/\.mj-monthly-rewards-hero h1\{/);
  assert.match(html,/ranking-rewards\.css\?v=20261111-top10-rewards1/);
- assert.match(html,/qg\.js\?v=20261111-top10-rewards2/);
+ assert.match(html,/qg\.js\?v=20261111-clean-rewards1/);
 });
 
 
@@ -388,8 +388,8 @@ test("Récompenses mensuelles : top 10 motivant, budget plafonné et sections sa
  const page=src("dist/qg/ranking-rewards.js");
  const style=src("dist/qg/ranking-rewards.css");
  const html=src("dist/qg/index.html");
- const payouts=[500,300,200,100,80,70,60,50,40,30];
- assert.equal(payouts.reduce((a,b)=>a+b,0),1430);
+ const payouts=[300,200,100,75,60,50,40,30,20,10];
+ assert.equal(payouts.reduce((a,b)=>a+b,0),885);
  assert.equal((page.match(/rank:\d+,place:/g)||[]).length,10);
  for(let rank=1;rank<=10;rank++)assert.match(page,new RegExp("rank:"+rank+",place:"));
  for(let i=0;i<payouts.length;i++)assert.match(page,new RegExp("coins:"+payouts[i]+"(?:,|\\})"));
@@ -409,5 +409,19 @@ test("Récompenses mensuelles : top 10 motivant, budget plafonné et sections sa
  assert.match(style,/\.mj-monthly-rewards-rules-list\{/);
  assert.match(style,/@media\(max-width:600px\)/);
  assert.match(html,/ranking-rewards\.css\?v=20261111-top10-rewards1/);
- assert.match(html,/qg\.js\?v=20261111-top10-rewards2/);
+ assert.match(html,/qg\.js\?v=20261111-clean-rewards1/);
+});
+
+test("Nettoyage demandé : aucun doublon dans les cinq fiches et accroche défis multijeux",()=>{
+ const shop=src("dist/qg/boutique.js");
+ const qg=src("dist/qg/qg.js");
+ const monthly=src("dist/qg/ranking-rewards.js");
+ assert.doesNotMatch(shop,/mj-shop-modal-art-note/);
+ assert.doesNotMatch(shop,/\(reward\.condition\?'<p class="mj-shop-modal-condition"/);
+ assert.match(shop,/mj-shop-modal-notice/);
+ assert.match(qg,/summary:'Des défis à relever en solo ou en équipe, sur différents jeux !'/);
+ assert.doesNotMatch(qg,/118 défis Zero Build/);
+ assert.match(monthly,/PIÈCES À GAGNER PAR MOIS/);
+ const tiers=[300,200,100,75,60,50,40,30,20,10];
+ assert.equal(tiers.reduce((a,b)=>a+b,0),885);
 });

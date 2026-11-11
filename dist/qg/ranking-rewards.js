@@ -2,16 +2,16 @@
    Pas de résultats fictifs, de paiement ni de points modifiables depuis le navigateur.
    Le classement par mois et les versements devront être validés côté serveur avant ouverture. */
 const rewards=[
- {rank:1,place:'1er',medal:'🥇',label:'PREMIÈRE PLACE',coins:500,tone:'gold'},
- {rank:2,place:'2e',medal:'🥈',label:'DEUXIÈME PLACE',coins:300,tone:'silver'},
- {rank:3,place:'3e',medal:'🥉',label:'TROISIÈME PLACE',coins:200,tone:'bronze'},
- {rank:4,place:'4e',coins:100},
- {rank:5,place:'5e',coins:80},
- {rank:6,place:'6e',coins:70},
- {rank:7,place:'7e',coins:60},
- {rank:8,place:'8e',coins:50},
- {rank:9,place:'9e',coins:40},
- {rank:10,place:'10e',coins:30}
+ {rank:1,place:'1er',medal:'🥇',label:'PREMIÈRE PLACE',coins:300,tone:'gold'},
+ {rank:2,place:'2e',medal:'🥈',label:'DEUXIÈME PLACE',coins:200,tone:'silver'},
+ {rank:3,place:'3e',medal:'🥉',label:'TROISIÈME PLACE',coins:100,tone:'bronze'},
+ {rank:4,place:'4e',coins:75},
+ {rank:5,place:'5e',coins:60},
+ {rank:6,place:'6e',coins:50},
+ {rank:7,place:'7e',coins:40},
+ {rank:8,place:'8e',coins:30},
+ {rank:9,place:'9e',coins:20},
+ {rank:10,place:'10e',coins:10}
 ];
 const formatCoins=value=>new Intl.NumberFormat('fr-FR').format(value);
 const totalCoins=rewards.reduce((total,reward)=>total+reward.coins,0);
@@ -48,7 +48,7 @@ export function monthlyRewardsMarkup(){
  '<p class="mj-monthly-rewards-lead">Chaque mois de compétition, les <strong>10 meilleurs membres du QG</strong> pourront remporter des pièces Discord. Participe aux pronostics, grimpe au classement et vise le podium !</p>'+
  '<div class="mj-monthly-rewards-metrics" aria-label="Les chiffres des récompenses">'+
  '<div><strong>10</strong><span>PLACES RÉCOMPENSÉES</span></div>'+
- '<div><strong>'+formatCoins(totalCoins)+'</strong><span>PIÈCES MAXIMUM PAR MOIS</span></div>'+
+ '<div><strong>'+formatCoins(totalCoins)+'</strong><span>PIÈCES À GAGNER PAR MOIS</span></div>'+
  '<div><strong>3</strong><span>PLACES SUR LE PODIUM</span></div>'+
  '</div></header>'+
  '<section class="mj-monthly-rewards-prizes" aria-labelledby="mjMonthlyPrizesTitle">'+
