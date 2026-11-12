@@ -1,3 +1,9 @@
+## Confidentialité — simplification des encadrés du 12 novembre 2026
+- Suite à l'avis du propriétaire, les trois encadrés de bas de section « connexion facultative », « qualification des bases légales » et « état actuel des nettoyages » ont été **supprimés visuellement** de `dist/qg/confidentialite.js`.
+- Les informations RGPD encore utiles ont été **réparties sans encadré** dans les sections existantes : connexion Twitch facultative pour lire le site et saisies facultatives du formulaire ; bases légales envisagées non définitivement qualifiées ; purges quotidiennes et durées du tableau ; anciens sondages sans date de fin à clore manuellement ; durées des journaux et sauvegardes des prestataires encore à préciser.
+- L'encadré restant sur les coordonnées et l'identité civile du responsable n'a **pas** été supprimé : sujet juridique toujours ouvert. Design CSS, navigation sept rubriques et Workers/D1 inchangés.
+- Cache `dist/qg/qg.js` / `dist/qg/index.html` actualisé (version `20261112-privacy-simplifiee1`). Six contrôles ciblés passés par validation de la source, sans prétendre à une certification juridique ni à une validation visuelle sur tous navigateurs.
+
 ## RGPD — mises en service du 12 novembre 2026
 - Audit en lecture seule de la base D1 `ma-jestik-qg-members` : **3 membres, 3 activités, 0 attestation de remise, 1 proposition Tribunal, 0 sondage**, pas d'anomalie au contrôle `PRAGMA foreign_key_check`. **0 élément éligible** aux purges à l'instant du contrôle ; ne pas déduire de cela que les purges futures ne supprimeront jamais rien.
 - Point de récupération D1 (Time Travel) obtenu avant modification ; export SQL D1 généré côté Cloudflare. Les liens temporaires d'export ne constituent pas un archivage de longue durée.
