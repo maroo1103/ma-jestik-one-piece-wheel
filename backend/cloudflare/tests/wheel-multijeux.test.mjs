@@ -311,3 +311,11 @@ test('Rebirth et Verdansk : noms vérifiés, cartes, activation par manifeste et
   assert.match(build,/node --check dist\/warzone-rebirth\.mjs/);
   assert.match(build,/node --check dist\/warzone-verdansk\.mjs/);
 });
+
+// Les miniatures doivent rester visibles sur Verdansk (21 choix) et jusqu'à 25.
+test("La Roue garde les miniatures jusqu'à 25 choix",()=>{
+  const app=source('dist/app.js');
+  assert.match(app,/if\(count>25\)\{/);
+  assert.doesNotMatch(app,/if\(count>20\)\{/);
+  assert.match(app,/group\.append\(svgElement\('image'/);
+});
