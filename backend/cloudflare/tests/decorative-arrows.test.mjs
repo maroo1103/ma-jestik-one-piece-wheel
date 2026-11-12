@@ -10,7 +10,8 @@ test('Site Ma_JesTik : aucun indicateur décoratif ↗ sur les liens et boutons'
 test('Les liens importants et leur destination restent intacts',()=>{
   assert.match(read('dist/qg/index.html'),/href="https:\/\/www\.twitch\.tv\/Ma_Jestikk"/);
   assert.match(read('dist/qg/qg.js'),/href="#\/setup">EXPLORER MON SETUP/);
-  assert.match(read('dist/qg/profil.js'),/Copier le lien public<\/button>/);
+  assert.match(read('dist/qg/profil.js'),/https:\/\/www\.twitch\.tv\//);
+  assert.match(read('dist/qg/profil.js'),/name="public_profile"/);
   assert.match(read('dist/qg/contact.js'),/href="#\/confidentialite"/);
   assert.match(read('dist/roue.html'),/id="sourcesButton"/);
   assert.match(read('dist/qg/setup-original/index.html'),/href="config-pc\.html\?v=/);
