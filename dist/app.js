@@ -64,12 +64,24 @@ function compactWheelLines(name,limit=11){
   }
   return lines.length?lines:[String(name)];
 }
+// Libellés purement visuels de Verdansk : les noms officiels restent inchangés partout ailleurs.
+const VERDANSK_WHEEL_LABELS=Object.freeze({
+  'Military Base':'Military',
+  'TV Station':'TV Sta.',
+  'Storage Town':'Storage',
+  'Train Station':'Train',
+  'Promenade West':'Prom. W',
+  'Promenade East':'Prom. E',
+  'Drone Labs':'Drone Lab'
+});
+function verdanskWheelLabel(name){return VERDANSK_WHEEL_LABELS[name]||name;}
 function drawWheel() {
   const items = active(), count = items.length, step = TAU / count;
   $('rotor').replaceChildren(); $('wheelDefs').replaceChildren(); $('rim').replaceChildren();
   const shades = ['#233e48', '#19313d', '#324740', '#213a44'];
   // Les 12 lieux Fortnite conservent exactement leur disposition d'origine.
   const compact=currentWheelId!=='fortnite'&&(count>=10||items.some(p=>p.name.length>15));
+  const isVerdanskWheel=currentWheelId==='warzone-verdansk';
   for (let i = 0; i < count; i++) {
     const start = -Math.PI/2 + i*step, end = start + step, mid = start+step/2;
     const point = a => `${360 + Math.cos(a)*332},${360+Math.sin(a)*332}`;
@@ -91,14 +103,14 @@ function drawWheel() {
       'clip-path':`url(#thumb-${i})`,
       ...(compact?{transform:`rotate(${-rotation} 0 -21)`}:{})
     }));
-    const lines=compact?compactWheelLines(items[i].name):items[i].lines;
+    const lines=isVerdanskWheel?[verdanskWheelLabel(items[i].name)]:(compact?compactWheelLines(items[i].name):items[i].lines);
     const lower=compact&&((rotation%360+360)%360>90)&&((rotation%360+360)%360<270);
     const rowHeight=compact?17:21,startY=compact?38:37;
     const centerY=startY+(lines.length-1)*rowHeight/2;
     const text=svgElement('text',{
       'text-anchor':'middle',fill:compact?'#fff7e4':'#f6f0d9',
       'font-family':'Barlow Condensed, Arial Narrow, Arial, sans-serif',
-      'font-weight':compact?800:700,'font-size':compact?15:count>14?12:count>9?18:22,
+      'font-weight':compact?800:700,'font-size':isVerdanskWheel?(lines[0].length>9?10.5:lines[0].length>7?11.5:13):(compact?15:count>14?12:count>9?18:22),
       'paint-order':'stroke',stroke:compact?'#10232b':'#102832','stroke-width':compact?2.8:1,
       'stroke-linejoin':'round',
       ...(lower?{transform:`rotate(180 0 ${centerY})`}:{})
