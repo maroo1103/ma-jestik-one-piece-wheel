@@ -152,7 +152,7 @@ function view(state){
    '<section class="mp-panel mp-stats"><h3>◈ STATISTIQUES DU QG</h3><div class="mp-stat-grid">'+
     statCard("★","POINTS QG",fmt(stats?.points))+
     statCard("♛","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
-    statCard("✓","VOTES",fmt(stats?.votes))+
+    statCard("✓","PRONOSTICS",fmt(stats?.votes))+
     statCard("▣","MEMBRE DEPUIS",date(stats?.joined_at))+
    '</div></section>'+
    '<section class="mp-panel mp-games"><div class="mp-panel-heading"><h3>♧ MES JEUX</h3><button type="button" id="mpGamesEdit" class="mp-outline-button">+ Personnaliser</button></div>'+
