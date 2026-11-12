@@ -274,6 +274,23 @@ async function purgeInactiveMembers(env){
   console.log("Purge QG : "+deleted+" compte(s) supprimé(s), lot plafonné à 25.");
 }
 
+// Les remises des missions mensuelles sont conservées 12 mois après leur confirmation.
+// Aucune pièce Discord n'est ajoutée ou retirée : seule l'attestation interne expire.
+async function purgeMonthlyAwards(env){
+  if(!env.DB||env.MONTHLY_AWARDS_RETENTION_ENABLED!=="true"){
+    console.log("Conservation récompenses mensuelles : non activée.");
+    return;
+  }
+  const sql="SELECT COUNT(*) AS n FROM monthly_awards WHERE paid_at<=unixepoch('now','-12 months')";
+  if(env.MONTHLY_AWARDS_RETENTION_DRY_RUN!=="false"){
+    const row=await env.DB.prepare(sql).first();
+    console.log("Conservation récompenses mensuelles en simulation : "+Number(row?.n||0)+" enregistrement(s) admissible(s). Aucune suppression.");
+    return;
+  }
+  const res=await env.DB.prepare("DELETE FROM monthly_awards WHERE paid_at<=unixepoch('now','-12 months')").run();
+  console.log("Conservation récompenses mensuelles : "+Number(res?.meta?.changes||0)+" enregistrement(s) purgé(s).");
+}
+
 // Conservation Tribunal approuvée le 10/11/2026.
 // Ne modifie ni les scores des défis, ni les profils membres.
 // ATTENTION : l'option "sans limite" n'est plus autorisée pour les NOUVEAUX
@@ -408,5 +425,6 @@ export default {
   async scheduled(_controller,env){
     await purgeInactiveMembers(env);
     await purgeTribunalRetention(env);
+    await purgeMonthlyAwards(env);
   }
 };
