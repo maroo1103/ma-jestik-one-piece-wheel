@@ -1,3 +1,9 @@
+## Confidentialité — mise à jour du 12 novembre 2026
+- Page `dist/qg/confidentialite.js` mise à jour en conservant sa structure, sa navigation et ses styles : ajout des explications sur la vitrine Discord/DraftBot, les commandes externes, les missions mensuelles, le calcul de progression Twitch et l'enregistrement D1 des remises déjà effectuées manuellement.
+- Le QG ne récupère pas automatiquement les soldes ni les commandes Discord et n'attribue pas lui-même les pièces ; le suivi des remises enregistre au plus le mois, l'identifiant Twitch, le nombre de pièces et l'horodatage de confirmation.
+- Les historiques `monthly_awards` sont liés aux membres par une clé étrangère `ON DELETE CASCADE` dans la migration, **sans purge autonome ni durée spécifique validée** : définir la durée et contrôler l'effacement réel avant toute déclaration de conformité complète. Les purges membres/Tribunal restent en simulation tant que l'éditeur n'autorise pas de suppression réelle.
+- Cache `dist/qg/qg.js` et `dist/qg/index.html` actualisé ; test ciblé `backend/cloudflare/tests/privacy-boutique-missions.test.mjs`. Aucun changement Worker/D1, aucune récompense distribuée et aucun tiers payant ajouté. Vérifier les exécutions GitHub Actions avant d'affirmer le déploiement.
+
 ## Défis & Missions Warzone — lancement du 11/11/2026
 - **300 défis nouveaux** déployés : **100 Hajin**, **100 Zodiac**, **100 Rebirth Island** ; chacun possède 20 Solo, 20 Duo, 20 Trio, 20 Quatuor et 20 bonus accessibles à toutes compositions. Les noms des lieux proviennent des roues déjà approuvées, avec niveaux Facile/Moyen/Difficile et catégories identiques.
 - **Fortnite inchangé** : 118 défis existants, même présentation et même stockage `ma_jestik_qg_defis_fortnite_v1`. Les trois nouveaux jeux réutilisent exactement l'UI Fortnite mais possèdent chacun leurs sauvegardes, historiques, filtres, activations et tirages.
