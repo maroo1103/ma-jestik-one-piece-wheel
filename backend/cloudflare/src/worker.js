@@ -191,7 +191,9 @@ async function profileStats(db,member){
     const r=await db.prepare("SELECT COUNT(*)+1 AS rank FROM members WHERE visible_in_ranking=1 AND score>0 AND (score>? OR (score=? AND joined_at<?))").bind(member.score,member.score,member.joined_at).first();
     rank=Number(r?.rank)||null;
   }
-  const v=await db.prepare("SELECT COUNT(*) AS total FROM vote_ballots WHERE twitch_id=?").bind(member.twitch_id).first();
+  // Tous les pronostics officiels : Fortnite, Warzone Hajin/Zodiac/Rebirth et Verdansk.
+  // Un seul SELECT avec trois compteurs ; aucun changement des scores ou du classement.
+  const v=await db.prepare("SELECT (SELECT COUNT(*) FROM vote_ballots WHERE twitch_id=?)+(SELECT COUNT(*) FROM vote_ballots_warzone WHERE twitch_id=?)+(SELECT COUNT(*) FROM vote_ballots_verdansk WHERE twitch_id=?) AS total").bind(member.twitch_id,member.twitch_id,member.twitch_id).first();
   return {points:Number(member.score)||0,rank,votes:Number(v?.total)||0,joined_at:member.joined_at};
 }
 async function memberProfileRoute(req,env,origin,path){
