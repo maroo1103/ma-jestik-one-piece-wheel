@@ -31,21 +31,27 @@ async function voteBody(req){
 }
 /* Votes Warzone ajoutés sans remplacer ni migrer les votes Fortnite.
    Une manche communautaire active maximum, tous jeux confondus. */
-const WARZONE_VOTE_GAMES=new Set(['warzone-hajin','warzone-zodiac','warzone-rebirth']);
+const WARZONE_VOTE_GAMES=new Set(['warzone-hajin','warzone-zodiac','warzone-rebirth','warzone-verdansk']);
 const voteTables=game=>game==='fortnite'
   ?{rounds:'vote_rounds',ballots:'vote_ballots',points:'vote_points'}
-  :{rounds:'vote_rounds_warzone',ballots:'vote_ballots_warzone',points:'vote_points_warzone'};
+  :game==='warzone-verdansk'
+   ?{rounds:'vote_rounds_verdansk',ballots:'vote_ballots_verdansk',points:'vote_points_verdansk'}
+   :{rounds:'vote_rounds_warzone',ballots:'vote_ballots_warzone',points:'vote_points_warzone'};
 async function voteTablesById(db,id){
-  const found=await db.prepare("SELECT id FROM vote_rounds_warzone WHERE id=?").bind(id).first();
-  return voteTables(found?'warzone-hajin':'fortnite');
+  const [verdansk,warzone]=await Promise.all([
+    db.prepare("SELECT id FROM vote_rounds_verdansk WHERE id=?").bind(id).first(),
+    db.prepare("SELECT id FROM vote_rounds_warzone WHERE id=?").bind(id).first()
+  ]);
+  return voteTables(verdansk?'warzone-verdansk':warzone?'warzone-hajin':'fortnite');
 }
 async function voteLatest(db){
   // Ne jamais masquer une manche ouverte derrière un résultat publié ensuite.
-  const [fortnite,warzone]=await Promise.all([
+  const [fortnite,warzone,verdansk]=await Promise.all([
     db.prepare("SELECT id,game,challenge_id,challenge_title,team,status,result,created_at,locked_at,resolved_at FROM vote_rounds ORDER BY created_at DESC LIMIT 1").first(),
-    db.prepare("SELECT id,game,challenge_id,challenge_title,team,status,result,created_at,locked_at,resolved_at FROM vote_rounds_warzone ORDER BY created_at DESC LIMIT 1").first()
+    db.prepare("SELECT id,game,challenge_id,challenge_title,team,status,result,created_at,locked_at,resolved_at FROM vote_rounds_warzone ORDER BY created_at DESC LIMIT 1").first(),
+    db.prepare("SELECT id,game,challenge_id,challenge_title,team,status,result,created_at,locked_at,resolved_at FROM vote_rounds_verdansk ORDER BY created_at DESC LIMIT 1").first()
   ]);
-  const rounds=[fortnite,warzone].filter(Boolean);
+  const rounds=[fortnite,warzone,verdansk].filter(Boolean);
   const active=rounds.filter(x=>['open','locked'].includes(x.status));
   const round=(active.length?active:rounds).sort((a,b)=>Number(b.created_at)-Number(a.created_at))[0];
   if(!round)return null;
@@ -139,7 +145,7 @@ async function voteRoute(req,env,origin,path){
         "INSERT OR IGNORE INTO "+points+"(round_id,twitch_id,points) SELECT b.round_id,b.twitch_id,? FROM "+ballots+" b JOIN "+rounds+" r ON r.id=b.round_id JOIN members m ON m.twitch_id=b.twitch_id WHERE r.id=? AND r.status='resolved' AND r.result=? AND b.prediction=?"
       ).bind(choice==="failure"?2:1,id,choice,choice),
       env.DB.prepare(
-        "UPDATE members SET score=COALESCE((SELECT SUM(points) FROM vote_points WHERE twitch_id=members.twitch_id),0)+COALESCE((SELECT SUM(points) FROM vote_points_warzone WHERE twitch_id=members.twitch_id),0),updated_at=CURRENT_TIMESTAMP WHERE twitch_id IN (SELECT twitch_id FROM "+points+" WHERE round_id=?)"
+        "UPDATE members SET score=COALESCE((SELECT SUM(points) FROM vote_points WHERE twitch_id=members.twitch_id),0)+COALESCE((SELECT SUM(points) FROM vote_points_warzone WHERE twitch_id=members.twitch_id),0)+COALESCE((SELECT SUM(points) FROM vote_points_verdansk WHERE twitch_id=members.twitch_id),0),updated_at=CURRENT_TIMESTAMP WHERE twitch_id IN (SELECT twitch_id FROM "+points+" WHERE round_id=?)"
       ).bind(id)
     ];
     const results=await env.DB.batch(steps);
