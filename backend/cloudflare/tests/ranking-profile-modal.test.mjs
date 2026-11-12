@@ -53,3 +53,14 @@ test('Fenêtre plus compacte, dorée, sans cadre navigateur et responsive',()=>{
  assert.match(css,/#qgMemberDialog #qgMemberDialogTitle/);
  assert.match(css,/@media\(max-width:630px\)/);
 });
+
+test('La carte de visibilité a disparu, mais les réglages privés restent disponibles dans la personnalisation',()=>{
+ const profile=read('profil.js');
+ assert.doesNotMatch(profile,/mp-panel mp-privacy|mpShareBtn|Copier le lien public/);
+ assert.match(profile,/name="public_profile"/);
+ assert.match(profile,/name="ranking_visible"/);
+ assert.match(profile,/Rendre mon profil public/);
+ assert.match(profile,/Afficher mon profil dans le classement/);
+ assert.match(profile,/mpEditBtn/);
+ assert.match(profile,/mpGamesEdit/);
+});
