@@ -23,6 +23,7 @@ function fixture() {
     '../migrations/0006_member_profile_palette.sql',
     '../migrations/0007_member_activity.sql',
     '../migrations/0009_warzone_votes.sql',
+    '../migrations/0010_verdansk_votes.sql',
   ]) sql.exec(readFileSync(new URL(path, import.meta.url), 'utf8'));
 
   const d1 = {
@@ -260,5 +261,55 @@ test('Les pronostics Warzone sont séparés des votes Fortnite, attribuent les p
  sql.prepare("DELETE FROM members WHERE twitch_id='222'").run();
  assert.equal(count(sql,'vote_ballots_warzone'),0,'suppression des pronostics Warzone');
  assert.equal(count(sql,'vote_points_warzone'),0,'suppression des points Warzone');
+ sql.close();
+});
+
+
+test('Les pronostics Verdansk fonctionnent sans écraser les manches Fortnite ni les trois autres cartes',async()=>{
+ const {sql,env}=fixture();
+ env.OWNER_TWITCH_ID='111';
+ sql.exec("UPDATE vote_rounds SET status='cancelled' WHERE id='round1'");
+ sql.exec("INSERT INTO vote_rounds_warzone(id,game,challenge_id,challenge_title,team,status) VALUES('legacy-zodiac','warzone-zodiac',2,'Ancienne manche conservée','solo','cancelled')");
+ const call=async(path,body,token='aaaabbbbccccdddd')=>{
+  const req=new Request('https://example.test'+path,{
+   method:body?'POST':'GET',
+   headers:{Authorization:'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},
+   ...(body?{body:JSON.stringify(body)}:{})
+  });
+  const result=await worker.fetch(req,env);
+  return {status:result.status,data:await result.json()};
+ };
+ let restore=mockTwitchUser('111'),round;
+ try{
+  const start=await call('/v1/votes/start',{game:'warzone-verdansk',challenge_id:81,title:'Verdansk, touriste du gaz',team:'solo'});
+  assert.equal(start.status,201,JSON.stringify(start.data));
+  round=start.data.round;
+  assert.equal(round.game,'warzone-verdansk');
+  assert.equal(count(sql,'vote_rounds_verdansk'),1);
+  assert.equal(count(sql,'vote_rounds_warzone'),1,'ancienne manche Zodiac conservée');
+  assert.equal(count(sql,'vote_rounds'),1,'manche Fortnite conservée');
+  assert.equal((await call('/v1/votes/start',{game:'warzone-hajin',challenge_id:1,title:'Manche concurrente',team:'solo'})).status,409);
+ }finally{restore();}
+ restore=mockTwitchUser('222');
+ try{
+  assert.equal((await call('/v1/votes/cast',{round_id:round.id,prediction:'failure'})).status,200);
+  assert.equal((await call('/v1/votes/cast',{round_id:round.id,prediction:'failure'})).status,409,'un seul pronostic');
+ }finally{restore();}
+ restore=mockTwitchUser('111');
+ try{
+  assert.equal((await call('/v1/votes/close',{round_id:round.id})).status,200);
+  const result=await call('/v1/votes/resolve',{round_id:round.id,result:'failure'});
+  assert.equal(result.status,200,JSON.stringify(result.data));
+  assert.equal(result.data.awarded,1);
+  assert.equal(count(sql,'vote_ballots_verdansk'),1);
+  assert.equal(count(sql,'vote_points_verdansk'),1);
+  assert.equal(sql.prepare("SELECT score FROM members WHERE twitch_id='222'").get().score,3,'Fortnite 1 + Verdansk 2');
+  assert.equal((await call('/v1/votes/resolve',{round_id:round.id,result:'failure'})).status,409);
+  assert.equal(count(sql,'vote_rounds_warzone'),1,'Zodiac inchangé');
+ }finally{restore();}
+ sql.prepare("DELETE FROM members WHERE twitch_id='222'").run();
+ assert.equal(count(sql,'vote_ballots_verdansk'),0,'pronostic supprimé en cascade');
+ assert.equal(count(sql,'vote_points_verdansk'),0,'points Verdansk supprimés en cascade');
+ assert.equal(count(sql,'vote_rounds_verdansk'),1,'historique collectif de la manche conservé');
  sql.close();
 });
