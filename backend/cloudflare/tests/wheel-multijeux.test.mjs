@@ -5,6 +5,7 @@ import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname,resolve} from 'node:path';
 import {MAX_CHOICES,makeChoice,loadWheelLibrary,saveWheelLibrary,imageKey,wheelToPois,cleanNames,parseWheelImport,isOfficialWheel} from '../../../dist/wheel-library.mjs';
+import {VERDANSK_POIS} from '../../../dist/warzone-verdansk.mjs';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const root=resolve(here,'../../..');
@@ -318,4 +319,32 @@ test("La Roue garde les miniatures jusqu'à 25 choix",()=>{
   assert.match(app,/if\(count>25\)\{/);
   assert.doesNotMatch(app,/if\(count>20\)\{/);
   assert.match(app,/group\.append\(svgElement\('image'/);
+});
+
+// Le raccourcissement est purement graphique : aucune modification des données officielles.
+test('Verdansk : 21 libellés courts sans altérer les noms des résultats ou les autres roues',()=>{
+  const app=source('dist/app.js');
+  const helper=app.match(/const VERDANSK_WHEEL_LABELS=[\s\S]*?(?=function drawWheel\(\))/)?.[0];
+  assert.ok(helper,'table des noms Verdansk manquante');
+  const label=new Function(helper+'\nreturn verdanskWheelLabel;')();
+  const renamed={
+    'Military Base':'Military',
+    'TV Station':'TV Sta.',
+    'Storage Town':'Storage',
+    'Train Station':'Train',
+    'Promenade West':'Prom. W',
+    'Promenade East':'Prom. E',
+    'Drone Labs':'Drone Lab'
+  };
+  assert.equal(VERDANSK_POIS.length,21);
+  for(const name of VERDANSK_POIS){
+    assert.equal(label(name),renamed[name]||name);
+    assert.ok(label(name).length<=10, 'libellé trop long : '+name);
+  }
+  assert.match(app,/const isVerdanskWheel=currentWheelId==='warzone-verdansk'/);
+  assert.match(app,/const lines=isVerdanskWheel\?\[verdanskWheelLabel\(items\[i\]\.name\)\]/);
+  assert.match(app,/isVerdanskWheel\?\(lines\[0\]\.length>9\?/);
+  assert.match(app,/\$\('resultName'\)\.textContent=winner\.name/);
+  assert.match(app,/name\.textContent=poi\.name/);
+  assert.match(app,/const compact=currentWheelId!=='fortnite'/);
 });
