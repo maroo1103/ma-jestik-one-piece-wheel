@@ -87,7 +87,7 @@ export function privacyMarkup(){
        <tbody>
         <tr><td>Compte, profil, Killathon, points et votes liés au membre</td><td>Jusqu'à la suppression demandée, ou 6 mois consécutifs sans activité Twitch authentifiée.</td></tr>
         <tr><td>Participation aux missions mensuelles</td><td>Progression calculée à partir des pronostics et votes déjà conservés dans le QG, selon les durées indiquées pour ces données.</td></tr>
-        <tr><td>Historique des récompenses mensuelles déclarées remises (identifiant Twitch, mois, pièces, date)</td><td>Enregistrements rattachés au compte membre, dont le schéma prévoit l'effacement avec celui-ci. Aucune durée autonome de conservation ni purge dédiée n'est encore fixée : ce point reste à finaliser.</td></tr>
+        <tr><td>Historique des remises des missions mensuelles (identifiant Twitch, mois, pièces, date)</td><td>12 mois après la confirmation de la remise, ou plus tôt si le compte QG associé est effacé. La purge automatique est planifiée quotidiennement.</td></tr>
         <tr><td>Propositions Tribunal en attente</td><td>3 mois après leur création.</td></tr>
         <tr><td>Propositions Tribunal refusées</td><td>30 jours après la décision.</td></tr>
         <tr><td>Propositions Tribunal acceptées</td><td>6 mois après la décision.</td></tr>
@@ -96,7 +96,7 @@ export function privacyMarkup(){
        </tbody>
       </table>
      </div>
-     <p class="mj-privacy-detail"><strong>État actuel :</strong> les nettoyages automatiques des comptes inactifs et des historiques du Tribunal fonctionnent en <strong>mode simulation</strong> ; aucune purge réelle n'est activée. Les demandes de suppression sont traitées via la fonctionnalité de profil lorsqu'elle s'applique, ou par contact direct. Les anciens sondages sans limite, s'il en existe, doivent être clos manuellement. Les durées des journaux techniques, des sauvegardes, des copies conservées par les prestataires et les durées spécifiques des historiques de récompenses restent à préciser.</p>
+     <p class="mj-privacy-detail"><strong>État actuel :</strong> les nettoyages automatiques sont <strong>activés</strong> dans le Worker du QG, avec une vérification quotidienne programmée à 3 h UTC. Ils concernent les comptes dont la dernière activité Twitch authentifiée enregistrée remonte à au moins six mois, les contenus du Tribunal arrivés à échéance et les attestations de récompenses mensuelles datant de plus de douze mois. Les anciens sondages sans date de fin, s'il en existe, doivent toujours être clos manuellement. Une suppression demandée par un membre est distincte du nettoyage quotidien et s'effectue depuis le profil lorsqu'elle s'applique, ou par contact direct. Les durées des journaux techniques, des sauvegardes et des copies conservées par les prestataires restent à préciser. Les prochaines exécutions programmées devront être surveillées pour confirmer leur bon déroulement.</p>
     </section>
 
     <section class="mj-privacy-section" id="mj-privacy-droits" aria-labelledby="mj-privacy-droits-title">
@@ -104,7 +104,7 @@ export function privacyMarkup(){
      <h2 id="mj-privacy-droits-title">TES DROITS SUR TES DONNÉES</h2>
      <p>Selon ta situation et les conditions prévues par le RGPD, tu peux demander l'accès à tes données, leur correction, leur effacement ou leur limitation, t'opposer à certains traitements, et demander la portabilité lorsqu'elle est applicable.</p>
      <p>Tu peux modifier les informations et réglages publics de ton profil dans <a href="#/profil">Mon profil</a>. La rubrique permet aussi de demander la suppression du compte QG. Cette suppression ne touche pas ton compte Twitch.</p>
-     <p>Si tu as voté ou proposé une question au Tribunal sans créer de profil QG, écris-nous directement : il n'est pas nécessaire de créer un compte pour exercer tes droits. Les textes libres, historiques techniques et sauvegardes peuvent nécessiter un traitement distinct.</p>
+     <p>Si tu as voté ou proposé une question au Tribunal sans créer de profil QG, écris-nous directement : il n'est pas nécessaire de créer un compte pour exercer tes droits. Un accès et un effacement de ces participations peuvent être effectués après vérification de l'identité Twitch par le service du Tribunal ; tu peux aussi nous contacter à ce sujet. Les textes libres, historiques techniques et sauvegardes peuvent nécessiter un traitement distinct.</p>
      <p>Les informations de progression et de récompense rattachées à ton compte QG peuvent aussi faire l'objet d'une demande. La suppression du compte QG ne supprime pas ton compte Discord, les messages de commande ni les informations détenues par Discord ou DraftBot : adresse-toi également à ces services pour leurs propres données.</p>
      <div class="mj-privacy-contact">
       <div><strong>UNE QUESTION OU UNE DEMANDE RGPD ?</strong><span>Contact direct, même sans profil Ma_JesTik.</span></div>
