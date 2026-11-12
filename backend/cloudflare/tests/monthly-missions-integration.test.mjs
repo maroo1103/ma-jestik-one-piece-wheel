@@ -41,6 +41,9 @@ test('Mission : les activités dédoublonnées et résolues sont comptées côt�
   const {readFileSync}=await import('node:fs');
   const schema=readFileSync(new URL('../migrations/0008_monthly_missions.sql',import.meta.url),'utf8');
   db.exec(schema);
+  // Les missions lisent désormais les trois familles de pronostics.
+  db.exec(readFileSync(new URL('../migrations/0009_warzone_votes.sql',import.meta.url),'utf8'));
+  db.exec(readFileSync(new URL('../migrations/0010_verdansk_votes.sql',import.meta.url),'utf8'));
   const env={DB:mockD1(db),TWITCH_CLIENT_ID:'client-test',OWNER_TWITCH_ID:'213078400'};
   const month=monthParis(),bounds=monthBounds(month),now=Math.floor(Date.now()/1000);
   const since=Math.max(bounds.start,now-3600);
