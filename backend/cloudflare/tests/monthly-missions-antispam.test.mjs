@@ -53,6 +53,8 @@ test('Anti-spam : F5 répété réutilise le résultat et isole les comptes Twit
    "CREATE TABLE tribunal_votes(poll_id TEXT,twitch_id TEXT,created_at INTEGER,PRIMARY KEY(poll_id,twitch_id));");
   const {readFileSync}=await import('node:fs');
   db.exec(readFileSync(new URL('../migrations/0008_monthly_missions.sql',import.meta.url),'utf8'));
+  db.exec(readFileSync(new URL('../migrations/0009_warzone_votes.sql',import.meta.url),'utf8'));
+  db.exec(readFileSync(new URL('../migrations/0010_verdansk_votes.sql',import.meta.url),'utf8'));
   const month=monthParis(),start=monthBounds(month).start;
   db.prepare('INSERT INTO members(twitch_id,display_name) VALUES(?,?)').run('991100','Membre A');
   db.prepare('INSERT INTO members(twitch_id,display_name) VALUES(?,?)').run('991101','Membre B');
