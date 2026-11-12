@@ -1,15 +1,16 @@
-/* Vérification de 300 défis Warzone, préservation de Fortnite et des favoris locaux. */
+/* Vérification de 400 défis Warzone, préservation de Fortnite et des favoris locaux. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {dirname,resolve} from 'node:path';
 import {WARZONE_CHALLENGES,WARZONE_CHALLENGE_GAMES} from '../../../dist/qg/warzone-challenges.mjs';
+import {VERDANSK_POIS} from '../../../dist/warzone-verdansk.mjs';
 const here=dirname(fileURLToPath(import.meta.url));
 const source=path=>readFileSync(resolve(here,'../../..',path),'utf8');
 
-test('trois catalogues Warzone complets, 100 défis chacun, 20 par composition',()=>{
- assert.deepEqual(Object.keys(WARZONE_CHALLENGES).sort(),['warzone-hajin','warzone-rebirth','warzone-zodiac']);
+test('quatre catalogues Warzone complets, 100 défis chacun, 20 par composition',()=>{
+ assert.deepEqual(Object.keys(WARZONE_CHALLENGES).sort(),['warzone-hajin','warzone-rebirth','warzone-verdansk','warzone-zodiac']);
  for(const [game,rows] of Object.entries(WARZONE_CHALLENGES)){
   assert.equal(rows.length,100,game);
   assert.deepEqual(rows.map(x=>x[0]),Array.from({length:100},(_,i)=>i+1));
@@ -32,6 +33,14 @@ test('les défis sont spécifiques à chaque carte et gardent les POI officiels'
  assert.match(WARZONE_CHALLENGE_GAMES['warzone-hajin'].a,/Chang-san Air Base/);
  assert.equal(WARZONE_CHALLENGE_GAMES['warzone-zodiac'].a,'Admin');
  assert.equal(WARZONE_CHALLENGE_GAMES['warzone-rebirth'].a,'Bioweapons');
+ assert.equal(WARZONE_CHALLENGE_GAMES['warzone-verdansk'].a,'Dam');
+ assert.equal(VERDANSK_POIS.length,21);
+ const verdansk=WARZONE_CHALLENGES['warzone-verdansk'];
+ for(const poi of VERDANSK_POIS){
+  assert.ok(verdansk.some(row=>(row[1]+' '+row[2]).includes(poi)),'Lieu Verdansk absent : '+poi);
+ }
+ assert.ok(verdansk.some(x=>x[1].includes('Drone Labs')));
+
  const sets=Object.values(WARZONE_CHALLENGES);
  for(let i=0;i<sets.length;i++)for(let j=i+1;j<sets.length;j++){
   assert.ok(sets[i].filter((row,k)=>row[2]!==sets[j][k][2]).length>=20,'Les règles doivent être adaptées selon la carte');
@@ -57,8 +66,8 @@ test('écran Défis préserve les 118 Fortnite et copie les mêmes composants po
  assert.doesNotMatch(ui,/challengeViewerForm|Proposition viewer|data-action="mode"/);
  assert.match(ui,/mountChallengeProposals/);
  const qg=source('dist/qg/qg.js'),html=source('dist/qg/index.html');
- assert.match(qg,/defis\.js\?v=20261112-defis-owner-simplified/);
- assert.match(html,/qg\.js\?v=20261112-defis-owner-simplified/);
+ assert.match(qg,/defis\.js\?v=20261112-verdansk-challenges1/);
+ assert.match(html,/qg\.js\?v=20261112-verdansk-challenges1/);
 });
 
 test('votes Warzone et Fortnite correctement séparés avec la même interface',()=>{
@@ -68,6 +77,15 @@ test('votes Warzone et Fortnite correctement séparés avec la même interface',
  assert.match(ui,/await votePanel\?\.publishCurrent\(\)/);
  assert.match(worker,/vote_rounds_warzone/);
  assert.match(worker,/WARZONE_VOTE_GAMES/);
+ assert.match(worker,/vote_rounds_verdansk/);
+ assert.match(worker,/vote_points_verdansk/);
+ assert.match(votes,/warzone-verdansk/);
+ assert.match(proposals,/⊛V⊛/);
+ assert.match(ui,/warzone-challenges\.mjs\?v=20261112-verdansk-challenges1/);
+ const migration=source('backend/cloudflare/migrations/0010_verdansk_votes.sql');
+ assert.match(migration,/CHECK\(game='warzone-verdansk'\)/);
+ assert.match(migration,/REFERENCES members\(twitch_id\) ON DELETE CASCADE/);
+ assert.doesNotMatch(migration,/DROP TABLE|ALTER TABLE/i);
  const proposals=source('dist/qg/challenge-proposals.js');
  assert.match(proposals,/getGame/);
  assert.match(proposals,/GAME_MARKERS/);
