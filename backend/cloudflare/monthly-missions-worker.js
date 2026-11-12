@@ -60,9 +60,19 @@ async function parseBody(req){
  try{const obj=JSON.parse(raw);return obj&&!Array.isArray(obj)&&typeof obj==='object'?obj:null;}catch{return null;}
 }
 async function memberExists(db,id){return !!await db.prepare('SELECT twitch_id FROM members WHERE twitch_id=?').bind(id).first();}
+/* Même règle pour les joueurs et pour l'administration : une participation
+   à un pronostic officiel résolu compte une fois, qu'il soit Fortnite, Hajin,
+   Zodiac, Rebirth Island ou Verdansk. Seule la date de vote est retenue ;
+   les prédictions incorrectes comptent aussi, sans modifier les points. */
+const RESOLVED_PREDICTION_EVENTS_SQL=[
+ "SELECT b.twitch_id,b.created_at FROM vote_ballots b JOIN vote_rounds r ON r.id=b.round_id WHERE r.status='resolved'",
+ "SELECT b.twitch_id,b.created_at FROM vote_ballots_warzone b JOIN vote_rounds_warzone r ON r.id=b.round_id WHERE r.status='resolved'",
+ "SELECT b.twitch_id,b.created_at FROM vote_ballots_verdansk b JOIN vote_rounds_verdansk r ON r.id=b.round_id WHERE r.status='resolved'"
+].join(' UNION ALL ');
+
 async function progress(db,id,m){
  const {since,until}=times(m);
- const pred=await db.prepare("SELECT COUNT(*) AS n FROM vote_ballots b JOIN vote_rounds r ON r.id=b.round_id WHERE b.twitch_id=? AND r.status='resolved' AND b.created_at>=? AND b.created_at<?").bind(id,since,until).first();
+ const pred=await db.prepare("SELECT COUNT(*) AS n FROM ("+RESOLVED_PREDICTION_EVENTS_SQL+") b WHERE b.twitch_id=? AND b.created_at>=? AND b.created_at<?").bind(id,since,until).first();
  const poll=await db.prepare('SELECT COUNT(*) AS n FROM tribunal_votes v JOIN tribunal_polls p ON p.id=v.poll_id WHERE v.twitch_id=? AND v.created_at>=? AND v.created_at<?').bind(id,since,until).first();
  const predictions=Number(pred?.n||0),polls=Number(poll?.n||0);
  const complete=predictions>=Number(m.prediction_target)&&polls>=Number(m.poll_target);
@@ -75,7 +85,7 @@ async function adminProgress(db,m){
  const result=await db.prepare(
   "SELECT m.twitch_id,m.display_name,COALESCE(v.n,0) AS predictions,COALESCE(t.n,0) AS polls,a.paid_at "+
   "FROM members m "+
-  "LEFT JOIN (SELECT b.twitch_id,COUNT(*) AS n FROM vote_ballots b JOIN vote_rounds r ON r.id=b.round_id WHERE r.status='resolved' AND b.created_at>=? AND b.created_at<? GROUP BY b.twitch_id) v ON v.twitch_id=m.twitch_id "+
+  "LEFT JOIN (SELECT b.twitch_id,COUNT(*) AS n FROM ("+RESOLVED_PREDICTION_EVENTS_SQL+") b WHERE b.created_at>=? AND b.created_at<? GROUP BY b.twitch_id) v ON v.twitch_id=m.twitch_id "+
   "LEFT JOIN (SELECT x.twitch_id,COUNT(*) AS n FROM tribunal_votes x JOIN tribunal_polls p ON p.id=x.poll_id WHERE x.created_at>=? AND x.created_at<? GROUP BY x.twitch_id) t ON t.twitch_id=m.twitch_id "+
   "LEFT JOIN monthly_awards a ON a.month=? AND a.twitch_id=m.twitch_id "+
   "WHERE COALESCE(v.n,0)>0 OR COALESCE(t.n,0)>0 OR a.twitch_id IS NOT NULL "+
@@ -116,7 +126,7 @@ async function trafficAllowed(req,env){
 /* Le cache interne utilise une URL inaccessible depuis l'API publique.
    Aucune réponse privée n'est consultée avant validation Twitch du demandeur.
    Le token OAuth n'apparaît jamais dans les clés ; le navigateur reste no-store. */
-function cacheRequest(req,key){return new Request(new URL(req.url).origin+'/__monthly_internal_cache/'+encodeURIComponent(key));}
+function cacheRequest(req,key){return new Request(new URL(req.url).origin+'/__monthly_internal_cache/v2-all-games/'+encodeURIComponent(key));}
 function storeLocal(key,value,ttl){
  const now=Date.now();
  localResults.set(key,{until:now+ttl*1000,value});
