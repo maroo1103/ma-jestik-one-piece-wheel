@@ -144,9 +144,6 @@ function view(state){
   '<div class="mp-column">'+
    '<section class="mp-panel"><h3>♙ PRÉSENTATION</h3><p class="mp-bio">'+(p.bio?esc(p.bio):'<span class="mp-muted">Aucune présentation pour le moment. Ajoute quelques mots sur toi !</span>')+'</p></section>'+
    '<section class="mp-panel"><h3>'+clipIcon+' MES LIENS</h3><div class="mp-links">'+socials(p,ident.name||"")+'</div></section>'+
-   '<section class="mp-panel mp-privacy"><h3>◉ VISIBILITÉ</h3><p>'+((server&&p.public_profile)?'Ton profil peut être consulté par les autres membres.':'Ton profil n’est pas publié pour les autres visiteurs.')+'</p>'+
-    (server&&p.public_profile?'<button class="mp-outline-button" id="mpShareBtn" type="button">Copier le lien public</button>':'')+
-   '</section>'+
   '</div>'+
   '<div class="mp-column">'+
    '<section class="mp-panel mp-stats"><h3>◈ STATISTIQUES DU QG</h3><div class="mp-stat-grid">'+
@@ -196,10 +193,6 @@ function view(state){
  $("mpEditBtn").addEventListener("click",open);
  $("mpGamesEdit").addEventListener("click",open);
  $("mpCancelEdit").addEventListener("click",()=>{$("mpEditor").hidden=true;});
- if($("mpShareBtn"))$("mpShareBtn").addEventListener("click",async()=>{
-  const link=location.origin+location.pathname+"#/membre?id="+encodeURIComponent(ident.id);
-  try{await navigator.clipboard.writeText(link);$("mpShareBtn").textContent="✓ Lien copié";}catch{$("mpShareBtn").textContent=link;}
- });
  let chosen=new Set(p.games);
  const primary=$("mpPrimaryGame");
  function refreshPicker(){
