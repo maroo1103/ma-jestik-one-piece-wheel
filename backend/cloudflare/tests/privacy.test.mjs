@@ -216,6 +216,39 @@ test('un profil privé reste inaccessible même si le joueur accepte le classeme
   } finally { sql.close(); }
 });
 
+test('Le profil compte les pronostics des cinq jeux sans exposer les statistiques privées',async()=>{
+ const {sql,env}=fixture();
+ sql.exec("INSERT INTO vote_rounds_warzone(id,game,challenge_id,challenge_title,team,status) VALUES('warzone-hajin-profile','warzone-hajin',1,'Défi Hajin','solo','resolved')");
+ sql.exec("INSERT INTO vote_rounds_warzone(id,game,challenge_id,challenge_title,team,status) VALUES('warzone-zodiac-profile','warzone-zodiac',2,'Défi Zodiac','solo','resolved')");
+ sql.exec("INSERT INTO vote_rounds_warzone(id,game,challenge_id,challenge_title,team,status) VALUES('warzone-rebirth-profile','warzone-rebirth',3,'Défi Rebirth','solo','resolved')");
+ sql.exec("INSERT INTO vote_rounds_verdansk(id,game,challenge_id,challenge_title,team,status) VALUES('warzone-verdansk-profile','warzone-verdansk',1,'Défi Verdansk','solo','resolved')");
+ for(const round of ['warzone-hajin-profile','warzone-zodiac-profile','warzone-rebirth-profile']){
+  sql.prepare("INSERT INTO vote_ballots_warzone(round_id,twitch_id,prediction) VALUES(?,?,'success')").run(round,'111');
+ }
+ sql.exec("INSERT INTO vote_ballots_verdansk(round_id,twitch_id,prediction) VALUES('warzone-verdansk-profile','111','failure')");
+ const restore=mockTwitchUser('111');
+ try{
+  const me=await worker.fetch(new Request('https://example.test/v1/profiles/me',{
+   headers:{Authorization:'Bearer aaaabbbbccccdddd'}
+  }),env);
+  assert.equal(me.status,200);
+  const own=await me.json();
+  assert.equal(own.stats.votes,5,'Fortnite et 4 cartes Warzone = cinq participations');
+  assert.equal(own.stats.points,0,'les points ne sont pas recalculés par le compteur');
+  sql.exec("UPDATE member_profiles SET is_public=1 WHERE twitch_id='111'");
+  // Le propriétaire peut partager un profil sans autoriser la publication des stats.
+  const privateStats=await worker.fetch(new Request('https://example.test/v1/profiles/111'),env);
+  assert.equal(privateStats.status,200);
+  assert.equal((await privateStats.json()).stats.votes,null);
+  sql.exec("UPDATE members SET visible_in_ranking=1 WHERE twitch_id='111'");
+  const publicStats=await worker.fetch(new Request('https://example.test/v1/profiles/111'),env);
+  assert.equal(publicStats.status,200);
+  assert.equal((await publicStats.json()).stats.votes,5,'stats visibles uniquement avec accord classement');
+  const other=await worker.fetch(new Request('https://example.test/v1/profiles/222'),env);
+  assert.equal(other.status,404,'profil privé inaccessible');
+ }finally{restore();sql.close();}
+});
+
 test('Les pronostics Warzone sont séparés des votes Fortnite, attribuent les points et se suppriment en cascade',async()=>{
  const {sql,env}=fixture();
  env.OWNER_TWITCH_ID='111';
