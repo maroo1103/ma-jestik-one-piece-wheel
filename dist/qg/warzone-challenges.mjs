@@ -40,25 +40,6 @@ export const WARZONE_CHALLENGE_GAMES=Object.freeze({
     "top": "Top 3",
     "final": "Top 2"
   },
-  "warzone-verdansk": {
-    "label": "Warzone · Verdansk · Battle Royale",
-    "short": "VERDANSK · BATTLE ROYALE",
-    "map": "Verdansk",
-    "a": "Dam",
-    "b": "Airport",
-    "c": "Superstore",
-    "d": "Stadium",
-    "e": "Downtown",
-    "f": "Hospital",
-    "g": "Train Station",
-    "h": "Prison",
-    "i": "Drone Labs",
-    "kills": 5,
-    "teamKills": 9,
-    "rank": "Top 10",
-    "top": "Top 5",
-    "final": "Top 3"
-  },
   "warzone-rebirth": {
     "label": "Warzone · Rebirth Island · Résurgence",
     "short": "REBIRTH ISLAND · RÉSURGENCE",
@@ -77,6 +58,25 @@ export const WARZONE_CHALLENGE_GAMES=Object.freeze({
     "rank": "Top 5",
     "top": "Top 3",
     "final": "Top 2"
+  },
+  "warzone-verdansk": {
+    "label": "Warzone · Verdansk · Battle Royale",
+    "short": "VERDANSK · BATTLE ROYALE",
+    "map": "Verdansk",
+    "a": "Dam",
+    "b": "Airport",
+    "c": "Superstore",
+    "d": "Stadium",
+    "e": "Downtown",
+    "f": "Hospital",
+    "g": "Train Station",
+    "h": "Prison",
+    "i": "Drone Labs",
+    "kills": 5,
+    "teamKills": 9,
+    "rank": "Top 10",
+    "top": "Top 5",
+    "final": "Top 3"
   }
 });
 const TEMPLATES={
