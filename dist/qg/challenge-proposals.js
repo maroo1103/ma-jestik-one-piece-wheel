@@ -4,7 +4,7 @@
 import {getQGTwitchSession} from './twitch-auth.js';
 const PREFIX='🎯 DÉFI · ';
 const GAME_MARKERS=Object.freeze({'warzone-hajin':'⊛H⊛','warzone-zodiac':'⊛Z⊛','warzone-rebirth':'⊛R⊛','warzone-verdansk':'⊛V⊛'});
-const GAME_LABELS=Object.freeze({fortnite:'Fortnite','warzone-hajin':'Hajin','warzone-zodiac':'Zodiac','warzone-rebirth':'Rebirth Island'});
+const GAME_LABELS=Object.freeze({fortnite:'Fortnite','warzone-hajin':'Hajin','warzone-zodiac':'Zodiac','warzone-rebirth':'Rebirth Island','warzone-verdansk':'Verdansk'});
 const API=(document.querySelector('meta[name="majestik-tribunal-api"]')?.content||'').replace(/\/+$/,'');
 const TEAMS={solo:'Solo',duo:'Duo',trio:'Trio',quatuor:'Quatuor'};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
