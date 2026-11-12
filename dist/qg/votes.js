@@ -97,7 +97,7 @@ export function mountVotePanel(root,getActive,onStateChange=()=>{},getGame=()=> 
  }
  function add(parent,tag,cls,txt){const n=el(tag,cls,txt);parent.append(n);return n;}
  function startCandidate(){
-  const game=getGame(),supported=game==='fortnite'||['warzone-hajin','warzone-zodiac','warzone-rebirth'].includes(game);
+  const game=getGame(),supported=game==='fortnite'||['warzone-hajin','warzone-zodiac','warzone-rebirth','warzone-verdansk'].includes(game);
   if(!supported)return null;
   const d=getActive();
   if(!d||typeof d!=='object')return null;
