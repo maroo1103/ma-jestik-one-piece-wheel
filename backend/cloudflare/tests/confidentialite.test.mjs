@@ -21,8 +21,8 @@ test("confidentialité : information essentielle avant la collecte du formulaire
 
 test("confidentialité : transparence sur les purges et les points légaux à finaliser",()=>{
  const page=read("confidentialite.js");
- assert.match(page,/mode simulation/);
- assert.match(page,/aucune purge réelle n'est activée/);
+ assert.match(page,/Les nettoyages automatiques concernés sont programmés chaque jour/);
+ assert.doesNotMatch(page,/mode simulation|aucune purge réelle n'est activée/);
  assert.match(page,/L'identité civile du responsable/);
  assert.match(page,/contact@ma-jestik\.fr/);
  assert.match(page,/Cloudflare/);
