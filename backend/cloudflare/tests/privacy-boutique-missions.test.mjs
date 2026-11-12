@@ -45,3 +45,14 @@ test('Le QG référence la nouvelle politique malgré le cache navigateur',()=>{
   assert.match(router,/confidentialite\.js\?v=20261112-privacy-rewards1/);
   assert.match(html,/qg\.js\?v=20261112-privacy-rewards1/);
 });
+
+test('La purge des attestations de missions respecte le seuil de douze mois et ses garde-fous',()=>{
+  const worker=source('backend/cloudflare/src/worker.js');
+  assert.match(worker,/async function purgeMonthlyAwards\(env\)/);
+  assert.match(worker,/MONTHLY_AWARDS_RETENTION_ENABLED/);
+  assert.match(worker,/MONTHLY_AWARDS_RETENTION_DRY_RUN!=="false"/);
+  assert.match(worker,/DELETE FROM monthly_awards WHERE paid_at<=unixepoch\('now','-12 months'\)/);
+  assert.match(worker,/await purgeMonthlyAwards\(env\)/);
+  assert.match(worker,/await purgeInactiveMembers\(env\)/);
+  assert.match(worker,/await purgeTribunalRetention\(env\)/);
+});
