@@ -33,14 +33,13 @@ let officialRound=null,verifiedOwner=false;
 const publicActive=()=>officialRound?.game===selectedGame&&["open","locked"].includes(officialRound.status);
 const gameSelector=()=>'<div class="challenge-game-switcher"><div class="challenge-game-switcher-copy"><span class="challenge-game-kicker">SÉLECTION DU JEU</span><strong>Choisis ton univers</strong><small>Les défis disponibles s’affichent selon le jeu choisi.</small></div><label class="challenge-game-field" for="challengeGame"><span>JEU</span><select id="challengeGame"><option value="" '+(!selectedGame?'selected':'')+'>— Sélectionner un jeu —</option>'+GAME_OPTIONS.map(x=>'<option value="'+x.id+'" '+(selectedGame===x.id?'selected ':'')+(!x.available?'disabled ':'')+'>'+x.label+(x.available?'':' · À venir')+'</option>').join("")+'</select></label></div>';
 const neutralChallenge=()=>'<div class="challenge-neutral"><span class="challenge-neutral-icon" aria-hidden="true">⚔️</span><div><span class="challenge-game-kicker">TON PROCHAIN OBJECTIF</span><h2>LE DÉFI DES VIEWERS</h2><p>Sélectionne un jeu dans le menu ci-dessus pour découvrir ses missions.</p></div></div>';
-const initial = () => ({catalogVersion:isFortnite()?CATALOG_VERSION:1,mode:"random",team:"solo",level:"all",category:"all",sort:"default",enabled:gameCatalogue().map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
+const initial = () => ({catalogVersion:isFortnite()?CATALOG_VERSION:1,team:"solo",level:"all",category:"all",sort:"default",enabled:gameCatalogue().map(x=>x[0]),active:null,queue:[],history:[],lastPreset:null,catalogOpen:false});
 let data = initial();
 function load(){
  try{
   const parsed = JSON.parse(localStorage.getItem(gameStoreKey(selectedGame||"fortnite")) || "null");
   if(!parsed || !Array.isArray(parsed.enabled) || !Array.isArray(parsed.history) || !Array.isArray(parsed.queue)) return initial();
   const clean = initial();
-  clean.mode = parsed.mode==="viewer"?"viewer":"random";
   clean.team = Object.hasOwn(teams,parsed.team)?parsed.team:"solo";
   clean.level = ["all","Facile","Moyen","Difficile"].includes(parsed.level)?parsed.level:"all";
   clean.category = ["all","Combat","Survie","Stratégie","Duo","Trio","Quatuor"].includes(parsed.category)?parsed.category:"all";
@@ -68,7 +67,7 @@ const score=()=>({success:data.history.filter(x=>x.result==="success").length,fa
 const badge=level=>'<span class="challenge-level '+(classes[level]||"medium")+'">'+escapeHtml(level)+'</span>';
 function current(){
  if(publicActive()&&(!data.active||String(data.active.title)!==String(officialRound.challenge_title)))return sharedMission();
- if(!data.active)return '<div class="challenge-empty"><div class="challenge-symbol" aria-hidden="true">⚔️</div><h3>Aucune mission en cours</h3><p>Choisis tes filtres puis lance un défi aléatoire, ou accepte une proposition locale.</p></div>';
+ if(!data.active)return '<div class="challenge-empty"><div class="challenge-symbol" aria-hidden="true">⚔️</div><h3>Aucune mission en cours</h3><p>Choisis tes filtres puis lance un défi aléatoire, ou accepte une proposition des viewers.</p></div>';
  const a=data.active;
  return '<div class="challenge-active"><div class="challenge-overline"><span>● MISSION EN COURS</span><span>'+escapeHtml(a.source==="viewer"?"PROPOSÉ PAR "+a.by:"TIRAGE ALÉATOIRE")+'</span></div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.description)+'</p><div class="challenge-meta">'+badge(a.level)+ '<span>'+escapeHtml((teams[a.team] || (a.team==="both"?"Solo / Duo":"Solo")).toUpperCase())+'</span></div>'+(publicActive()?'':'<div class="challenge-result-actions"><button type="button" data-action="success" class="btn success">✓ Réussie</button><button type="button" data-action="failure" class="btn failure">✕ Ratée</button><button type="button" data-action="skipped" class="btn btn-ghost">Passer</button></div>')+'</div>';
 }
@@ -111,9 +110,7 @@ function view(message=""){
  return '<section class="challenge-ui" id="challengeUi">'+gameSelector()+
  '<div class="challenge-stats"><div><span>DÉFIS DISPONIBLES</span><strong>'+count+'</strong></div><div><span>RÉUSSITES</span><strong>'+s.success+'</strong></div><div><span>ÉCHECS</span><strong>'+s.fail+'</strong></div><div><span>PASSÉES</span><strong>'+s.skipped+'</strong></div></div>'+
  '<div class="challenge-columns"><section class="panel challenge-main"><div class="challenge-game-banner challenge-game-banner--fortnite"><span class="challenge-game-kicker">'+escapeHtml(gameLabel())+'</span><h2>LE DÉFI DES VIEWERS</h2><p>'+escapeHtml(gameDescription())+'</p></div>'+
- '<div class="challenge-tabs" role="group" aria-label="Mode de création du défi"><button type="button" class="'+(data.mode==="random"?"selected":"")+'" data-action="mode" data-value="random" aria-pressed="'+(data.mode==="random")+'">🎲 Aléatoire</button><button type="button" class="'+(data.mode==="viewer"?"selected":"")+'" data-action="mode" data-value="viewer" aria-pressed="'+(data.mode==="viewer")+'">👥 Proposition viewer</button></div>'+
- (data.mode==="random"?'<div class="challenge-filters">'+teamSelect()+'<label>Filtrer par difficulté <select id="challengeLevel"><option value="all">Toutes</option>'+["Facile","Moyen","Difficile"].map(x=>'<option value="'+x+'" '+(data.level===x?"selected":"")+'>'+x+'</option>').join("")+'</select></label></div><p class="challenge-muted">'+count+' défi(s) compatible(s) avec ce mode et cette difficulté.</p><button type="button" class="btn btn-gold challenge-draw" data-action="draw" '+(data.active?"disabled":"")+'>🎲 TIRER UNE MISSION</button>':
- '<form id="challengeViewerForm" class="challenge-viewer-form">'+teamSelect()+'<label>Pseudo du viewer <input name="viewer" type="text" maxlength="36" placeholder="Ex. ViewerAlpha" required></label><label>Titre du défi <input name="title" type="text" maxlength="80" placeholder="Ex. Le défi du pirate" required></label><label>Règles de la mission <textarea name="description" rows="3" maxlength="350" placeholder="Explique précisément comment réussir le défi…" required></textarea></label><button type="submit" class="btn btn-gold">Ajouter à la file de validation</button><p class="challenge-muted">Cette proposition reste sur cet appareil : elle n’est pas envoyée à Ma_JesTik ni à Twitch/Rumble.</p></form>')+
+ '<div class="challenge-filters">'+teamSelect()+'<label>Filtrer par difficulté <select id="challengeLevel"><option value="all">Toutes</option>'+["Facile","Moyen","Difficile"].map(x=>'<option value="'+x+'" '+(data.level===x?"selected":"")+'>'+x+'</option>').join("")+'</select></label></div><p class="challenge-muted">'+count+' défi(s) compatible(s) avec cette composition et cette difficulté.</p><button type="button" class="btn btn-gold challenge-draw" data-action="draw" '+(data.active?"disabled":"")+'>🎲 TIRER UNE MISSION</button>'+
  '<div id="challengeCurrent" aria-live="polite">'+current()+'</div><div class="challenge-status" id="challengeStatus" role="status">'+escapeHtml(message)+'</div></section>'+
  '<aside class="challenge-sidebar"><section class="panel"><h3>PROPOSITIONS À VALIDER</h3><div class="challenge-queue">'+queue()+'</div></section><section class="panel"><div class="challenge-history-heading"><h3>JOURNAL DES MISSIONS</h3><button type="button" class="challenge-reset" data-action="clear-history" '+(!data.history.length?"disabled":"")+'>Effacer</button></div><div>'+history()+'</div></section><div id="challengeVoteSlot" class="challenge-vote-slot"></div></aside></div>'+
  catalogue()+'</section>';
@@ -173,7 +170,6 @@ export function mountChallenges(){
   if(!btn||btn.disabled)return;
   const action=btn.dataset.action;
   if(!verifiedOwner)return;
-  if(action==="mode"){data.mode=btn.dataset.value==="viewer"?"viewer":"random";save();render();return;}
   if(action==="draw"){
    if(votePanel?.hasOpenRound()){render("Une mission officielle est déjà en cours. Termine le vote avant de tirer une autre mission.");return;}
    if(data.active){render("Termine ou passe le défi actuel avant d'en tirer un autre.");return;}
@@ -236,18 +232,5 @@ export function mountChallenges(){
   else if(el.id==="challengeSort"){data.sort=["default","easy","hard"].includes(el.value)?el.value:"default";data.catalogOpen=true;save();render();}
   else if(el.id==="challengeCategory"){data.category=["Combat","Survie","Stratégie","Duo","Trio","Quatuor"].includes(el.value)?el.value:"all";data.catalogOpen=true;save();render();}
   else if(el.matches("[data-enable]")){const id=Number(el.dataset.enable);data.enabled=el.checked?[...new Set([...data.enabled,id])]:data.enabled.filter(x=>x!==id);data.catalogOpen=true;save();render();}
- });
- root.addEventListener("submit",event=>{
-  if(event.target.id!=="challengeViewerForm")return;
-  event.preventDefault();
-  if(!verifiedOwner)return;
-  const form=new FormData(event.target);
-  const by=String(form.get("viewer")||"").trim().slice(0,36);
-  const title=String(form.get("title")||"").trim().slice(0,80);
-  const description=String(form.get("description")||"").trim().slice(0,350);
-  if(!by||!title||!description){render("Renseigne le pseudo, le titre et les règles du défi.");return;}
-  if(data.queue.length>=20){render("File pleine : accepte ou refuse une proposition avant d'en ajouter.");return;}
-  data.queue.push({id:"q"+Date.now()+"-"+Math.floor(Math.random()*100000),title,description,by,team:data.team,level:"Personnalisé",source:"viewer"});
-  save();render("Proposition ajoutée à la file locale : elle attend ta validation.");
  });
 }
