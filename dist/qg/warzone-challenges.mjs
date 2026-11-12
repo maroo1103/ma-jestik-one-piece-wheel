@@ -1,6 +1,6 @@
-/* Ma_JesTik — 300 défis Warzone, statiques et sans donnée personnelle.
+/* Ma_JesTik — 400 défis Warzone, statiques et sans donnée personnelle.
    20 Solo + 20 Duo + 20 Trio + 20 Quatuor + 20 Spéciaux par carte.
-   La sélection des POI correspond exactement aux trois roues officielles. */
+   La sélection des POI correspond exactement aux quatre roues officielles. */
 export const WARZONE_CHALLENGE_GAMES=Object.freeze({
   "warzone-hajin": {
     "label": "Warzone · Hajin · Battle Royale",
@@ -40,6 +40,25 @@ export const WARZONE_CHALLENGE_GAMES=Object.freeze({
     "top": "Top 3",
     "final": "Top 2"
   },
+  "warzone-verdansk": {
+    "label": "Warzone · Verdansk · Battle Royale",
+    "short": "VERDANSK · BATTLE ROYALE",
+    "map": "Verdansk",
+    "a": "Dam",
+    "b": "Airport",
+    "c": "Superstore",
+    "d": "Stadium",
+    "e": "Downtown",
+    "f": "Hospital",
+    "g": "Train Station",
+    "h": "Prison",
+    "i": "Drone Labs",
+    "kills": 5,
+    "teamKills": 9,
+    "rank": "Top 10",
+    "top": "Top 5",
+    "final": "Top 3"
+  },
   "warzone-rebirth": {
     "label": "Warzone · Rebirth Island · Résurgence",
     "short": "REBIRTH ISLAND · RÉSURGENCE",
@@ -67,6 +86,22 @@ const TEMPLATES={
   "quatuor": "Quatre soldats, quatre victimes|Chaque joueur réalise au moins une élimination dans la même partie.|Moyen\nLe grand débarquement à {a}|Atterrissez ensemble à {a} et réalisez au moins quatre éliminations cumulées avant de partir.|Difficile\nEscouade complète|Atteignez le {top} avec les quatre joueurs encore en vie.|Difficile\nLe chef intouchable|Désignez un capitaine : il ne doit jamais être mis à terre avant le {rank}.|Difficile\nLe mur de soutien|Trois joueurs différents réalisent chacun une réanimation pendant la partie.|Difficile\nPillards organisés|Chaque joueur ouvre au moins deux caches de ravitaillement dans la même partie.|Facile\nDeux duos de choc|Formez deux binômes : chacun doit obtenir au moins trois éliminations cumulées.|Difficile\nLa prise de {b}|Tout le quatuor atterrit à {b}, puis quitte le lieu avec quatre joueurs en vie.|Moyen\nAchat interdit|Atteignez le {rank} sans qu'aucun membre de l'équipe achète quoi que ce soit.|Moyen\nQuatre classes distinctes|Chaque joueur doit obtenir une élimination avec une catégorie d'arme différente.|Difficile\nLa chaîne de munitions|Chaque joueur donne une partie de ses munitions à un autre membre avant le deuxième rétrécissement.|Facile\nZéro véhicule|Atteignez le {rank} sans qu'aucun joueur utilise un véhicule.|Moyen\nDouze caches|Ouvrez au moins douze caches de ravitaillement au total et atteignez le {rank}.|Moyen\nL'offensive à {c}|Réalisez deux éliminations à {c}, puis deux autres à un lieu différent, avec au moins trois joueurs impliqués.|Difficile\nQuatre vies précieuses|Atteignez le {top} sans perdre un joueur pendant les deux derniers rétrécissements.|Difficile\nUne arme par personne|Chaque joueur conserve au maximum une arme dans son inventaire et l'équipe atteint le {rank}.|Difficile\nEscorte croisée|Désignez deux VIP : les deux autres joueurs réalisent chacun deux éliminations et tous les VIP survivent jusqu'au {rank}.|Difficile\nRavitaillement solidaire|Avant d'entrer dans le {top}, chacun donne au moins une plaque d'armure à un autre membre.|Moyen\nLe commando silencieux|Ne tirez aucune balle pendant les deux premières minutes, puis réalisez {teamKills} éliminations cumulées.|Difficile\nQuatuor royal|Gagnez une partie avec les quatre membres de l'escouade encore en vie.|Difficile",
   "special": "La roulette des armes|Utilise seulement des armes trouvées au sol et atteins le {rank}.|Moyen|Stratégie\nL'audace de {a}|Atterris à {a}, ouvre au maximum trois caches de ravitaillement et atteins le {top}.|Difficile|Stratégie\nÉconomie de munitions|Réalise une élimination en tirant moins de quinze balles pendant l'affrontement.|Difficile|Combat\nDernière cartouche|Réalise une élimination avec la dernière balle de ton chargeur.|Difficile|Combat\nLe chirurgien|Réalise deux éliminations avec la même arme sans remettre de plaques d'armure entre les deux.|Difficile|Combat\nTouriste de {map}|Visite {e}, {f} et {g} dans la même partie, sans utiliser de véhicule.|Difficile|Stratégie\nLe coffre unique|Ouvre exactement une cache de ravitaillement et atteins le {rank}.|Difficile|Stratégie\nSang-froid|Réalise au moins {kills} éliminations et termine dans le {top}.|Difficile|Combat\nLe survivant muet|Atteins le {rank} sans tirer le moindre coup de feu durant les trois premières minutes.|Moyen|Survie\nUn saut, une mission|Après l'atterrissage initial, réussis une élimination avant d'entrer dans un deuxième lieu nommé.|Moyen|Combat\nGarder sa première arme|Conserve ta toute première arme jusqu'au {rank}, sans la remplacer.|Moyen|Stratégie\nSans rechargement d'armure|Atteins le {rank} sans remettre de plaques pendant les deux premières minutes.|Moyen|Survie\nL'ombre de {h}|Atterris à {h}, puis atteins le {top} sans utiliser d'équipement tactique.|Difficile|Survie\nChasseur de butin|Réalise une élimination avec une arme ramassée sur un adversaire éliminé.|Moyen|Combat\nLe grand silence|Atteins le {rank} avec deux éliminations maximum.|Difficile|Survie\nJuste une tentative|Lors de ta première partie de la session sur {map}, atteins le {top}.|Difficile|Survie\nTrois armes, trois styles|Réalise trois éliminations avec trois catégories d'armes différentes.|Difficile|Combat\nPas de raccourci|Atteins le {rank} sans utiliser de véhicule ni de tyrolienne.|Moyen|Stratégie\nLe pari de {i}|Atterris à {i} et termine dans le {top} sans utiliser de station d'achat.|Difficile|Stratégie\nTout pour la victoire|Gagne une partie sans utiliser de véhicule.|Difficile|Survie"
 };
+/* Variantes exclusives : les 12 autres POI officiels de la roue Verdansk
+   apparaissent explicitement dans les missions, sans inventer de lieux. */
+const VERDANSK_EXCLUSIVES=Object.freeze({
+  7:["Contrôle de Military Base","Atterris à Military Base, réalise une élimination puis atteins le Top 10 sans effectuer d'achat."],
+  8:["Escapade à Quarry","Atterris à Quarry et survis à deux affrontements différents avant le premier rétrécissement."],
+  12:["Le signal de TV Station","Atteins le Top 10 après avoir atterri à TV Station, sans utiliser de station d'achat."],
+  18:["Le pillage de Storage Town","Ouvre au moins trois caches à Storage Town, puis atteins le Top 10 sans y revenir."],
+  24:["Le repli de Lumber","Atterrissez ensemble à Lumber, puis atteignez le Top 5 sans utiliser de véhicule."],
+  30:["Duo de Boneyard","Atterrissez à Boneyard et réalisez chacun une élimination avant de quitter le secteur."],
+  39:["Le pacte de Farmland","Chaque joueur ouvre deux caches à Farmland, puis le duo atteint le Top 10."],
+  46:["Les trois de Promenade West","Atterrissez ensemble à Promenade West ; chacun doit obtenir une élimination avant le Top 10."],
+  54:["Trio de Promenade East","Réalisez trois éliminations cumulées à Promenade East puis atteignez le Top 5."],
+  68:["La prise de Hills","Le quatuor atterrit à Hills, reste groupé jusqu'au premier rétrécissement et atteint le Top 10."],
+  92:["Traversée de Park","Atterris à Park, visite un autre lieu nommé et atteins le Top 10 sans véhicule."],
+  96:["La route de Port","Atterris à Port et atteins le Top 5 sans utiliser de station d'achat."]
+});
 const GROUPS=[['solo',0,'solo'],['duo',20,'duo'],['trio',40,'trio'],['quatuor',60,'quatuor'],['special',80,'all']];
 const format=(value,c)=>String(value).replace(/\{(a|b|c|d|e|f|g|h|i|kills|teamKills|rank|top|final|map)\}/g,(_,key)=>String(c[key]));
 function buildCatalogue(id,settings){
@@ -77,7 +112,9 @@ function buildCatalogue(id,settings){
    const [name,description,level,kind]=line.split('|');
    if(!name||!description||!['Facile','Moyen','Difficile'].includes(level))throw Error('Défi incomplet : '+key+' '+index);
    const category=kind||(team==='duo'?'Duo':team==='trio'?'Trio':'Quatuor');
-   const mapped=[offset+index+1,format(name,settings),format(description,settings),level,category,team];
+   const number=offset+index+1;
+   const exclusive=id==='warzone-verdansk'?VERDANSK_EXCLUSIVES[number]:null;
+   const mapped=[number,exclusive?exclusive[0]:format(name,settings),exclusive?exclusive[1]:format(description,settings),level,category,team];
    if(mapped.some(x=>typeof x==='string'&&/\{[a-zA-Z]+\}/.test(x)))throw Error('Variable manquante '+name);
    return Object.freeze(mapped);
   });
