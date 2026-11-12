@@ -77,7 +77,7 @@ function drawWheel() {
     $('rotor').append(wedge);
     const rotation=mid*180/Math.PI+90;
     const group = svgElement('g', { transform:`translate(${360+Math.cos(mid)*235},${360+Math.sin(mid)*235}) rotate(${rotation})` });
-    if(count>20){
+    if(count>25){
       const number=svgElement('text',{'text-anchor':'middle',fill:'#f7dcaa',
         'font-family':'Arial,sans-serif','font-weight':'700','font-size':count>40?13:16,
         'paint-order':'stroke',stroke:'#111d24','stroke-width':1},String(i+1));
