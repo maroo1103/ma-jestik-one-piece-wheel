@@ -73,6 +73,7 @@ test('écran Défis préserve les 118 Fortnite et copie les mêmes composants po
 test('votes Warzone et Fortnite correctement séparés avec la même interface',()=>{
  const ui=source('dist/qg/defis.js'),votes=source('dist/qg/votes.js');
  const worker=source('backend/cloudflare/src/worker.js');
+ const proposals=source('dist/qg/challenge-proposals.js');
  assert.match(votes,/return \{game,challenge_id:/);
  assert.match(ui,/await votePanel\?\.publishCurrent\(\)/);
  assert.match(worker,/vote_rounds_warzone/);
@@ -86,7 +87,6 @@ test('votes Warzone et Fortnite correctement séparés avec la même interface',
  assert.match(migration,/CHECK\(game='warzone-verdansk'\)/);
  assert.match(migration,/REFERENCES members\(twitch_id\) ON DELETE CASCADE/);
  assert.doesNotMatch(migration,/DROP TABLE|ALTER TABLE/i);
- const proposals=source('dist/qg/challenge-proposals.js');
  assert.match(proposals,/getGame/);
  assert.match(proposals,/GAME_MARKERS/);
 });
