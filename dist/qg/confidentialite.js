@@ -1,4 +1,4 @@
-/* Page publique d'information — traitements connus au 10/11/2026.
+/* Page publique d'information — traitements connus au 12/11/2026.
    Ne remplace pas les mentions légales : l'identification du responsable reste à finaliser.
    Aucun secret, identifiant personnel ou adresse privée n'est inclus. */
 export function privacyMarkup(){
@@ -7,8 +7,8 @@ export function privacyMarkup(){
   <header class="mj-privacy-hero" aria-labelledby="mjPrivacyTitle">
    <div class="mj-privacy-eyebrow">AIDE &amp; INFORMATIONS <span aria-hidden="true">✦</span> DONNÉES PERSONNELLES</div>
    <h1 id="mjPrivacyTitle">TES DONNÉES.<br><em>EN TOUTE CLARTÉ.</em></h1>
-   <p>Voici comment le QG Ma_JesTik utilise les informations nécessaires à la connexion Twitch, aux activités communautaires et aux messages envoyés depuis le site.</p>
-   <div class="mj-privacy-hero-meta"><span>POLITIQUE DE CONFIDENTIALITÉ</span><span>Mise à jour : <time datetime="2026-11-10">10 novembre 2026</time></span></div>
+   <p>Voici comment le QG Ma_JesTik utilise les informations nécessaires à la connexion Twitch, aux activités communautaires, aux missions et récompenses, et aux messages envoyés depuis le site.</p>
+   <div class="mj-privacy-hero-meta"><span>POLITIQUE DE CONFIDENTIALITÉ</span><span>Mise à jour : <time datetime="2026-11-12">12 novembre 2026</time></span></div>
   </header>
 
   <div class="mj-privacy-intro" role="note">
@@ -46,6 +46,8 @@ export function privacyMarkup(){
       <div><h3>Profil communautaire</h3><p>Présentation, nom affiché, préférences visuelles, jeux favoris et identifiants Instagram, TikTok ou Discord si tu les renseignes. Tu choisis la visibilité de ton profil et du classement. Si tu actives ta présence au classement, ton identifiant Twitch technique peut accompagner ton pseudo et tes points pour ouvrir ta fiche membre ; son contenu détaillé reste inaccessible si ton profil est privé.</p></div>
       <div><h3>Défis &amp; Killathon</h3><p>Participation aux défis, pronostics, points, classement, objectifs et compteur Killathon. Les informations associées au compte sont conservées dans la base du QG.</p></div>
       <div><h3>Tribunal</h3><p>Questions, choix de réponses, propositions, résultats, dates, pseudos et identifiants Twitch des auteurs ou votants. Tu peux y participer avec Twitch sans nécessairement créer un profil communautaire.</p></div>
+      <div><h3>Missions &amp; récompenses mensuelles</h3><p>Pour suivre une mission ouverte, le QG associe ton identifiant Twitch aux pronostics résolus et aux votes du Tribunal éligibles pour calculer ta progression. Lorsque l'éditeur confirme une récompense déjà remise manuellement sur Discord, la base du QG peut enregistrer le mois, ton identifiant Twitch, le nombre de pièces et la date de cette confirmation. Ce suivi n'envoie aucune pièce sur Discord.</p></div>
+      <div><h3>Boutique &amp; récompenses Discord</h3><p>La boutique du QG présente les récompenses, leurs conditions et des liens vers des salons Discord. Le solde en pièces, les achats, les stocks et les commandes sont gérés sur Discord avec DraftBot, pas par le site. Les éventuels pseudos ou identifiants de jeu nécessaires à une remise sont à communiquer dans le cadre de l'échange sur Discord, et non dans la boutique du QG.</p></div>
       <div><h3>Nous contacter</h3><p>Catégorie, sujet, e-mail de réponse, pseudo facultatif, message et éventuelles pièces jointes. Le formulaire utilise une vérification Cloudflare Turnstile contre les envois automatisés.</p></div>
       <div><h3>Données techniques</h3><p>Les services d'hébergement et de protection peuvent traiter des données de connexion, telles que l'adresse IP et des journaux techniques, nécessaires au fonctionnement et à la sécurité.</p></div>
      </div>
@@ -58,6 +60,7 @@ export function privacyMarkup(){
      <ul class="mj-privacy-points">
       <li><strong>Connexion et fonctionnement des outils demandés :</strong> vérifier l'identité Twitch, faire fonctionner les profils, votes, classements et compteurs. Base envisagée : l'intérêt légitime à assurer le fonctionnement du service communautaire choisi par l'utilisateur (article 6, §1, f du RGPD).</li>
       <li><strong>Visibilité publique choisie :</strong> afficher un profil ou un classement lorsque tu actives volontairement cette option. Le choix est réversible dans les paramètres du profil ; la qualification de la base légale de cette publication reste à confirmer.</li>
+      <li><strong>Missions mensuelles et suivi des remises :</strong> vérifier les objectifs à partir des participations déjà enregistrées, afficher la progression aux membres connectés et garder une trace des récompenses déclarées remises par l'éditeur. Base envisagée : l'intérêt légitime à organiser et contrôler les activités communautaires et à éviter les doubles remises ; cette qualification reste à confirmer. Aucun versement de pièces Discord n'est automatisé par le site.</li>
       <li><strong>Réponse aux messages :</strong> recevoir et traiter les demandes envoyées volontairement, au titre de l'intérêt légitime à répondre aux sollicitations (article 6, §1, f).</li>
       <li><strong>Protection technique :</strong> prévention des abus, vérification de session et anti-spam, au titre de l'intérêt légitime à sécuriser le service (article 6, §1, f).</li>
      </ul>
@@ -69,6 +72,7 @@ export function privacyMarkup(){
      <h2 id="mj-privacy-destinataires-title">PRESTATAIRES &amp; DESTINATAIRES</h2>
      <p>Selon la fonctionnalité utilisée : <strong>Twitch</strong> vérifie la connexion ; <strong>Cloudflare</strong> fournit les Workers, la base D1 et la vérification anti-spam Turnstile ; <strong>GitHub Pages</strong> publie les pages statiques ; <strong>Resend</strong> achemine les messages de contact ; <strong>OVHcloud</strong> héberge leur boîte de réception.</p>
      <p>L'éditeur peut accéder aux données nécessaires à la gestion du site. Les autres visiteurs ne voient que les contenus destinés à être publics : notamment certains sondages, résultats, classements ou profils rendus visibles.</p>
+     <p><strong>Boutique externe :</strong> les boutons de la boutique ouvrent des pages de <strong>Discord</strong> ; les commandes et pièces sont gérées dans ce service avec le bot <strong>DraftBot</strong>. Discord et le service du bot peuvent traiter les informations liées à ton compte et à tes commandes selon leurs propres règles. Le QG ne récupère pas automatiquement le solde, les commandes ni les coordonnées Discord à partir de ces liens. Les éventuels échanges de vérification ou de remise se déroulent sur Discord ; leur effacement ne découle pas automatiquement de la suppression d'un profil QG.</p>
      <p><strong>Autres appels externes :</strong> l'accueil interroge <strong>DecAPI</strong> pour afficher si la chaîne Twitch est en direct. Des illustrations de jeux affichées dans les profils peuvent être chargées depuis les serveurs d'éditeurs et de plateformes de jeux (notamment Steam et les sites des jeux concernés). La page du setup interactif charge aussi deux ressources depuis un autre site hébergé sur <strong>GitHub Pages</strong>. Ces requêtes peuvent communiquer l'adresse IP et des données techniques du navigateur aux serveurs concernés. L'utilisation éventuelle de cookies par ces tiers doit encore être vérifiée.</p>
      <p>Des prestataires peuvent traiter des informations hors de l'Espace économique européen. Les localisations exactes, garanties applicables et durées conservées par chaque service sont encore en cours de vérification. Pour obtenir davantage d'informations, contacte l'éditeur.</p>
     </section>
@@ -82,6 +86,8 @@ export function privacyMarkup(){
        <thead><tr><th scope="col">Données</th><th scope="col">Durée retenue</th></tr></thead>
        <tbody>
         <tr><td>Compte, profil, Killathon, points et votes liés au membre</td><td>Jusqu'à la suppression demandée, ou 6 mois consécutifs sans activité Twitch authentifiée.</td></tr>
+        <tr><td>Participation aux missions mensuelles</td><td>Progression calculée à partir des pronostics et votes déjà conservés dans le QG, selon les durées indiquées pour ces données.</td></tr>
+        <tr><td>Historique des récompenses mensuelles déclarées remises (identifiant Twitch, mois, pièces, date)</td><td>Enregistrements rattachés au compte membre, dont le schéma prévoit l'effacement avec celui-ci. Aucune durée autonome de conservation ni purge dédiée n'est encore fixée : ce point reste à finaliser.</td></tr>
         <tr><td>Propositions Tribunal en attente</td><td>3 mois après leur création.</td></tr>
         <tr><td>Propositions Tribunal refusées</td><td>30 jours après la décision.</td></tr>
         <tr><td>Propositions Tribunal acceptées</td><td>6 mois après la décision.</td></tr>
@@ -90,7 +96,7 @@ export function privacyMarkup(){
        </tbody>
       </table>
      </div>
-     <p class="mj-privacy-detail"><strong>État actuel :</strong> les nettoyages automatiques des comptes inactifs et des historiques du Tribunal fonctionnent en <strong>mode simulation</strong> ; aucune purge réelle n'est activée. Les demandes de suppression sont traitées via la fonctionnalité de profil lorsqu'elle s'applique, ou par contact direct. Les anciens sondages sans limite, s'il en existe, doivent être clos manuellement. Les durées des journaux techniques, des sauvegardes et des copies conservées par les prestataires restent à préciser.</p>
+     <p class="mj-privacy-detail"><strong>État actuel :</strong> les nettoyages automatiques des comptes inactifs et des historiques du Tribunal fonctionnent en <strong>mode simulation</strong> ; aucune purge réelle n'est activée. Les demandes de suppression sont traitées via la fonctionnalité de profil lorsqu'elle s'applique, ou par contact direct. Les anciens sondages sans limite, s'il en existe, doivent être clos manuellement. Les durées des journaux techniques, des sauvegardes, des copies conservées par les prestataires et les durées spécifiques des historiques de récompenses restent à préciser.</p>
     </section>
 
     <section class="mj-privacy-section" id="mj-privacy-droits" aria-labelledby="mj-privacy-droits-title">
@@ -99,6 +105,7 @@ export function privacyMarkup(){
      <p>Selon ta situation et les conditions prévues par le RGPD, tu peux demander l'accès à tes données, leur correction, leur effacement ou leur limitation, t'opposer à certains traitements, et demander la portabilité lorsqu'elle est applicable.</p>
      <p>Tu peux modifier les informations et réglages publics de ton profil dans <a href="#/profil">Mon profil</a>. La rubrique permet aussi de demander la suppression du compte QG. Cette suppression ne touche pas ton compte Twitch.</p>
      <p>Si tu as voté ou proposé une question au Tribunal sans créer de profil QG, écris-nous directement : il n'est pas nécessaire de créer un compte pour exercer tes droits. Les textes libres, historiques techniques et sauvegardes peuvent nécessiter un traitement distinct.</p>
+     <p>Les informations de progression et de récompense rattachées à ton compte QG peuvent aussi faire l'objet d'une demande. La suppression du compte QG ne supprime pas ton compte Discord, les messages de commande ni les informations détenues par Discord ou DraftBot : adresse-toi également à ces services pour leurs propres données.</p>
      <div class="mj-privacy-contact">
       <div><strong>UNE QUESTION OU UNE DEMANDE RGPD ?</strong><span>Contact direct, même sans profil Ma_JesTik.</span></div>
       <a href="mailto:contact@ma-jestik.fr" class="mj-privacy-contact-btn">✉ contact@ma-jestik.fr</a>
@@ -111,6 +118,7 @@ export function privacyMarkup(){
      <h2 id="mj-privacy-stockage-title">STOCKAGE LOCAL &amp; SÉCURITÉ</h2>
      <p>Le QG utilise <strong>sessionStorage</strong> pour le jeton Twitch de l'onglet. Un état de sécurité temporaire lié à la connexion peut être conservé dans <strong>sessionStorage</strong> et <strong>localStorage</strong>, puis retiré au retour de Twitch. Des brouillons de profil, préférences ou données de certains outils peuvent aussi rester dans le stockage local du navigateur.</p>
      <p>Le site emploie HTTPS et vérifie côté serveur les demandes authentifiées. Cloudflare Turnstile protège le formulaire de contact contre les robots. Ces mesures réduisent certains risques sans offrir de garantie absolue de sécurité.</p>
+     <p>La boutique du QG n'enregistre pas de panier, de paiement ou de solde Discord. Cliquer sur un lien de commande ouvre un service externe ; ses modalités de connexion, de stockage et de confidentialité sont distinctes de celles du QG.</p>
      <p>La présence éventuelle de cookies ou traitements supplémentaires liés à des ressources tierces fait encore l'objet d'une vérification. Aucune affirmation générale d'absence de traceurs publicitaires n'est faite ici.</p>
      <p>Cette politique sera actualisée si les fonctionnalités ou les traitements changent. Tu peux demander des précisions à <a href="mailto:contact@ma-jestik.fr">contact@ma-jestik.fr</a>.</p>
     </section>
