@@ -17,7 +17,8 @@ test('La politique détaille les missions, les remises et la boutique Discord',(
   assert.match(privacy,/pronostics résolus et aux votes du Tribunal/);
   assert.match(privacy,/le mois, ton identifiant Twitch, le nombre de pièces et la date/);
   assert.match(privacy,/Aucun versement de pièces Discord n'est automatisé/);
-  assert.match(privacy,/Aucune durée autonome de conservation ni purge dédiée n'est encore fixée/);
+  assert.match(privacy,/12 mois après la confirmation de la remise/);
+  assert.match(privacy,/nettoyages automatiques sont <strong>activés<\/strong>/);
   assert.match(privacy,/La suppression du compte QG ne supprime pas ton compte Discord/);
 });
 
