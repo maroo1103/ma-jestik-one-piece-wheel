@@ -197,7 +197,7 @@ function view(state){
    '<div class="mp-column">'+profileAbout(p,links)+'</div>'+
    '<div class="mp-column">'+profileStatsPanel(stats)+profileGamesPanel(p,cards,true)+'</div>'+
   '</div>'+
- '<section class="mp-panel mp-editor" id="mpEditor" '<section class="mp-panel mp-editor" id="mpEditor" hidden><div class="mp-panel-heading"><h3>✎ PERSONNALISER MON PROFIL</h3><button type="button" class="mp-outline-button" id="mpCancelEdit">Fermer</button></div>'+
+ '<section class="mp-panel mp-editor" id="mpEditor" hidden><div class="mp-panel-heading"><h3>✎ PERSONNALISER MON PROFIL</h3><button type="button" class="mp-outline-button" id="mpCancelEdit">Fermer</button></div>'+
   '<form id="mpForm">'+
    '<div class="mp-form-grid">'+
     '<label>Pseudo affiché dans le QG <input name="display_name" maxlength="32" value="'+esc(p.display_name)+'" placeholder="'+esc(ident.name)+'"></label>'+
@@ -388,7 +388,7 @@ export function renderPublicMember(root,data,id){
  fillSocialIcons(root);
  handleProfileArtErrors(root);
 }
-export function renderPrivateMember(root,withReturn=false){export function renderPrivateMember(root,withReturn=false){
+export function renderPrivateMember(root,withReturn=false){
  if(!root)return;
  root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil indisponible</h2><p>Ce profil est privé. Vous n’êtes pas autorisé à consulter son contenu.</p>'+
   (withReturn?'<a href="#/accueil" class="mp-gold-button">Retour au QG</a>':'')+'</div>';
