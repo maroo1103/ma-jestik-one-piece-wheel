@@ -67,7 +67,7 @@ test('écran Défis préserve les 118 Fortnite et copie les mêmes composants po
  assert.match(ui,/mountChallengeProposals/);
  const qg=source('dist/qg/qg.js'),html=source('dist/qg/index.html');
  assert.match(qg,/defis\.js\?v=20261112-verdansk-challenges1/);
- assert.match(html,/qg\.js\?v=20261113-profil-v5-region-banner/);
+ assert.match(html,/qg\.js\?v=20261113-profil-v5-region-banner2/);
 });
 
 test('votes Warzone et Fortnite correctement séparés avec la même interface',()=>{

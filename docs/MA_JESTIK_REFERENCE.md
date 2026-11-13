@@ -1,3 +1,5 @@
+Note de publication complémentaire : cache QG v5b (`qg.js?v=20261113-profil-v5-region-banner2`) et module Confidentialité `confidentialite.js?v=20261113-profil-region1` pour refléter l'option de région sur les profils.
+
 ## Profil V5 — région optionnelle, 4 statistiques et bannière exclusive (13 novembre 2026)
 - Image utilisateur vérifiée dans `dist/qg/media/banniere-ma-jestik-exclusive-2000x400.webp` (2000×400, 161680 octets). Elle remplace l'ancienne image AVIF exclusivement pour le compte propriétaire dont l'identifiant est vérifié par la métadonnée Twitch ; les autres comptes conservent la bannière du jeu principal. Couronne décorative CSS au-dessus de l'avatar supprimée, badge « LE BOSS DU QG » conservé.
 - Statistiques : étoiles pour points, coupe pour classement, trois barres pour pronostics, calendrier « Membre depuis » utilisant `joined_at` existant. Quatre cartes responsive, aucune nouvelle lecture D1 pour la date.
