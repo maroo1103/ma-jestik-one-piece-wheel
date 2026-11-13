@@ -117,7 +117,7 @@ test('La bannière exclusive ne dépend que de ownerId et ne touche pas aux autr
  assert.match(code,/selected=isOwner\?null:/);
  assert.match(code,/\(isOwner\?' mp-owner-hero':''\)/);
  assert.match(css,/\.mp-banner\.mp-owner-hero \.mp-banner-visual/);
- assert.match(css,/ma-jestik-owner-hero-v1\.avif/);
+ assert.match(css,/banniere-ma-jestik-exclusive-2000x400\.webp/);
  assert.match(css,/@media\(max-width:680px\)/);
  assert.doesNotMatch(code,/Compte lié à Twitch :|mp-twitch-mark/);
 });
@@ -132,7 +132,7 @@ test('V5 : bannière exacte de GitHub, sans couronne au-dessus de l’avatar',()
 test('V5 : quatre statistiques avec étoile, trophée, barres et calendrier',()=>{
  const js=read('profil.js'),css=read('profil.css');
  for(const label of ['POINTS QG','CLASSEMENT','PRONOSTICS','MEMBRE DEPUIS'])assert.match(js,new RegExp('statCard\\([^\\n]*'+label));
- assert.match(js,/function joinedDate/);
+ assert.match(js,/const joinedDate=/);
  assert.match(css,/repeat\(4,minmax\(0,1fr\)\)/);
 });
 test('V5 : région facultative, sans géolocalisation automatique',()=>{
