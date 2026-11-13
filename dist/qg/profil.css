@@ -609,3 +609,13 @@
 @media(max-width:1150px){.qg-layout .mp-profile-layout .mp-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.qg-layout .mp-profile-layout .mp-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.qg-layout .mp-profile-layout .mp-stat{min-height:108px}.qg-layout .mp-profile-layout .mp-stat strong{font-size:23px}}
 #qgMemberDialog .mp-profile-layout .mp-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+
+/* Drapeaux de pays SVG locaux pour un affichage fiable sur Windows et mobile. */
+.qg-layout .mp-region-line strong{display:inline-flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+.qg-layout .mp-region-flag{display:inline-block;flex:0 0 auto;width:27px;height:20px;object-fit:cover;border:1px solid #d8ba83aa;border-radius:3px;box-shadow:0 2px 7px #0008;background:#161a20;vertical-align:middle}
+.qg-layout .mp-region-flag[hidden]{display:none!important}
+.qg-layout .mp-region-select-row{display:flex;align-items:center;gap:11px;min-width:0}
+.qg-layout .mp-region-select-row select{flex:1 1 auto;min-width:0}
+.qg-layout .mp-region-select-row .mp-region-flag{width:34px;height:25px}
+@media(max-width:470px){.qg-layout .mp-region-line{align-items:flex-start}.qg-layout .mp-region-line strong{max-width:70%}}

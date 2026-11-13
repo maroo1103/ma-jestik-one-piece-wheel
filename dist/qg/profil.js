@@ -46,8 +46,9 @@ const games=[
  {"id":"valorant","name":"Valorant","subtitle":"FPS tactique","art":"tactical","image":"https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/8f0df8efd5b986039cd37a4d5f3bf31b815d0c54-3840x2160.jpg?w=680&auto=format&q=80"}
 ];
 const lookup=new Map(games.map(g=>[g.id,g]));
-const regionOptions=[{"id":"","label":"Non renseigné","flag":""},{"id":"fr","label":"France 🇫🇷","flag":"🇫🇷"},{"id":"be","label":"Belgique 🇧🇪","flag":"🇧🇪"},{"id":"ch","label":"Suisse 🇨🇭","flag":"🇨🇭"},{"id":"ca","label":"Canada 🇨🇦","flag":"🇨🇦"},{"id":"lu","label":"Luxembourg 🇱🇺","flag":"🇱🇺"},{"id":"mc","label":"Monaco 🇲🇨","flag":"🇲🇨"},{"id":"ma","label":"Maroc 🇲🇦","flag":"🇲🇦"},{"id":"dz","label":"Algérie 🇩🇿","flag":"🇩🇿"},{"id":"tn","label":"Tunisie 🇹🇳","flag":"🇹🇳"},{"id":"sn","label":"Sénégal 🇸🇳","flag":"🇸🇳"},{"id":"ci","label":"Côte d’Ivoire 🇨🇮","flag":"🇨🇮"},{"id":"de","label":"Allemagne 🇩🇪","flag":"🇩🇪"},{"id":"es","label":"Espagne 🇪🇸","flag":"🇪🇸"},{"id":"it","label":"Italie 🇮🇹","flag":"🇮🇹"},{"id":"gb","label":"Royaume-Uni 🇬🇧","flag":"🇬🇧"},{"id":"pt","label":"Portugal 🇵🇹","flag":"🇵🇹"},{"id":"us","label":"États-Unis 🇺🇸","flag":"🇺🇸"},{"id":"other","label":"Autre pays 🌍","flag":"🌍"}];
+const regionOptions=[{"id":"","label":"Non renseigné"},{"id":"fr","label":"France"},{"id":"be","label":"Belgique"},{"id":"ch","label":"Suisse"},{"id":"ca","label":"Canada"},{"id":"lu","label":"Luxembourg"},{"id":"mc","label":"Monaco"},{"id":"ma","label":"Maroc"},{"id":"dz","label":"Algérie"},{"id":"tn","label":"Tunisie"},{"id":"sn","label":"Sénégal"},{"id":"ci","label":"Côte d’Ivoire"},{"id":"de","label":"Allemagne"},{"id":"es","label":"Espagne"},{"id":"it","label":"Italie"},{"id":"gb","label":"Royaume-Uni"},{"id":"pt","label":"Portugal"},{"id":"us","label":"États-Unis"},{"id":"other","label":"Autre pays"}];
 const regionLookup=new Map(regionOptions.map(o=>[o.id,o]));
+const regionFlagImage=id=>id&&regionLookup.has(id)?'<img class="mp-region-flag" src="media/flags/'+esc(id)+'.svg" alt="" aria-hidden="true" loading="lazy" decoding="async">':'';
 const bannerKeys=["champagne","carbone","violet","bleu-nuit","rubis","emeraude"];
 const accentKeys=["or","violet","bleu","rouge","vert","rose"];
 const legacyGameIds=new Set(["fortnite","warzone","rocket-league","apex-legends","cyberpunk-2077","elden-ring","god-of-war","horizon-zero-dawn","the-witcher-3","the-last-of-us","gta-v","resident-evil-4"]);
@@ -160,7 +161,7 @@ function profileAbout(p,links,visitor=false){
   (p.bio?esc(p.bio):'<span class="mp-muted">'+(visitor?'Ce membre n’a pas encore renseigné sa présentation.':'Ajoute quelques mots sur ton univers gaming !')+'</span>')+
   '</p>'+
   '<h3 class="mp-social-title">'+clipIcon+' MES RÉSEAUX</h3><div class="mp-links">'+links+'</div>'+
-  (p.region&&regionLookup.has(p.region)?'<div class="mp-region-line"><span>◎ RÉGION</span><strong>'+esc(regionLookup.get(p.region).label)+'</strong></div>':'')+
+  (p.region&&regionLookup.has(p.region)?'<div class="mp-region-line"><span>◎ RÉGION</span><strong>'+regionFlagImage(p.region)+'<span>'+esc(regionLookup.get(p.region).label)+'</span></strong></div>':'')+
  '</section>';
 }
 function profileStatsPanel(stats){
@@ -217,7 +218,7 @@ function view(state){
     games.filter(g=>state.hasV2||legacyGameIds.has(g.id)).map(g=>'<button type="button" class="mp-picker-tile'+(picked.includes(g.id)?' is-selected':'')+'" data-mp-game="'+g.id+'" aria-pressed="'+picked.includes(g.id)+'">'+
       '<span class="mp-picker-art">'+gameArtwork(g.id)+'</span><span>'+esc(g.name)+'</span></button>').join("")+
    '</div><p id="mpSearchEmpty" class="mp-games-notice" hidden>Aucun jeu trouvé.</p><label class="mp-primary-select">Jeu principal <select name="primary_game" id="mpPrimaryGame"></select></label></fieldset>'+
-   '<div class="mp-form-grid"><label class="mp-form-full">Région / pays (facultatif) <select name="region">'+regionOptions.map(r=>'<option value="'+r.id+'"'+(p.region===r.id?' selected':'')+'>'+esc(r.label)+'</option>').join('')+'</select><small>Choix manuel, sans géolocalisation. Visible uniquement lorsque ton profil est public.</small></label><label>Instagram (pseudo facultatif) <input name="instagram" maxlength="30" value="'+esc(p.instagram)+'" placeholder="mon_pseudo"></label>'+
+   '<div class="mp-form-grid"><label class="mp-form-full">Région / pays (facultatif) <span class="mp-region-select-row"><img id="mpRegionPreview" class="mp-region-flag" alt="" aria-hidden="true"'+(p.region?' src="media/flags/'+esc(p.region)+'.svg"':' hidden')+'><select name="region">'+regionOptions.map(r=>'<option value="'+r.id+'"'+(p.region===r.id?' selected':'')+'>'+esc(r.label)+'</option>').join('')+'</select></span><small>Choix manuel, sans géolocalisation. Visible uniquement lorsque ton profil est public.</small></label><label>Instagram (pseudo facultatif) <input name="instagram" maxlength="30" value="'+esc(p.instagram)+'" placeholder="mon_pseudo"></label>'+
    '<label>TikTok (pseudo facultatif) <input name="tiktok" maxlength="24" value="'+esc(p.tiktok)+'" placeholder="mon_pseudo"></label>'+
    '<label class="mp-form-full">Discord (pseudo facultatif) <input name="discord" maxlength="40" value="'+esc(p.discord)+'" placeholder="mon_pseudo"></label></div>'+
    '<div class="mp-privacy-settings">'+
@@ -233,6 +234,14 @@ function view(state){
  '</section>';
  fillSocialIcons(root);
  handleProfileArtErrors(root);
+ const regionControl=$("mpForm").elements.namedItem("region");
+ const regionPreview=$("mpRegionPreview");
+ regionControl.addEventListener("change",()=>{
+  const country=regionControl.value;
+  regionPreview.hidden=!country;
+  if(country&&regionLookup.has(country))regionPreview.src="media/flags/"+country+".svg";
+  else regionPreview.removeAttribute("src");
+ });
  const open=()=>{const editor=$("mpEditor");editor.hidden=false;editor.scrollIntoView({behavior:"smooth",block:"start"});};
  $("mpEditBtn").addEventListener("click",open);
  $("mpCancelEdit").addEventListener("click",()=>{$("mpEditor").hidden=true;});

@@ -1,3 +1,7 @@
+## Affichage des drapeaux par pays (13 novembre 2026)
+- Certains navigateurs Windows affichaient « France FR » plutôt que le drapeau emoji. Correctif : drapeaux SVG locaux fidèles aux 17 pays proposés, et globe pour « Autre pays », dans `dist/qg/media/flags/`. Source des 17 graphismes : lipis/flag-icons (licence MIT incluse dans le dossier).
+- Profil : affiche un drapeau graphique et le nom du pays. Formulaire : choix natif en français + aperçu graphique du drapeau choisi ; aucun emoji dépendant de Windows. Aucun changement de D1, Worker, données, visibilité, coût ou service externe. Version cache `20261113-profil-flags1`.
+
 Note de publication complémentaire : cache QG v5b (`qg.js?v=20261113-profil-v5-region-banner2`) et module Confidentialité `confidentialite.js?v=20261113-profil-region1` pour refléter l'option de région sur les profils.
 
 ## Profil V5 — région optionnelle, 4 statistiques et bannière exclusive (13 novembre 2026)
