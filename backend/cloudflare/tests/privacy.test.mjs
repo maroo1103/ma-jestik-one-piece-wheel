@@ -24,6 +24,7 @@ function fixture() {
     '../migrations/0007_member_activity.sql',
     '../migrations/0009_warzone_votes.sql',
     '../migrations/0010_verdansk_votes.sql',
+    '../migrations/0011_member_profile_region.sql',
   ]) sql.exec(readFileSync(new URL(path, import.meta.url), 'utf8'));
 
   const d1 = {
@@ -345,4 +346,30 @@ test('Les pronostics Verdansk fonctionnent sans écraser les manches Fortnite ni
  assert.equal(count(sql,'vote_points_verdansk'),0,'points Verdansk supprimés en cascade');
  assert.equal(count(sql,'vote_rounds_verdansk'),1,'historique collectif de la manche conservé');
  sql.close();
+});
+
+test('La région manuelle reste facultative, privée, validée et compatible avec les anciens profils',async()=>{
+ const {sql,env}=fixture(),restore=mockTwitchUser('111');
+ const auth='Bearer aaaabbbbccccdddd',url='https://example.test/v1/profiles/';
+ const patch=async profile=>worker.fetch(new Request(url+'me',{method:'PATCH',headers:{Authorization:auth,'Content-Type':'application/json'},body:JSON.stringify(profile)}),env);
+ try{
+  const own=await worker.fetch(new Request(url+'me',{headers:{Authorization:auth}}),env);
+  const initial=(await own.json()).profile;
+  assert.equal(initial.region,'');
+  const set=await patch({...initial,region:'fr'});
+  assert.equal(set.status,200);
+  assert.equal((await set.json()).profile.region,'fr');
+  assert.equal(sql.prepare("SELECT region FROM member_profiles WHERE twitch_id='111'").get().region,'fr');
+  const bad=await patch({...initial,region:'<script>'});assert.equal(bad.status,400);
+  const legacy={...initial};delete legacy.region;
+  const oldClient=await patch(legacy);assert.equal(oldClient.status,200);
+  assert.equal((await oldClient.json()).profile.region,'fr');
+  const privateView=await worker.fetch(new Request(url+'111'),env);assert.equal(privateView.status,404);
+  sql.exec("UPDATE member_profiles SET is_public=1 WHERE twitch_id='111'");
+  const publicView=await worker.fetch(new Request(url+'111'),env);
+  assert.equal((await publicView.json()).profile.region,'fr');
+  const clear=await patch({...initial,region:''});
+  assert.equal(clear.status,200);
+  assert.equal((await clear.json()).profile.region,'');
+ }finally{restore();sql.close();}
 });

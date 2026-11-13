@@ -162,18 +162,21 @@ async function voteRoute(req,env,origin,path){
 const profileGames=new Set(["fortnite","warzone","rocket-league","apex-legends","cyberpunk-2077","elden-ring","god-of-war","horizon-zero-dawn","the-witcher-3","the-last-of-us","gta-v","resident-evil-4","counter-strike-2","dota-2","pubg","helldivers-2","baldurs-gate-3","red-dead-redemption-2","hogwarts-legacy","spider-man","jedi-survivor","days-gone","plague-tale-requiem","god-of-war-ragnarok","sea-of-thieves","monster-hunter-wilds","palworld","overwatch-2","rainbow-six-siege","warframe","destiny-2","diablo-iv","path-of-exile","stardew-valley","terraria","gta-vi","league-of-legends","world-of-warcraft","minecraft","valorant"]);
 const profileBanners=new Set(["champagne","carbone","violet","bleu-nuit","rubis","emeraude"]);
 const profileAccents=new Set(["or","violet","bleu","rouge","vert","rose"]);
-const profileFields="display_label,bio,banner_key,accent_key,favorite_games_json,primary_game,is_public,instagram,tiktok,discord,updated_at,banner_choice,accent_choice";
-const defaultProfile=()=>({display_label:"",bio:"",banner_key:"champagne",accent_key:"or",favorite_games_json:"[]",primary_game:"",is_public:0,instagram:"",tiktok:"",discord:""});
+const profileRegions=new Set(["","fr","be","ch","ca","lu","mc","ma","dz","tn","sn","ci","de","es","it","gb","pt","us","other"]);
+const profileFields="display_label,bio,banner_key,accent_key,favorite_games_json,primary_game,is_public,instagram,tiktok,discord,updated_at,banner_choice,accent_choice,region";
+const defaultProfile=()=>({display_label:"",bio:"",banner_key:"champagne",accent_key:"or",favorite_games_json:"[]",primary_game:"",is_public:0,instagram:"",tiktok:"",discord:"",region:""});
 function normalizeProfile(row){
   const p=row||defaultProfile();
   let games=[];
   try{const parsed=JSON.parse(p.favorite_games_json||"[]");games=Array.isArray(parsed)?parsed.filter(x=>profileGames.has(x)).slice(0,4):[];}catch{}
-  return {display_name:p.display_label||"",bio:p.bio||"",banner:p.banner_choice||p.banner_key||"champagne",accent:p.accent_choice||p.accent_key||"or",games,primary_game:games.includes(p.primary_game)?p.primary_game:"",public_profile:p.is_public===1,instagram:p.instagram||"",tiktok:p.tiktok||"",discord:p.discord||""};
+  return {display_name:p.display_label||"",bio:p.bio||"",banner:p.banner_choice||p.banner_key||"champagne",accent:p.accent_choice||p.accent_key||"or",games,primary_game:games.includes(p.primary_game)?p.primary_game:"",public_profile:p.is_public===1,instagram:p.instagram||"",tiktok:p.tiktok||"",discord:p.discord||"",region:profileRegions.has(p.region)?p.region:""};
 }
 function validateProfile(data){
   if(!data||typeof data!=="object"||Array.isArray(data))return null;
   const keys=["display_name","bio","banner","accent","games","primary_game","public_profile","instagram","tiktok","discord"];
-  if(Object.keys(data).some(k=>!keys.includes(k))||!keys.every(k=>Object.prototype.hasOwnProperty.call(data,k)))return null;
+  const hasRegion=Object.prototype.hasOwnProperty.call(data,"region");
+  if(Object.keys(data).some(k=>!keys.includes(k)&&k!=="region")||!keys.every(k=>Object.prototype.hasOwnProperty.call(data,k)))return null;
+  if(hasRegion&&(typeof data.region!=="string"||!profileRegions.has(data.region)))return null;
   for(const k of ["display_name","bio","banner","accent","primary_game","instagram","tiktok","discord"])if(typeof data[k]!=="string")return null;
   const clean=t=>t.trim().replace(/\s+/g," ");
   const display=clean(data.display_name),bio=data.bio.trim(),instagram=clean(data.instagram).replace(/^@/,""),tiktok=clean(data.tiktok).replace(/^@/,""),discord=clean(data.discord);
@@ -182,7 +185,7 @@ function validateProfile(data){
   if(!Array.isArray(data.games)||data.games.length>4||new Set(data.games).size!==data.games.length||data.games.some(g=>typeof g!=="string"||!profileGames.has(g)))return null;
   if(data.primary_game!==""&&!data.games.includes(data.primary_game))return null;
   if((instagram&&!/^[A-Za-z0-9._]{1,30}$/.test(instagram))||(tiktok&&!/^[A-Za-z0-9._]{1,24}$/.test(tiktok))||discord.length>40||/[\u0000-\u001f\u007f<>]/.test(discord))return null;
-  return {display,bio,banner:data.banner,accent:data.accent,games:data.games,primary:data.primary_game,isPublic:data.public_profile?1:0,instagram,tiktok,discord};
+  return {display,bio,banner:data.banner,accent:data.accent,games:data.games,primary:data.primary_game,isPublic:data.public_profile?1:0,instagram,tiktok,discord,region:hasRegion?data.region:"",hasRegion};
 }
 async function profileStats(db,member){
   if(!member)return null;
@@ -210,8 +213,8 @@ async function memberProfileRoute(req,env,origin,path){
       let body;try{body=JSON.parse(text)}catch{return result({error:"JSON invalide"},400)}
       const p=validateProfile(body);
       if(!p)return result({error:"Champs du profil invalides"},400);
-      await env.DB.prepare("INSERT INTO member_profiles(twitch_id,display_label,bio,banner_key,accent_key,favorite_games_json,primary_game,is_public,instagram,tiktok,discord,banner_choice,accent_choice) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(twitch_id) DO UPDATE SET display_label=excluded.display_label,bio=excluded.bio,banner_key=excluded.banner_key,accent_key=excluded.accent_key,favorite_games_json=excluded.favorite_games_json,primary_game=excluded.primary_game,is_public=excluded.is_public,instagram=excluded.instagram,tiktok=excluded.tiktok,discord=excluded.discord,banner_choice=excluded.banner_choice,accent_choice=excluded.accent_choice,updated_at=CURRENT_TIMESTAMP")
-        .bind(user.id,p.display,p.bio,["champagne","carbone","violet"].includes(p.banner)?p.banner:"champagne",["or","violet","bleu"].includes(p.accent)?p.accent:"or",JSON.stringify(p.games),p.primary,p.isPublic,p.instagram,p.tiktok,p.discord,p.banner,p.accent).run();
+      await env.DB.prepare("INSERT INTO member_profiles(twitch_id,display_label,bio,banner_key,accent_key,favorite_games_json,primary_game,is_public,instagram,tiktok,discord,banner_choice,accent_choice,region) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(twitch_id) DO UPDATE SET display_label=excluded.display_label,bio=excluded.bio,banner_key=excluded.banner_key,accent_key=excluded.accent_key,favorite_games_json=excluded.favorite_games_json,primary_game=excluded.primary_game,is_public=excluded.is_public,instagram=excluded.instagram,tiktok=excluded.tiktok,discord=excluded.discord,banner_choice=excluded.banner_choice,accent_choice=excluded.accent_choice,region=CASE WHEN ?=1 THEN excluded.region ELSE member_profiles.region END,updated_at=CURRENT_TIMESTAMP")
+        .bind(user.id,p.display,p.bio,["champagne","carbone","violet"].includes(p.banner)?p.banner:"champagne",["or","violet","bleu"].includes(p.accent)?p.accent:"or",JSON.stringify(p.games),p.primary,p.isPublic,p.instagram,p.tiktok,p.discord,p.banner,p.accent,p.region,p.hasRegion?1:0).run();
     }
     const saved=await env.DB.prepare("SELECT "+profileFields+" FROM member_profiles WHERE twitch_id=?").bind(user.id).first();
     return result({catalog_version:2,registered:true,profile:normalizeProfile(saved),stats:await profileStats(env.DB,{...member,twitch_id:user.id}),identity:{name:user.name,avatar:user.avatar}});

@@ -76,10 +76,10 @@ test('Profil V3 : la bannière gaming respecte les choix du membre sans données
  assert.match(css,/\.mp-profile-layout \.mp-count-1 \.mp-game-card/);
  assert.match(css,/\.mp-profile-layout \.mp-count-4/);
  assert.match(css,/@media\(max-width:680px\)/);
- assert.match(html,/profil\.css\?v=20261113-profil-v4-ownerhero/);
- assert.match(qg,/profil\.js\?v=20261113-profil-v4-ownerhero/);
- assert.doesNotMatch(profile,/Compte lié à Twitch :|mp-twitch-mark|MEMBRE DEPUIS|Copier le lien public/);
- assert.doesNotMatch(profile,/statCard\([^\n]*MEMBRE DEPUIS/);
+ assert.match(html,/profil\.css\?v=20261113-profil-v5-region-banner/);
+ assert.match(qg,/profil\.js\?v=20261113-profil-v5-region-banner/);
+ assert.doesNotMatch(profile,/Compte lié à Twitch :|mp-twitch-mark|Copier le lien public/);
+ assert.match(profile,/statCard\("calendar","MEMBRE DEPUIS",joinedDate/);
  assert.match(profile,/name="public_profile"/);
  assert.match(profile,/name="ranking_visible"/);
 });
@@ -120,4 +120,25 @@ test('La bannière exclusive ne dépend que de ownerId et ne touche pas aux autr
  assert.match(css,/ma-jestik-owner-hero-v1\.avif/);
  assert.match(css,/@media\(max-width:680px\)/);
  assert.doesNotMatch(code,/Compte lié à Twitch :|mp-twitch-mark/);
+});
+
+test('V5 : bannière exacte de GitHub, sans couronne au-dessus de l’avatar',()=>{
+ const css=read('profil.css'),js=read('profil.js');
+ assert.match(css,/banniere-ma-jestik-exclusive-2000x400\.webp/);
+ assert.doesNotMatch(css,/\.mp-banner\.mp-owner-hero \.mp-avatar:before/);
+ assert.match(js,/const isOwner=!!ownerId&&String\(id\|\|""\)===ownerId/);
+ assert.match(js,/const selected=isOwner\?null:/);
+});
+test('V5 : quatre statistiques avec étoile, trophée, barres et calendrier',()=>{
+ const js=read('profil.js'),css=read('profil.css');
+ for(const label of ['POINTS QG','CLASSEMENT','PRONOSTICS','MEMBRE DEPUIS'])assert.match(js,new RegExp('statCard\\([^\\n]*'+label));
+ assert.match(js,/function joinedDate/);
+ assert.match(css,/repeat\(4,minmax\(0,1fr\)\)/);
+});
+test('V5 : région facultative, sans géolocalisation automatique',()=>{
+ const js=read('profil.js');
+ assert.match(js,/Région \/ pays \(facultatif\)/);
+ assert.match(js,/name="region"/);
+ assert.match(js,/region:e\.namedItem\("region"\)\.value/);
+ assert.match(js,/p\.region&&regionLookup\.has\(p\.region\)/);
 });

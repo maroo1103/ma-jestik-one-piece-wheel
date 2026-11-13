@@ -46,15 +46,18 @@ const games=[
  {"id":"valorant","name":"Valorant","subtitle":"FPS tactique","art":"tactical","image":"https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/8f0df8efd5b986039cd37a4d5f3bf31b815d0c54-3840x2160.jpg?w=680&auto=format&q=80"}
 ];
 const lookup=new Map(games.map(g=>[g.id,g]));
+const regionOptions=[{"id":"","label":"Non renseigné","flag":""},{"id":"fr","label":"France 🇫🇷","flag":"🇫🇷"},{"id":"be","label":"Belgique 🇧🇪","flag":"🇧🇪"},{"id":"ch","label":"Suisse 🇨🇭","flag":"🇨🇭"},{"id":"ca","label":"Canada 🇨🇦","flag":"🇨🇦"},{"id":"lu","label":"Luxembourg 🇱🇺","flag":"🇱🇺"},{"id":"mc","label":"Monaco 🇲🇨","flag":"🇲🇨"},{"id":"ma","label":"Maroc 🇲🇦","flag":"🇲🇦"},{"id":"dz","label":"Algérie 🇩🇿","flag":"🇩🇿"},{"id":"tn","label":"Tunisie 🇹🇳","flag":"🇹🇳"},{"id":"sn","label":"Sénégal 🇸🇳","flag":"🇸🇳"},{"id":"ci","label":"Côte d’Ivoire 🇨🇮","flag":"🇨🇮"},{"id":"de","label":"Allemagne 🇩🇪","flag":"🇩🇪"},{"id":"es","label":"Espagne 🇪🇸","flag":"🇪🇸"},{"id":"it","label":"Italie 🇮🇹","flag":"🇮🇹"},{"id":"gb","label":"Royaume-Uni 🇬🇧","flag":"🇬🇧"},{"id":"pt","label":"Portugal 🇵🇹","flag":"🇵🇹"},{"id":"us","label":"États-Unis 🇺🇸","flag":"🇺🇸"},{"id":"other","label":"Autre pays 🌍","flag":"🌍"}];
+const regionLookup=new Map(regionOptions.map(o=>[o.id,o]));
 const bannerKeys=["champagne","carbone","violet","bleu-nuit","rubis","emeraude"];
 const accentKeys=["or","violet","bleu","rouge","vert","rose"];
 const legacyGameIds=new Set(["fortnite","warzone","rocket-league","apex-legends","cyberpunk-2077","elden-ring","god-of-war","horizon-zero-dawn","the-witcher-3","the-last-of-us","gta-v","resident-evil-4"]);
 const ownerId=(document.querySelector('meta[name="majestik-owner-twitch-id"]')?.content||"").trim();
 const ownerBadge=id=>id&&String(id)===ownerId?'<span class="mp-member-badge mp-owner-badge">♛ LE BOSS DU QG</span>':'<span class="mp-member-badge">✦ MEMBRE DU QG</span>';
-const defaults=()=>({display_name:"",bio:"",banner:"champagne",accent:"or",games:[],primary_game:"",public_profile:false,instagram:"",tiktok:"",discord:""});
+const defaults=()=>({display_name:"",bio:"",banner:"champagne",accent:"or",games:[],primary_game:"",public_profile:false,instagram:"",tiktok:"",discord:"",region:""});
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=n=>n===null||n===undefined?"—":new Intl.NumberFormat("fr-FR").format(n);
+const joinedDate=x=>{if(!x)return "—";const d=new Date(String(x).replace(" ","T"));return Number.isNaN(d.getTime())?"—":d.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});};
 const avatar=x=>{try{const u=new URL(x);return u.protocol==="https:"&&u.hostname==="static-cdn.jtvnw.net"?u.href:"";}catch{return "";}};
 const localKey=id=>"mj-qg-profile-draft-v1-"+id;
 function readDraft(id){try{const d=JSON.parse(localStorage.getItem(localKey(id))||"null");return d&&typeof d==="object"?d:null;}catch{return null;}}
@@ -72,7 +75,8 @@ function sanitize(data){
   public_profile:p.public_profile===true,
   instagram:String(p.instagram||"").slice(0,30),
   tiktok:String(p.tiktok||"").slice(0,24),
-  discord:String(p.discord||"").slice(0,40)
+  discord:String(p.discord||"").slice(0,40),
+  region:regionLookup.has(p.region)?p.region:""
  };
 }
 async function request(method,path,token,payload){
@@ -105,7 +109,13 @@ function gameCard(id,primary,preview=false){
   '<div class="mp-game-copy"><strong>'+esc(g.name)+'</strong><small>'+esc(g.subtitle)+'</small></div>'+
  '</article>';
 }
-function statCard(icon,label,value){return '<div class="mp-stat"><span aria-hidden="true">'+icon+'</span><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong></div>';}
+const statIcons={
+ star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/></svg>',
+ trophy:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3ZM7 5H4v3a4 4 0 0 0 4 4M17 5h3v3a4 4 0 0 1-4 4M12 15v4m-4 2h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M7 3h10v7a5 5 0 0 1-10 0V3Z" fill="currentColor" opacity=".55"/></svg>',
+ bars:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="13" width="5" height="8" rx="1" fill="currentColor"/><rect x="10" y="8" width="5" height="13" rx="1" fill="currentColor"/><rect x="17" y="3" width="5" height="18" rx="1" fill="currentColor"/></svg>',
+ calendar:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 2v6M17 2v6M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 14h3v3H7zM13 14h3v3h-3z" fill="currentColor"/></svg>'
+};
+function statCard(icon,label,value){return '<div class="mp-stat"><span class="mp-stat-icon" aria-hidden="true">'+(statIcons[icon]||"")+'</span><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong></div>';}
 const clipIcon='<svg class="mp-clip" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5 12.5 20a6 6 0 0 1-8.5-8.5l9-9a4 4 0 0 1 5.7 5.6l-9 9a2 2 0 0 1-2.8-2.8l8.2-8.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 function socials(profile,name){
  const rows=[["twitch","Twitch","https://www.twitch.tv/"+encodeURIComponent(name)]];
@@ -150,14 +160,16 @@ function profileAbout(p,links,visitor=false){
   (p.bio?esc(p.bio):'<span class="mp-muted">'+(visitor?'Ce membre n’a pas encore renseigné sa présentation.':'Ajoute quelques mots sur ton univers gaming !')+'</span>')+
   '</p>'+
   '<h3 class="mp-social-title">'+clipIcon+' MES RÉSEAUX</h3><div class="mp-links">'+links+'</div>'+
+  (p.region&&regionLookup.has(p.region)?'<div class="mp-region-line"><span>◎ RÉGION</span><strong>'+esc(regionLookup.get(p.region).label)+'</strong></div>':'')+
  '</section>';
 }
 function profileStatsPanel(stats){
  return '<section class="mp-panel mp-stats"><div class="mp-panel-heading"><h3><svg class="mp-stat-bars-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14h4v6H4zM10 9h4v11h-4zM16 4h4v16h-4z" fill="currentColor"/></svg> STATISTIQUES DU QG</h3></div>'+
   '<div class="mp-stat-grid">'+
-   statCard("★","POINTS QG",fmt(stats?.points))+
-   statCard("♛","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
-   statCard("◫","PRONOSTICS",fmt(stats?.votes))+
+   statCard("star","POINTS QG",fmt(stats?.points))+
+   statCard("trophy","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
+   statCard("bars","PRONOSTICS",fmt(stats?.votes))+
+   statCard("calendar","MEMBRE DEPUIS",joinedDate(stats?.joined_at))+
   '</div></section>';
 }
 function profileGamesPanel(p,cards,editable=false){
@@ -205,7 +217,7 @@ function view(state){
     games.filter(g=>state.hasV2||legacyGameIds.has(g.id)).map(g=>'<button type="button" class="mp-picker-tile'+(picked.includes(g.id)?' is-selected':'')+'" data-mp-game="'+g.id+'" aria-pressed="'+picked.includes(g.id)+'">'+
       '<span class="mp-picker-art">'+gameArtwork(g.id)+'</span><span>'+esc(g.name)+'</span></button>').join("")+
    '</div><p id="mpSearchEmpty" class="mp-games-notice" hidden>Aucun jeu trouvé.</p><label class="mp-primary-select">Jeu principal <select name="primary_game" id="mpPrimaryGame"></select></label></fieldset>'+
-   '<div class="mp-form-grid"><label>Instagram (pseudo facultatif) <input name="instagram" maxlength="30" value="'+esc(p.instagram)+'" placeholder="mon_pseudo"></label>'+
+   '<div class="mp-form-grid"><label class="mp-form-full">Région / pays (facultatif) <select name="region">'+regionOptions.map(r=>'<option value="'+r.id+'"'+(p.region===r.id?' selected':'')+'>'+esc(r.label)+'</option>').join('')+'</select><small>Choix manuel, sans géolocalisation. Visible uniquement lorsque ton profil est public.</small></label><label>Instagram (pseudo facultatif) <input name="instagram" maxlength="30" value="'+esc(p.instagram)+'" placeholder="mon_pseudo"></label>'+
    '<label>TikTok (pseudo facultatif) <input name="tiktok" maxlength="24" value="'+esc(p.tiktok)+'" placeholder="mon_pseudo"></label>'+
    '<label class="mp-form-full">Discord (pseudo facultatif) <input name="discord" maxlength="40" value="'+esc(p.discord)+'" placeholder="mon_pseudo"></label></div>'+
    '<div class="mp-privacy-settings">'+
@@ -259,7 +271,7 @@ function view(state){
   const payload={display_name:e.namedItem("display_name").value.trim(),bio:e.namedItem("bio").value.trim(),
    banner:e.namedItem("banner").value,accent:e.namedItem("accent").value,
    games:[...chosen],primary_game:e.namedItem("primary_game").value,public_profile:e.namedItem("public_profile").checked,
-   instagram:e.namedItem("instagram").value.trim().replace(/^@/,""),tiktok:e.namedItem("tiktok").value.trim().replace(/^@/,""),discord:e.namedItem("discord").value.trim()};
+   instagram:e.namedItem("instagram").value.trim().replace(/^@/,""),tiktok:e.namedItem("tiktok").value.trim().replace(/^@/,""),discord:e.namedItem("discord").value.trim(),region:e.namedItem("region").value};
   if(payload.display_name.length>32||payload.bio.length>180||!/^[A-Za-z0-9._]{0,30}$/.test(payload.instagram)||!/^[A-Za-z0-9._]{0,24}$/.test(payload.tiktok)){
    $("mpSaveStatus").textContent="Vérifie les pseudos des réseaux sociaux.";return;
   }
