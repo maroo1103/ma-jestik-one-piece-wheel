@@ -63,21 +63,21 @@ test('La carte de visibilité a disparu, mais les réglages privés restent disp
  assert.match(profile,/Rendre mon profil public/);
  assert.match(profile,/Afficher mon profil dans le classement/);
  assert.match(profile,/mpEditBtn/);
- assert.match(profile,/mpGamesEdit/);
+ assert.doesNotMatch(profile,/mpGamesEdit|\+ Personnaliser/);
 });
 
 test('Profil V3 : la bannière gaming respecte les choix du membre sans données fictives',()=>{
  const profile=read('profil.js'),css=read('profil.css'),html=read('index.html'),qg=read('qg.js');
  assert.match(profile,/function profileBanner\(p,identity,id,editable=false\)/);
- assert.match(profile,/const primary=lookup\.get\(p\.primary_game\)/);
+ assert.match(profile,/const selected=isOwner\?null:/);
  assert.match(profile,/const image=selected\?cover\(selected\.id\):""/);
  assert.match(profile,/function profileGamesPanel\(p,cards,editable=false\)/);
  assert.match(profile,/mp-count-['"]?\+amount/);
  assert.match(css,/\.mp-profile-layout \.mp-count-1 \.mp-game-card/);
  assert.match(css,/\.mp-profile-layout \.mp-count-4/);
  assert.match(css,/@media\(max-width:680px\)/);
- assert.match(html,/profil\.css\?v=20261113-profil-v3/);
- assert.match(qg,/profil\.js\?v=20261113-profil-v3/);
+ assert.match(html,/profil\.css\?v=20261113-profil-v4-ownerhero/);
+ assert.match(qg,/profil\.js\?v=20261113-profil-v4-ownerhero/);
  assert.doesNotMatch(profile,/Compte lié à Twitch :|mp-twitch-mark|MEMBRE DEPUIS|Copier le lien public/);
  assert.doesNotMatch(profile,/statCard\([^\n]*MEMBRE DEPUIS/);
  assert.match(profile,/name="public_profile"/);
@@ -97,4 +97,27 @@ test('Les scripts de profil et du QG passent la vérification syntaxique Node',(
   const result=spawnSync(process.execPath,['--check',script.pathname],{encoding:'utf8',timeout:15000});
   assert.equal(result.status,0,path+' : '+(result.stderr||result.stdout||'échec syntaxique'));
  }
+});
+
+test('Profil V4 : suppression de tous les éléments encadrés sans perdre le formulaire',()=>{
+ const code=read('profil.js'),css=read('profil.css');
+ assert.doesNotMatch(code,/MON ESPACE COMMUNAUTAIRE|JEU PRINCIPAL<\/span>|MON UNIVERS|mp-about-facts|mp-section-divider|mp-stats-crown|mpGamesEdit|\+ Personnaliser/);
+ assert.match(code,/function profileAbout\(p,links,visitor=false\)/);
+ assert.match(code,/STATISTIQUES DU QG/);
+ assert.match(code,/profileStatsPanel\(stats\)/);
+ assert.match(code,/name="public_profile"/);
+ assert.match(code,/name="ranking_visible"/);
+ assert.match(code,/id="mpEditBtn"/);
+ assert.match(code,/id="mpDeleteAccount"/);
+ assert.match(css,/\.mp-social-title/);
+});
+test('La bannière exclusive ne dépend que de ownerId et ne touche pas aux autres profils',()=>{
+ const code=read('profil.js'),css=read('profil.css');
+ assert.match(code,/const isOwner=!!ownerId&&String\(id\|\|""\)===ownerId/);
+ assert.match(code,/selected=isOwner\?null:/);
+ assert.match(code,/\(isOwner\?' mp-owner-hero':''\)/);
+ assert.match(css,/\.mp-banner\.mp-owner-hero \.mp-banner-visual/);
+ assert.match(css,/ma-jestik-owner-hero-v1\.avif/);
+ assert.match(css,/@media\(max-width:680px\)/);
+ assert.doesNotMatch(code,/Compte lié à Twitch :|mp-twitch-mark/);
 });

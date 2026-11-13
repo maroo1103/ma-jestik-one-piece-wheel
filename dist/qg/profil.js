@@ -128,38 +128,32 @@ function fillSocialIcons(root){
    Les illustrations viennent uniquement du catalogue de jeux déjà utilisé par le QG. */
 function profileBanner(p,identity,id,editable=false){
  const pic=avatar(identity.avatar),name=p.display_name||identity.name||"Membre Twitch";
- const selected=lookup.get(p.primary_game)||(p.games.length===1?lookup.get(p.games[0]):null);
- const primary=lookup.get(p.primary_game);
+ // Réservée à l'identifiant Twitch du propriétaire, jamais au pseudo affiché.
+ const isOwner=!!ownerId&&String(id||"")===ownerId;
+ const selected=isOwner?null:(lookup.get(p.primary_game)||(p.games.length===1?lookup.get(p.games[0]):null));
  const image=selected?cover(selected.id):"";
- return '<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'">'+
+ return '<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+(isOwner?' mp-owner-hero':'')+'">'+
   '<div class="mp-banner-visual" aria-hidden="true">'+
    (image?'<img src="'+esc(image)+'" alt="" decoding="async" referrerpolicy="no-referrer">':'')+
   '</div>'+
   '<div class="mp-banner-crest" aria-hidden="true">♛</div>'+
   '<div class="mp-banner-identity">'+
    '<div class="mp-avatar">'+(pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch" referrerpolicy="no-referrer">':'<span aria-hidden="true">MJ</span>')+'</div>'+
-   '<div class="mp-banner-name"><span class="mp-kicker">'+(editable?'MON ESPACE COMMUNAUTAIRE':'PROFIL MEMBRE DU QG')+'</span>'+
-    '<h2>'+esc(name)+'</h2>'+ownerBadge(id)+'</div>'+
+   '<div class="mp-banner-name"><h2>'+esc(name)+'</h2>'+ownerBadge(id)+'</div>'+
   '</div>'+
-  (primary?'<div class="mp-banner-game"><span>JEU PRINCIPAL</span><strong>'+esc(primary.name)+'</strong></div>':'')+
   (editable?'<div class="mp-banner-actions"><button type="button" id="mpEditBtn" class="mp-gold-button">✎ Modifier mon profil</button></div>':'')+
  '</section>';
 }
 function profileAbout(p,links,visitor=false){
- const main=lookup.get(p.primary_game);
- const facts=(main?'<div class="mp-about-fact"><span>JEU PRINCIPAL</span><strong>'+esc(main.name)+'</strong></div>':'')+
-  (p.games.length?'<div class="mp-about-fact"><span>JEUX FAVORIS</span><strong>'+p.games.length+' / 4</strong></div>':'');
  return '<section class="mp-panel mp-about">'+
   '<h3>♙ À PROPOS DE MOI</h3><p class="mp-bio">'+
   (p.bio?esc(p.bio):'<span class="mp-muted">'+(visitor?'Ce membre n’a pas encore renseigné sa présentation.':'Ajoute quelques mots sur ton univers gaming !')+'</span>')+
-  '</p><div class="mp-section-divider" aria-hidden="true"></div>'+
-  '<h3>'+clipIcon+' MES RÉSEAUX</h3><div class="mp-links">'+links+'</div>'+
-  (facts?'<div class="mp-section-divider" aria-hidden="true"></div><h3>✦ MON UNIVERS</h3><div class="mp-about-facts">'+facts+'</div>':'')+
+  '</p>'+
+  '<h3 class="mp-social-title">'+clipIcon+' MES RÉSEAUX</h3><div class="mp-links">'+links+'</div>'+
  '</section>';
 }
 function profileStatsPanel(stats){
- return '<section class="mp-panel mp-stats"><div class="mp-panel-heading"><h3>◈ STATISTIQUES DU QG</h3>'+
-  '<span class="mp-stats-crown" aria-hidden="true">♛</span></div>'+
+ return '<section class="mp-panel mp-stats"><div class="mp-panel-heading"><h3><svg class="mp-stat-bars-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14h4v6H4zM10 9h4v11h-4zM16 4h4v16h-4z" fill="currentColor"/></svg> STATISTIQUES DU QG</h3></div>'+
   '<div class="mp-stat-grid">'+
    statCard("★","POINTS QG",fmt(stats?.points))+
    statCard("♛","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
@@ -168,9 +162,7 @@ function profileStatsPanel(stats){
 }
 function profileGamesPanel(p,cards,editable=false){
  const amount=p.games.length;
- return '<section class="mp-panel mp-games"><div class="mp-panel-heading"><h3>♧ MES JEUX FAVORIS</h3>'+
-  (editable?'<button type="button" id="mpGamesEdit" class="mp-outline-button">+ Personnaliser</button>':'')+
-  '</div>'+
+ return '<section class="mp-panel mp-games"><div class="mp-panel-heading"><h3>♧ MES JEUX FAVORIS</h3></div>'+
   (amount?'<div class="mp-game-grid mp-count-'+amount+'">'+cards+'</div>':
   '<p class="mp-games-empty">'+(editable?'Choisis jusqu’à quatre jeux favoris pour mettre ton univers en avant.':'Ce membre n’a pas encore sélectionné de jeux favoris.')+'</p>')+
  '</section>';
@@ -231,7 +223,6 @@ function view(state){
  handleProfileArtErrors(root);
  const open=()=>{const editor=$("mpEditor");editor.hidden=false;editor.scrollIntoView({behavior:"smooth",block:"start"});};
  $("mpEditBtn").addEventListener("click",open);
- $("mpGamesEdit").addEventListener("click",open);
  $("mpCancelEdit").addEventListener("click",()=>{$("mpEditor").hidden=true;});
  let chosen=new Set(p.games);
  const primary=$("mpPrimaryGame");

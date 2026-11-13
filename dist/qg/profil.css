@@ -540,3 +540,64 @@
    de ranking-profile-dialog.css, chargé après profil.css. */
 #qgMemberDialog .mp-grid.mp-profile-layout{grid-template-columns:minmax(0,1fr)}
 #qgMemberDialog .mp-game-grid.mp-count-1{grid-template-columns:minmax(0,1fr)}
+
+
+/* V4 — Ajustements explicitement validés par le propriétaire : aucune redondance.
+   Image de la maquette servie localement au seul compte Twitch propriétaire. */
+.qg-layout .mp-banner.mp-owner-hero{
+ min-height:272px;
+ border-color:#d5a157;
+ box-shadow:0 16px 40px #000a,0 0 0 1px #e7a94324,inset 0 1px #ffe3a76a,0 3px 18px -9px #f2b54688;
+}
+.qg-layout .mp-banner.mp-owner-hero .mp-banner-visual{
+ inset:0;z-index:0;
+ background:#080a0e url("media/ma-jestik-owner-hero-v1.avif") center center / cover no-repeat;
+}
+.qg-layout .mp-banner.mp-owner-hero:before{
+ background:
+  linear-gradient(115deg,transparent 1.5%,#f1b34fbd 1.66%,transparent 1.83% 7.3%,#d3a0529c 7.5%,transparent 7.67%),
+  linear-gradient(90deg,#080a0ebd 0%,#080a0e63 30%,transparent 68%);
+}
+.qg-layout .mp-banner.mp-owner-hero .mp-banner-crest{display:none}
+.qg-layout .mp-banner.mp-owner-hero .mp-avatar:before{
+ content:"♛";position:absolute;top:-34px;left:50%;z-index:4;
+ color:#ffd583;font-size:34px;line-height:1;transform:translateX(-50%);
+ text-shadow:0 0 10px #ffd176,0 0 22px #e8a640;
+ pointer-events:none;
+}
+.qg-layout .mp-banner.mp-owner-hero .mp-banner-identity{max-width:min(72%,760px)}
+.qg-layout .mp-banner.mp-owner-hero .mp-banner-name h2{margin-top:0}
+.qg-layout .mp-banner.mp-owner-hero .mp-member-badge{box-shadow:0 0 14px #dba8496e}
+.qg-layout .mp-profile-layout .mp-about .mp-social-title{
+ margin-top:34px;margin-bottom:20px;
+}
+.qg-layout .mp-profile-layout .mp-stats .mp-panel-heading{justify-content:flex-start}
+.qg-layout .mp-profile-layout .mp-stats .mp-stat-bars-icon{
+ width:27px;height:27px;display:inline-block;margin-right:8px;
+ color:var(--mp-choice,#e8be80);vertical-align:-5px;
+ filter:drop-shadow(0 0 6px #ddb05c65);
+}
+.qg-layout .mp-profile-layout .mp-stats .mp-stat{
+ border-color:#b18143;
+ box-shadow:0 0 0 1px #ffc76e17 inset,0 5px 14px #0009,0 6px 12px -8px #f1b24d;
+}
+.qg-layout .mp-profile-layout .mp-stats .mp-stat:hover{
+ border-color:#e8ba70;
+}
+@media(max-width:680px){
+ .qg-layout .mp-banner.mp-owner-hero{min-height:270px}
+ .qg-layout .mp-banner.mp-owner-hero .mp-banner-identity{max-width:100%}
+ .qg-layout .mp-banner.mp-owner-hero .mp-banner-visual{
+  background-position:66% center;
+ }
+ .qg-layout .mp-banner.mp-owner-hero:before{
+  background:linear-gradient(0deg,#08090deb 0%,#08090dd3 38%,#08090d38 100%);
+ }
+ .qg-layout .mp-banner.mp-owner-hero .mp-avatar:before{top:-25px;font-size:26px}
+ .qg-layout .mp-profile-layout .mp-about .mp-social-title{margin-top:25px}
+}
+#qgMemberDialog .mp-banner.mp-owner-hero{min-height:170px}
+#qgMemberDialog .mp-banner.mp-owner-hero .mp-banner-identity{max-width:100%}
+@media(max-width:630px){
+ #qgMemberDialog .mp-banner.mp-owner-hero .mp-banner-visual{background-position:65% center}
+}
