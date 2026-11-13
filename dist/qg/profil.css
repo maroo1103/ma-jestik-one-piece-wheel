@@ -535,3 +535,8 @@
  #qgMemberDialog .mp-banner-game strong{font-size:15px}
  #qgMemberDialog .mp-profile-layout .mp-stat{min-height:98px}
 }
+
+/* Dialogue de classement : ces règles surpassent les colonnes historiques
+   de ranking-profile-dialog.css, chargé après profil.css. */
+#qgMemberDialog .mp-grid.mp-profile-layout{grid-template-columns:minmax(0,1fr)}
+#qgMemberDialog .mp-game-grid.mp-count-1{grid-template-columns:minmax(0,1fr)}

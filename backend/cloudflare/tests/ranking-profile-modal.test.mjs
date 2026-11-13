@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';
 // Tests UI des profils du classement, sans navigateur ni données de production.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -88,4 +89,12 @@ test('Profil public V3 : informations privées non montrées sans accord de clas
  assert.match(profile,/visible\?profileStatsPanel\(data\.stats\):""/);
  assert.match(profile,/renderPrivateMember\(root,true\)/);
  assert.match(profile,/handleProfileArtErrors\(root\)/);
+});
+
+test('Les scripts de profil et du QG passent la vérification syntaxique Node',()=>{
+ for(const path of ['profil.js','qg.js']){
+  const script=new URL('../../../dist/qg/'+path,import.meta.url);
+  const result=spawnSync(process.execPath,['--check',script.pathname],{encoding:'utf8',timeout:15000});
+  assert.equal(result.status,0,path+' : '+(result.stderr||result.stdout||'échec syntaxique'));
+ }
 });
