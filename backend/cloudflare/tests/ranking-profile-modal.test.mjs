@@ -64,3 +64,28 @@ test('La carte de visibilité a disparu, mais les réglages privés restent disp
  assert.match(profile,/mpEditBtn/);
  assert.match(profile,/mpGamesEdit/);
 });
+
+test('Profil V3 : la bannière gaming respecte les choix du membre sans données fictives',()=>{
+ const profile=read('profil.js'),css=read('profil.css'),html=read('index.html'),qg=read('qg.js');
+ assert.match(profile,/function profileBanner\(p,identity,id,editable=false\)/);
+ assert.match(profile,/const primary=lookup\.get\(p\.primary_game\)/);
+ assert.match(profile,/const image=selected\?cover\(selected\.id\):""/);
+ assert.match(profile,/function profileGamesPanel\(p,cards,editable=false\)/);
+ assert.match(profile,/mp-count-['"]?\+amount/);
+ assert.match(css,/\.mp-profile-layout \.mp-count-1 \.mp-game-card/);
+ assert.match(css,/\.mp-profile-layout \.mp-count-4/);
+ assert.match(css,/@media\(max-width:680px\)/);
+ assert.match(html,/profil\.css\?v=20261113-profil-v3/);
+ assert.match(qg,/profil\.js\?v=20261113-profil-v3/);
+ assert.doesNotMatch(profile,/Compte lié à Twitch :|mp-twitch-mark|MEMBRE DEPUIS|Copier le lien public/);
+ assert.doesNotMatch(profile,/statCard\([^\n]*MEMBRE DEPUIS/);
+ assert.match(profile,/name="public_profile"/);
+ assert.match(profile,/name="ranking_visible"/);
+});
+test('Profil public V3 : informations privées non montrées sans accord de classement',()=>{
+ const profile=read('profil.js');
+ assert.match(profile,/data\.stats\.points!==null&&data\.stats\.rank!==null&&data\.stats\.votes!==null/);
+ assert.match(profile,/visible\?profileStatsPanel\(data\.stats\):""/);
+ assert.match(profile,/renderPrivateMember\(root,true\)/);
+ assert.match(profile,/handleProfileArtErrors\(root\)/);
+});

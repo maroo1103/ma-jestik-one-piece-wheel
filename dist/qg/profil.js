@@ -55,7 +55,6 @@ const defaults=()=>({display_name:"",bio:"",banner:"champagne",accent:"or",games
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=n=>n===null||n===undefined?"—":new Intl.NumberFormat("fr-FR").format(n);
-const date=x=>{const d=new Date(x);return !x||Number.isNaN(d.getTime())?"—":d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});};
 const avatar=x=>{try{const u=new URL(x);return u.protocol==="https:"&&u.hostname==="static-cdn.jtvnw.net"?u.href:"";}catch{return "";}};
 const localKey=id=>"mj-qg-profile-draft-v1-"+id;
 function readDraft(id){try{const d=JSON.parse(localStorage.getItem(localKey(id))||"null");return d&&typeof d==="object"?d:null;}catch{return null;}}
@@ -124,40 +123,81 @@ function fillSocialIcons(root){
   if(svg)el.replaceChildren(svg.cloneNode(true));
  });
 }
+
+/* V3 : présentation partagée, sans nouveaux champs ni requête Cloudflare.
+   Les illustrations viennent uniquement du catalogue de jeux déjà utilisé par le QG. */
+function profileBanner(p,identity,id,editable=false){
+ const pic=avatar(identity.avatar),name=p.display_name||identity.name||"Membre Twitch";
+ const selected=lookup.get(p.primary_game)||(p.games.length===1?lookup.get(p.games[0]):null);
+ const primary=lookup.get(p.primary_game);
+ const image=selected?cover(selected.id):"";
+ return '<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'">'+
+  '<div class="mp-banner-visual" aria-hidden="true">'+
+   (image?'<img src="'+esc(image)+'" alt="" decoding="async" referrerpolicy="no-referrer">':'')+
+  '</div>'+
+  '<div class="mp-banner-crest" aria-hidden="true">♛</div>'+
+  '<div class="mp-banner-identity">'+
+   '<div class="mp-avatar">'+(pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch" referrerpolicy="no-referrer">':'<span aria-hidden="true">MJ</span>')+'</div>'+
+   '<div class="mp-banner-name"><span class="mp-kicker">'+(editable?'MON ESPACE COMMUNAUTAIRE':'PROFIL MEMBRE DU QG')+'</span>'+
+    '<h2>'+esc(name)+'</h2>'+ownerBadge(id)+'</div>'+
+  '</div>'+
+  (primary?'<div class="mp-banner-game"><span>JEU PRINCIPAL</span><strong>'+esc(primary.name)+'</strong></div>':'')+
+  (editable?'<div class="mp-banner-actions"><button type="button" id="mpEditBtn" class="mp-gold-button">✎ Modifier mon profil</button></div>':'')+
+ '</section>';
+}
+function profileAbout(p,links,visitor=false){
+ const main=lookup.get(p.primary_game);
+ const facts=(main?'<div class="mp-about-fact"><span>JEU PRINCIPAL</span><strong>'+esc(main.name)+'</strong></div>':'')+
+  (p.games.length?'<div class="mp-about-fact"><span>JEUX FAVORIS</span><strong>'+p.games.length+' / 4</strong></div>':'');
+ return '<section class="mp-panel mp-about">'+
+  '<h3>♙ À PROPOS DE MOI</h3><p class="mp-bio">'+
+  (p.bio?esc(p.bio):'<span class="mp-muted">'+(visitor?'Ce membre n’a pas encore renseigné sa présentation.':'Ajoute quelques mots sur ton univers gaming !')+'</span>')+
+  '</p><div class="mp-section-divider" aria-hidden="true"></div>'+
+  '<h3>'+clipIcon+' MES RÉSEAUX</h3><div class="mp-links">'+links+'</div>'+
+  (facts?'<div class="mp-section-divider" aria-hidden="true"></div><h3>✦ MON UNIVERS</h3><div class="mp-about-facts">'+facts+'</div>':'')+
+ '</section>';
+}
+function profileStatsPanel(stats){
+ return '<section class="mp-panel mp-stats"><div class="mp-panel-heading"><h3>◈ STATISTIQUES DU QG</h3>'+
+  '<span class="mp-stats-crown" aria-hidden="true">♛</span></div>'+
+  '<div class="mp-stat-grid">'+
+   statCard("★","POINTS QG",fmt(stats?.points))+
+   statCard("♛","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
+   statCard("◫","PRONOSTICS",fmt(stats?.votes))+
+  '</div></section>';
+}
+function profileGamesPanel(p,cards,editable=false){
+ const amount=p.games.length;
+ return '<section class="mp-panel mp-games"><div class="mp-panel-heading"><h3>♧ MES JEUX FAVORIS</h3>'+
+  (editable?'<button type="button" id="mpGamesEdit" class="mp-outline-button">+ Personnaliser</button>':'')+
+  '</div>'+
+  (amount?'<div class="mp-game-grid mp-count-'+amount+'">'+cards+'</div>':
+  '<p class="mp-games-empty">'+(editable?'Choisis jusqu’à quatre jeux favoris pour mettre ton univers en avant.':'Ce membre n’a pas encore sélectionné de jeux favoris.')+'</p>')+
+ '</section>';
+}
+function handleProfileArtErrors(root){
+ root.querySelectorAll(".mp-game-image img,.mp-picker-art img,.mp-banner-visual img").forEach(img=>{
+  img.addEventListener("error",()=>{
+   if(img.closest(".mp-banner-visual"))img.closest(".mp-banner-visual").classList.add("mp-banner-image-failed");
+   img.style.opacity="0";
+  });
+ });
+}
+
 function view(state){
  const root=$("mjProfileRoot");if(!root)return;
  const p=state.profile,ident=state.identity,stats=state.stats,server=state.online;
  root.closest(".mp-page").dataset.accent=p.accent;
- const display=p.display_name||ident.name||"Membre Twitch";
- const pic=avatar(ident.avatar),ava=pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch de '+esc(ident.name)+'" referrerpolicy="no-referrer">':'<span aria-hidden="true">MJ</span>';
  const picked=p.games;
- const cards=picked.length?picked.map(g=>gameCard(g,p.primary_game)).join(""):[gameCard("fortnite","",true),gameCard("warzone","",true),gameCard("rocket-league","",true)].join("");
+ const cards=picked.map(g=>gameCard(g,p.primary_game)).join("");
+ const links=socials(p,ident.name||"");
  root.innerHTML=
- '<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'">'+
-  '<div class="mp-banner-crown" aria-hidden="true">✦</div>'+
-  '<div class="mp-banner-identity"><div class="mp-avatar">'+ava+'<span class="mp-twitch-mark" aria-hidden="true">T</span></div>'+
-   '<div><span class="mp-kicker">MON ESPACE COMMUNAUTAIRE</span><h2>'+esc(display)+'</h2>'+
-    ownerBadge(ident.id)+'<small>Compte lié à Twitch : '+esc(ident.name)+'</small></div></div>'+
-  '<div class="mp-banner-actions"><button type="button" id="mpEditBtn" class="mp-gold-button">✎ Modifier mon profil</button></div>'+
- '</section>'+
- '<div class="mp-grid">'+
-  '<div class="mp-column">'+
-   '<section class="mp-panel"><h3>♙ PRÉSENTATION</h3><p class="mp-bio">'+(p.bio?esc(p.bio):'<span class="mp-muted">Aucune présentation pour le moment. Ajoute quelques mots sur toi !</span>')+'</p></section>'+
-   '<section class="mp-panel"><h3>'+clipIcon+' MES LIENS</h3><div class="mp-links">'+socials(p,ident.name||"")+'</div></section>'+
+  profileBanner(p,ident,ident.id,true)+
+  '<div class="mp-grid mp-profile-layout">'+
+   '<div class="mp-column">'+profileAbout(p,links)+'</div>'+
+   '<div class="mp-column">'+profileStatsPanel(stats)+profileGamesPanel(p,cards,true)+'</div>'+
   '</div>'+
-  '<div class="mp-column">'+
-   '<section class="mp-panel mp-stats"><h3>◈ STATISTIQUES DU QG</h3><div class="mp-stat-grid">'+
-    statCard("★","POINTS QG",fmt(stats?.points))+
-    statCard("♛","CLASSEMENT",stats?.rank?"#"+fmt(stats.rank):"—")+
-    statCard("✓","PRONOSTICS",fmt(stats?.votes))+
-    statCard("▣","MEMBRE DEPUIS",date(stats?.joined_at))+
-   '</div></section>'+
-   '<section class="mp-panel mp-games"><div class="mp-panel-heading"><h3>♧ MES JEUX</h3><button type="button" id="mpGamesEdit" class="mp-outline-button">+ Personnaliser</button></div>'+
-    (!picked.length?'<p class="mp-games-notice">Exemples du catalogue : sélectionne tes jeux favoris pour personnaliser cette section.</p>':'')+
-    '<div class="mp-game-grid">'+cards+'</div></section>'+
-  '</div>'+
- '</div>'+
- '<section class="mp-panel mp-editor" id="mpEditor" hidden><div class="mp-panel-heading"><h3>✎ PERSONNALISER MON PROFIL</h3><button type="button" class="mp-outline-button" id="mpCancelEdit">Fermer</button></div>'+
+ '<section class="mp-panel mp-editor" id="mpEditor" '<section class="mp-panel mp-editor" id="mpEditor" hidden><div class="mp-panel-heading"><h3>✎ PERSONNALISER MON PROFIL</h3><button type="button" class="mp-outline-button" id="mpCancelEdit">Fermer</button></div>'+
   '<form id="mpForm">'+
    '<div class="mp-form-grid">'+
     '<label>Pseudo affiché dans le QG <input name="display_name" maxlength="32" value="'+esc(p.display_name)+'" placeholder="'+esc(ident.name)+'"></label>'+
@@ -188,7 +228,7 @@ function view(state){
   (state.online?'<div class="mp-danger-zone"><div><strong>Suppression du profil QG</strong><p>Action définitive : ton profil, tes points, tes votes des défis et ton Killathon communautaire associé peuvent être effacés. Ton compte Twitch reste indépendant.</p></div><button class="mp-danger-button" id="mpDeleteAccount" type="button">Supprimer mon profil QG</button><span id="mpDeleteStatus" role="status"></span></div>':'')+
  '</section>';
  fillSocialIcons(root);
- root.querySelectorAll(".mp-game-image img,.mp-picker-art img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
+ handleProfileArtErrors(root);
  const open=()=>{const editor=$("mpEditor");editor.hidden=false;editor.scrollIntoView({behavior:"smooth",block:"start"});};
  $("mpEditBtn").addEventListener("click",open);
  $("mpGamesEdit").addEventListener("click",open);
@@ -333,15 +373,22 @@ export function publicProfileMarkup(){return '<div class="mp-page"><div class="p
 // Les données sont filtrées par le Worker : aucune donnée privée n'arrive ici.
 export function renderPublicMember(root,data,id){
  if(!root||!data?.profile)throw Error("Profil public absent");
- const p=sanitize(data.profile),identity=data.identity||{},pic=avatar(identity.avatar);
+ const p=sanitize(data.profile),identity=data.identity||{};
  const page=root.closest(".mp-page");if(page)page.dataset.accent=p.accent;
- root.innerHTML='<section class="mp-banner mp-banner-'+esc(p.banner)+' mp-accent-'+esc(p.accent)+'"><div class="mp-banner-identity"><div class="mp-avatar">'+(pic?'<img src="'+esc(pic)+'" alt="Avatar Twitch" referrerpolicy="no-referrer">':'<span aria-hidden="true">MJ</span>')+'</div><div><span class="mp-kicker">PROFIL PUBLIC DU QG</span><h2>'+esc(p.display_name||identity.name||"Membre Twitch")+'</h2>'+ownerBadge(id)+'</div></div></section>'+
-  '<div class="mp-grid"><section class="mp-panel"><h3>PRÉSENTATION</h3><p class="mp-bio">'+esc(p.bio||"Ce membre n’a pas encore renseigné sa biographie.")+'</p><div class="mp-links">'+socials(p,identity.name||"")+'</div></section>'+
-  '<section class="mp-panel"><h3>MES JEUX</h3><div class="mp-game-grid">'+(p.games.length?p.games.map(g=>gameCard(g,p.primary_game)).join(""):'<p>Aucun jeu favori renseigné.</p>')+'</div></section></div>';
+ // Les données privées ne sont jamais livrées par le Worker. 
+ // Les compteurs publics restent absents sans accord de visibilité du classement.
+ const visible=data.stats&&data.stats.points!==null&&data.stats.rank!==null&&data.stats.votes!==null;
+ const links=socials(p,identity.name||"");
+ const cards=p.games.map(g=>gameCard(g,p.primary_game)).join("");
+ root.innerHTML=profileBanner(p,identity,id,false)+
+  '<div class="mp-grid mp-profile-layout">'+
+   '<div class="mp-column">'+profileAbout(p,links,true)+'</div>'+
+   '<div class="mp-column">'+(visible?profileStatsPanel(data.stats):"")+profileGamesPanel(p,cards,false)+'</div>'+
+  '</div>';
  fillSocialIcons(root);
- root.querySelectorAll(".mp-game-image img").forEach(img=>img.addEventListener("error",()=>{img.style.opacity="0";}));
+ handleProfileArtErrors(root);
 }
-export function renderPrivateMember(root,withReturn=false){
+export function renderPrivateMember(root,withReturn=false){export function renderPrivateMember(root,withReturn=false){
  if(!root)return;
  root.innerHTML='<div class="mp-panel mp-empty"><h2>Profil indisponible</h2><p>Ce profil est privé. Vous n’êtes pas autorisé à consulter son contenu.</p>'+
   (withReturn?'<a href="#/accueil" class="mp-gold-button">Retour au QG</a>':'')+'</div>';
